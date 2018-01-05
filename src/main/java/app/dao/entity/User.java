@@ -17,9 +17,16 @@ public class User {
 	
 	private String password;
 	
-	private String mail;
+	private String email;
 	
 	private String username;
+	
+	private String gazzettaUsername;
+	
+	private String gazzettaPassword;
+	
+	private Integer toBeConfirm;
+	
 
 	public String getFirstname() {
 		return firstname;
@@ -37,25 +44,12 @@ public class User {
 		this.lastname = lastname;
 	}
 
-	@Override
-	public String toString() {
-		return "Person [id=" + id + ", firstName=" + firstname + ", lastName=" + lastname + "]";
-	}
-
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getMail() {
-		return mail;
-	}
-
-	public void setMail(String mail) {
-		this.mail = mail;
 	}
 
 	public String getUsername() {
@@ -65,6 +59,48 @@ public class User {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+
+	public String getGazzettaPassword() {
+		return gazzettaPassword;
+	}
+
+	public void setGazzettaPassword(String gazzettaPassword) {
+		this.gazzettaPassword = gazzettaPassword;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", password=" + password
+				+ ", mail=" + email + ", username=" + username + ", gazzettaUsername=" + getGazzettaUsername() + ", gazzettaPassword="
+				+ gazzettaPassword + "]";
+	}
+
+	public String getGazzettaUsername() {
+		return gazzettaUsername;
+	}
+
+	public void setGazzettaUsername(String gazzettaUsername) {
+		this.gazzettaUsername = gazzettaUsername;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Integer getToBeConfirm() {
+		return toBeConfirm;
+	}
+
+	public void setToBeConfirm(Integer toBeConfirm) {
+		this.toBeConfirm = toBeConfirm;
+	}
+
+	
 	
 	
 	
