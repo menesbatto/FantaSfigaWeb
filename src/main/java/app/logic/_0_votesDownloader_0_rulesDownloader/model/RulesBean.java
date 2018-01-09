@@ -12,6 +12,9 @@ public class RulesBean  implements Serializable{
 	private Points points;
 	private Substitutions substitutions;
 	private Modifiers modifiers;
+	private CompetitionRules competitionRules;
+	
+	
 	public BonusMalus getBonusMalus() {
 		return bonusMalus;
 	}
@@ -42,7 +45,12 @@ public class RulesBean  implements Serializable{
 	public void setModifiers(Modifiers modifiers) {
 		this.modifiers = modifiers;
 	}
-	
+	public CompetitionRules getCompetitionRules() {
+		return competitionRules;
+	}
+	public void setCompetitionRules(CompetitionRules competitionRules) {
+		this.competitionRules = competitionRules;
+	}
 	
 	
 		

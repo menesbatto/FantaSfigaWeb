@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Competition {
@@ -16,12 +15,14 @@ public class Competition {
 
 	private String name;
 	
+	private String shortName;
+	
+	private String url;
+	
 	@ManyToOne
 	private League league;
 	
-	@OneToOne
-	private Rules rules;
-	
+	private String type;
 	
 	
 	public Competition() {
@@ -51,17 +52,34 @@ public class Competition {
 		this.league = league;
 	}
 
-	public Rules getRules() {
-		return rules;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setRules(Rules rules) {
-		this.rules = rules;
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	@Override
 	public String toString() {
-		return "id=" + id + "\tname=" + name + "\tleague=" + league + "\trules=" + rules;
+		return "Competition [id=" + id + ", name=" + name + ", shortName=" + shortName + ", url=" + url + ", league="
+				+ league + ", type=" + type + "]";
 	}
 
 	

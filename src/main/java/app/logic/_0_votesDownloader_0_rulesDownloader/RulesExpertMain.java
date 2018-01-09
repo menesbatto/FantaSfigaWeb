@@ -2,7 +2,6 @@ package app.logic._0_votesDownloader_0_rulesDownloader;
 
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +12,21 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.CompetitionBean;
+import app.dao.LeagueDao;
+import app.dao.RulesDao;
+import app.dao.UserDao;
+import app.dao.entity.Competition;
+import app.logic._0_credentialsSaver.LeagueBean;
+import app.logic._0_credentialsSaver.model.Credentials;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
 import app.logic._0_votesDownloader_0_rulesDownloader.model.BonusMalus;
 import app.logic._0_votesDownloader_0_rulesDownloader.model.DataSources;
+import app.logic._0_votesDownloader_0_rulesDownloader.model.MaxOfficeVotesEnum;
 import app.logic._0_votesDownloader_0_rulesDownloader.model.Modifiers;
+import app.logic._0_votesDownloader_0_rulesDownloader.model.CompetitionRules;
 import app.logic._0_votesDownloader_0_rulesDownloader.model.Points;
 import app.logic._0_votesDownloader_0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader_0_rulesDownloader.model.Substitutions;
@@ -33,35 +41,77 @@ public class RulesExpertMain {
 	@Autowired
 	private UserBean userBean; 
 	
-	public void execute() {
+	@Autowired
+	private UserDao userDao; 
 
-		try {
+	@Autowired
+	private RulesDao rulesDao; 
+	
+	@Autowired
+	private LeagueDao leagueDao; 
+	
+	public void saveRulesForLeague(String leagueShortName) {
+		
+		LeagueBean league = leagueDao.findByShortName(leagueShortName, userBean.getUsername());
+		
+		RulesBean rulesDb = rulesDao.findByShortName(league.getShortName(), userBean.getUsername());
+		
+		if (rulesDb != null)
+			return;
 			
-			BonusMalus bonusMalus = analyzeRulesPageBonusMalus();
-			
-			DataSources dataSources = analyzeRulesPageDataSources();
-			
-			Substitutions substitutions = analyzeRulesPageSubstitutions();
+		BonusMalus bonusMalus = analyzeRulesPageBonusMalus(league.getShortName());
+		
+		DataSources dataSources = analyzeRulesPageDataSources(league.getShortName());
+		
+		Substitutions substitutions = analyzeRulesPageSubstitutions(league.getShortName());
 
-			Points points = analyzeRulesPagePoints();
+		Points points = analyzeRulesPagePoints(league.getShortName());
 
-			Modifiers modifiers = analyzeRulesPageModifiers();
+		Modifiers modifiers = analyzeRulesPageModifiers(league.getShortName());
+		
+		RulesBean rules = new RulesBean();
+		rules.setBonusMalus(bonusMalus);
+		rules.setDataSource(dataSources);
+		rules.setSubstitutions(substitutions);
+		rules.setPoints(points);
+		rules.setModifiers(modifiers);
+		
+		rulesDao.saveRulesForLeague(rules, league.getShortName(), userBean.getUsername());
+		
+		
+		
+		List<CompetitionBean> competitions = leagueDao.findCompetitionsByLeague(leagueShortName, userBean.getUsername());
+		for (CompetitionBean competition : competitions) {
+			CompetitionRules rulesComp = analyzeRulesForCompetition(competition.getUrl());
 			
-			RulesBean rules = new RulesBean();
-			rules.setBonusMalus(bonusMalus);
-			rules.setDataSource(dataSources);
-			rules.setSubstitutions(substitutions);
-			rules.setPoints(points);
-			rules.setModifiers(modifiers);
-				
-
-		} catch (Exception e) {
-			System.out.println(e);
+			rules.setCompetitionRules(rulesComp);
+			
+			rulesDao.saveRulesForCompetition(rules, competition.getName(), league.getShortName(), userBean.getUsername());
+			
 		}
+
+
 	}
 
-	private Modifiers analyzeRulesPageModifiers( ) throws IOException {
-		Document doc = HttpUtils.getHtmlPage(AppConstants.RULES_5_MODIFIERS_URL);
+	private CompetitionRules analyzeRulesForCompetition(String url) {
+		Document doc = getLoggedPage(url, "");
+		
+		CompetitionRules cr = new CompetitionRules();
+		
+		Elements fattoreCampoElems = doc.getElementsMatchingOwnText("Fattore campo:");
+		if (!fattoreCampoElems.isEmpty()) {
+			String homeBonusActiveString = fattoreCampoElems.parents().get(0).getElementsByAttribute("checked").val();
+			Boolean isHomeBonusActive = homeBonusActiveString.equals("1");
+			cr.setHomeBonusActive(isHomeBonusActive);
+			String homeBonusString = doc.getElementById("valore_fattore").val();
+			Double homeBonus = Double.valueOf(homeBonusString.replace(",", "."));
+			cr.setHomeBonus(homeBonus);
+		}
+		return cr;
+	}
+
+	private Modifiers analyzeRulesPageModifiers(String leagueName) {
+		Document doc = getLoggedPage(AppConstants.RULES_5_MODIFIERS_URL, leagueName);
 		
 		Modifiers m = new Modifiers();
 		
@@ -81,6 +131,13 @@ public class RulesExpertMain {
 		System.out.println(m);
 		
 		return m;
+	}
+
+	private Document getLoggedPage(String url, String leagueName) {
+		url = url.replace("[LEAGUE_NAME]", leagueName);
+		Credentials c = userDao.retrieveGazzettaCredentials(userBean.getUsername());
+		Document doc = HttpUtils.getHtmlPageLogged(url, c.getUsername(), c.getPassword());
+		return doc;
 	}
 
 	private Modifiers getPerformanceModifiers(Modifiers m, Document doc) {
@@ -310,9 +367,8 @@ public class RulesExpertMain {
 		
 	}
 
-	private Substitutions analyzeRulesPageSubstitutions()  throws IOException {
-		Document doc = HttpUtils.getHtmlPage(AppConstants.RULES_3_SUBSTITUTIONS_URL);
-//		
+	private Substitutions analyzeRulesPageSubstitutions(String leagueName) {
+		Document doc = getLoggedPage(AppConstants.RULES_3_SUBSTITUTIONS_URL, leagueName);
 //		String isFasciaConIntornoActiveString = doc.getElementsMatchingOwnText("Fascia con intorno:").parents().get(0).getElementsByAttribute("checked").val();
 //		Boolean isFasciaConIntornoActive = isFasciaConIntornoActiveString.equals("0");
 //		p.setFasciaConIntornoActive(isFasciaConIntornoActive);
@@ -347,6 +403,7 @@ public class RulesExpertMain {
 		Double goalkeeperPlayerOfficeVote = Double.valueOf(goalkeeperPlayerOfficeVoteString.replace(",", "."));
 		s.setGoalkeeperPlayerOfficeVote(goalkeeperPlayerOfficeVote);
 		
+		
 		String movementsPlayerOfficeVoteActiveString =  doc.getElementsByAttributeValue("id", "riservaufficiogm1").attr("checked");
 		Boolean movementsPlayerOfficeVoteActive = movementsPlayerOfficeVoteActiveString.equals("checked");
 		s.setMovementsPlayerOfficeVoteActive(movementsPlayerOfficeVoteActive);
@@ -354,11 +411,19 @@ public class RulesExpertMain {
 		Double movementsPlayerOfficeVote = Double.valueOf(movementsPlayerOfficeVoteString.replace(",", "."));
 		s.setMovementsPlayerOfficeVote(movementsPlayerOfficeVote);;
 		
+		String maxOfficeVotes = doc.getElementsMatchingOwnText("Applica riserva d'ufficio fino al:").parents().get(0).getElementsByAttribute("selected").text();
+		if (maxOfficeVotes.equals("Numero di sostituzioni impostate"))
+			s.setMaxOfficeVotes(MaxOfficeVotesEnum.TILL_SUBSTITUTIONS);
+		else// if (maxOfficeVotes.equals("Raggiungimento degli 11 calciatori"))
+			s.setMaxOfficeVotes(MaxOfficeVotesEnum.TILL_ALL);
+		
+		
+		
 		return s;
 	}
 
-	private Points analyzeRulesPagePoints( ) throws IOException {
-		Document doc = HttpUtils.getHtmlPage(AppConstants.RULES_4_POINTS_URL);
+	private Points analyzeRulesPagePoints(String leagueName) {
+		Document doc = getLoggedPage(AppConstants.RULES_4_POINTS_URL, leagueName);
 				
 		Points p = new Points();
 		
@@ -418,6 +483,20 @@ public class RulesExpertMain {
 		Double differenzaPunti = Double.valueOf(differenzaPuntiString);
 		p.setDifferenzaPunti(differenzaPunti);
 		
+		Elements autogolElems = doc.getElementsMatchingOwnText("Autogol:");
+		if (autogolElems.isEmpty()) {
+			p.setAutogolActive(false);
+			p.setAutogol(null);
+		}
+		else {
+			String isAutogolActiveString = autogolElems.parents().get(0).getElementsByAttribute("checked").val();
+			Boolean isAutogolActive = isAutogolActiveString.equals("1");
+			p.setAutogolActive(isAutogolActive);
+			String autogolString = doc.getElementsByAttributeValue("id", "vdautogol").val();
+			Double autogol = Double.valueOf(autogolString);
+			p.setAutogol(autogol);
+		}
+		
 		String isPortiereImbattutoActiveString = doc.getElementsMatchingOwnText("Bonus portiere imbattuto:").parents().get(0).getElementsByAttribute("checked").val();
 		Boolean isPortiereImbattutoActive = isPortiereImbattutoActiveString.equals("1");
 		p.setPortiereImbattutoActive(isPortiereImbattutoActive);
@@ -434,25 +513,23 @@ public class RulesExpertMain {
 	}
 
 
-	private DataSources analyzeRulesPageDataSources() throws IOException {
-		
-		Document doc = HttpUtils.getHtmlPage(AppConstants.RULES_2_SOURCE_URL);
+	private DataSources analyzeRulesPageDataSources(String leagueName) {
+		Document doc = getLoggedPage(AppConstants.RULES_2_SOURCE_URL, leagueName);
 		
 		DataSources ds = new DataSources();
 		
+		
 		String votesSourceString = doc.getElementsMatchingOwnText("Fonte voti:").parents().get(0).getElementsByAttribute("selected").text();
-		VotesSourceEnum voteSource = VotesSourceEnum.valueOf(votesSourceString.toUpperCase());
+		VotesSourceEnum voteSource = getVoteSource(votesSourceString);
 		ds.setVotesSource(voteSource);
 		
 		String bonusMalusSourceString = doc.getElementsMatchingOwnText("Fonte bonus/malus:").parents().get(0).getElementsByAttribute("selected").text();
-		if (bonusMalusSourceString.equals("Fantagazzetta (Ex Napoli)"))
-			bonusMalusSourceString = "Napoli";
-		VotesSourceEnum bonusMalusSource = VotesSourceEnum.valueOf(bonusMalusSourceString.toUpperCase());
+		VotesSourceEnum bonusMalusSource = getVoteSource(bonusMalusSourceString);
 		ds.setBonusMalusSource(bonusMalusSource);
 		
-//		String cardsSourceString = doc.getElementsMatchingOwnText("Fonte ammonizioni/esplusioni:").parents().get(0).getElementsByAttribute("selected").text();
-//		String precisiontring = doc.getElementsMatchingOwnText("Precisione Voti:").parents().get(0).getElementsByAttribute("selected").text();
 		
+		String cardsSourceString = doc.getElementsMatchingOwnText("Fonte ammonizioni/esplusioni:").parents().get(0).getElementsByAttribute("selected").text();
+		ds.setYellowRedCardSource(cardsSourceString.substring(0, 1));
 		
 		
 		System.out.println(ds);
@@ -462,9 +539,19 @@ public class RulesExpertMain {
 	}
 
 	
-	private BonusMalus analyzeRulesPageBonusMalus() throws IOException {
-
-		Document doc = HttpUtils.getHtmlPage(AppConstants.RULES_1_BONUS_MALUS_URL);	
+	private static VotesSourceEnum getVoteSource(String bonusMalusSourceString) {
+		VotesSourceEnum bonusMalusSource;
+		if (bonusMalusSourceString.equals("Fantagazzetta (Ex Napoli)"))
+			bonusMalusSource = VotesSourceEnum.FANTAGAZZETTA;
+		else if (bonusMalusSourceString.equals("Statistico (Alvin482)"))
+			bonusMalusSource = VotesSourceEnum.STATISTICO;
+		else //if (bonusMalusSourceString.equals("Italia"))
+			bonusMalusSource = VotesSourceEnum.ITALIA;
+		return bonusMalusSource;
+	}
+	
+	private BonusMalus analyzeRulesPageBonusMalus(String leagueName) {
+		Document doc = getLoggedPage(AppConstants.RULES_1_BONUS_MALUS_URL, leagueName);
 		
 		System.out.println(doc);
 		BonusMalus bm = new BonusMalus();

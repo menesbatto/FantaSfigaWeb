@@ -17,12 +17,14 @@ public class Points  implements Serializable{
 	private Boolean intornoActive;
 	private Double intorno;
 	
-	
 	private Boolean controllaPareggioActive;
 	private Double controllaPareggio;
 	
 	private Boolean differenzaPuntiActive;
 	private Double differenzaPunti;
+	
+	private Boolean autogolActive;
+	private Double autogol;
 	
 	private Boolean portiereImbattutoActive;
 	private Double portiereImbattuto;
@@ -109,8 +111,18 @@ public class Points  implements Serializable{
 				+ differenzaPuntiActive + "\n differenzaPunti=" + differenzaPunti + "\n isPortiereImbattutoActive="
 				+ portiereImbattutoActive + "\n portiereImbattuto=" + portiereImbattuto + "]";
 	}
-	
-	
+	public Boolean getAutogolActive() {
+		return autogolActive;
+	}
+	public void setAutogolActive(Boolean autogolActive) {
+		this.autogolActive = autogolActive;
+	}
+	public Double getAutogol() {
+		return autogol;
+	}
+	public void setAutogol(Double autogol) {
+		this.autogol = autogol;
+	}
 	
 
 }

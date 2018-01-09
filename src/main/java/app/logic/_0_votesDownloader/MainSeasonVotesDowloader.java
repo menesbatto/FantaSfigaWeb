@@ -56,11 +56,11 @@ public class MainSeasonVotesDowloader {
 			Map<VotesSourceEnum, Map<String, List<PlayerVoteComplete>>> trisVote = calculateSingleSeasonDay(finalSeasonDayVotesUrl);
 			
 			
-			Map<String, List<PlayerVoteComplete>> napoliVotes = trisVote.get(VotesSourceEnum.NAPOLI);
-			voteDao.saveVotesBySeasonDayAndVoteSource(napoliVotes, i, VotesSourceEnum.NAPOLI);
+			Map<String, List<PlayerVoteComplete>> napoliVotes = trisVote.get(VotesSourceEnum.FANTAGAZZETTA);
+			voteDao.saveVotesBySeasonDayAndVoteSource(napoliVotes, i, VotesSourceEnum.FANTAGAZZETTA);
 			
-			Map<String, List<PlayerVoteComplete>> milanoVotes = trisVote.get(VotesSourceEnum.MILANO);
-			voteDao.saveVotesBySeasonDayAndVoteSource(milanoVotes, i, VotesSourceEnum.MILANO);
+			Map<String, List<PlayerVoteComplete>> milanoVotes = trisVote.get(VotesSourceEnum.STATISTICO);
+			voteDao.saveVotesBySeasonDayAndVoteSource(milanoVotes, i, VotesSourceEnum.STATISTICO);
 
 			Map<String, List<PlayerVoteComplete>> italiaVotes = trisVote.get(VotesSourceEnum.ITALIA);
 			voteDao.saveVotesBySeasonDayAndVoteSource(italiaVotes, i, VotesSourceEnum.ITALIA);
@@ -82,7 +82,7 @@ public class MainSeasonVotesDowloader {
 		Map<String, String> map = serieATeamDao.findAllTeamIds();
 		
 		map = new HashMap<String, String>();
-		Document doc = HttpUtils.getHtmlPageLight(AppConstants.TEAMS_IDS_URL);
+		Document doc = HttpUtils.getHtmlPageNoLogged(AppConstants.TEAMS_IDS_URL);
 		Elements teamsIds = doc.select("div.row.no-gutter.tbvoti");
 		for(Element team : teamsIds){
 			String gazzettaTeamId = team.attr("data-team");
@@ -98,7 +98,7 @@ public class MainSeasonVotesDowloader {
 	
 	private Integer retrieveLastSerieASeasonDay() {
 		
-		Document doc = HttpUtils.getHtmlPageLight(AppConstants.LAST_SEASON_DAY_URL);
+		Document doc = HttpUtils.getHtmlPageNoLogged(AppConstants.LAST_SEASON_DAY_URL);
 		String lastSerieASeasonDayString = doc.getElementsByClass("xlsgior").get(1).text();
 		Integer lastSerieASeasonDay = Integer.valueOf(lastSerieASeasonDayString);
 		
@@ -110,7 +110,7 @@ public class MainSeasonVotesDowloader {
 
 
 	private String getTVUrlParameter() {
-		Document doc = HttpUtils.getHtmlPageLight(AppConstants.SEASON_DAY_ALL_VOTES_URL + "/1");
+		Document doc = HttpUtils.getHtmlPageNoLogged(AppConstants.SEASON_DAY_ALL_VOTES_URL + "/1");
 		String tvStamp = doc.select("#tvstamp").val();
 		return tvStamp;
 	}
@@ -137,15 +137,15 @@ public class MainSeasonVotesDowloader {
 			gazzettaTeamId = teamIds.get(teamShortName);
 			seasonDayVotesUrlFinal = seasonDayVotesUrl.replace("[GAZZETTA_TEAM_ID]", gazzettaTeamId);
 			
-			doc = HttpUtils.getHtmlPageLight(seasonDayVotesUrlFinal);
+			doc = HttpUtils.getHtmlPageNoLogged(seasonDayVotesUrlFinal);
 			
-			teamPlayersVotes = getTeamPlayersVotes(doc, teamShortName, VotesSourceEnum.NAPOLI);
+			teamPlayersVotes = getTeamPlayersVotes(doc, teamShortName, VotesSourceEnum.FANTAGAZZETTA);
 			votes1.put(teamShortName, teamPlayersVotes);
-			trisVotes.put(VotesSourceEnum.NAPOLI, votes1);
+			trisVotes.put(VotesSourceEnum.FANTAGAZZETTA, votes1);
 			
-			teamPlayersVotes = getTeamPlayersVotes(doc, teamShortName, VotesSourceEnum.MILANO);
+			teamPlayersVotes = getTeamPlayersVotes(doc, teamShortName, VotesSourceEnum.STATISTICO);
 			votes2.put(teamShortName, teamPlayersVotes);
-			trisVotes.put(VotesSourceEnum.MILANO, votes2);
+			trisVotes.put(VotesSourceEnum.STATISTICO, votes2);
 			
 			teamPlayersVotes = getTeamPlayersVotes(doc, teamShortName, VotesSourceEnum.ITALIA);
 			votes3.put(teamShortName, teamPlayersVotes);
@@ -219,8 +219,8 @@ public class MainSeasonVotesDowloader {
 			Integer sc = 0;
 			
 			switch (source) {
-				case NAPOLI:	sc = 0*2;	break;
-				case MILANO:	sc = 1*2;	break;
+				case FANTAGAZZETTA:	sc = 0*2;	break;
+				case STATISTICO:	sc = 1*2;	break;
 				case ITALIA:	sc = 2*2;	break;
 				default:		sc = 0*2; 			}
 
@@ -303,8 +303,8 @@ public class MainSeasonVotesDowloader {
 		Map<VotesSourceEnum,Map<String, Map<String, List<PlayerVoteComplete>>>> map = IOUtils.read(AppConstants.REAL_CHAMPIONSHIP_VOTES_DIR	+ AppConstants.REAL_CHAMPIONSHIP_VOTES_FILE_NAME, HashMap.class);
 		if (map== null){
 			map = new HashMap<VotesSourceEnum, Map<String,Map<String,List<PlayerVoteComplete>>>>();
-			map.put(VotesSourceEnum.NAPOLI, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
-			map.put(VotesSourceEnum.MILANO, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
+			map.put(VotesSourceEnum.FANTAGAZZETTA, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
+			map.put(VotesSourceEnum.STATISTICO, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
 			map.put(VotesSourceEnum.ITALIA, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
 		}
 		return map;

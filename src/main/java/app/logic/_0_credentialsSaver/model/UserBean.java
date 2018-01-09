@@ -2,12 +2,11 @@ package app.logic._0_credentialsSaver.model;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.ScopedProxyMode;
 
 @Component
-
+@Scope(value = "session",  proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserBean {
-	
-	private static final long serialVersionUID = -8182168666565154395L;
 	
 	private String firstname;
 	

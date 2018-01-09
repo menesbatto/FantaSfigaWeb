@@ -9,17 +9,18 @@ import app.logic._0_votesDownloader.model.RoleEnum;
 public class BonusMalus implements Serializable{
 	private static final long serialVersionUID = 1791071872590063199L;
 
+	public Map<RoleEnum, Double> autogoal;
+	public Map<RoleEnum, Double> evenGoal;
+	public Map<RoleEnum, Double> missedPenalty;
+	public Map<RoleEnum, Double> movementAssist;
 	public Map<RoleEnum, Double> redCard;
-	public Map<RoleEnum, Double> yellowCard;
+	public Map<RoleEnum, Double> savedPenalty;
+	
 	public Map<RoleEnum, Double> scoredGoal;
 	public Map<RoleEnum, Double> scoredPenalty;
-	public Map<RoleEnum, Double> movementAssist;
 	public Map<RoleEnum, Double> stationaryAssist;
-	public Map<RoleEnum, Double> autogoal;
-	public Map<RoleEnum, Double> missedPenalty;
-	public Map<RoleEnum, Double> savedPenalty;
 	public Map<RoleEnum, Double> takenGoal;
-	public Map<RoleEnum, Double> evenGoal;
+	public Map<RoleEnum, Double> yellowCard;
 	public Map<RoleEnum, Double> winGoal;
 	
 	

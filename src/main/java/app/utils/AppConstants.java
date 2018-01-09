@@ -10,9 +10,25 @@ import app.logic._0_votesDownloader.model.VotesSourceEnum;
 public class AppConstants {
 	
 	
-	//	URL
-	public static String LAST_SEASON_DAY_URL = "http://www.fantagazzetta.com/voti-fantacalcio-serie-a";
 
+	
+	//	URL
+	
+	
+	
+	public static String LAST_SEASON_DAY_URL = "http://www.fantagazzetta.com/voti-fantacalcio-serie-a";
+	
+	public static String GAZZETTA_URL = "http://leghe.fantagazzetta.com/";
+	
+	public static String LOGIN_PAGE_URL = GAZZETTA_URL;
+
+
+	public static String RULES_1_BONUS_MALUS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo1";
+	public static String RULES_2_SOURCE_URL =			"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo2";
+	public static String RULES_3_SUBSTITUTIONS_URL = 	"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo3";
+	public static String RULES_4_POINTS_URL = 			"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo4";
+	public static String RULES_5_MODIFIERS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo5";
+	
 	
 	
 	
@@ -79,12 +95,7 @@ public class AppConstants {
 
 	
 	
-	public static String LOGIN_PAGE = "http://leghe.fantagazzetta.com/" + LEAGUE_NAME;
-	public static String RULES_1_BONUS_MALUS_URL = "http://leghe.fantagazzetta.com/" + LEAGUE_NAME + "/visualizza-opzioni-calcolo1";
-	public static String RULES_2_SOURCE_URL = "http://leghe.fantagazzetta.com/" + LEAGUE_NAME + "/visualizza-opzioni-calcolo2";
-	public static String RULES_3_SUBSTITUTIONS_URL = "http://leghe.fantagazzetta.com/" + LEAGUE_NAME + "/visualizza-opzioni-calcolo3";
-	public static String RULES_4_POINTS_URL = "http://leghe.fantagazzetta.com/" + LEAGUE_NAME + "/visualizza-opzioni-calcolo4";
-	public static String RULES_5_MODIFIERS_URL = "http://leghe.fantagazzetta.com/" + LEAGUE_NAME + "/visualizza-opzioni-calcolo5";
+
 	
 	public static String SEASON_DAY_LINES_UP_URL_TEMPLATE = "http://leghe.fantagazzetta.com/" + LEAGUE_NAME + "/formazioni/[COMPETITION_ID]?g=";
 

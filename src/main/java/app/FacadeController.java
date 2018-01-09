@@ -1,14 +1,18 @@
 package app;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import app.logic._0_credentialsSaver.LeagueBean;
 import app.logic._0_credentialsSaver.UserExpert;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
@@ -45,6 +49,24 @@ public class FacadeController {
 		return response;
 	}
 	
+
+	//###################################################################
+	
+	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
+	public ResponseEntity<String> createUser(@RequestBody UserBean user) {
+		
+		user = userExpert.createUser(user);
+		
+		String body;
+		if (user != null)
+			body = "Saving new User COMPLETED";
+		else
+			body = "Saving new User FAILED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+	
 	//###################################################################
 	
 	@RequestMapping(value = "/confirmUser", params = { "username", "rnd" },  method = RequestMethod.GET)
@@ -64,17 +86,22 @@ public class FacadeController {
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
 	}
+
+	
 	//###################################################################
 	
-	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
-	public ResponseEntity<String> createUser(@RequestBody UserBean user) {
+	@RequestMapping(value = "/saveFantaGazzettaCredentials", method = RequestMethod.POST)
+	public ResponseEntity<String> saveFantaGazzettaCredentials(@RequestBody Credentials credentials) {
 		
-		userExpert.createUser(user);
-		String body = "Saving new User COMPLETED";
+		userExpert.saveGazzettaCredentials(credentials);
+		String body = "Saving Gazzeta Credentials COMPLETED";
+		
+		
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
 	}
+	
 	//###################################################################
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -95,25 +122,31 @@ public class FacadeController {
 	
 	//###################################################################
 	
-	@RequestMapping(value = "/saveFantaGazzettaCredentials", method = RequestMethod.POST)
-	public ResponseEntity<String> saveFantaGazzettaCredentials(@RequestBody Credentials credentials) {
-		
-		userExpert.saveGazzettaCredentials(credentials);
-		String body = "Saving Gazzeta Credentials COMPLETED";
-		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
-		return response;
-	}
-	
-	
-	//###################################################################
-	
 	@RequestMapping(value = "/downloadLeagues", method = RequestMethod.GET)
 	public ResponseEntity<String> downloadLeagues() {
 		
-		rulesExpertMain.execute();
-//		User p = personDao.findById(1L);
-		String body = "Downloading Rules COMPLETED";
+		List<LeagueBean> leaguesInserted = userExpert.downloadLeagues();
+
+		String body;
+		if (leaguesInserted.isEmpty())
+			body = "Downloading Leagues FAILED";
+		else
+			body = "Downloading Leagues COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+	//###################################################################
+	
+	@RequestMapping(value = "/downloadCompetitions/{leagueName}", method = RequestMethod.GET)
+	public ResponseEntity<String> downloadCompetitions(@PathVariable String leagueName) {
+		List<CompetitionBean> competitionsInserted= userExpert.downloadCompetitions(leagueName);
+		
+		String body;
+		if (competitionsInserted.isEmpty())
+			body = "Downloading Competitions FAILED";
+		else
+			body = "Downloading Competitions COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
@@ -121,10 +154,10 @@ public class FacadeController {
 	
 	//###################################################################
 	
-	@RequestMapping(value = "/downloadRules", method = RequestMethod.GET)
-	public ResponseEntity<String> downloadRules() {
+	@RequestMapping(value = "/downloadRules/{leagueShortName}", method = RequestMethod.GET)
+	public ResponseEntity<String> downloadRules(@PathVariable String leagueShortName) {
 		
-		rulesExpertMain.execute();
+		rulesExpertMain.saveRulesForLeague(leagueShortName);
 //		User p = personDao.findById(1L);
 		String body = "Downloading Rules COMPLETED";
 		

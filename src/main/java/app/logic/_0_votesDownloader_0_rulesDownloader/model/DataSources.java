@@ -10,6 +10,7 @@ public class DataSources  implements Serializable{
 
 	private VotesSourceEnum votesSource;
 	private VotesSourceEnum bonusMalusSource;
+	private String yellowRedCardSource;
 	
 	
 	public VotesSourceEnum getVotesSource() {
@@ -27,6 +28,12 @@ public class DataSources  implements Serializable{
 	@Override
 	public String toString() {
 		return "DataSources [votesSource=" + votesSource + "\n bonusMalusSource=" + bonusMalusSource + "]";
+	}
+	public String getYellowRedCardSource() {
+		return yellowRedCardSource;
+	}
+	public void setYellowRedCardSource(String yellowRedCardSource) {
+		this.yellowRedCardSource = yellowRedCardSource;
 	}
 
 	

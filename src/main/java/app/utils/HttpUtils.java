@@ -16,13 +16,17 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class HttpUtils {
 
 	private static WebDriver loggedWebDriver;
+	
 
-	public static Document getHtmlPageLight(String url){
+	public static Document getHtmlPageNoLogged(String url){
 		Document doc = null;
 		Connection connect = Jsoup.connect(url);
 	
@@ -36,14 +40,14 @@ public class HttpUtils {
 	}
 	
 	
-	public static Document getHtmlPage(String url){
+	public static Document getHtmlPageLogged(String url, String username, String password){
 		Document doc = null;
 		System.out.print(".");
 		while (true){
 			try {
 
 				if (loggedWebDriver == null)
-					initLoggedWebDriver();
+					initLoggedWebDriver(username, password);
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e) {
@@ -62,18 +66,27 @@ public class HttpUtils {
 			}
 		}
 		return doc;
-	
+		
 	}
+//	
+//	public static Document loginOnFantagazzetta(String username, String password) {
+//		if (loggedWebDriver == null)
+//			initLoggedWebDriver(username, password);
+//		String pageSource = loggedWebDriver.getPageSource();
+//		Document doc = Jsoup.parse(pageSource);
+//		
+//		return doc;
+//	}
+	
 	
 
-
-	private static void initLoggedWebDriver() {
+	private static WebDriver initLoggedWebDriver(String username, String password) {
 		
 		// 1 - Crea driver
 		WebDriver driver = initDriver();
 		
 		// 2 - Esegui login su fantagazzetta
-		String url = "http://leghe.fantagazzetta.com/";
+		String url = AppConstants.LOGIN_PAGE_URL;
 		
 		
 		driver.get(url);
@@ -98,12 +111,14 @@ public class HttpUtils {
 	    wait.until(ExpectedConditions.elementToBeClickable(loginButtonModal));
 	    
 	    
-	    id.sendKeys(AppConstants.user);
-	    pass.sendKeys(AppConstants.password);
+	    id.sendKeys(username);
+	    pass.sendKeys(password);
 	    loginButtonModal.click();
 	   
 	    // 3 - Setta il Web Driver nel field della classe
 	    loggedWebDriver = driver;
+	    
+	    return driver;
 	}
 
 

@@ -4,12 +4,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import app.dao.entity.League;
-import app.dao.entity.Rules;
+import app.dao.entity.User;
 
 @RepositoryRestResource
-public interface RulesRepo extends JpaRepository<Rules, Long> {
+public interface LeagueRepo extends JpaRepository<League, Long> {
 
-	Rules findByLeague(League league);
+	League findByUserAndShortName(User user, String name);
 
-	Rules findByLeagueAndBasic(League league, Boolean basic);
+	
+	
+
+
 }

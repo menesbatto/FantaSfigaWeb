@@ -1,12 +1,15 @@
 package app.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
+import app.dao.entity.League;
 import app.dao.entity.User;
+import app.logic._0_credentialsSaver.LeagueBean;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
 import app.logic._0_credentialsSaver.model.UserBean;
@@ -32,7 +35,12 @@ public class UserDao {
 	}
 
 
-	public void createUser(UserBean userBean) {
+	public UserBean createUser(UserBean userBean) {
+		
+		User existingUser = userRepo.findByUsername(userBean.getUsername());
+		if (existingUser != null)
+			return null;
+		
 		User ent = new User();
 		ent.setFirstname(userBean.getFirstname());
 		ent.setLastname(userBean.getLastname());
@@ -43,6 +51,8 @@ public class UserDao {
 		ent.setToBeConfirm(rnd);
 		
 		userRepo.save(ent);
+		
+		return userBean;
 		
 	}
 	
@@ -84,9 +94,29 @@ public class UserDao {
 		return userBean;
 		
 	}
+
+	public Credentials retrieveGazzettaCredentials(String username) {
+		User user = userRepo.findByUsername(username);
+		Credentials c = new Credentials();
+		c.setUsername(user.getGazzettaUsername());
+		c.setPassword(user.getGazzettaPassword());
+		return c;
+	}
+
+	public User retrieveByUsername(String username) {
+		User user = userRepo.findByUsername(username);
+		
+		return user;
+	}
+	
+
+	
+
+
+
 	
 	
 
 	
 	
-	}
+}

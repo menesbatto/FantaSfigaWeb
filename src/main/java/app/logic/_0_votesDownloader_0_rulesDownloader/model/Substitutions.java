@@ -10,6 +10,8 @@ public class Substitutions  implements Serializable{
 	private Integer substitutionNumber;
 	private SubstitutionsModeEnum substitutionMode;
 	
+	private MaxOfficeVotesEnum maxOfficeVotes;
+	
 	private Boolean yellowCardSvOfficeVoteActive;
 	private Double yellowCardOfficeVote;
 	
@@ -76,7 +78,12 @@ public class Substitutions  implements Serializable{
 				+ "\n goalkeeperPlayerOfficeVote=" + goalkeeperPlayerOfficeVote + "\n movementsPlayerOfficeVoteActive="
 				+ movementsPlayerOfficeVoteActive + "\n movementsPlayerOfficeVote=" + movementsPlayerOfficeVote + "]";
 	}
-	
+	public MaxOfficeVotesEnum getMaxOfficeVotes() {
+		return maxOfficeVotes;
+	}
+	public void setMaxOfficeVotes(MaxOfficeVotesEnum maxOfficeVotes) {
+		this.maxOfficeVotes = maxOfficeVotes;
+	}
 	
 	
 	
