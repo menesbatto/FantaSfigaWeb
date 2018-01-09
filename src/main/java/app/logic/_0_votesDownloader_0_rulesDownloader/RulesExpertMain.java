@@ -52,22 +52,20 @@ public class RulesExpertMain {
 	
 	public void saveRulesForLeague(String leagueShortName) {
 		
-		LeagueBean league = leagueDao.findByShortName(leagueShortName, userBean.getUsername());
+		Boolean alreadyDownloadRules = rulesDao.existRulesForLeague(leagueShortName, userBean.getUsername());
 		
-		RulesBean rulesDb = rulesDao.findByShortName(league.getShortName(), userBean.getUsername());
-		
-		if (rulesDb != null)
+		if (alreadyDownloadRules)
 			return;
 			
-		BonusMalus bonusMalus = analyzeRulesPageBonusMalus(league.getShortName());
+		BonusMalus bonusMalus = analyzeRulesPageBonusMalus(leagueShortName);
 		
-		DataSources dataSources = analyzeRulesPageDataSources(league.getShortName());
+		DataSources dataSources = analyzeRulesPageDataSources(leagueShortName);
 		
-		Substitutions substitutions = analyzeRulesPageSubstitutions(league.getShortName());
+		Substitutions substitutions = analyzeRulesPageSubstitutions(leagueShortName);
 
-		Points points = analyzeRulesPagePoints(league.getShortName());
+		Points points = analyzeRulesPagePoints(leagueShortName);
 
-		Modifiers modifiers = analyzeRulesPageModifiers(league.getShortName());
+		Modifiers modifiers = analyzeRulesPageModifiers(leagueShortName);
 		
 		RulesBean rules = new RulesBean();
 		rules.setBonusMalus(bonusMalus);
@@ -76,9 +74,6 @@ public class RulesExpertMain {
 		rules.setPoints(points);
 		rules.setModifiers(modifiers);
 		
-		rulesDao.saveRulesForLeague(rules, league.getShortName(), userBean.getUsername());
-		
-		
 		
 		List<CompetitionBean> competitions = leagueDao.findCompetitionsByLeague(leagueShortName, userBean.getUsername());
 		for (CompetitionBean competition : competitions) {
@@ -86,7 +81,7 @@ public class RulesExpertMain {
 			
 			rules.setCompetitionRules(rulesComp);
 			
-			rulesDao.saveRulesForCompetition(rules, competition.getName(), league.getShortName(), userBean.getUsername());
+			rulesDao.saveRulesForCompetition(rules, competition.getShortName(), leagueShortName, userBean.getUsername());
 			
 		}
 

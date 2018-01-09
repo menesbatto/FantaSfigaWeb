@@ -11,7 +11,7 @@ import app.dao.entity.League;
 @RepositoryRestResource
 public interface CompetitionRepo extends JpaRepository<Competition, Long> {
 
-	Competition findByLeagueAndName(League league, String name);
+	Competition findByLeagueAndShortName(League league, String shortName);
 
 	List<Competition> findByLeague(League league);
 

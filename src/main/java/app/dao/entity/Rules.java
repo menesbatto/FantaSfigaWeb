@@ -24,8 +24,6 @@ public class Rules {
 	@ManyToOne
 	private League league;
 	
-	private Boolean basic;
-	
 	// BonusMalus
 	private Double redCardP;
 	private Double yellowCardP;
@@ -1203,14 +1201,6 @@ public class Rules {
 
 	public Competition getCompetition() {
 		return competition;
-	}
-
-	public Boolean getBasic() {
-		return basic;
-	}
-
-	public void setBasic(Boolean basic) {
-		this.basic = basic;
 	}
 
 	public Boolean getHomeBonusActive() {

@@ -92,7 +92,7 @@ public class LeagueDao {
 		Competition existingCompetition;
 		for (CompetitionBean bean : beans) {
 			
-			existingCompetition = competitionRepo.findByLeagueAndName(league, bean.getName());
+			existingCompetition = competitionRepo.findByLeagueAndShortName(league, bean.getShortName());
 			if (existingCompetition != null)
 				continue;
 			
@@ -112,10 +112,10 @@ public class LeagueDao {
 		return true;
 	}
 	
-	public Competition findCompetitionByNameAndLeagueEnt (String competitionName, String leagueShortName, String username) {
+	public Competition findCompetitionByShortNameAndLeagueEnt (String competitionShortName, String leagueShortName, String username) {
 	
 		League league = findByShortNameEnt(leagueShortName, username);
-		Competition competition = competitionRepo.findByLeagueAndName(league, competitionName);
+		Competition competition = competitionRepo.findByLeagueAndShortName(league, competitionShortName);
 		
 		return competition;
 	}

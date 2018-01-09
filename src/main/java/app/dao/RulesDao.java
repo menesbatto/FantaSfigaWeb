@@ -72,31 +72,27 @@ public class RulesDao {
 		return null;
 	}
 
-	public RulesBean findByShortName(String leagueShortName, String username) {
+	public Boolean existRulesForLeague(String leagueShortName, String username) {
 		League league = leagueDao.findByShortNameEnt(leagueShortName, username);
-		Rules rules = rulesRepo.findByLeague(league);
-		if (rules == null)
-			return null;
-
-		RulesBean b = new RulesBean();
+		List<Rules> rules = rulesRepo.findByLeague(league);
 		
-		return b;
+		Boolean exist = rules.size() > 0;
+		return exist;
 	}
 
+	public Boolean existRulesForCompetition(String competitionShortName, String leagueShortName, String username) {
+		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		
+		Rules rules = rulesRepo.findByCompetition(competition);
+		
+		boolean alreadyExistRules = rules != null;
+		
+		return alreadyExistRules;
+		
+	}
 
-
-	public RulesBean saveRulesForLeague(RulesBean b, String leagueShortName, String username) {
+	private Rules populateRules(RulesBean b, String leagueShortName, String username) {
 		Rules e = new Rules();
-		
-
-		
-		League league = leagueDao.findByShortNameEnt(leagueShortName, username);
-		Rules dbRules = rulesRepo.findByLeague(league);
-		if (dbRules != null)
-			return null;
-		
-		
-		e.setLeague(league);
 		
 		
 		BonusMalus bonusMalus = b.getBonusMalus();
@@ -270,43 +266,47 @@ public class RulesDao {
 		e.setYellowCardSvOfficeVoteActive(substitutions.isYellowCardSvOfficeVoteActive());
 		e.setYellowCardOfficeVote(substitutions.getYellowCardSvOfficeVote());
 		
-		
-		e.setBasic(true);
-		
-		rulesRepo.save(e);
-		
-		return b;
+		return e;
 	}
 
 
 
 
-	@PersistenceContext
-	private EntityManager entityManager;
+//	@PersistenceContext
+//	private EntityManager entityManager;
+//
+//		entityManager.detach(rules);
+//		Rules rules = rulesRepo.findByLeagueAndBasic(league, true);
+//		rules.setId(0);
+//		rules.setCompetition( competition );
+//		rules.setHomeBonusActive( rulesBean.getCompetitionRules().isHomeBonusActive());
+//		rules.setHomeBonus( rulesBean.getCompetitionRules().getHomeBonus());
+//	}
+	
 	
 	@Transactional
-	public void saveRulesForCompetition(RulesBean rulesBean, String competitionName, String leagueShortName, String username) {
+	public RulesBean saveRulesForCompetition(RulesBean rulesBean, String competitionShortName, String leagueShortName, String username) {
+		
+		
+		Boolean alreadyExistRules = existRulesForCompetition(competitionShortName, leagueShortName, username);
+		if (alreadyExistRules)
+			return null;
+		
+		Rules rules = populateRules(rulesBean, leagueShortName, username);
+
 		League league = leagueDao.findByShortNameEnt(leagueShortName, username);
+		rules.setLeague(league);
 		
+		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		rules.setCompetition(competition);
 		
-		Rules rules = rulesRepo.findByLeagueAndBasic(league, true);
-
-		Competition competition = leagueDao.findCompetitionByNameAndLeagueEnt(competitionName, leagueShortName, username);
+		rules.setHomeBonusActive(rulesBean.getCompetitionRules().isHomeBonusActive());
+		rules.setHomeBonus(rulesBean.getCompetitionRules().getHomeBonus());
 		
-		entityManager.detach(rules);
+		rulesRepo.save(rules);
 		
-		rules.setId(0);
-		rules.setCompetition( competition );
-		rules.setHomeBonusActive( rulesBean.getCompetitionRules().isHomeBonusActive());
-		rules.setHomeBonus( rulesBean.getCompetitionRules().getHomeBonus());
-		rules.setBasic(false);
-
-		rules = entityManager.merge(rules);
-		
-		
-//		rulesRepo.save(rules);
-		
-		
+		RulesBean bean = new RulesBean();
+		return bean; 
 		
 	}
 
