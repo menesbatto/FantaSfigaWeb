@@ -6,7 +6,7 @@ public class CompetitionBean {
 	private String name;
 	private String shortName;
 	private String url;
-	private String leagueName;
+	private String leagueShortName;
 	private String type;
 	
 	public CompetitionBean() {
@@ -36,12 +36,12 @@ public class CompetitionBean {
 		this.url = url;
 	}
 
-	public String getLeagueName() {
-		return leagueName;
+	public String getLeagueShortName() {
+		return leagueShortName;
 	}
 
-	public void setLeagueName(String leagueName) {
-		this.leagueName = leagueName;
+	public void setLeagueShortName(String leagueName) {
+		this.leagueShortName = leagueName;
 	}
 
 	public String getType() {
@@ -55,7 +55,7 @@ public class CompetitionBean {
 	@Override
 	public String toString() {
 		return "CompetitionBean [name=" + name + ", shortName=" + shortName + ", url=" + url + ", leagueName="
-				+ leagueName + ", type=" + type + "]";
+				+ leagueShortName + ", type=" + type + "]";
 	}
 
 	

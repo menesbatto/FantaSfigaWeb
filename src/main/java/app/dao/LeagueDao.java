@@ -10,11 +10,17 @@ import org.springframework.stereotype.Service;
 import app.CompetitionBean;
 import app.dao.entity.Competition;
 import app.dao.entity.League;
+import app.dao.entity.LineUpLight;
+import app.dao.entity.SeasonDayResult;
+import app.dao.entity.SeasonResult;
 import app.dao.entity.User;
-import app.logic._0_credentialsSaver.LeagueBean;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
+import app.logic._0_credentialsSaver.model.LeagueBean;
 import app.logic._0_credentialsSaver.model.UserBean;
+import app.logic._1_realChampionshipAnalyzer.model.LineUpLightBean;
+import app.logic._1_realChampionshipAnalyzer.model.SeasonDayResultBean;
+import app.logic._2_seasonPatternExtractor.model.SeasonResultBean;
 
 @Service
 @EnableCaching
@@ -28,6 +34,9 @@ public class LeagueDao {
 	
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private SeasonResultRepo seasonResultRepo;
 
 
 
@@ -131,7 +140,7 @@ public class LeagueDao {
 		CompetitionBean bean;
 		for (Competition e : ents) {
 			bean = new CompetitionBean();
-			bean.setLeagueName(e.getLeague().getName());
+			bean.setLeagueShortName(e.getLeague().getShortName());
 			bean.setName(e.getName());
 			bean.setShortName(e.getShortName());
 			bean.setUrl(e.getUrl());
@@ -141,6 +150,70 @@ public class LeagueDao {
 		}
 		
 		return beans; 		
+	}
+
+
+	public void saveCompetition(Competition competition) {
+		competitionRepo.save(competition);
+		
+	}
+
+
+	public void saveCalculatedSeason(SeasonResultBean seasonResultBean, String leagueShortName, String competitionShortName, String username) {
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		
+		SeasonResult seasonResult = new SeasonResult();
+		
+		seasonResult.setName(seasonResultBean.getName());
+		List<SeasonDayResult> seasonDayResults = new ArrayList<SeasonDayResult>();
+		
+		for (SeasonDayResultBean seasonDayResultBean : seasonResultBean.getSeasonDayResults()) {
+			SeasonDayResult seasonDayResult = createSeasonDayResult(seasonDayResultBean);
+			seasonDayResults.add(seasonDayResult);
+		}
+		seasonResult.setSeasonDayResults(seasonDayResults);
+		
+		seasonResult.setCompetition(competition);
+		
+		seasonResultRepo.save(seasonResult);
+		
+	}
+
+
+	private SeasonDayResult createSeasonDayResult(SeasonDayResultBean bean) {
+		SeasonDayResult ent = new SeasonDayResult();
+		
+		ent.setName(bean.getName());
+		
+		List<LineUpLight> lineUpLights = new ArrayList<LineUpLight>();
+		
+		
+		for (LineUpLightBean lineUpLightBean : bean.getLinesUpLight()) {
+			LineUpLight lineUpLight = createLineUpLight(lineUpLightBean);
+			lineUpLights.add(lineUpLight);
+		}
+		
+		ent.setLinesUpLight(lineUpLights);
+		
+		return ent;
+	}
+
+
+	private LineUpLight createLineUpLight(LineUpLightBean bean) {
+		
+		LineUpLight ent = new LineUpLight();
+		
+		ent.setGoalkeeperModifier(bean.getGoalkeeperModifier());
+		ent.setGoals(bean.getGoals());
+		ent.setMiddlefieldersVariation(bean.getMiddlefieldersVariation());
+		ent.setRankingPoints(bean.getRankingPoints());
+		
+		ent.setSumTotalPoints(bean.getSumTotalPoints());
+		ent.setTakenGoals(bean.getTakenGoals());
+		ent.setTeamName(bean.getTeamName());
+		ent.setTotalWithoutGoalkeeperAndMiddlefielderModifiers(bean.getTotalWithoutGoalkeeperAndMiddlefielderModifiers());
+		
+		return ent;
 	}
 	
 	

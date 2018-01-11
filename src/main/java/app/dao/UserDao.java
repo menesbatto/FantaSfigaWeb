@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 import app.dao.entity.League;
 import app.dao.entity.User;
-import app.logic._0_credentialsSaver.LeagueBean;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
+import app.logic._0_credentialsSaver.model.LeagueBean;
 import app.logic._0_credentialsSaver.model.UserBean;
 
 @Service

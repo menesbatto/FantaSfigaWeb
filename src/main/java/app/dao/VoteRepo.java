@@ -20,4 +20,7 @@ public interface VoteRepo extends JpaRepository<Vote, Long> {
 	@Query("SELECT DISTINCT v.team FROM Vote v")
 	List<String> findAllSerieATeam();
 
+	List<Vote> findBySourceOrderBySerieASeasonDayAsc(String source);
+
+	
 }

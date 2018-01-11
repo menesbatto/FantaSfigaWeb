@@ -12,13 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import app.logic._0_credentialsSaver.LeagueBean;
 import app.logic._0_credentialsSaver.UserExpert;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
+import app.logic._0_credentialsSaver.model.LeagueBean;
 import app.logic._0_credentialsSaver.model.UserBean;
+import app.logic._0_rulesDownloader.RulesExpertMain;
 import app.logic._0_votesDownloader.MainSeasonVotesDowloader;
-import app.logic._0_votesDownloader_0_rulesDownloader.RulesExpertMain;
+import app.logic._1_realChampionshipAnalyzer.SeasonAnalyzer;
+import app.logic._2_seasonPatternExtractor.SeasonPatternExtractor;
 
 @Controller // This means that this class is a Controller
 @RequestMapping(path = "/api") // This means URL's start with /demo (after Application path)
@@ -33,6 +35,13 @@ public class FacadeController {
 	
 	@Autowired
 	private UserExpert userExpert;
+	
+	@Autowired
+	private SeasonAnalyzer seasonAnalyzer;
+	
+	@Autowired
+	private SeasonPatternExtractor seasonPatternExtractor;
+	
 	
 	// ###################################################
 	// ##########            1                ############
@@ -158,10 +167,40 @@ public class FacadeController {
 	public ResponseEntity<String> downloadRules(@PathVariable String leagueShortName) {
 		
 		rulesExpertMain.saveRulesForLeague(leagueShortName);
-//		User p = personDao.findById(1L);
 		String body = "Downloading Rules COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
 	}
+	
+	
+	//###################################################################
+
+	@RequestMapping(value = "/extractPattern", method = RequestMethod.POST)
+	public ResponseEntity<String> extractPattern(@RequestBody CompetitionBean competition) {
+		String competitionShortName = competition.getShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		
+		seasonPatternExtractor.calculateSerieAToCompetitionSeasonDaysBinding(leagueShortName, competitionShortName);
+
+		String body = "Extract pattern COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+		
+	//###################################################################
+	
+		@RequestMapping(value = "/analyzeCompetition", method = RequestMethod.POST)
+		public ResponseEntity<String> analyzeChampionship(@RequestBody CompetitionBean competition) {
+			
+			String competitionShortName = competition.getShortName();
+			String leagueShortName = competition.getLeagueShortName();
+			
+			seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName);
+			String body = "Analyze Championship COMPLETED";
+			
+			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+			return response;
+		}
 }

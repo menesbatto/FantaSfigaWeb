@@ -1,4 +1,4 @@
-package app.logic._0_votesDownloader_0_rulesDownloader.model;
+package app.logic._0_rulesDownloader.model;
 
 import java.io.Serializable;
 
@@ -8,6 +8,7 @@ public class CompetitionRules  implements Serializable {
 
 	private Boolean homeBonusActive;
 	private Double homeBonus;
+	private String binding;
 
 	
 	
@@ -28,6 +29,14 @@ public class CompetitionRules  implements Serializable {
 
 	public void setHomeBonusActive(Boolean homeBonusActive) {
 		this.homeBonusActive = homeBonusActive;
+	}
+
+	public String getBinding() {
+		return binding;
+	}
+
+	public void setBinding(String binding) {
+		this.binding = binding;
 	}
 	
 	

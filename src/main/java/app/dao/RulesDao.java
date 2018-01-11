@@ -1,35 +1,31 @@
 package app.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import app.dao.entity.Competition;
 import app.dao.entity.League;
 import app.dao.entity.Rules;
-import app.dao.entity.User;
 import app.dao.entity.Vote;
-import app.logic._0_credentialsSaver.LeagueBean;
+import app.logic._0_rulesDownloader.model.BonusMalus;
+import app.logic._0_rulesDownloader.model.CompetitionRules;
+import app.logic._0_rulesDownloader.model.DataSources;
+import app.logic._0_rulesDownloader.model.MaxOfficeVotesEnum;
+import app.logic._0_rulesDownloader.model.Modifiers;
+import app.logic._0_rulesDownloader.model.Points;
+import app.logic._0_rulesDownloader.model.RulesBean;
+import app.logic._0_rulesDownloader.model.Substitutions;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.BonusMalus;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.DataSources;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.MaxOfficeVotesEnum;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.Modifiers;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.Points;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.RulesBean;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.Substitutions;
+import app.logic._2_seasonPatternExtractor.model.SeasonBean;
+import app.logic._2_seasonPatternExtractor.model.SeasonDay;
 
 @Service
 @EnableCaching
@@ -110,7 +106,6 @@ public class RulesDao {
 		e.setTakenGoalP(bonusMalus.getTakenGoal().get(RoleEnum.P));
 		e.setWinGoalP(bonusMalus.getWinGoal().get(RoleEnum.P));
 		e.setYellowCardP(bonusMalus.getYellowCard().get(RoleEnum.P));
-		
 		
 		
 		e.setAutogoalD(bonusMalus.getAutogoal().get(RoleEnum.D));
@@ -264,7 +259,7 @@ public class RulesDao {
 		e.setMovementsPlayerOfficeVoteActive(substitutions.isMovementsPlayerOfficeVoteActive());
 		e.setMovementsPlayerOfficeVote(substitutions.getMovementsPlayerOfficeVote());
 		e.setYellowCardSvOfficeVoteActive(substitutions.isYellowCardSvOfficeVoteActive());
-		e.setYellowCardOfficeVote(substitutions.getYellowCardSvOfficeVote());
+		e.setYellowCardSvOfficeVote(substitutions.getYellowCardSvOfficeVote());
 		
 		return e;
 	}
@@ -284,7 +279,220 @@ public class RulesDao {
 //	}
 	
 	
-	@Transactional
+	public Rules retrieveRulesEnt(String competitionShortName, String leagueShortName, String username) {
+			
+		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		Rules e = rulesRepo.findByCompetition(competition);
+		return e;
+			
+	}
+	
+	public RulesBean retrieveRules(String competitionShortName, String leagueShortName, String username) {
+		
+		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		Rules e = rulesRepo.findByCompetition(competition);
+		
+		RulesBean bean = new RulesBean();
+		
+		BonusMalus bonusMalus = new BonusMalus();
+		bean.setBonusMalus(bonusMalus);
+		
+		bonusMalus.getAutogoal().put(RoleEnum.P, e.getAutogoalP());
+		bonusMalus.getEvenGoal().put(RoleEnum.P, e.getEvenGoalP());
+		bonusMalus.getMissedPenalty().put(RoleEnum.P, e.getMissedPenaltyP());
+		bonusMalus.getMovementAssist().put(RoleEnum.P, e.getMovementAssistP());
+		bonusMalus.getRedCard().put(RoleEnum.P, e.getRedCardP());
+		bonusMalus.getScoredGoal().put(RoleEnum.P, e.getScoredGoalP());
+
+		bonusMalus.getSavedPenalty().put(RoleEnum.P, e.getSavedPenaltyP());
+		bonusMalus.getScoredPenalty().put(RoleEnum.P, e.getScoredPenaltyP());
+		bonusMalus.getStationaryAssist().put(RoleEnum.P, e.getStationaryAssistP());
+		bonusMalus.getTakenGoal().put(RoleEnum.P, e.getTakenGoalP());
+		bonusMalus.getWinGoal().put(RoleEnum.P, e.getWinGoalP());
+		bonusMalus.getYellowCard().put(RoleEnum.P, e.getYellowCardP());
+		
+		
+		bonusMalus.getAutogoal().put(RoleEnum.D, e.getAutogoalD());
+		bonusMalus.getEvenGoal().put(RoleEnum.D, e.getEvenGoalD());
+		bonusMalus.getMissedPenalty().put(RoleEnum.D, e.getMissedPenaltyD());
+		bonusMalus.getMovementAssist().put(RoleEnum.D, e.getMovementAssistD());
+		bonusMalus.getRedCard().put(RoleEnum.D, e.getRedCardD());
+		bonusMalus.getScoredGoal().put(RoleEnum.D, e.getScoredGoalD());
+
+		bonusMalus.getSavedPenalty().put(RoleEnum.D, e.getSavedPenaltyD());
+		bonusMalus.getScoredPenalty().put(RoleEnum.D, e.getScoredPenaltyD());
+		bonusMalus.getStationaryAssist().put(RoleEnum.D, e.getStationaryAssistD());
+		bonusMalus.getTakenGoal().put(RoleEnum.D, e.getTakenGoalD());
+		bonusMalus.getWinGoal().put(RoleEnum.D, e.getWinGoalD());
+		bonusMalus.getYellowCard().put(RoleEnum.D, e.getYellowCardD());
+		
+		
+		
+		bonusMalus.getAutogoal().put(RoleEnum.C, e.getAutogoalC());
+		bonusMalus.getEvenGoal().put(RoleEnum.C, e.getEvenGoalC());
+		bonusMalus.getMissedPenalty().put(RoleEnum.C, e.getMissedPenaltyC());
+		bonusMalus.getMovementAssist().put(RoleEnum.C, e.getMovementAssistC());
+		bonusMalus.getRedCard().put(RoleEnum.C, e.getRedCardC());
+		bonusMalus.getScoredGoal().put(RoleEnum.C, e.getScoredGoalC());
+
+		bonusMalus.getSavedPenalty().put(RoleEnum.C, e.getSavedPenaltyC());
+		bonusMalus.getScoredPenalty().put(RoleEnum.C, e.getScoredPenaltyC());
+		bonusMalus.getStationaryAssist().put(RoleEnum.C, e.getStationaryAssistC());
+		bonusMalus.getTakenGoal().put(RoleEnum.C, e.getTakenGoalC());
+		bonusMalus.getWinGoal().put(RoleEnum.C, e.getWinGoalC());
+		bonusMalus.getYellowCard().put(RoleEnum.C, e.getYellowCardC());
+		
+		
+		
+		bonusMalus.getAutogoal().put(RoleEnum.A, e.getAutogoalA());
+		bonusMalus.getEvenGoal().put(RoleEnum.A, e.getEvenGoalA());
+		bonusMalus.getMissedPenalty().put(RoleEnum.A, e.getMissedPenaltyA());
+		bonusMalus.getMovementAssist().put(RoleEnum.A, e.getMovementAssistA());
+		bonusMalus.getRedCard().put(RoleEnum.A, e.getRedCardA());
+		bonusMalus.getScoredGoal().put(RoleEnum.A, e.getScoredGoalA());
+
+		bonusMalus.getSavedPenalty().put(RoleEnum.A, e.getSavedPenaltyA());
+		bonusMalus.getScoredPenalty().put(RoleEnum.A, e.getScoredPenaltyA());
+		bonusMalus.getStationaryAssist().put(RoleEnum.A, e.getStationaryAssistA());
+		bonusMalus.getTakenGoal().put(RoleEnum.A, e.getTakenGoalA());
+		bonusMalus.getWinGoal().put(RoleEnum.A, e.getWinGoalA());
+		bonusMalus.getYellowCard().put(RoleEnum.A, e.getYellowCardA());
+		
+		
+		// #################################################################################
+
+		DataSources dataSource = new DataSources();
+		bean.setDataSource(dataSource);
+		
+		dataSource.setBonusMalusSource(VotesSourceEnum.valueOf(e.getBonusMalusSource()));
+		dataSource.setVotesSource(VotesSourceEnum.valueOf(e.getVotesSource()));
+		dataSource.setYellowRedCardSource(e.getYellowRedCardSource());
+		
+		// #################################################################################
+		
+		Modifiers modifiers = new Modifiers();
+		bean.setModifiers(modifiers);
+		
+		modifiers.setGoalkeeperModifierActive(e.isGoalkeeperModifierActive());
+		modifiers.setGoalkeeperVote3(e.getGoalkeeperVote3());
+		modifiers.setGoalkeeperVote3half(e.getGoalkeeperVote3half());
+		modifiers.setGoalkeeperVote4(e.getGoalkeeperVote4());
+		modifiers.setGoalkeeperVote4half(e.getGoalkeeperVote4half());
+		modifiers.setGoalkeeperVote5(e.getGoalkeeperVote5());
+		modifiers.setGoalkeeperVote5half(e.getGoalkeeperVote5half());
+		modifiers.setGoalkeeperVote6(e.getGoalkeeperVote6());
+		modifiers.setGoalkeeperVote6half(e.getGoalkeeperVote6half());
+		modifiers.setGoalkeeperVote7(e.getGoalkeeperVote7());
+		modifiers.setGoalkeeperVote7half(e.getGoalkeeperVote7half());
+		modifiers.setGoalkeeperVote8(e.getGoalkeeperVote8());
+		modifiers.setGoalkeeperVote8half(e.getGoalkeeperVote8half());
+		modifiers.setGoalkeeperVote9(e.getGoalkeeperVote9());
+		
+		modifiers.setDefenderModifierActive(e.isDefenderModifierActive());
+		modifiers.setDefenderAvgVote6(e.getDefenderAvgVote6());
+		modifiers.setDefenderAvgVote6half(e.getDefenderAvgVote6half());
+		modifiers.setDefenderAvgVote7(e.getDefenderAvgVote7());
+		
+		modifiers.setMiddlefielderModifierActive(e.isMiddlefielderModifierActive());
+		modifiers.setMiddlefielderNear0(e.getMiddlefielderNear0());
+		modifiers.setMiddlefielderOver2(e.getMiddlefielderOver2());
+		modifiers.setMiddlefielderOver4(e.getMiddlefielderOver4());
+		modifiers.setMiddlefielderOver6(e.getMiddlefielderOver6());
+		modifiers.setMiddlefielderOver8(e.getMiddlefielderOver8());
+		modifiers.setMiddlefielderUnderMinus2(e.getMiddlefielderUnderMinus2());					
+		modifiers.setMiddlefielderUnderMinus4(e.getMiddlefielderUnderMinus4());
+		modifiers.setMiddlefielderUnderMinus6(e.getMiddlefielderUnderMinus6());
+		modifiers.setMiddlefielderUnderMinus8(e.getMiddlefielderUnderMinus8());
+		
+		modifiers.setStrikerModifierActive(	e.isStrikerModifierActive());
+		modifiers.setStrikerVote6(e.getStrikerVote6());
+		modifiers.setStrikerVote6half(e.getStrikerVote6half());
+		modifiers.setStrikerVote7(e.getStrikerVote7());
+		modifiers.setStrikerVote7half(e.getStrikerVote7half());
+		modifiers.setStrikerVote8(e.getStrikerVote8());
+		
+		// #################################################################################
+
+		Points points = new Points();
+		bean.setPoints(points);
+		
+		List<Double> formulaUnoPoints = new ArrayList<Double>();
+		String formulaUnoPointsString = e.getFormulaUnoPoints();
+		String[] split = formulaUnoPointsString.split("-");
+		
+		for (int i = 0; i < split.length; i++) {
+			String pointString = split[i];
+			Double point = Double.valueOf(pointString);
+			formulaUnoPoints.add(point);
+		}
+		points.setFormulaUnoPoints(formulaUnoPoints);
+		
+		List<Double> goalPoints = new ArrayList<Double>();
+		String goalPointsString = e.getGoalPoints();
+		split = goalPointsString.split("-");
+		
+		for (int i = 0; i < split.length; i++) {
+			String pointString = split[i];
+			Double point = Double.valueOf(pointString);
+			goalPoints.add(point);
+		}
+		points.setGoalPoints(goalPoints);
+		
+		points.setControllaPareggioActive(e.getControllaPareggioActive());
+		points.setControllaPareggio(e.getControllaPareggio());
+		
+		points.setDifferenzaPuntiActive(e.getDifferenzaPuntiActive());
+		points.setDifferenzaPunti(e.getDifferenzaPunti());
+		
+		points.setFasciaConIntornoActive(e.getFasciaConIntornoActive());
+		points.setFasciaConIntorno(e.getFasciaConIntorno());
+
+		points.setIntornoActive(e.getIntornoActive());
+		points.setIntorno(e.getIntorno());
+		
+		points.setAutogolActive(e.getAutogolActive());
+		points.setAutogol(e.getAutogol());
+		
+		points.setPortiereImbattutoActive(e.getPortiereImbattutoActive());
+		points.setPortiereImbattuto(e.getPortiereImbattuto());
+
+		// #################################################################################
+		
+		Substitutions substitution = new Substitutions();
+		bean.setSubstitutions(substitution);
+
+		substitution.setSubstitutionNumber(e.getSubstitutionNumber());
+		substitution.setSubstitutionMode(e.getSubstitutionMode());
+		
+		MaxOfficeVotesEnum maxOfficeVotesString;
+		if (e.getMaxOfficeVotes().equals("S"))
+			maxOfficeVotesString = MaxOfficeVotesEnum.TILL_SUBSTITUTIONS;
+		else //	if (e.getMaxOfficeVotes().equals("A"))
+			maxOfficeVotesString = MaxOfficeVotesEnum.TILL_ALL;
+		substitution.setMaxOfficeVotes(maxOfficeVotesString);
+		
+		substitution.setGoalkeeperPlayerOfficeVoteActive(e.getGoalkeeperPlayerOfficeVoteActive());
+		substitution.setGoalkeeperPlayerOfficeVote(e.getGoalkeeperPlayerOfficeVote());
+		substitution.setMovementsPlayerOfficeVoteActive(e.getMovementsPlayerOfficeVoteActive());
+		substitution.setMovementsPlayerOfficeVote(e.getMovementsPlayerOfficeVote());
+		substitution.setYellowCardSvOfficeVoteActive(e.getYellowCardSvOfficeVoteActive());
+		substitution.setYellowCardSvOfficeVote(e.getYellowCardSvOfficeVote());
+		
+		// #################################################################################
+		
+		CompetitionRules competitionRules = new CompetitionRules();
+		competitionRules.setHomeBonus(e.getHomeBonus());
+		competitionRules.setHomeBonusActive(e.getHomeBonusActive());
+		competitionRules.setBinding(e.getBinding());
+		bean.setCompetitionRules(competitionRules);
+		
+		
+		
+		return bean;
+	}
+	
+	
+	//@Transactional
 	public RulesBean saveRulesForCompetition(RulesBean rulesBean, String competitionShortName, String leagueShortName, String username) {
 		
 		
@@ -307,6 +515,43 @@ public class RulesDao {
 		
 		RulesBean bean = new RulesBean();
 		return bean; 
+		
+	}
+
+	public void saveSerieAToCompetitionBinding(SeasonBean season, String leagueShortName, String competitionShortName, String username) {
+		String seasonDayBinding = "";
+		
+		Rules rules = retrieveRulesEnt(competitionShortName, leagueShortName,  username);
+		
+		for (SeasonDay sd : season.getSeasonDays()) {
+			seasonDayBinding += sd.getNameNumber() + "-" + sd.getSerieANumber() + ",";
+		}
+		
+		rules.setBinding(seasonDayBinding);
+		
+		rulesRepo.save(rules);
+		
+	}
+	
+	public Map<Integer, Integer> findSerieAToCompetitionBinding(String leagueShortName, String competitionShortName, String username) {
+		RulesBean rules = retrieveRules(competitionShortName, leagueShortName, username);
+		
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		String[] pairs = rules.getCompetitionRules().getBinding().split(",");
+		for (int i = 0; i < pairs.length; i++) {
+			String[] seasonDays = pairs[i].split("-");
+			Integer serieA = Integer.valueOf(seasonDays[0]);
+			Integer comp = Integer.valueOf(seasonDays[1]);
+			map.put(serieA, comp);
+		}
+		
+		return map;
+		
+	}
+	
+	
+
+	public void saveCompetitionPattern(SeasonBean season, String leagueShortName, String competitionShortName,	String username) {
 		
 	}
 

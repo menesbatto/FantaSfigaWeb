@@ -1,6 +1,7 @@
 package app.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import app.dao.entity.User;
 import app.dao.entity.Vote;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
+import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
 
 @Service
@@ -24,7 +26,65 @@ public class VoteDao {
 
 
 	
+	public Map<String, Map<String, List<PlayerVoteComplete>>> findVotesBySource(VotesSourceEnum source) {
+		
+		List<Vote> votes = voteRepo.findBySourceOrderBySerieASeasonDayAsc(source.name());
+		
+		Map<String, Map<String, List<PlayerVoteComplete>>> map = new HashMap<String, Map<String, List<PlayerVoteComplete>>>();
+		
 
+		
+		for (Vote voteEnt : votes) {
+			String seasonDay = voteEnt.getSerieASeasonDay().toString();
+			Map<String, List<PlayerVoteComplete>> teamMap = map.get(seasonDay);
+			
+			if (teamMap == null) {
+				teamMap = new HashMap<String, List<PlayerVoteComplete>>();
+				map.put(seasonDay, teamMap);
+			}
+			
+			String team = voteEnt.getTeam();
+			List<PlayerVoteComplete> players = teamMap.get(team);
+			
+			if (players == null) {
+				players = new ArrayList<PlayerVoteComplete>();
+				teamMap.put(team, players);
+			}
+			
+			PlayerVoteComplete playerVote = createPlayerVote(voteEnt);
+			players.add(playerVote);
+			
+		}
+		
+		return map;
+	}
+
+	private PlayerVoteComplete createPlayerVote(Vote voteEnt) {
+		
+		String name = voteEnt.getName();
+		String team = voteEnt.getTeam();
+		RoleEnum role = RoleEnum.valueOf(voteEnt.getRole());
+		Double vote = voteEnt.getVote();
+		Boolean yellowCard = voteEnt.getYellowCard();
+		Boolean redCard = voteEnt.getRedCard();
+		Double scoredGoals = voteEnt.getScoredGoals();
+		Double scoredPenalties = voteEnt.getScoredPenalties();
+		Double movementAssists = voteEnt.getMovementAssists();
+		Double stationaryAssists = voteEnt.getStationaryAssists();
+		Double autogoals = voteEnt.getAutogoals();
+		Double missedPenalties = voteEnt.getMissedPenalties();
+		Double savedPenalties = voteEnt.getSavedPenalties();
+		Double takenGoals = voteEnt.getTakenGoals();
+		Boolean winGoal = voteEnt.getWinGoal();
+		Boolean evenGoal = voteEnt.getEvenGoal();
+		Boolean subIn = voteEnt.getSubIn();
+		Boolean subOut = voteEnt.getSubOut();
+		
+		PlayerVoteComplete bean = new PlayerVoteComplete(name, team, role, vote, yellowCard, redCard, scoredGoals, scoredPenalties, 
+				movementAssists, stationaryAssists, autogoals, missedPenalties, savedPenalties, takenGoals, winGoal, evenGoal, subIn, subOut); 
+
+		return bean;
+	}
 
 	public int calculateLastSeasonDayCalculated() {
 		List<Integer> seasonDays = voteRepo.findAllDistinct();
@@ -33,8 +93,6 @@ public class VoteDao {
 		
 		return seasonDays.get(seasonDays.size()-1);
 	}
-
-
 
 
 	public void saveVotesBySeasonDayAndVoteSource(Map<String, List<PlayerVoteComplete>> votesByTeam, Integer serieASeasonDay, VotesSourceEnum voteSource) {

@@ -1,4 +1,4 @@
-package app.logic._0_votesDownloader_0_rulesDownloader.model;
+package app.logic._0_rulesDownloader.model;
 
 import java.io.Serializable;
 

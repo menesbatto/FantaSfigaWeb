@@ -21,6 +21,11 @@ public class AppConstants {
 	public static String GAZZETTA_URL = "http://leghe.fantagazzetta.com/";
 	
 	public static String LOGIN_PAGE_URL = GAZZETTA_URL;
+	
+	public static String CALENDAR_URL_TEMPLATE = "http://leghe.fantagazzetta.com/[LEAGUE_NAME]/calendario/[COMPETITION_ID]";
+
+	
+	
 
 
 	public static String RULES_1_BONUS_MALUS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo1";
@@ -104,7 +109,7 @@ public class AppConstants {
 //	public static String TEAMS_IDS_URL = "https://www.fantagazzetta.com/voti-serie-a/2017-18/1/";
 	public static String TEAMS_IDS_URL = "https://www.fantagazzetta.com/voti-fantacalcio-serie-a/";
 	
-	public static String CALENDAR_URL_TEMPLATE = "http://leghe.fantagazzetta.com/" + LEAGUE_NAME + "/calendario/[COMPETITION_ID]";
+//	public static String CALENDAR_URL_TEMPLATE = "http://leghe.fantagazzetta.com/" + LEAGUE_NAME + "/calendario/[COMPETITION_ID]";
 	
 	
 	

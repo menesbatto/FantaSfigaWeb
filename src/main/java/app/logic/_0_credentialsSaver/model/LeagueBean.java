@@ -1,4 +1,4 @@
-package app.logic._0_credentialsSaver;
+package app.logic._0_credentialsSaver.model;
 
 public class LeagueBean {
 

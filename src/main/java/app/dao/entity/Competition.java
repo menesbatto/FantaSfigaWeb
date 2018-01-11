@@ -82,7 +82,4 @@ public class Competition {
 				+ league + ", type=" + type + "]";
 	}
 
-	
-	
-	
 }

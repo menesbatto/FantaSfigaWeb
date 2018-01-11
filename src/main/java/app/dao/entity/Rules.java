@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import app.logic._0_votesDownloader_0_rulesDownloader.model.SubstitutionsModeEnum;
+import app.logic._0_rulesDownloader.model.SubstitutionsModeEnum;
 
 @Entity
 public class Rules {
@@ -23,6 +23,8 @@ public class Rules {
 
 	@ManyToOne
 	private League league;
+	
+	private String binding;
 	
 	// BonusMalus
 	private Double redCardP;
@@ -113,7 +115,7 @@ public class Rules {
 	private String maxOfficeVotes;
 	
 	private Boolean yellowCardSvOfficeVoteActive;
-	private Double yellowCardOfficeVote;
+	private Double yellowCardSvOfficeVote;
 	
 	private Boolean goalkeeperPlayerOfficeVoteActive;
 	private Double goalkeeperPlayerOfficeVote;
@@ -710,12 +712,12 @@ public class Rules {
 		this.yellowCardSvOfficeVoteActive = yellowCardSvOfficeVoteActive;
 	}
 
-	public Double getYellowCardOfficeVote() {
-		return yellowCardOfficeVote;
+	public Double getYellowCardSvOfficeVote() {
+		return yellowCardSvOfficeVote;
 	}
 
-	public void setYellowCardOfficeVote(Double yellowCardOfficeVote) {
-		this.yellowCardOfficeVote = yellowCardOfficeVote;
+	public void setYellowCardSvOfficeVote(Double yellowCardOfficeVote) {
+		this.yellowCardSvOfficeVote = yellowCardOfficeVote;
 	}
 
 	public Boolean getGoalkeeperPlayerOfficeVoteActive() {
@@ -1219,6 +1221,13 @@ public class Rules {
 		this.homeBonus = homeBonus;
 	}
 
+	public String getBinding() {
+		return binding;
+	}
+
+	public void setBinding(String binding) {
+		this.binding = binding;
+	}
 	
 
 }

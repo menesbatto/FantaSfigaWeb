@@ -1,4 +1,4 @@
-package app.logic._0_votesDownloader_0_rulesDownloader;
+package app.logic._0_rulesDownloader;
 
 
 
@@ -17,20 +17,20 @@ import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UserDao;
 import app.dao.entity.Competition;
-import app.logic._0_credentialsSaver.LeagueBean;
 import app.logic._0_credentialsSaver.model.Credentials;
+import app.logic._0_credentialsSaver.model.LeagueBean;
 import app.logic._0_credentialsSaver.model.UserBean;
+import app.logic._0_rulesDownloader.model.BonusMalus;
+import app.logic._0_rulesDownloader.model.CompetitionRules;
+import app.logic._0_rulesDownloader.model.DataSources;
+import app.logic._0_rulesDownloader.model.MaxOfficeVotesEnum;
+import app.logic._0_rulesDownloader.model.Modifiers;
+import app.logic._0_rulesDownloader.model.Points;
+import app.logic._0_rulesDownloader.model.RulesBean;
+import app.logic._0_rulesDownloader.model.Substitutions;
+import app.logic._0_rulesDownloader.model.SubstitutionsModeEnum;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.BonusMalus;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.DataSources;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.MaxOfficeVotesEnum;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.Modifiers;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.CompetitionRules;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.Points;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.RulesBean;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.Substitutions;
-import app.logic._0_votesDownloader_0_rulesDownloader.model.SubstitutionsModeEnum;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
 import app.utils.IOUtils;
@@ -49,6 +49,7 @@ public class RulesExpertMain {
 	
 	@Autowired
 	private LeagueDao leagueDao; 
+	
 	
 	public void saveRulesForLeague(String leagueShortName) {
 		
@@ -613,38 +614,5 @@ public class RulesExpertMain {
 		return map;
 	}
 
-//	private static ClientResponse loginInFantagazzetta() {
-//		Client client = Client.create();
-//		WebResource webResource = null;
-//		String urlToCall = "http://leghe.fantagazzetta.com/servizi/LG.asmx/lg";
-//		webResource = client.resource(urlToCall);
-//		WebResource.Builder builder = webResource.getRequestBuilder();
-//
-//		ClientResponse cuResponse = null;
-//		builder.header("Content-Type", "application/json");
-//		String requestPayload = "{" + "\"u\": \"" + AppConstants.user + "\", "
-//									+ "\"p\": \"" + AppConstants.password + "\", "
-//									+ "\"aliaslega\": \"" + AppConstants.LEAGUE_NAME + "\", "
-//									+ "\"check\": \"u1-L12\"}";
-//		cuResponse = builder.post(ClientResponse.class, requestPayload);
-//		return cuResponse;
-//	}
-//	//{"u":"menesbatto","p":"suppaman","aliaslega":"accaniti-division","check":"u1-L12"}
-//	
-//	private static Document getHtmlPage(ClientResponse cuResponse, String url) throws IOException {
-//		
-//		Document htmlPage = HttpUtils.getHtmlPage(url);
-//
-//		
-//		return htmlPage;
-//	}
-	
-	
-
-	public RulesBean getRules() {
-		RulesBean rules = IOUtils.read(AppConstants.RULES_DIR + AppConstants.RULES_FILE_NAME, RulesBean.class);
-		return rules;
-	}
-	
 	
 }
