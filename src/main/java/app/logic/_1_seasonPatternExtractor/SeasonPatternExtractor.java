@@ -1,4 +1,4 @@
-package app.logic._2_seasonPatternExtractor;
+package app.logic._1_seasonPatternExtractor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,14 +10,15 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UserDao;
 import app.logic._0_credentialsSaver.model.Credentials;
 import app.logic._0_credentialsSaver.model.UserBean;
-import app.logic._2_seasonPatternExtractor.model.Match;
-import app.logic._2_seasonPatternExtractor.model.PlayerEnum;
-import app.logic._2_seasonPatternExtractor.model.SeasonBean;
-import app.logic._2_seasonPatternExtractor.model.SeasonDay;
+import app.logic._1_seasonPatternExtractor.model.MatchBean;
+import app.logic._1_seasonPatternExtractor.model.PlayerEnum;
+import app.logic._1_seasonPatternExtractor.model.SeasonBean;
+import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
 import app.utils.IOUtils;
@@ -26,7 +27,7 @@ import app.utils.IOUtils;
 public class SeasonPatternExtractor {
 	
 	@Autowired
-	private UserDao userDao;
+	private LeagueDao leagueDao;
 	
 	@Autowired
 	private RulesDao rulesDao;
@@ -36,7 +37,7 @@ public class SeasonPatternExtractor {
 
 	public void calculateSerieAToCompetitionSeasonDaysBinding(String leagueShortName, String competitionShortName) {
 		
-		List<SeasonDay> seasonDays = createSeasonDays(leagueShortName, competitionShortName);
+		List<SeasonDayBean> seasonDays = downloadSeasonDays(leagueShortName, competitionShortName);
 		
 		SeasonBean season = new SeasonBean();
 		season.setSeasonDays(seasonDays);
@@ -45,13 +46,47 @@ public class SeasonPatternExtractor {
 		
 	}
 	
-	public void calculateCompetitionPattern(String leagueShortName, String competitionShortName) {
+	public void saveOnlineSeasonAndTeams(String leagueShortName, String competitionShortName) {
 		
-		List<SeasonDay> seasonDays = createSeasonDays(leagueShortName, competitionShortName);
+		List<SeasonDayBean> seasonDays = downloadSeasonDays(leagueShortName, competitionShortName);
 		SeasonBean season = new SeasonBean();
 		season.setSeasonDays(seasonDays);
 		
-		SeasonBean lightSeason = createLightSeason(season);
+		List<String> teams = getSortedTeams(season);
+		IOUtils.write(AppConstants.PLAYERS_DIR + AppConstants.PLAYERS_FILE_NAME, teams);
+		
+		leagueDao.saveTeams(teams, leagueShortName, userBean.getUsername());
+		
+		
+		SeasonBean lightSeason = createLightSeason(teams, season);
+
+		leagueDao.saveOnlineSeason(season, leagueShortName, competitionShortName, userBean.getUsername());
+		
+		System.out.println(lightSeason);
+		
+	}
+
+	private List<String> getSortedTeams(SeasonBean season) {
+		SeasonDayBean fsd = season.getSeasonDays().get(0);
+		List<String> teams = new ArrayList<String>();
+		for (MatchBean match : fsd.getMatches()) {
+			teams.add(match.getHomeTeam());
+			teams.add(match.getAwayTeam());
+		}
+		Collections.sort(teams);
+		return teams;
+	}
+
+	
+	public void calculateCompetitionPattern(String leagueShortName, String competitionShortName) {
+		
+		List<SeasonDayBean> seasonDays = downloadSeasonDays(leagueShortName, competitionShortName);
+		SeasonBean season = new SeasonBean();
+		season.setSeasonDays(seasonDays);
+		
+		List<String> teams = getSortedTeams(season);
+		
+		SeasonBean lightSeason = createLightSeason(teams, season);
 
 		rulesDao.saveCompetitionPattern(season, leagueShortName, competitionShortName, userBean.getUsername());
 		
@@ -60,7 +95,7 @@ public class SeasonPatternExtractor {
 	}
 
 
-	private List<SeasonDay> createSeasonDays(String leagueShortName, String competitionShortName) {
+	private List<SeasonDayBean> downloadSeasonDays(String leagueShortName, String competitionShortName) {
 		String url = AppConstants.CALENDAR_URL_TEMPLATE.replace("[LEAGUE_NAME]", leagueShortName).replace("[COMPETITION_ID]", competitionShortName);
 //		Credentials c = userDao.retrieveGazzettaCredentials(userBean.getUsername());
 //		Document doc = HttpUtils.getHtmlPageNoLogged(url, c.getUsername(), c.getPassword());
@@ -69,8 +104,8 @@ public class SeasonPatternExtractor {
 
 		Elements seasonDayElements = doc.getElementsByTag("table");
 		
-		List<SeasonDay> seasonDays = new ArrayList<SeasonDay>();
-		SeasonDay seasonDay;
+		List<SeasonDayBean> seasonDays = new ArrayList<SeasonDayBean>();
+		SeasonDayBean seasonDay;
 		
 		for (int i = 0; i < seasonDayElements.size(); i++) {
 			Element lineUpElem = seasonDayElements.get(i);
@@ -82,13 +117,13 @@ public class SeasonPatternExtractor {
 	
 	
 
-	private static SeasonDay createSeasonDay(Element seasonDayElements, String seasonDayName) {
-		SeasonDay seasonDay = new SeasonDay(seasonDayName);
+	private static SeasonDayBean createSeasonDay(Element seasonDayElements, String seasonDayName) {
+		SeasonDayBean seasonDay = new SeasonDayBean(seasonDayName);
 		Elements matchesDomElems = seasonDayElements.getElementsByClass("match");
 		Element serieASeasonDayElem = seasonDayElements.getElementsByTag("tr").get(0).getElementsByClass("thtitle").get(0);
 		String serieASeasonDayApp = serieASeasonDayElem.text().split("-")[1];
 		String serieASeasonDay = serieASeasonDayApp.substring(1, serieASeasonDayApp.length()-9);
-		Match m;
+		MatchBean m;
 		Elements teamsDomElems;
 		String homeTeam;
 		String awayTeam;
@@ -99,7 +134,7 @@ public class SeasonPatternExtractor {
 			homeTeam = teamsDomElems.get(0).text();
 			awayTeam = teamsDomElems.get(1).text();
 			Elements resultPoints = matchElem.getElementsByClass("point");
-			m = new Match(homeTeam, awayTeam);
+			m = new MatchBean(homeTeam, awayTeam);
 			if (resultPoints.size() != 0){
 				homeSumTotalPoints = Double.valueOf(resultPoints.get(0).text().replace(",", "."));
 				awaySumTotalPoints = Double.valueOf(resultPoints.get(1).text().replace(",", "."));
@@ -112,20 +147,13 @@ public class SeasonPatternExtractor {
 		return seasonDay;
 	}
 
-	private static SeasonBean createLightSeason(SeasonBean season) {
-		SeasonDay fsd = season.getSeasonDays().get(0);
-		List<String> players = new ArrayList<String>();
-		for (Match match : fsd.getMatches()) {
-			players.add(match.getHomeTeam());
-			players.add(match.getAwayTeam());
-		}
-		Collections.sort(players);
-		IOUtils.write(AppConstants.PLAYERS_DIR + AppConstants.PLAYERS_FILE_NAME, players);
+	private static SeasonBean createLightSeason(List<String> teams, SeasonBean season) {
 
-		for (SeasonDay sd : season.getSeasonDays()) {
-			for (Match m : sd.getMatches()) {
-				PlayerEnum homeTeamEnum = PlayerEnum.values()[players.indexOf(m.getHomeTeam())];
-				PlayerEnum awayTeamEnum = PlayerEnum.values()[players.indexOf(m.getAwayTeam())];
+
+		for (SeasonDayBean sd : season.getSeasonDays()) {
+			for (MatchBean m : sd.getMatches()) {
+				PlayerEnum homeTeamEnum = PlayerEnum.values()[teams.indexOf(m.getHomeTeam())];
+				PlayerEnum awayTeamEnum = PlayerEnum.values()[teams.indexOf(m.getAwayTeam())];
 				m.setHomeTeamEnum(homeTeamEnum);
 				m.setAwayTeamEnum(awayTeamEnum);
 				m.setHomeTeam(m.getHomeTeam());
@@ -181,9 +209,10 @@ public class SeasonPatternExtractor {
 		return seasonPattern;
 	}
 	
-	public static ArrayList<String> getPlayers() {
-		ArrayList<String> players = IOUtils.read(AppConstants.PLAYERS_DIR + AppConstants.PLAYERS_FILE_NAME, ArrayList.class);
-		return players;
-	}
+//	public ArrayList<String> getPlayers() {
+//		List<String> teams = leagueDao.findTeams(leagueShortName, username);
+//		ArrayList<String> players = IOUtils.read(AppConstants.PLAYERS_DIR + AppConstants.PLAYERS_FILE_NAME, ArrayList.class);
+//		return players;
+//	}
 	
 }

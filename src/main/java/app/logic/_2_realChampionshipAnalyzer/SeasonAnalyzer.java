@@ -1,4 +1,4 @@
-package app.logic._1_realChampionshipAnalyzer;
+package app.logic._2_realChampionshipAnalyzer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,8 @@ import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
-import app.logic._1_realChampionshipAnalyzer.model.SeasonDayResultBean;
-import app.logic._2_seasonPatternExtractor.model.SeasonResultBean;
+import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
+import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
 import app.utils.AppConstants;
 import app.utils.IOUtils;
 

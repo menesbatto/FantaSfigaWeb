@@ -1,4 +1,4 @@
-package app.logic._1_realChampionshipAnalyzer.model;
+package app.logic._2_realChampionshipAnalyzer.model;
 
 import java.io.Serializable;
 

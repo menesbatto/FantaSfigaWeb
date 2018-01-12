@@ -5,13 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.dom4j.rule.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 import app.dao.entity.Competition;
 import app.dao.entity.League;
+import app.dao.entity.LineUpLight;
+import app.dao.entity.Matcho;
 import app.dao.entity.Rules;
+import app.dao.entity.Season;
+import app.dao.entity.SeasonDay;
 import app.dao.entity.Vote;
 import app.logic._0_rulesDownloader.model.BonusMalus;
 import app.logic._0_rulesDownloader.model.CompetitionRules;
@@ -24,8 +29,10 @@ import app.logic._0_rulesDownloader.model.Substitutions;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
-import app.logic._2_seasonPatternExtractor.model.SeasonBean;
-import app.logic._2_seasonPatternExtractor.model.SeasonDay;
+import app.logic._1_seasonPatternExtractor.model.MatchBean;
+import app.logic._1_seasonPatternExtractor.model.SeasonBean;
+import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
+import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 
 @Service
 @EnableCaching
@@ -523,7 +530,7 @@ public class RulesDao {
 		
 		Rules rules = retrieveRulesEnt(competitionShortName, leagueShortName,  username);
 		
-		for (SeasonDay sd : season.getSeasonDays()) {
+		for (SeasonDayBean sd : season.getSeasonDays()) {
 			seasonDayBinding += sd.getNameNumber() + "-" + sd.getSerieANumber() + ",";
 		}
 		
@@ -553,7 +560,20 @@ public class RulesDao {
 
 	public void saveCompetitionPattern(SeasonBean season, String leagueShortName, String competitionShortName,	String username) {
 		
+		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+
+		
+//		vedi se ti serve Season o 
+//		
+//		s = new Season();
+//		capire come salvare il Pattern.
+//		puo' essere una tabella con id num string
+//		
+		
+		
 	}
+
+	
 
 	
 	

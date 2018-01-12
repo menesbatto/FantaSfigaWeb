@@ -1,38 +1,38 @@
-package app.logic._2_seasonPatternExtractor.model;
+package app.logic._1_seasonPatternExtractor.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SeasonDay  implements Serializable{
+public class SeasonDayBean  implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 9121439474561854857L;
 	private String name;
 	private Integer nameNumber;
-	private List<Match> matches;
+	private List<MatchBean> matches;
 	private Integer serieANumber;
 	
 	
 	
 
-	public SeasonDay(String name) {
-		this.matches = new ArrayList<Match>();
+	public SeasonDayBean(String name) {
+		this.matches = new ArrayList<MatchBean>();
 		this.setName(name);
 		Integer nameNumber = Integer.valueOf(name.substring(name.indexOf(" ")+1));
 		this.nameNumber = nameNumber;
 	}
 
-	public SeasonDay() {
+	public SeasonDayBean() {
 		//Usato solo in un caso inutile
 	}
 
-	public List<Match> getMatches() {
+	public List<MatchBean> getMatches() {
 		return matches;
 	}
 
-	public void setMatches(List<Match> matches) {
+	public void setMatches(List<MatchBean> matches) {
 		this.matches = matches;
 	}
 
@@ -66,7 +66,7 @@ public class SeasonDay  implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SeasonDay other = (SeasonDay) obj;
+		SeasonDayBean other = (SeasonDayBean) obj;
 		if (matches == null) {
 			if (other.matches != null)
 				return false;

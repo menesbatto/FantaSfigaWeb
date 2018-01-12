@@ -1,10 +1,10 @@
-package app.logic._2_seasonPatternExtractor.model;
+package app.logic._1_seasonPatternExtractor.model;
 
 import java.io.Serializable;
 
-import app.logic._1_realChampionshipAnalyzer.model.LineUpLightBean;
+import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 
-public class Match  implements Serializable {
+public class MatchBean  implements Serializable {
 	/**
 	 * 
 	 */
@@ -14,6 +14,8 @@ public class Match  implements Serializable {
 	private PlayerEnum homeTeamEnum;
 	private PlayerEnum awayTeamEnum;
 	
+	
+	// utile solo nella 5 fase per verificare se il risultato calcolato è uguale al risultato sul sito
 	private LineUpLightBean homeTeamResult;
 	private LineUpLightBean awayTeamResult;
 	
@@ -23,11 +25,11 @@ public class Match  implements Serializable {
 	
 	
 	
-	public Match(String homeTeam, String awayTeam) {
+	public MatchBean(String homeTeam, String awayTeam) {
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 	}
-	public Match() {
+	public MatchBean() {
 
 	}
 	

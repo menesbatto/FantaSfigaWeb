@@ -1,4 +1,4 @@
-package app.logic._1_realChampionshipAnalyzer;
+package app.logic._2_realChampionshipAnalyzer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,19 +8,17 @@ import java.util.Map;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_rulesDownloader.model.BonusMalus;
 import app.logic._0_rulesDownloader.model.Modifiers;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.RoleEnum;
-import app.logic._1_realChampionshipAnalyzer.model.LineUp;
-import app.logic._1_realChampionshipAnalyzer.model.LineUpLightBean;
-import app.logic._1_realChampionshipAnalyzer.model.PlayerVote;
-import app.logic._1_realChampionshipAnalyzer.model.SeasonDayResultBean;
+import app.logic._2_realChampionshipAnalyzer.model.LineUp;
+import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
+import app.logic._2_realChampionshipAnalyzer.model.PlayerVote;
+import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
 

@@ -1,6 +1,8 @@
 package app.dao.entity;
 
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +29,9 @@ public class League {
 	
 	@ManyToOne
 	private User user;
+	
+	
+	private String teams;
 	
 	public League() {
 	}
@@ -83,6 +88,15 @@ public class League {
 	public void setRules(Rules rules) {
 		this.rules = rules;
 	}
+
+	public String getTeams() {
+		return teams;
+	}
+
+	public void setTeams(String teams) {
+		this.teams = teams;
+	}
+
 
 	
 	

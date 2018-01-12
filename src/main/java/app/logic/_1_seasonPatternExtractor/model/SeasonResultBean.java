@@ -1,10 +1,10 @@
-package app.logic._2_seasonPatternExtractor.model;
+package app.logic._1_seasonPatternExtractor.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.logic._1_realChampionshipAnalyzer.model.SeasonDayResultBean;
+import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
 
 public class SeasonResultBean implements Serializable{
 	

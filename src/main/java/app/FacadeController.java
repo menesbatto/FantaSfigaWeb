@@ -17,10 +17,11 @@ import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
 import app.logic._0_credentialsSaver.model.LeagueBean;
 import app.logic._0_credentialsSaver.model.UserBean;
+import app.logic._0_permutationsGenerator.PermutationsGenerator;
 import app.logic._0_rulesDownloader.RulesExpertMain;
 import app.logic._0_votesDownloader.MainSeasonVotesDowloader;
-import app.logic._1_realChampionshipAnalyzer.SeasonAnalyzer;
-import app.logic._2_seasonPatternExtractor.SeasonPatternExtractor;
+import app.logic._1_seasonPatternExtractor.SeasonPatternExtractor;
+import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
 
 @Controller // This means that this class is a Controller
 @RequestMapping(path = "/api") // This means URL's start with /demo (after Application path)
@@ -41,6 +42,9 @@ public class FacadeController {
 	
 	@Autowired
 	private SeasonPatternExtractor seasonPatternExtractor;
+	
+	@Autowired
+	private PermutationsGenerator permutationsGenerator;
 	
 	
 	// ###################################################
@@ -176,19 +180,66 @@ public class FacadeController {
 	
 	//###################################################################
 
-	@RequestMapping(value = "/extractPattern", method = RequestMethod.POST)
-	public ResponseEntity<String> extractPattern(@RequestBody CompetitionBean competition) {
+	@RequestMapping(value = "/calculateBinding", method = RequestMethod.POST)
+	public ResponseEntity<String> calculateBinding(@RequestBody CompetitionBean competition) {
 		String competitionShortName = competition.getShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		
 		seasonPatternExtractor.calculateSerieAToCompetitionSeasonDaysBinding(leagueShortName, competitionShortName);
+
+		String body = "Calculate binding COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+	
+	
+	//###################################################################
+
+	@RequestMapping(value = "/calculateCompetitionPattern", method = RequestMethod.POST)
+	public ResponseEntity<String> calculateCompetitionPattern(@RequestBody CompetitionBean competition) {
+		String competitionShortName = competition.getShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		
+		seasonPatternExtractor.calculateCompetitionPattern(leagueShortName, competitionShortName);
 
 		String body = "Extract pattern COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
 	}
+	
+	
+	
+	//###################################################################
+
+		@RequestMapping(value = "/saveOnlineSeasonAndTeams", method = RequestMethod.POST)
+		public ResponseEntity<String> saveOnlineSeasonAndTeams(@RequestBody CompetitionBean competition) {
+			String competitionShortName = competition.getShortName();
+			String leagueShortName = competition.getLeagueShortName();
+			
+			seasonPatternExtractor.saveOnlineSeasonAndTeams(leagueShortName, competitionShortName);
+
+			String body = "Save Online Season And Teams COMPLETED";
+			
+			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+			return response;
+		}
+	
+	
 		
+		//###################################################################
+
+		@RequestMapping(value = "/createPermutations/{playersNumber}", method = RequestMethod.GET)
+		public ResponseEntity<String> createPermutations(@PathVariable Integer playersNumber) {
+			
+			permutationsGenerator.createPermutations(playersNumber);
+
+			String body = "Creating Permutation COMPLETED";
+			
+			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+			return response;
+		}
 	//###################################################################
 	
 		@RequestMapping(value = "/analyzeCompetition", method = RequestMethod.POST)

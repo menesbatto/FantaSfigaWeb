@@ -30,8 +30,6 @@ public class LineUpLight {
 										//X, V, P
 
 	public LineUpLight() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public long getId() {

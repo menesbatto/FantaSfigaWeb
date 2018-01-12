@@ -1,4 +1,4 @@
-package app.logic._2_seasonPatternExtractor.model;
+package app.logic._1_seasonPatternExtractor.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,23 +8,23 @@ public class SeasonBean implements Serializable{
 	
 	private static final long serialVersionUID = -5241896046608966295L;
 	private String name;
-	private List<SeasonDay> seasonDays;
+	private List<SeasonDayBean> seasonDays;
 	
 
 	public SeasonBean() {
-		this.seasonDays = new ArrayList<SeasonDay>();
+		this.seasonDays = new ArrayList<SeasonDayBean>();
 	}
 
 	public SeasonBean(String name) {
 		this.name = name;
-		this.seasonDays = new ArrayList<SeasonDay>();
+		this.seasonDays = new ArrayList<SeasonDayBean>();
 	}
 
-	public List<SeasonDay> getSeasonDays() {
+	public List<SeasonDayBean> getSeasonDays() {
 		return seasonDays;
 	}
 
-	public void setSeasonDays(List<SeasonDay> seasonDays) {
+	public void setSeasonDays(List<SeasonDayBean> seasonDays) {
 		this.seasonDays = seasonDays;
 	}
 
