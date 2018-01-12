@@ -1,9 +1,11 @@
 package app.dao.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -15,11 +17,11 @@ public class Matcho {
 	
 	private String homeTeam;
 	private String awayTeam;
-	
-	@OneToOne
+
+	@OneToOne(cascade = {CascadeType.ALL})
 	private LineUpLight homeTeamResult;
 	
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.ALL})
 	private LineUpLight awayTeamResult;
 	
 	

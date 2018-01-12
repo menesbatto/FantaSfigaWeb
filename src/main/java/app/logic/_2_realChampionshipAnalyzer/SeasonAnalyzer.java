@@ -47,7 +47,7 @@ public class SeasonAnalyzer {
 		
 		Map<String, Map<String, List<PlayerVoteComplete>>> map = voteDao.findVotesBySource(source);
 		
-		int seriaAActualSeasonDay = voteDao.calculateLastSeasonDayCalculated();
+		int seriaAActualSeasonDay = voteDao.calculateLastSerieASeasonDayCalculated();
 
 		ArrayList<SeasonDayResultBean> seasonDayResults = new ArrayList<SeasonDayResultBean>();
 		

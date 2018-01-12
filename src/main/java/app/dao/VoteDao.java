@@ -86,7 +86,7 @@ public class VoteDao {
 		return bean;
 	}
 
-	public int calculateLastSeasonDayCalculated() {
+	public int calculateLastSerieASeasonDayCalculated() {
 		List<Integer> seasonDays = voteRepo.findAllDistinct();
 		if (seasonDays.isEmpty())
 			return 0;

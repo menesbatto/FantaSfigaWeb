@@ -7,7 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
+import app.dao.entity.Matcho;
 import app.dao.entity.Permutation;
+import app.dao.entity.Season;
+import app.dao.entity.SeasonDay;
+import app.logic._1_seasonPatternExtractor.model.MatchBean;
+import app.logic._1_seasonPatternExtractor.model.SeasonBean;
+import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 
 @Service
 @EnableCaching
@@ -38,7 +44,6 @@ public class UtilsDao {
 		
 		return permutations;
 	}
-
 
 	
 	

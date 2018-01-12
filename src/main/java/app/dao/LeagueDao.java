@@ -22,6 +22,7 @@ import app.logic._0_credentialsSaver.model.Credentials;
 import app.logic._0_credentialsSaver.model.LeagueBean;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
+import app.logic._1_seasonPatternExtractor.model.PlayerEnum;
 import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
@@ -43,6 +44,9 @@ public class LeagueDao {
 
 	@Autowired
 	private SeasonResultRepo seasonResultRepo;
+	
+	@Autowired
+	private SeasonRepo seasonRepo;
 
 
 
@@ -225,9 +229,14 @@ public class LeagueDao {
 	
 	public void saveOnlineSeason(SeasonBean bean, String leagueShortName, String competitionShortName, String username) {
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
-		Season ent = new Season();
-		ent.setCompetition(competition);
-		ent.setName(bean.getName());
+
+		Season s = seasonRepo.findByNameAndCompetition(null, competition);
+		if (s != null)
+			return;
+		
+		s = new Season();
+		s.setCompetition(competition);
+		s.setName(bean.getName());
 		List<SeasonDay> seasonDayEnts = new ArrayList<SeasonDay>();
 		for (SeasonDayBean seasonDayBean: bean.getSeasonDays()) {
 			
@@ -237,7 +246,9 @@ public class LeagueDao {
 		}
 			
 			
-		ent.setSeasonDays(seasonDayEnts);
+		s.setSeasonDays(seasonDayEnts);
+		
+		seasonRepo.save(s);
 		
 	}
 
@@ -250,6 +261,14 @@ public class LeagueDao {
 			Matcho match = new Matcho();
 			LineUpLight homeTeamResult = createLineUpLight(matchBean.getHomeTeamResult());
 			match.setHomeTeamResult(homeTeamResult);
+			match.setHomeTeam(matchBean.getHomeTeam());
+
+			LineUpLight awayTeamResult = createLineUpLight(matchBean.getAwayTeamResult());
+			match.setAwayTeamResult(awayTeamResult);
+			match.setAwayTeam(matchBean.getAwayTeam());
+
+			matchEnts.add(match);
+			
 		}
 		
 		ent.setMatches(matchEnts);
@@ -259,6 +278,7 @@ public class LeagueDao {
 
 	public void saveTeams(List<String> teams, String leagueShortName, String username) {
 		League league = findByShortNameEnt(leagueShortName, username);
+		
 		String teamsString = "";
 		for (String t : teams)
 			teamsString += t + ",";
@@ -278,7 +298,114 @@ public class LeagueDao {
 		
 		return teams;
 	}
+	
+	
+	// SIMILE A LEAGUE DAO
+	public void saveCompetitionPattern(SeasonBean bean, String leagueShortName, String competitionShortName, String username) {
+		
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		Season s = seasonRepo.findByNameAndCompetition("Pattern", competition);
+		if (s != null)
+			return;
+		
+		s = new Season();
+		s.setName("Pattern");
+		List<SeasonDay> seasonDays = new ArrayList<SeasonDay>();
+		
+		for (SeasonDayBean seasonDayBean : bean.getSeasonDays()) {
+			SeasonDay seasonDay = createSeasonDayPatternEnt(seasonDayBean);
+			seasonDays.add(seasonDay);
+			
+		}
+		s.setSeasonDays(seasonDays);
+		s.setCompetition(competition);
+		
+		seasonRepo.save(s);
+		
+	}
 
+	// SIMILE A LEAGUE DAO
+	private SeasonDay createSeasonDayPatternEnt(SeasonDayBean bean) {
+		SeasonDay ent = new SeasonDay();
+		ent.setName(bean.getName());
+		ent.setSerieANumber(bean.getSerieANumber());
+		List<Matcho> matches = new ArrayList<Matcho>();
+		for (MatchBean matchBean : bean.getMatches()) {
+			Matcho match = new Matcho();
+			match.setHomeTeam(matchBean.getHomeTeamEnum().name());
+			match.setAwayTeam(matchBean.getAwayTeamEnum().name());
+			matches.add(match);
+		}
+		ent.setMatches(matches);
+		return ent;
+	}
+
+	public SeasonBean findSeason(String leagueShortName, String competitionShortName, String username, String seasonName) {
+		
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		Season ent = seasonRepo.findByNameAndCompetition(seasonName, competition);
+		
+		SeasonBean seasonBean = new SeasonBean();
+		seasonBean.setName(ent.getName());
+		List<SeasonDayBean> seasonDayBeans = new ArrayList<SeasonDayBean>();
+
+		for (SeasonDay seasonDayEnt : ent.getSeasonDays()) {
+			SeasonDayBean seasonDayBean = createSeasonDayBean(seasonDayEnt);
+			seasonDayBeans.add(seasonDayBean);
+		}
+		seasonBean.setSeasonDays(seasonDayBeans);
+		
+		return seasonBean;
+	}
+
+
+	private SeasonDayBean createSeasonDayBean(SeasonDay ent) {
+		SeasonDayBean bean = new SeasonDayBean();
+		bean.setName(ent.getName());
+		
+		List<MatchBean> matchesBean = new ArrayList<MatchBean>();
+		for(Matcho match : ent.getMatches()) {
+			MatchBean matchBean = createMatchBean(match);
+			matchesBean.add(matchBean);
+		}
+		
+		bean.setMatches(matchesBean);
+		
+		return bean;
+	}
+
+
+	private MatchBean createMatchBean(Matcho ent) {
+		MatchBean bean = new MatchBean();
+		
+		bean.setHomeTeam(ent.getHomeTeam());
+		bean.setAwayTeam(ent.getAwayTeam());
+		
+		try {
+			bean.setHomeTeamEnum(PlayerEnum.valueOf(ent.getHomeTeam()));
+			bean.setAwayTeamEnum(PlayerEnum.valueOf(ent.getAwayTeam()));
+		}
+		catch (Exception e) {
+			
+		}
+		
+		LineUpLightBean homeTeamResult = createLineUpLightBean(ent.getHomeTeamResult());
+		bean.setHomeTeamResult(homeTeamResult);
+		LineUpLightBean awayTeamResult = createLineUpLightBean(ent.getAwayTeamResult());
+		bean.setAwayTeamResult(awayTeamResult);
+		
+		return bean;
+	}
+
+
+	private LineUpLightBean createLineUpLightBean(LineUpLight awayTeamResult) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	
 	
 	
 }

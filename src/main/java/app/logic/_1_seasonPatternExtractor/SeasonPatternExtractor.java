@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
-import app.dao.UserDao;
-import app.logic._0_credentialsSaver.model.Credentials;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._1_seasonPatternExtractor.model.PlayerEnum;
@@ -47,13 +45,15 @@ public class SeasonPatternExtractor {
 	}
 	
 	public void saveOnlineSeasonAndTeams(String leagueShortName, String competitionShortName) {
+		if (userBean.getUsername() == null)
+			return;
 		
 		List<SeasonDayBean> seasonDays = downloadSeasonDays(leagueShortName, competitionShortName);
 		SeasonBean season = new SeasonBean();
 		season.setSeasonDays(seasonDays);
 		
 		List<String> teams = getSortedTeams(season);
-		IOUtils.write(AppConstants.PLAYERS_DIR + AppConstants.PLAYERS_FILE_NAME, teams);
+//		IOUtils.write(AppConstants.PLAYERS_DIR + AppConstants.PLAYERS_FILE_NAME, teams);
 		
 		leagueDao.saveTeams(teams, leagueShortName, userBean.getUsername());
 		
@@ -80,6 +80,9 @@ public class SeasonPatternExtractor {
 	
 	public void calculateCompetitionPattern(String leagueShortName, String competitionShortName) {
 		
+		if (userBean.getUsername() == null)
+			return;
+		
 		List<SeasonDayBean> seasonDays = downloadSeasonDays(leagueShortName, competitionShortName);
 		SeasonBean season = new SeasonBean();
 		season.setSeasonDays(seasonDays);
@@ -88,7 +91,9 @@ public class SeasonPatternExtractor {
 		
 		SeasonBean lightSeason = createLightSeason(teams, season);
 
-		rulesDao.saveCompetitionPattern(season, leagueShortName, competitionShortName, userBean.getUsername());
+		leagueDao.saveCompetitionPattern(season, leagueShortName, competitionShortName, userBean.getUsername());
+
+//		rulesDao.saveCompetitionPattern(season, leagueShortName, competitionShortName, userBean.getUsername());
 		
 		System.out.println(lightSeason);
 		

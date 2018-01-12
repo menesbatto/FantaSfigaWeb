@@ -22,6 +22,7 @@ import app.logic._0_rulesDownloader.RulesExpertMain;
 import app.logic._0_votesDownloader.MainSeasonVotesDowloader;
 import app.logic._1_seasonPatternExtractor.SeasonPatternExtractor;
 import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
+import app.logic._3_seasonsGenerator.AllSeasonsGenerator;
 
 @Controller // This means that this class is a Controller
 @RequestMapping(path = "/api") // This means URL's start with /demo (after Application path)
@@ -38,13 +39,16 @@ public class FacadeController {
 	private UserExpert userExpert;
 	
 	@Autowired
-	private SeasonAnalyzer seasonAnalyzer;
-	
-	@Autowired
 	private SeasonPatternExtractor seasonPatternExtractor;
 	
 	@Autowired
 	private PermutationsGenerator permutationsGenerator;
+	
+	@Autowired
+	private SeasonAnalyzer seasonAnalyzer;
+	
+	@Autowired
+	private AllSeasonsGenerator allSeasonsGenerator;
 	
 	
 	// ###################################################
@@ -203,7 +207,7 @@ public class FacadeController {
 		
 		seasonPatternExtractor.calculateCompetitionPattern(leagueShortName, competitionShortName);
 
-		String body = "Extract pattern COMPLETED";
+		String body = "Calculate Competition Pattern COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
@@ -254,4 +258,25 @@ public class FacadeController {
 			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 			return response;
 		}
+		
+		//###################################################################
+		
+		@RequestMapping(value = "/generateAllSeason", method = RequestMethod.POST)
+		public ResponseEntity<String> generateAllSeason(@RequestBody CompetitionBean competition) {
+			
+			String competitionShortName = competition.getShortName();
+			String leagueShortName = competition.getLeagueShortName();
+			
+			allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName);
+			String body = "Generate All Seasons COMPLETED";
+			
+			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+			return response;
+		}
+			
+		
+		
+		
+		
+		
 }

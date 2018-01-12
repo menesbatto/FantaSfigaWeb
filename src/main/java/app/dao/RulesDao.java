@@ -557,22 +557,25 @@ public class RulesDao {
 	}
 	
 	
-
-	public void saveCompetitionPattern(SeasonBean season, String leagueShortName, String competitionShortName,	String username) {
+	public Map<Integer, Integer> findCompetitionToSerieABinding(String leagueShortName, String competitionShortName, String username) {
+		RulesBean rules = retrieveRules(competitionShortName, leagueShortName, username);
 		
-		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
-
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		String[] pairs = rules.getCompetitionRules().getBinding().split(",");
+		for (int i = 0; i < pairs.length; i++) {
+			String[] seasonDays = pairs[i].split("-");
+			Integer comp = Integer.valueOf(seasonDays[0]);
+			Integer serieA = Integer.valueOf(seasonDays[1]);
+			map.put(serieA, comp);
+		}
 		
-//		vedi se ti serve Season o 
-//		
-//		s = new Season();
-//		capire come salvare il Pattern.
-//		puo' essere una tabella con id num string
-//		
-		
+		return map;
 		
 	}
+	
+	
 
+	
 	
 
 	
