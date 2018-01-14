@@ -15,6 +15,9 @@ public class SeasonDayResultBean implements Serializable {
 
 	
 	
+	public SeasonDayResultBean() {
+	}
+
 	public SeasonDayResultBean(String name, List<LineUpLightBean> linesUpLight) {
 		this.name = name;
 		this.linesUpLight = linesUpLight;

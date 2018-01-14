@@ -91,7 +91,7 @@ public class UserExpert {
 		
 		Credentials c = userDao.retrieveGazzettaCredentials(userBean.getUsername());
 		
-		LeagueBean league = leagueDao.findByShortName(leagueName, userBean.getUsername());
+		LeagueBean league = leagueDao.findLeagueByShortName(leagueName, userBean.getUsername());
 		
 		String leagueUrl = AppConstants.GAZZETTA_URL + league.getShortName() + "/gestione-competizioni";
 		Document doc = HttpUtils.getHtmlPageLogged(leagueUrl , c.getUsername(), c.getPassword());

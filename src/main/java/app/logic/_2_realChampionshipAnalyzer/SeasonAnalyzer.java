@@ -92,7 +92,7 @@ public class SeasonAnalyzer {
 		seasonResult.setSeasonDayResults(seasonDayResults);
 		seasonResult.setName("BASE");
 		
-		leagueDao.saveCalculatedSeason(seasonResult, leagueShortName, competitionShortName, userBean.getUsername());
+		leagueDao.saveCalculatedSeasonResult(seasonResult, leagueShortName, competitionShortName, userBean.getUsername());
 		
 //		###############################
 //		Integer fantacalcioSeasonDaysNumber = calculateFantaSeasonDayForSerieASSeasonDay(seasonDayBind, seriaAActualSeasonDay);//seriaAActualSeasonDay - fantacalcioStartingSerieASeasonDay + 1;

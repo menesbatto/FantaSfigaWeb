@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import app.logic.Main;
 import app.logic._0_credentialsSaver.UserExpert;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
@@ -273,7 +274,23 @@ public class FacadeController {
 			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 			return response;
 		}
+		
+		
+	//###################################################################
+		@Autowired
+		private Main main;
+		@RequestMapping(value = "/createStats", method = RequestMethod.POST)
+		public ResponseEntity<String> createStats(@RequestBody CompetitionBean competition) {
 			
+			String competitionShortName = competition.getShortName();
+			String leagueShortName = competition.getLeagueShortName();
+			
+			main.execute(leagueShortName, competitionShortName);
+			String body = "Create Stats COMPLETED";
+			
+			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+			return response;
+		}
 		
 		
 		

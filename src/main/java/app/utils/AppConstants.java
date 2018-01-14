@@ -42,7 +42,7 @@ public class AppConstants {
 	public static String PROXY_HOST = "10.0.1.251";
 	public static String PROXY_PORT = "3128";
 
-	public static boolean DEBUG_MODE =false;
+	public static boolean DEBUG_MODE =true;
 	public static boolean FAST_MODE_ACTIVE = false;
 	public static Boolean FORCE_INVERT_HOME_AWAY = false;
 	public static Boolean FORCE_WINNING_FOR_DISTANCE = false;

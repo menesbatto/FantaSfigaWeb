@@ -65,13 +65,12 @@ public class AllSeasonsGenerator {
 		if (fantacalcioActualSeasonDay == null)
 			fantacalcioActualSeasonDay = bindings.get(serieAActualSeasonDay-1);
 		
-		List<String> players = leagueDao.findTeams(leagueShortName, userBean.getUsername());
 
 		
 		SeasonBean seasonPattern = leagueDao.findSeason(leagueShortName, competitionShortName, userBean.getUsername(), "Pattern");
 		
 		for (String permutation : allInputPermutations){
-			s = seasonGenerator.generateSingleSeason(permutation, seasonNumber++, fantacalcioActualSeasonDay, seasonPattern, players);
+			s = seasonGenerator.generateSingleSeason(permutation, seasonNumber++, fantacalcioActualSeasonDay, seasonPattern, teams);
 			allSeasons.add(s);
 		}
 		

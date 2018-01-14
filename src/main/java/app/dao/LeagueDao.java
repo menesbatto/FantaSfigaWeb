@@ -12,6 +12,8 @@ import app.dao.entity.Competition;
 import app.dao.entity.League;
 import app.dao.entity.LineUpLight;
 import app.dao.entity.Matcho;
+import app.dao.entity.Ranking;
+import app.dao.entity.RankingRow;
 import app.dao.entity.Season;
 import app.dao.entity.SeasonDay;
 import app.dao.entity.SeasonDayResult;
@@ -28,6 +30,8 @@ import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
+import app.logic._5_seasonsExecutor.model.RankingBean;
+import app.logic._5_seasonsExecutor.model.RankingRowBean;
 
 @Service
 @EnableCaching
@@ -47,6 +51,9 @@ public class LeagueDao {
 	
 	@Autowired
 	private SeasonRepo seasonRepo;
+	
+	@Autowired
+	private RankingRepo rankingRepo;
 
 
 
@@ -88,7 +95,7 @@ public class LeagueDao {
 	
 
 
-	public LeagueBean findByShortName(String leagueShortName, String username) {
+	public LeagueBean findLeagueByShortName(String leagueShortName, String username) {
 		User user = userDao.retrieveByUsername(username);
 		League ent = leagueRepo.findByUserAndShortName(user, leagueShortName);
 		LeagueBean bean = new LeagueBean();
@@ -169,10 +176,17 @@ public class LeagueDao {
 	}
 
 
-	public void saveCalculatedSeason(SeasonResultBean seasonResultBean, String leagueShortName, String competitionShortName, String username) {
-		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+	public void saveCalculatedSeasonResult(SeasonResultBean seasonResultBean, String leagueShortName, String competitionShortName, String username) {
 		
-		SeasonResult seasonResult = new SeasonResult();
+
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+
+		SeasonResult seasonResult = seasonResultRepo.findByCompetition(competition);
+		
+		if (seasonResult != null)
+			return;
+		
+		seasonResult = new SeasonResult();
 		
 		seasonResult.setName(seasonResultBean.getName());
 		List<SeasonDayResult> seasonDayResults = new ArrayList<SeasonDayResult>();
@@ -227,6 +241,43 @@ public class LeagueDao {
 	}
 	
 	
+	
+	
+	public SeasonResultBean findCalculatedSeasonResult(String leagueShortName, String competitionShortName, String username) {
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+
+		SeasonResultBean bean = new SeasonResultBean();	
+		SeasonResult ent = seasonResultRepo.findByCompetition(competition);
+		
+		bean.setName(ent.getName());
+		List<SeasonDayResultBean> seasonDayResultBeans = new ArrayList<SeasonDayResultBean>();
+		for (SeasonDayResult sdEnt : ent.getSeasonDayResults()) {
+			
+			SeasonDayResultBean sdBean = createSeasonDayResultBean(sdEnt);
+			seasonDayResultBeans.add(sdBean);
+		}
+			
+		bean.setSeasonDayResults(seasonDayResultBeans);
+	
+		return bean;	
+	}
+	
+	
+	private SeasonDayResultBean createSeasonDayResultBean(SeasonDayResult ent) {
+		
+		String name = ent.getName();
+
+		List<LineUpLightBean> linesUpLightBeans = new ArrayList<LineUpLightBean>();
+		for (LineUpLight lulEnt : ent.getLinesUpLight()) {
+			LineUpLightBean lulBean = createLineUpLightBean(lulEnt);
+			linesUpLightBeans.add(lulBean);
+		}
+			
+		SeasonDayResultBean bean = new SeasonDayResultBean(name, linesUpLightBeans);
+		return bean;
+	}
+
+
 	public void saveOnlineSeason(SeasonBean bean, String leagueShortName, String competitionShortName, String username) {
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 
@@ -398,9 +449,51 @@ public class LeagueDao {
 	}
 
 
-	private LineUpLightBean createLineUpLightBean(LineUpLight awayTeamResult) {
-		// TODO Auto-generated method stub
-		return null;
+	private LineUpLightBean createLineUpLightBean(LineUpLight ent) {
+		if (ent == null)
+			return null;
+		LineUpLightBean bean = new LineUpLightBean();
+		bean.setGoalkeeperModifier(ent.getGoalkeeperModifier());
+		bean.setGoals(ent.getGoals());
+		bean.setMiddlefieldersVariation(ent.getMiddlefieldersVariation());
+		bean.setRankingPoints(ent.getRankingPoints());
+		
+		bean.setSumTotalPoints(ent.getSumTotalPoints());
+		bean.setTakenGoals(ent.getTakenGoals());
+		bean.setTeamName(ent.getTeamName());
+		bean.setTotalWithoutGoalkeeperAndMiddlefielderModifiers(ent.getTotalWithoutGoalkeeperAndMiddlefielderModifiers());
+		
+		return bean;
+	}
+
+
+	public void saveRealRanking(RankingBean bean, String leagueShortName, String competitionShortName, String username) {
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		Ranking ent = new Ranking();
+		ent.setCompetition(competition);
+		ent.setName(bean.getName());
+		List<RankingRow> rows = new ArrayList<RankingRow>();
+		for (RankingRowBean rrb : bean.getRows()) {
+			RankingRow rre = createRankingRowEnt(rrb);
+			rows.add(rre);
+		}
+		ent.setRows(rows);
+		
+		rankingRepo.save(ent);
+		
+		
+	}
+
+
+	private RankingRow createRankingRowEnt(RankingRowBean bean) {
+		RankingRow ent = new RankingRow();
+		ent.setName(bean.getName());
+		ent.setPoints(bean.getPoints());
+		ent.setRankingPosition(ent.getRankingPosition());
+		ent.setScoredGoals(bean.getScoredGoals());
+		ent.setSumAllVotes(bean.getSumAllVotes());
+		ent.setTakenGoals(bean.getTakenGoals());
+		return ent;
 	}
 
 

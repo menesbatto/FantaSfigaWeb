@@ -143,7 +143,7 @@ public class RulesExpertMain {
 		if (!isPerformancerActive)
 			return m;
 		
-		m.setPerformanceModifierActive(true);
+		m.setPerformanceModifierActive(isPerformancerActive);
 		
 		m.setPerformance0(-5.0);
 		m.setPerformance1(-3.0);

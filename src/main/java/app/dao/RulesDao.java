@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.dom4j.rule.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
@@ -77,7 +78,9 @@ public class RulesDao {
 
 	public Boolean existRulesForLeague(String leagueShortName, String username) {
 		League league = leagueDao.findByShortNameEnt(leagueShortName, username);
+		
 		List<Rules> rules = rulesRepo.findByLeague(league);
+		
 		
 		Boolean exist = rules.size() > 0;
 		return exist;
@@ -294,6 +297,7 @@ public class RulesDao {
 			
 	}
 	
+	@Cacheable("rules")
 	public RulesBean retrieveRules(String competitionShortName, String leagueShortName, String username) {
 		
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);

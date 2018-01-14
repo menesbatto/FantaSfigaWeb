@@ -544,6 +544,20 @@ public class SeasonDayAnalyzer {
 				lineUp.setDefenderModifier(defenderModifierFromWeb);
 			}
 		}
+		if (rules.getModifiers().isDefenderModifierActive()){
+			if (!AppConstants.FORCE_PERFORMANCE_MODIFIER_DISABLED){
+				Elements performanceModifiersDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore rendimento:");
+				Double performanceModifierFromWeb = performanceModifiersDomElement.isEmpty() ? 0 : getVote(performanceModifiersDomElement.get(0).siblingNodes().get(0).childNode(0).toString());
+				lineUp.setPerformanceModifier(performanceModifierFromWeb);
+			}
+		}
+		if (rules.getModifiers().isDefenderModifierActive()){
+			if (!AppConstants.FORCE_FAIR_PLAY_MODIFIER_DISABLED){
+				Elements fairplayModifiersDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore fairplay:");
+				Double fairPlayModifierFromWeb = fairplayModifiersDomElement.isEmpty() ? 0 : getVote(fairplayModifiersDomElement.get(0).siblingNodes().get(0).childNode(0).toString());
+				lineUp.setFairPlayModifier(fairPlayModifierFromWeb);
+			}
+		}
 		//System.out.println(lineUp);
 		return lineUp;
 	}
