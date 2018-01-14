@@ -1,4 +1,4 @@
-package app.logic._5_seasonsExecutor;
+package app.logic._4_seasonsExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
-import app.logic._5_seasonsExecutor.model.Pair;
+import app.logic._4_seasonsExecutor.model.Pair;
 import app.utils.AppConstants;
 
 @Service

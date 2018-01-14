@@ -1,4 +1,4 @@
-package app.logic._5_seasonsExecutor;
+package app.logic._4_seasonsExecutor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,9 +13,9 @@ import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
-import app.logic._5_seasonsExecutor.model.Pair;
-import app.logic._5_seasonsExecutor.model.RankingBean;
-import app.logic._5_seasonsExecutor.model.RankingRowBean;
+import app.logic._4_seasonsExecutor.model.Pair;
+import app.logic._4_seasonsExecutor.model.RankingBean;
+import app.logic._4_seasonsExecutor.model.RankingRowBean;
 
 @Service
 public class SeasonExecutor {

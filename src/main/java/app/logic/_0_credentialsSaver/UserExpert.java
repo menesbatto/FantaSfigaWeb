@@ -153,6 +153,15 @@ public class UserExpert {
 		return true;
 	}
 
+	public Boolean logout() {
+		userBean.setUsername(null);
+		userBean.setFirstname(null);
+		userBean.setLastname(null);
+		userBean.setEmail(null);
+		userBean.setPassword(null);
+		return true;
+	}
+
 	
 	
 }

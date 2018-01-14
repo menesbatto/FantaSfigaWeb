@@ -13,9 +13,6 @@ public class AppConstants {
 
 	
 	//	URL
-	
-	
-	
 	public static String LAST_SEASON_DAY_URL = "http://www.fantagazzetta.com/voti-fantacalcio-serie-a";
 	
 	public static String GAZZETTA_URL = "http://leghe.fantagazzetta.com/";

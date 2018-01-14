@@ -1,4 +1,4 @@
-package app.logic._5_seasonsExecutor.model;
+package app.logic._4_seasonsExecutor.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

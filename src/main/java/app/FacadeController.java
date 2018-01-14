@@ -136,6 +136,22 @@ public class FacadeController {
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
 	}
+	//###################################################################
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	public ResponseEntity<String> logout() {
+		
+		Boolean confirmed = userExpert.logout();
+		String body;
+		if (confirmed)
+			body = "logout COMPLETED";
+		else
+			body = "logout ERROR";
+		
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
 	
 	
 	//###################################################################

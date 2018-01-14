@@ -52,7 +52,7 @@ public class AllSeasonsGenerator {
 		Integer playersNumbers = teams.size();
 		
 		List<String> allInputPermutations = utilsDao.findPermutations(playersNumbers );
-		
+		AppConstants.DEBUG_MODE = false;
 		if (AppConstants.DEBUG_MODE) 
 			allInputPermutations = allInputPermutations.subList(0, 1);
 		

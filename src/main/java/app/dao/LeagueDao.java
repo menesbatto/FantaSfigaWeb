@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,7 @@ import app.dao.entity.SeasonDay;
 import app.dao.entity.SeasonDayResult;
 import app.dao.entity.SeasonResult;
 import app.dao.entity.User;
-import app.logic._0_credentialsSaver.model.ConfirmUser;
-import app.logic._0_credentialsSaver.model.Credentials;
 import app.logic._0_credentialsSaver.model.LeagueBean;
-import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._1_seasonPatternExtractor.model.PlayerEnum;
 import app.logic._1_seasonPatternExtractor.model.SeasonBean;
@@ -30,8 +28,8 @@ import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
-import app.logic._5_seasonsExecutor.model.RankingBean;
-import app.logic._5_seasonsExecutor.model.RankingRowBean;
+import app.logic._4_seasonsExecutor.model.RankingBean;
+import app.logic._4_seasonsExecutor.model.RankingRowBean;
 
 @Service
 @EnableCaching
@@ -137,7 +135,7 @@ public class LeagueDao {
 		
 		return true;
 	}
-	
+	@Cacheable("competition")
 	public Competition findCompetitionByShortNameAndLeagueEnt (String competitionShortName, String leagueShortName, String username) {
 	
 		League league = findByShortNameEnt(leagueShortName, username);
@@ -469,7 +467,10 @@ public class LeagueDao {
 
 	public void saveRealRanking(RankingBean bean, String leagueShortName, String competitionShortName, String username) {
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
-		Ranking ent = new Ranking();
+//		rankingRepo.delete(8l);
+		Ranking ent = rankingRepo.findByCompetition(competition);
+		rankingRepo.delete(ent);
+		ent = new Ranking();
 		ent.setCompetition(competition);
 		ent.setName(bean.getName());
 		List<RankingRow> rows = new ArrayList<RankingRow>();
@@ -480,7 +481,6 @@ public class LeagueDao {
 		ent.setRows(rows);
 		
 		rankingRepo.save(ent);
-		
 		
 	}
 
@@ -498,7 +498,36 @@ public class LeagueDao {
 
 
 
-	
+	public RankingBean findRealRanking(String leagueShortName, String competitionShortName, String username) {
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		RankingBean bean = new RankingBean();
+		
+		Ranking ent = rankingRepo.findByCompetition(competition);
+		
+		bean.setName(ent.getName());
+		
+		
+		List<RankingRowBean> rows = new ArrayList<RankingRowBean>();
+		for (RankingRow rrEnt : ent.getRows()) {
+			RankingRowBean rrBean = createRankingRowEnt(rrEnt);
+			rows.add(rrBean);
+		}
+		bean.setRows(rows);
+		
+		return bean;
+	}
+
+
+	private RankingRowBean createRankingRowEnt(RankingRow ent) {
+		RankingRowBean bean = new RankingRowBean();
+		bean.setName(ent.getName());
+		bean.setPoints(ent.getPoints());
+		bean.setRankingPosition(ent.getRankingPosition());
+		bean.setScoredGoals(ent.getScoredGoals());
+		bean.setSumAllVotes(ent.getSumAllVotes());
+		bean.setTakenGoals(ent.getTakenGoals());
+		return bean;
+	}
 	
 	
 }
