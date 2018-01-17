@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.PostponementBean;
 import app.dao.SerieATeamDao;
 import app.dao.VoteDao;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
@@ -82,7 +83,7 @@ public class MainSeasonVotesDowloader {
 		Map<String, String> map = serieATeamDao.findAllTeamIds();
 		
 		map = new HashMap<String, String>();
-		Document doc = HttpUtils.getHtmlPageNoLogged(AppConstants.TEAMS_IDS_URL);
+		Document doc = HttpUtils.getHtmlPageNoLogged(AppConstants.SERIE_A_TEAMS_IDS_URL);
 		Elements teamsIds = doc.select("div.row.no-gutter.tbvoti");
 		for(Element team : teamsIds){
 			String gazzettaTeamId = team.attr("data-team");
@@ -290,25 +291,31 @@ public class MainSeasonVotesDowloader {
 		}
 		return playerVoteCompleteList;
 	}
-	
-	
-	
-	public static Map<VotesSourceEnum,Map<String, Map<String, List<PlayerVoteComplete>>>> getAllVotes() {
-		return retrieveAllVotes();
-	}	
-	
-	private static Map<VotesSourceEnum,Map<String, Map<String, List<PlayerVoteComplete>>>> retrieveAllVotes() {
+
+
+	public void insertPostponement(PostponementBean match) {
+		voteDao.insertPostponement(match);
 		
-		
-		Map<VotesSourceEnum,Map<String, Map<String, List<PlayerVoteComplete>>>> map = IOUtils.read(AppConstants.REAL_CHAMPIONSHIP_VOTES_DIR	+ AppConstants.REAL_CHAMPIONSHIP_VOTES_FILE_NAME, HashMap.class);
-		if (map== null){
-			map = new HashMap<VotesSourceEnum, Map<String,Map<String,List<PlayerVoteComplete>>>>();
-			map.put(VotesSourceEnum.FANTAGAZZETTA, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
-			map.put(VotesSourceEnum.STATISTICO, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
-			map.put(VotesSourceEnum.ITALIA, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
-		}
-		return map;
 	}
+	
+	
+	
+//	public static Map<VotesSourceEnum,Map<String, Map<String, List<PlayerVoteComplete>>>> getAllVotes() {
+//		return retrieveAllVotes();
+//	}	
+	
+//	private static Map<VotesSourceEnum,Map<String, Map<String, List<PlayerVoteComplete>>>> retrieveAllVotes() {
+//		
+//		
+//		Map<VotesSourceEnum,Map<String, Map<String, List<PlayerVoteComplete>>>> map = IOUtils.read(AppConstants.REAL_CHAMPIONSHIP_VOTES_DIR	+ AppConstants.REAL_CHAMPIONSHIP_VOTES_FILE_NAME, HashMap.class);
+//		if (map== null){
+//			map = new HashMap<VotesSourceEnum, Map<String,Map<String,List<PlayerVoteComplete>>>>();
+//			map.put(VotesSourceEnum.FANTAGAZZETTA, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
+//			map.put(VotesSourceEnum.STATISTICO, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
+//			map.put(VotesSourceEnum.ITALIA, new HashMap<String, Map<String,List<PlayerVoteComplete>>>());
+//		}
+//		return map;
+//	}
 
 	
 	

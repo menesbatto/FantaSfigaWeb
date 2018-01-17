@@ -51,7 +51,6 @@ public class MainSeasonsExecutor {
 		ArrayList<RankingBean> rankings = new ArrayList<RankingBean>();
 	
 		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
-
 		SeasonResultBean findCalculatedSeasonResult = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
 
 		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
@@ -82,7 +81,6 @@ public class MainSeasonsExecutor {
 					row.setRankingPosition(j+1);
 				
 			}
-			System.out.println();
 			rankings.add(ranking);
 //			if (ranking.getRows().get(1).getName().equals("Hawkins"))
 //				System.out.println(season);
@@ -125,13 +123,15 @@ public class MainSeasonsExecutor {
 					LineUpLightBean homeTeamFromApp = getTeamFromApp(seasonDayFromApp.getLinesUpLight(), matchFromWeb.getHomeTeam());
 					LineUpLightBean awayTeamFromApp = getTeamFromApp(seasonDayFromApp.getLinesUpLight(), matchFromWeb.getAwayTeam());
 					
-					if (!homeTeamFromApp.getSumTotalPoints().equals(homeTeamResultFromWeb.getSumTotalPoints())){
-						System.out.println("ERRORE \t Giornata:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getHomeTeam() + "\tPunteggio da web:\t" + homeTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  homeTeamFromApp.getSumTotalPoints());
-	
-					}
-	
-					if (!awayTeamFromApp.getSumTotalPoints().equals(awayTeamResultFromWeb.getSumTotalPoints())){
-						System.out.println("ERRORE \t Giornata:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getAwayTeam() + "\tPunteggio da web:\t" + awayTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  awayTeamFromApp.getSumTotalPoints());
+					if (homeTeamFromApp != null) {
+						if (!homeTeamFromApp.getSumTotalPoints().equals(homeTeamResultFromWeb.getSumTotalPoints())){
+							System.out.println("ERRORE \t Giornata:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getHomeTeam() + "\tPunteggio da web:\t" + homeTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  homeTeamFromApp.getSumTotalPoints());
+		
+						}
+		
+						if (!awayTeamFromApp.getSumTotalPoints().equals(awayTeamResultFromWeb.getSumTotalPoints())){
+							System.out.println("ERRORE \t Giornata:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getAwayTeam() + "\tPunteggio da web:\t" + awayTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  awayTeamFromApp.getSumTotalPoints());
+						}
 					}
 				}
 			}
@@ -149,16 +149,16 @@ public class MainSeasonsExecutor {
 	
 	
 	
-	public static ArrayList<RankingBean> getAllGeneratedRankings() {
-		long startTime = System.nanoTime();
-		System.out.println("Inizio caricamento di tutte le classifiche");
-		ArrayList<RankingBean> allRankings = IOUtils.read(AppConstants.RANKING_DIR + AppConstants.RANKING_FILE_NAME, ArrayList.class);
-		long endTime = System.nanoTime();
-		long duration = (endTime - startTime); // divide by 1000000 to get
-												// milliseconds.
-		System.out.println("Fine caricamento " + duration / 1000000);
-		return allRankings;
-	}
+//	public static ArrayList<RankingBean> getAllGeneratedRankings() {
+//		long startTime = System.nanoTime();
+//		System.out.println("Inizio caricamento di tutte le classifiche");
+//		ArrayList<RankingBean> allRankings = IOUtils.read(AppConstants.RANKING_DIR + AppConstants.RANKING_FILE_NAME, ArrayList.class);
+//		long endTime = System.nanoTime();
+//		long duration = (endTime - startTime); // divide by 1000000 to get
+//												// milliseconds.
+//		System.out.println("Fine caricamento " + duration / 1000000);
+//		return allRankings;
+//	}
 	
 //	public static RankingBean getRealRanking() {
 //		RankingBean ranking = IOUtils.read(AppConstants.REAL_RANKING_DIR + AppConstants.REAL_RANKING_FILE_NAME, RankingBean.class);

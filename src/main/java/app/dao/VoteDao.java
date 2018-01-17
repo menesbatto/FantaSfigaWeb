@@ -7,11 +7,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import app.dao.entity.User;
+import app.PostponementBean;
+import app.dao.entity.Postponement;
 import app.dao.entity.Vote;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.RoleEnum;
@@ -24,7 +25,8 @@ public class VoteDao {
 	@Autowired
 	private VoteRepo voteRepo;
 
-
+	@Autowired
+	private PostponementRepo postponementRepo;
 	
 	public Map<String, Map<String, List<PlayerVoteComplete>>> findVotesBySource(VotesSourceEnum source) {
 		
@@ -85,8 +87,10 @@ public class VoteDao {
 
 		return bean;
 	}
-
+@Transactional
 	public int calculateLastSerieASeasonDayCalculated() {
+//		voteRepo.deleteBySerieASeasonDay(20);
+
 		List<Integer> seasonDays = voteRepo.findAllDistinct();
 		if (seasonDays.isEmpty())
 			return 0;
@@ -96,7 +100,6 @@ public class VoteDao {
 
 
 	public void saveVotesBySeasonDayAndVoteSource(Map<String, List<PlayerVoteComplete>> votesByTeam, Integer serieASeasonDay, VotesSourceEnum voteSource) {
-		
 		Vote v;
 		List<Vote> voteEnts = new ArrayList<Vote>();
 		for ( Entry<String, List<PlayerVoteComplete>> entry : votesByTeam.entrySet()) {
@@ -148,6 +151,47 @@ public class VoteDao {
 			return null;
 		return seasonDays;
 	}
+
+
+	public void insertPostponement(PostponementBean bean) {
+		
+		Postponement ent = new Postponement();
+		ent.setAwayTeam(bean.getAwayTeam());
+		ent.setHomeTeam(bean.getHomeTeam());
+		ent.setSeasonDay(bean.getSeasonDay());
+		postponementRepo.save(ent);
+		
+			
+	}
+	
+	public Map<Integer, List<PostponementBean>> findAllPostponement() {
+		Map<Integer, List<PostponementBean>> map = new HashMap<Integer, List<PostponementBean>>();
+		
+		List<Postponement> ents = postponementRepo.findAll();
+		for (Postponement ent : ents) {
+			
+			PostponementBean bean = createPostponementBean(ent);
+			Integer seasonDay = ent.getSeasonDay();
+			List<PostponementBean> beans =  map.get(seasonDay);
+			if (beans == null) {
+				beans = new ArrayList<PostponementBean>();
+				map.put(seasonDay, beans);
+			}
+			beans.add(bean);
+			
+		}
+		return map;
+		
+	}
+
+	private PostponementBean createPostponementBean(Postponement ent) {
+		PostponementBean bean = new PostponementBean();
+		bean.setAwayTeam(ent.getAwayTeam());
+		bean.setHomeTeam(ent.getHomeTeam());
+		bean.setSeasonDay(ent.getSeasonDay());
+		return bean;
+	}
+
 
 	
 	

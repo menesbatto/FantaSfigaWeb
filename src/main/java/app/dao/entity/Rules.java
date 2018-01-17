@@ -185,8 +185,7 @@ public class Rules {
 	// CompetitionRules
 	private Boolean homeBonusActive;
 	private Double homeBonus;
-
-	
+	private String postponementBehaviour;
 	
 	public Rules() {
 	}
@@ -1227,6 +1226,14 @@ public class Rules {
 
 	public void setBinding(String binding) {
 		this.binding = binding;
+	}
+
+	public String getPostponementBehaviour() {
+		return postponementBehaviour;
+	}
+
+	public void setPostponementBehaviour(String postponementBehaviour) {
+		this.postponementBehaviour = postponementBehaviour;
 	}
 	
 

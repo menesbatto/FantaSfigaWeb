@@ -207,12 +207,12 @@ public class SeasonPatternExtractor {
 //
 //	}
 	
-	public static SeasonBean getSeasonPattern() {
-		// recupera da file il pattern della stagione recuperata
-		// Dalla combinazione data in ingresso crea il rispettivo calendario
-		SeasonBean seasonPattern = IOUtils.read(AppConstants.SEASON_REASULTS_DIR + AppConstants.SEASON_REASULTS_FILE_NAME, SeasonBean.class);
-		return seasonPattern;
-	}
+//	public static SeasonBean getSeasonPattern() {
+//		// recupera da file il pattern della stagione recuperata
+//		// Dalla combinazione data in ingresso crea il rispettivo calendario
+//		SeasonBean seasonPattern = IOUtils.read(AppConstants.SEASON_REASULTS_DIR + AppConstants.SEASON_REASULTS_FILE_NAME, SeasonBean.class);
+//		return seasonPattern;
+//	}
 	
 //	public ArrayList<String> getPlayers() {
 //		List<String> teams = leagueDao.findTeams(leagueShortName, username);

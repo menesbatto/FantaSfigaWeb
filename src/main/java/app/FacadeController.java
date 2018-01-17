@@ -1,6 +1,9 @@
 package app;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +25,9 @@ import app.logic._0_permutationsGenerator.PermutationsGenerator;
 import app.logic._0_rulesDownloader.RulesExpertMain;
 import app.logic._0_votesDownloader.MainSeasonVotesDowloader;
 import app.logic._1_seasonPatternExtractor.SeasonPatternExtractor;
+import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
+import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._3_seasonsGenerator.AllSeasonsGenerator;
 
 @Controller // This means that this class is a Controller
@@ -69,6 +74,36 @@ public class FacadeController {
 	
 
 	//###################################################################
+	
+	@RequestMapping(value = "/insertPostponement", method = RequestMethod.POST)
+	public ResponseEntity<String> insertPostponement(@RequestBody PostponementBean m) {
+		
+		mainSeasonVotesDowloader.insertPostponement(m);
+//		User p = personDao.findById(1L);
+		String body = "Insert Postponemen COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+	
+
+	//###################################################################
+	
+	
+	private static Map<String, ArrayList<String>> initTo6MatchesMap() {
+		Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("LAZ");
+		list.add("UDI");
+		map.put("12", list);
+		list = new ArrayList<String>();
+		list.add("SAM");
+		list.add("ROM");
+		map.put("12", list);
+		
+		return map;
+	}
+	
 	
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
 	public ResponseEntity<String> createUser(@RequestBody UserBean user) {
@@ -198,6 +233,18 @@ public class FacadeController {
 		return response;
 	}
 	
+	//###################################################################
+	
+	@RequestMapping(value = "/savePostpomentBehaviour", method = RequestMethod.POST)
+	public ResponseEntity<String> savePostpomentBehaviour(@RequestBody PostponementReq req) {
+		
+		rulesExpertMain.savePostpomentBehaviour(req);
+		String body = "Save Postpoment Behaviour COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+		
 	
 	//###################################################################
 

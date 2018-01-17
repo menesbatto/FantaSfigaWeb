@@ -22,5 +22,7 @@ public interface VoteRepo extends JpaRepository<Vote, Long> {
 
 	List<Vote> findBySourceOrderBySerieASeasonDayAsc(String source);
 
+	void deleteBySerieASeasonDay(Integer l);
+
 	
 }

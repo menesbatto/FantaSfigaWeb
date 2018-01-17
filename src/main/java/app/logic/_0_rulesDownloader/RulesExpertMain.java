@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.CompetitionBean;
+import app.PostponementReq;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UserDao;
@@ -481,8 +482,8 @@ public class RulesExpertMain {
 		
 		Elements autogolElems = doc.getElementsMatchingOwnText("Autogol:");
 		if (autogolElems.isEmpty()) {
-			p.setAutogolActive(false);
-			p.setAutogol(null);
+			p.setAutogolActive(true);
+			p.setAutogol(59.0);
 		}
 		else {
 			String isAutogolActiveString = autogolElems.parents().get(0).getElementsByAttribute("checked").val();
@@ -612,6 +613,11 @@ public class RulesExpertMain {
 		map.put(RoleEnum.A, val);
 		
 		return map;
+	}
+
+	public void savePostpomentBehaviour(PostponementReq req) {
+		rulesDao.savePostpomentBehaviour(req, userBean.getUsername());
+		
 	}
 
 	

@@ -52,12 +52,15 @@ public class SeasonExecutor {
 //			if (AppConstants.SEASON_DAYS_TO_WAIT.contains(i+1))
 			seasonDay = seasonDays.get(i);
 			seasonDayResult = realChampionshipResults.get(i);
-			seasonDayResult = seasonDayExecutor.execute(seasonDay, seasonDayResult, rules, teams);
-			System.out.println();
-//			System.out.println(seasonDayResult);
-			updateRanking(seasonDayResult, ranking);	
-			updateFormulaUnoRanking(seasonDayResult, rules, formulaUnoRanking);
-			
+			if (seasonDayResult.getLinesUpLight().size() > 0) {	//Controllo per gestire le giornate in cui ci sono i rinvii
+				seasonDayResult = seasonDayExecutor.execute(seasonDay, seasonDayResult, rules, teams);
+	//			System.out.println(seasonDayResult);
+				updateRanking(seasonDayResult, ranking);	
+				updateFormulaUnoRanking(seasonDayResult, rules, formulaUnoRanking);
+			}
+			else {
+				System.out.println( (i + 1) + " Giornata da recuperare");
+			}
 		}
 		
 		

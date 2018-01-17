@@ -102,6 +102,14 @@ public class MatchExecutor {
 		//2 - Calcola gol fatti 			
 		Integer homeTeamGoals = calculateGoal(homeSumTotalPoints, rules);
 		Integer awayTeamGoals = calculateGoal(awaySumTotalPoints, rules);
+		
+		if (rules.getPoints().getAutogolActive()) {
+			if ( homeSumTotalPoints < rules.getPoints().getAutogol() )
+				awayTeamGoals++;
+			else if ( awaySumTotalPoints < rules.getPoints().getAutogol() )
+				homeTeamGoals++;
+		}
+		
 
 		if (AppConstants.FORCE_WINNING_FOR_DISTANCE){
 			Double difference = homeSumTotalPoints - awaySumTotalPoints;

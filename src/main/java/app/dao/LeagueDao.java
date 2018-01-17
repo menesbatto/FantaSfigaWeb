@@ -178,9 +178,9 @@ public class LeagueDao {
 		
 
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
-
 		SeasonResult seasonResult = seasonResultRepo.findByCompetition(competition);
-		
+//		seasonResultRepo.delete(seasonResult);
+		System.out.println();
 		if (seasonResult != null)
 			return;
 		
@@ -203,19 +203,22 @@ public class LeagueDao {
 
 
 	private SeasonDayResult createSeasonDayResult(SeasonDayResultBean bean) {
+		
 		SeasonDayResult ent = new SeasonDayResult();
 		
 		ent.setName(bean.getName());
 		
-		List<LineUpLight> lineUpLights = new ArrayList<LineUpLight>();
-		
-		
-		for (LineUpLightBean lineUpLightBean : bean.getLinesUpLight()) {
-			LineUpLight lineUpLight = createLineUpLight(lineUpLightBean);
-			lineUpLights.add(lineUpLight);
+		if (bean.getLinesUpLight()!= null) {
+			List<LineUpLight> lineUpLights = new ArrayList<LineUpLight>();
+			
+			
+			for (LineUpLightBean lineUpLightBean : bean.getLinesUpLight()) {
+				LineUpLight lineUpLight = createLineUpLight(lineUpLightBean);
+				lineUpLights.add(lineUpLight);
+			}
+			
+			ent.setLinesUpLight(lineUpLights);
 		}
-		
-		ent.setLinesUpLight(lineUpLights);
 		
 		return ent;
 	}
@@ -265,6 +268,12 @@ public class LeagueDao {
 		
 		String name = ent.getName();
 
+		if (ent.getLinesUpLight() == null) {
+			SeasonDayResultBean bean = new SeasonDayResultBean();
+			bean.setName(name);
+			return bean;
+		}
+		
 		List<LineUpLightBean> linesUpLightBeans = new ArrayList<LineUpLightBean>();
 		for (LineUpLight lulEnt : ent.getLinesUpLight()) {
 			LineUpLightBean lulBean = createLineUpLightBean(lulEnt);
@@ -272,6 +281,7 @@ public class LeagueDao {
 		}
 			
 		SeasonDayResultBean bean = new SeasonDayResultBean(name, linesUpLightBeans);
+		
 		return bean;
 	}
 
@@ -469,7 +479,8 @@ public class LeagueDao {
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 //		rankingRepo.delete(8l);
 		Ranking ent = rankingRepo.findByCompetition(competition);
-		rankingRepo.delete(ent);
+		if (ent != null)
+			rankingRepo.delete(ent);
 		ent = new Ranking();
 		ent.setCompetition(competition);
 		ent.setName(bean.getName());

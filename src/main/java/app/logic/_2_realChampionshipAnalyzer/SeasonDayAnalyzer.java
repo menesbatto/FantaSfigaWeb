@@ -1,7 +1,6 @@
 package app.logic._2_realChampionshipAnalyzer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +9,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
+import app.PostponementBean;
 import app.logic._0_rulesDownloader.model.BonusMalus;
+import app.logic._0_rulesDownloader.model.MaxOfficeVotesEnum;
 import app.logic._0_rulesDownloader.model.Modifiers;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
@@ -18,6 +19,7 @@ import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._2_realChampionshipAnalyzer.model.LineUp;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.PlayerVote;
+import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
@@ -28,11 +30,12 @@ public class SeasonDayAnalyzer {
 	private Map<String, List<PlayerVoteComplete>> seasonDayVotes;
 	private RulesBean rules;
 	
-	static Map<String, ArrayList<String>> force6map = initTo6MatchesMap();
+	private Map<Integer, List<PostponementBean>> postponementsMap;
 	
 	
-	public SeasonDayResultBean calculateSingleSeasonDay(String seasonDayLinesUpURL, Map<String, List<PlayerVoteComplete>> seasonDayVotesFromMain, String serieASeasonDay, RulesBean rules) {
-		seasonDayVotes = seasonDayVotesFromMain;
+	public SeasonDayResultBean calculateSingleSeasonDay(String seasonDayLinesUpURL, Map<String, List<PlayerVoteComplete>> seasonDayVotesInput, Integer serieASeasonDay, RulesBean rules, Map<Integer, List<PostponementBean>> postponementsMapInput) {
+		seasonDayVotes = seasonDayVotesInput;
+		postponementsMap = postponementsMapInput;
 		this.rules = rules;
 		//Recupero le formazioni di giornata
 		Document doc = HttpUtils.getHtmlPageNoLogged(seasonDayLinesUpURL);
@@ -95,18 +98,24 @@ public class SeasonDayAnalyzer {
 	}
 
 
-	
-
-
-	private static Map<String, ArrayList<String>> initTo6MatchesMap() {
-		Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("LAZ");
-		list.add("UDI");
-		map.put("12", list);
-		return map;
-	}
-
+//	
+//
+//
+//	private static Map<Integer, ArrayList<String>> initTo6MatchesMap() {
+//		
+//		Map<Integer, ArrayList<String>> map = new HashMap<Integer, ArrayList<String>>();
+//		ArrayList<String> list = new ArrayList<String>();
+//		list.add("LAZ");
+//		list.add("UDI");
+//		map.put(12, list);
+//		list = new ArrayList<String>();
+//		list.add("SAM");
+//		list.add("ROM");
+//		map.put(2, list);
+//		
+//		return map;
+//	}
+//
 
 
 
@@ -413,7 +422,7 @@ public class SeasonDayAnalyzer {
 
 
 	private void createOfficePlayer(int i, PlayerVote subCandidate) {
-		if (i <=  rules.getSubstitutions().getSubstitutionNumber() - 1 || AppConstants.OFFICE_RESERVERS_TILL_11) {
+		if (i <=  rules.getSubstitutions().getSubstitutionNumber() - 1 || rules.getSubstitutions().getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_ALL)) {
 			subCandidate.setName("OFFICE");
 			subCandidate.setTeam("OFFICE");
 			if (subCandidate.getRole().equals(RoleEnum.P)){
@@ -476,7 +485,7 @@ public class SeasonDayAnalyzer {
 		return playerVoteToAdd;
 	}
 
-	private LineUp createLineUp(Element lineUpDomElement, String teamName, String serieASeasonDay) {
+	private LineUp createLineUp(Element lineUpDomElement, String teamName, Integer serieASeasonDay) {
 		LineUp lineUp = new LineUp();
 		
 		lineUp.setTeamName(teamName);
@@ -562,7 +571,7 @@ public class SeasonDayAnalyzer {
 		return lineUp;
 	}
 
-	private PlayerVote getPlayer(Element playerElem, String serieASeasonDay) {
+	private PlayerVote getPlayer(Element playerElem, Integer serieASeasonDay) {
 		
 		RoleEnum role = RoleEnum.valueOf(playerElem.getElementsByClass("myhidden-xs").get(0).text());
 		String name = playerElem.getElementsByClass("sh").get(0).text().toUpperCase();
@@ -577,11 +586,13 @@ public class SeasonDayAnalyzer {
 		 
 		// Controllo se lo devo forzare a 6
 		if (pvcVote == null){
-			ArrayList<String> forcedTeams = force6map.get(serieASeasonDay);
-			if (forcedTeams != null)
-				 if (forcedTeams.contains(team))
-					 pvcVote = new PlayerVoteComplete(name, team, role, 6.0, false, false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false);
-			
+			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.ALL_6)) {
+				List<PostponementBean> forcedTeams = postponementsMap.get(serieASeasonDay);
+				if (forcedTeams != null)
+					 if (forcedTeams.contains(team))
+						 pvcVote = new PlayerVoteComplete(name, team, role, 6.0, false, false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false);
+				
+			}
 		}
 	
 		

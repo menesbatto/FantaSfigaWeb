@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
+import app.PostponementReq;
 import app.dao.entity.Competition;
 import app.dao.entity.League;
 import app.dao.entity.LineUpLight;
@@ -34,6 +35,7 @@ import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
+import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 
 @Service
 @EnableCaching
@@ -81,7 +83,7 @@ public class RulesDao {
 		
 		List<Rules> rules = rulesRepo.findByLeague(league);
 		
-		
+//		rulesRepo.delete(rules);
 		Boolean exist = rules.size() > 0;
 		return exist;
 	}
@@ -475,12 +477,12 @@ public class RulesDao {
 		substitution.setSubstitutionNumber(e.getSubstitutionNumber());
 		substitution.setSubstitutionMode(e.getSubstitutionMode());
 		
-		MaxOfficeVotesEnum maxOfficeVotesString;
+		MaxOfficeVotesEnum maxOfficeVotesEnum;
 		if (e.getMaxOfficeVotes().equals("S"))
-			maxOfficeVotesString = MaxOfficeVotesEnum.TILL_SUBSTITUTIONS;
+			maxOfficeVotesEnum = MaxOfficeVotesEnum.TILL_SUBSTITUTIONS;
 		else //	if (e.getMaxOfficeVotes().equals("A"))
-			maxOfficeVotesString = MaxOfficeVotesEnum.TILL_ALL;
-		substitution.setMaxOfficeVotes(maxOfficeVotesString);
+			maxOfficeVotesEnum = MaxOfficeVotesEnum.TILL_ALL;
+		substitution.setMaxOfficeVotes(maxOfficeVotesEnum);
 		
 		substitution.setGoalkeeperPlayerOfficeVoteActive(e.getGoalkeeperPlayerOfficeVoteActive());
 		substitution.setGoalkeeperPlayerOfficeVote(e.getGoalkeeperPlayerOfficeVote());
@@ -495,6 +497,8 @@ public class RulesDao {
 		competitionRules.setHomeBonus(e.getHomeBonus());
 		competitionRules.setHomeBonusActive(e.getHomeBonusActive());
 		competitionRules.setBinding(e.getBinding());
+		competitionRules.setPostponementBehaviour(PostponementBehaviourEnum.valueOf(e.getPostponementBehaviour()));
+		
 		bean.setCompetitionRules(competitionRules);
 		
 		
@@ -522,13 +526,15 @@ public class RulesDao {
 		rules.setHomeBonusActive(rulesBean.getCompetitionRules().isHomeBonusActive());
 		rules.setHomeBonus(rulesBean.getCompetitionRules().getHomeBonus());
 		
+		
 		rulesRepo.save(rules);
 		
 		RulesBean bean = new RulesBean();
 		return bean; 
 		
 	}
-
+	
+	
 	public void saveSerieAToCompetitionBinding(SeasonBean season, String leagueShortName, String competitionShortName, String username) {
 		String seasonDayBinding = "";
 		
@@ -574,6 +580,19 @@ public class RulesDao {
 		}
 		
 		return map;
+		
+	}
+
+	public void savePostpomentBehaviour(PostponementReq req, String username) {
+		String competitionShortName = req.getCompetitionShortName();
+		String leagueShortName = req.getLeagueShortName();
+		String postponementBehaviour = req.getPostponementBehaviour();
+		
+		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		Rules ent = rulesRepo.findByCompetition(competition);
+		ent.setPostponementBehaviour(postponementBehaviour);
+		
+		rulesRepo.save(ent);
 		
 	}
 	
