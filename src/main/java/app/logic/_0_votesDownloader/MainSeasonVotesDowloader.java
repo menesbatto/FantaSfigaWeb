@@ -14,13 +14,12 @@ import org.springframework.stereotype.Service;
 
 import app.PostponementBean;
 import app.dao.SerieATeamDao;
-import app.dao.VoteDao;
+import app.dao.UtilsDao;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
-import app.utils.IOUtils;
 //import fantapianto._1_realChampionshipAnalyzerFINAL.MainSeasonAnalyzerFINAL;
 import app.utils.UsefulMethods;
 
@@ -28,7 +27,7 @@ import app.utils.UsefulMethods;
 public class MainSeasonVotesDowloader {
 	
 	@Autowired
-	private VoteDao voteDao;
+	private UtilsDao utilsDao;
 	
 	@Autowired
 	private SerieATeamDao serieATeamDao;
@@ -43,7 +42,7 @@ public class MainSeasonVotesDowloader {
 
 		Integer lastSerieASeasonDay = retrieveLastSerieASeasonDay();
 		
-		int lastSeasonDayCalculated = voteDao.calculateLastSerieASeasonDayCalculated();
+		int lastSeasonDayCalculated = utilsDao.calculateLastSerieASeasonDayCalculated();
 		
 		String tvStamp = getTVUrlParameter();
 		
@@ -58,13 +57,13 @@ public class MainSeasonVotesDowloader {
 			
 			
 			Map<String, List<PlayerVoteComplete>> napoliVotes = trisVote.get(VotesSourceEnum.FANTAGAZZETTA);
-			voteDao.saveVotesBySeasonDayAndVoteSource(napoliVotes, i, VotesSourceEnum.FANTAGAZZETTA);
+			utilsDao.saveVotesBySeasonDayAndVoteSource(napoliVotes, i, VotesSourceEnum.FANTAGAZZETTA);
 			
 			Map<String, List<PlayerVoteComplete>> milanoVotes = trisVote.get(VotesSourceEnum.STATISTICO);
-			voteDao.saveVotesBySeasonDayAndVoteSource(milanoVotes, i, VotesSourceEnum.STATISTICO);
+			utilsDao.saveVotesBySeasonDayAndVoteSource(milanoVotes, i, VotesSourceEnum.STATISTICO);
 
 			Map<String, List<PlayerVoteComplete>> italiaVotes = trisVote.get(VotesSourceEnum.ITALIA);
-			voteDao.saveVotesBySeasonDayAndVoteSource(italiaVotes, i, VotesSourceEnum.ITALIA);
+			utilsDao.saveVotesBySeasonDayAndVoteSource(italiaVotes, i, VotesSourceEnum.ITALIA);
 			
 			
 		}
@@ -294,7 +293,7 @@ public class MainSeasonVotesDowloader {
 
 
 	public void insertPostponement(PostponementBean match) {
-		voteDao.insertPostponement(match);
+		utilsDao.insertPostponement(match);
 		
 	}
 	

@@ -15,7 +15,7 @@ public class RankingRow {
 
 	private String name;
 
-	private Integer points;					// 56, 60, 58
+	private Double points;					// 56, 60, 58
 	
 	private Double sumAllVotes;			// 1345, 1200, 1240.5, 
 	
@@ -24,6 +24,8 @@ public class RankingRow {
 	private Integer takenGoals;			// 50, 30, 23
 	
 	private Integer rankingPosition;		// 1,2,3,4,5,6,7,8
+	
+	private String positions;
 	
 	public RankingRow() {
 	}
@@ -40,10 +42,10 @@ public class RankingRow {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getPoints() {
+	public Double getPoints() {
 		return points;
 	}
-	public void setPoints(Integer points) {
+	public void setPoints(Double points) {
 		this.points = points;
 	}
 	public Double getSumAllVotes() {
@@ -70,11 +72,20 @@ public class RankingRow {
 	public void setRankingPosition(Integer rankingPosition) {
 		this.rankingPosition = rankingPosition;
 	}
+
+	public String getPositions() {
+		return positions;
+	}
+
+	public void setPositions(String positions) {
+		this.positions = positions;
+	}
+
 	@Override
 	public String toString() {
 		return "RankingRow [id=" + id + ", name=" + name + ", points=" + points + ", sumAllVotes=" + sumAllVotes
 				+ ", scoredGoals=" + scoredGoals + ", takenGoals=" + takenGoals + ", rankingPosition=" + rankingPosition
-				+ "]";
+				+ ", positions=" + positions + "]";
 	}
 	
 	

@@ -281,81 +281,97 @@ public class FacadeController {
 	
 	//###################################################################
 
-		@RequestMapping(value = "/saveOnlineSeasonAndTeams", method = RequestMethod.POST)
-		public ResponseEntity<String> saveOnlineSeasonAndTeams(@RequestBody CompetitionBean competition) {
-			String competitionShortName = competition.getShortName();
-			String leagueShortName = competition.getLeagueShortName();
-			
-			seasonPatternExtractor.saveOnlineSeasonAndTeams(leagueShortName, competitionShortName);
+	@RequestMapping(value = "/saveOnlineSeasonAndTeams", method = RequestMethod.POST)
+	public ResponseEntity<String> saveOnlineSeasonAndTeams(@RequestBody CompetitionBean competition) {
+		String competitionShortName = competition.getShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		
+		seasonPatternExtractor.saveOnlineSeasonAndTeams(leagueShortName, competitionShortName);
 
-			String body = "Save Online Season And Teams COMPLETED";
-			
-			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
-			return response;
-		}
+		String body = "Save Online Season And Teams COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
 	
 	
-		
-		//###################################################################
-
-		@RequestMapping(value = "/createPermutations/{playersNumber}", method = RequestMethod.GET)
-		public ResponseEntity<String> createPermutations(@PathVariable Integer playersNumber) {
-			
-			permutationsGenerator.createPermutations(playersNumber);
-
-			String body = "Creating Permutation COMPLETED";
-			
-			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
-			return response;
-		}
-	//###################################################################
-	
-		@RequestMapping(value = "/analyzeCompetition", method = RequestMethod.POST)
-		public ResponseEntity<String> analyzeChampionship(@RequestBody CompetitionBean competition) {
-			
-			String competitionShortName = competition.getShortName();
-			String leagueShortName = competition.getLeagueShortName();
-			
-			seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName);
-			String body = "Analyze Championship COMPLETED";
-			
-			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
-			return response;
-		}
-		
-		//###################################################################
-		
-		@RequestMapping(value = "/generateAllSeason", method = RequestMethod.POST)
-		public ResponseEntity<String> generateAllSeason(@RequestBody CompetitionBean competition) {
-			
-			String competitionShortName = competition.getShortName();
-			String leagueShortName = competition.getLeagueShortName();
-			
-			allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName);
-			String body = "Generate All Seasons COMPLETED";
-			
-			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
-			return response;
-		}
-		
 		
 	//###################################################################
-		@Autowired
-		private Main main;
-		@RequestMapping(value = "/createStats", method = RequestMethod.POST)
-		public ResponseEntity<String> createStats(@RequestBody CompetitionBean competition) {
-			
-			String competitionShortName = competition.getShortName();
-			String leagueShortName = competition.getLeagueShortName();
-			
-			main.execute(leagueShortName, competitionShortName);
-			String body = "Create Stats COMPLETED";
-			
-			ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
-			return response;
-		}
+
+	@RequestMapping(value = "/createPermutations/{playersNumber}", method = RequestMethod.GET)
+	public ResponseEntity<String> createPermutations(@PathVariable Integer playersNumber) {
+		
+		permutationsGenerator.createPermutations(playersNumber);
+
+		String body = "Creating Permutation COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+	
+	
+	//###################################################################
+	
+	@RequestMapping(value = "/analyzeCompetition", method = RequestMethod.POST)
+	public ResponseEntity<String> analyzeChampionship(@RequestBody CompetitionBean competition) {
+		
+		String competitionShortName = competition.getShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		
+		seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName);
+		String body = "Analyze Championship COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+		
+	//###################################################################
+	
+	@RequestMapping(value = "/generateAllSeason", method = RequestMethod.POST)
+	public ResponseEntity<String> generateAllSeason(@RequestBody CompetitionBean competition) {
+		
+		String competitionShortName = competition.getShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		
+		allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName);
+		String body = "Generate All Seasons COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
 		
 		
+	//###################################################################
+	@Autowired
+	private Main main;
+	@RequestMapping(value = "/createStats", method = RequestMethod.POST)
+	public ResponseEntity<String> createStats(@RequestBody CompetitionBean competition) {
+		
+		String competitionShortName = competition.getShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		
+		main.execute(leagueShortName, competitionShortName);
+		String body = "Create Stats COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+		
+		
+	//###################################################################
+	
+	@RequestMapping(value = "/calculateRankingWithCustomRules", method = RequestMethod.POST)
+	public ResponseEntity<String> calculateRankingWithCustomRules(@RequestBody CustomRules req) {
+		
+		String competitionShortName = req.getCompetition().getShortName();
+		String leagueShortName = req.getCompetition().getLeagueShortName();
+		
+		main.calculateRankingWithCustomRules(leagueShortName, competitionShortName, req.getRules());
+		String body = "Calculate Ranking With Custom Rules COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
 		
 		
 		

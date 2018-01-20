@@ -265,19 +265,19 @@ public class SeasonDayAnalyzer {
 	private Double calculateGoalkeeperModifier(PlayerVoteComplete pvcVote) {
 		Double vote = pvcVote.getVote();
 //		if (pvcVote.getTakenGoals() == 0){
-			if (vote < 3.0)			return rules.getModifiers().getGoalkeeperVote3();
+			if (vote < 3.0)				return rules.getModifiers().getGoalkeeperVote3();
 			if (vote.equals( 3.0 )) 	return rules.getModifiers().getGoalkeeperVote3();
-			if (vote.equals( 3.5 )) return rules.getModifiers().getGoalkeeperVote3half();
+			if (vote.equals( 3.5 )) 	return rules.getModifiers().getGoalkeeperVote3half();
 			if (vote.equals( 4.0 )) 	return rules.getModifiers().getGoalkeeperVote4();
-			if (vote.equals( 4.5 )) return rules.getModifiers().getGoalkeeperVote4half();
+			if (vote.equals( 4.5 )) 	return rules.getModifiers().getGoalkeeperVote4half();
 			if (vote.equals( 5.0 )) 	return rules.getModifiers().getGoalkeeperVote5();
 			if (vote.equals( 5.5 )) 	return rules.getModifiers().getGoalkeeperVote5half();
 			if (vote.equals( 6.0 )) 	return rules.getModifiers().getGoalkeeperVote6();
-			if (vote.equals( 6.5 )) return rules.getModifiers().getGoalkeeperVote6half();
+			if (vote.equals( 6.5 )) 	return rules.getModifiers().getGoalkeeperVote6half();
 			if (vote.equals( 7.0 )) 	return rules.getModifiers().getGoalkeeperVote7();
-			if (vote.equals( 7.5 )) return rules.getModifiers().getGoalkeeperVote7half();
+			if (vote.equals( 7.5 ))		return rules.getModifiers().getGoalkeeperVote7half();
 			if (vote.equals( 8.0 )) 	return rules.getModifiers().getGoalkeeperVote8();
-			if (vote.equals( 8.5 )) return rules.getModifiers().getGoalkeeperVote8half();
+			if (vote.equals( 8.5 )) 	return rules.getModifiers().getGoalkeeperVote8half();
 			if (vote.equals( 9.0 )) 	return rules.getModifiers().getGoalkeeperVote9();
 			if (vote > 9.0) 			return rules.getModifiers().getGoalkeeperVote9();
 			

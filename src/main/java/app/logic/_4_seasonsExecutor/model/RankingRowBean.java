@@ -1,21 +1,24 @@
 package app.logic._4_seasonsExecutor.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class RankingRowBean implements Serializable{
 
 	private static final long serialVersionUID = -8498184099900310703L;
 
 	private String name;
-	private Integer points;					// 56, 60, 58
+	private Double points;					// 56, 60, 58
 	private Double sumAllVotes;			// 1345, 1200, 1240.5, 
 	private Integer scoredGoals;			// 50, 30, 23
 	private Integer takenGoals;			// 50, 30, 23
 	private Integer rankingPosition;		// 1,2,3,4,5,6,7,8
+	private List<Double> positions;
+
 	
 	
 	public RankingRowBean() {
-		points = 0;
+		points = 0.0;
 		sumAllVotes = 0.0;
 		scoredGoals = 0;
 		takenGoals = 0;
@@ -57,14 +60,14 @@ public class RankingRowBean implements Serializable{
 
 
 
-	public Integer getPoints() {
+	public Double getPoints() {
 		return points;
 	}
 
 
 
 
-	public void setPoints(Integer points) {
+	public void setPoints(Double points) {
 		this.points = points;
 	}
 
@@ -122,6 +125,14 @@ public class RankingRowBean implements Serializable{
 
 	public void setRankingPosition(Integer rankingPosition) {
 		this.rankingPosition = rankingPosition;
+	}
+
+	public List<Double> getPositions() {
+		return positions;
+	}
+
+	public void setPositions(List<Double> positions) {
+		this.positions = positions;
 	}
 
 	

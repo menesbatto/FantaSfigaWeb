@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.dao.LeagueDao;
+import app.dao.RankingType;
+import app.dao.entity.Competition;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._4_seasonsExecutor.model.Pair;
 import app.logic._4_seasonsExecutor.model.RankingBean;
@@ -29,12 +31,11 @@ public class RankingAnalyzer {
 //	private static int playerNumber;
 	
 	
-	public void analyzeRankings(List<RankingBean> allRankings, String leagueShortName, String competitionShortName) {
+	public void analyzeAllRankings(List<RankingBean> allRankings, String leagueShortName, String competitionShortName) {
+		
 		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
-		RankingBean realRanking = leagueDao.findRealRanking(leagueShortName, competitionShortName, userBean.getUsername());
+		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL);
 		
-		
-		initStaticFields();
 		
 		System.out.println("CLASSIFICA ATTUALE");
 		for(RankingRowBean rr: realRanking.getRows()){
@@ -42,28 +43,22 @@ public class RankingAnalyzer {
 		}
 		int playerNumber = realRanking.getRows().size();
 		
-		List<Pair> calculateAllPosition = calculateAllPosition(teams, allRankings, playerNumber);
+		List<Pair> calculateAllPosition = calculateAllPosition(teams, allRankings, playerNumber, leagueShortName, competitionShortName);
 		calculateAverageRankingPositions(calculateAllPosition, realRanking, playerNumber);
-		calculateAvgRankingPoints(teams, allRankings, realRanking, playerNumber);
+		
+		calculateAvgRankingPoints(teams, allRankings, realRanking, playerNumber, leagueShortName, competitionShortName);
 	}
 
 	
 	
-	
-	
-
-	private void initStaticFields() {
-//		if (allRankings == null){
-//			allRankings = MainSeasonsExecutor.getAllGeneratedRankings();
-//		}
-//		realRanking = MainSeasonsExecutor.getRealRanking();
-//		playerNumber = realRanking.getRows().size();;
-	}
-
-	private void calculateAvgRankingPoints(List<String> teams, List<RankingBean> allRankings, RankingBean realRanking, int playerNumber) {
+	private void calculateAvgRankingPoints(List<String> teams, List<RankingBean> allRankings, RankingBean realRanking, int playerNumber, String leagueShortName, String competitionShortName) {
+		
+		
+		
 		System.out.println("\n\n\nCALCOLO DEI PUNTI MEDI");
-		List<Pair> results = createListTeams(teams);
+		List<Pair> results = createListPairTeams(teams);
 
+		
 		RankingRowBean rr;
 		List<RankingRowBean> rows;
 		Double listPoints = 0.0;
@@ -90,6 +85,21 @@ public class RankingAnalyzer {
 		for(Pair r : results){
 			r.setValue( r.getValue()/combinations);
 		}
+		
+		
+		List<RankingRowBean> fairRanking = new ArrayList<RankingRowBean>();
+		for (int i = 0; i < results.size(); i++) {
+			Pair pair = results.get(i);
+			RankingRowBean current = new RankingRowBean();
+			current.setName(pair.getName());
+			current.setPoints(pair.getValue());
+			current.setRankingPosition(i);
+		}
+		
+		RankingBean rankingBean = new RankingBean();
+		rankingBean.setName(RankingType.FAIR.name());
+		rankingBean.setRows(fairRanking);
+		leagueDao.saveRanking(rankingBean, leagueShortName, competitionShortName, userBean.getUsername());
 		System.out.println(results);
 		
 		
@@ -173,10 +183,10 @@ public class RankingAnalyzer {
 		System.out.println(positionVariation);
 	}
 
-	private List<Pair> calculateAllPosition(List<String> teams, List<RankingBean> allRankings, int playerNumber) {
+	private List<Pair> calculateAllPosition(List<String> teams, List<RankingBean> allRankings, int playerNumber, String leagueShortName, String competitionShortName) {
 		System.out.println("\n\n\nCALCOLO DI TUTTE LE POSIZIONI");
 		
-		List<Pair> results = createListTeams(teams);
+		List<Pair> results = createListPairTeams(teams);
 		
 		RankingRowBean rr;
 		List<RankingRowBean> rows;
@@ -200,6 +210,35 @@ public class RankingAnalyzer {
 				return o2.getValueList().get(0).compareTo(o1.getValueList().get(0));
 			}
 		});
+		
+		
+		List<RankingRowBean> positionsRanking = new ArrayList<RankingRowBean>();
+		for (int i = 0; i < results.size(); i++) {
+			Pair pair = results.get(i);
+			RankingRowBean current = new RankingRowBean();
+			current.setName(pair.getName());
+			current.setPositions(pair.getValueList());
+			current.setRankingPosition(i);
+		}
+		
+		RankingBean rankingBean = new RankingBean();
+		rankingBean.setName(RankingType.POSITIONS.name());
+		rankingBean.setRows(positionsRanking);
+		leagueDao.saveRanking(rankingBean, leagueShortName, competitionShortName, userBean.getUsername());
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		System.out.println(results);
 		System.out.println("\n\n\nCALCOLO DI TUTTE LE POSIZIONI IN PERCENTUALE");
 		List<Pair> percentagePairList = new ArrayList<Pair>(); 
@@ -223,7 +262,7 @@ public class RankingAnalyzer {
 		return results;
 	}
 
-	private List<Pair> createListTeams(List<String> teams) {
+	private List<Pair> createListPairTeams(List<String> teams) {
 		
 //		ArrayList<String> players = MainSeasonPatternExtractorNEW.getPlayers();
 		List<Pair> results = new ArrayList<Pair>();

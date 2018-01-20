@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.dao.LeagueDao;
+import app.dao.RankingType;
 import app.dao.RulesDao;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_rulesDownloader.model.RulesBean;
@@ -42,16 +43,29 @@ public class MainSeasonsExecutor {
 	private UserBean userBean;
 	
 	
-	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName ){
+	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName) {
+		return execute(allSeasons, leagueShortName, competitionShortName);
+	}
+	
+	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName, RulesBean rulesInput, SeasonResultBean seasonResultBeanInput ){
 //		allSeasons = allSeasonsInput;
+		
+		RulesBean rules;
+		SeasonResultBean seasonResultBean;
+		if (rulesInput == null) {
+			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
+			seasonResultBean = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
+		}
+		else {
+			rules = rulesInput;	
+			seasonResultBean = seasonResultBeanInput;
+		}
 		
 		long startTime = System.nanoTime();
 		System.out.println("Inizio esecuzione di tutti i calendari");
 		
 		ArrayList<RankingBean> rankings = new ArrayList<RankingBean>();
 	
-		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
-		SeasonResultBean findCalculatedSeasonResult = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
 
 		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
 
@@ -60,13 +74,17 @@ public class MainSeasonsExecutor {
 //			i++;
 			
 			
-			RankingBean ranking = seasonExecutor.execute(season, rules, findCalculatedSeasonResult.getSeasonDayResults(), teams);
+			RankingBean ranking = seasonExecutor.execute(season, rules, seasonResultBean.getSeasonDayResults(), teams);
 		
 			
 			Collections.sort(ranking.getRows(), new Comparator<RankingRowBean>() {
 
 				public int compare(RankingRowBean o1, RankingRowBean o2) {
-					return o2.getPoints() - o1.getPoints();
+					if (o2.getPoints() - o1.getPoints() < 0)
+						return -1;
+					else if (o2.getPoints() - o1.getPoints() > 0)
+						return 1;
+					return 0;
 				}
 			});
 			List<RankingRowBean> rows = ranking.getRows();
@@ -87,13 +105,15 @@ public class MainSeasonsExecutor {
 		} 
 		
 		if(AppConstants.DEBUG_MODE)
-			checkRealSeasonCorrect(findCalculatedSeasonResult.getSeasonDayResults(),  leagueShortName, competitionShortName);
+			checkRealSeasonCorrect(seasonResultBean.getSeasonDayResults(),  leagueShortName, competitionShortName);
 		
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
 		System.out.println("Fine esecuzione di tutti i calendari " + duration/1000000);
 		
-		leagueDao.saveRealRanking(rankings.get(0), leagueShortName, competitionShortName, userBean.getUsername());
+		
+		rankings.get(0).setName(RankingType.REAL.name());
+		leagueDao.saveRanking(rankings.get(0), leagueShortName, competitionShortName, userBean.getUsername());
 		System.out.println(rankings.get(0));
 //		IOUtils.write(AppConstants.REAL_RANKING_DIR + AppConstants.REAL_RANKING_FILE_NAME , rankings.get(0));
 		
@@ -146,9 +166,8 @@ public class MainSeasonsExecutor {
 		}
 		return null;
 	}
-	
-	
-	
+
+
 //	public static ArrayList<RankingBean> getAllGeneratedRankings() {
 //		long startTime = System.nanoTime();
 //		System.out.println("Inizio caricamento di tutte le classifiche");

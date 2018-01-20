@@ -16,6 +16,7 @@ import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
 import app.logic._4_seasonsExecutor.model.Pair;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 import app.logic._4_seasonsExecutor.model.RankingRowBean;
+import app.utils.AppConstants;
 
 @Service
 public class SeasonExecutor {
@@ -59,7 +60,8 @@ public class SeasonExecutor {
 				updateFormulaUnoRanking(seasonDayResult, rules, formulaUnoRanking);
 			}
 			else {
-				System.out.println( (i + 1) + " Giornata da recuperare");
+				if (AppConstants.DEBUG_MODE)
+					System.out.println( (i + 1) + " Giornata da recuperare");
 			}
 		}
 		
@@ -130,8 +132,11 @@ public class SeasonExecutor {
 	
 		Collections.sort(formulaUnoRanking.getRows(), new Comparator<RankingRowBean>() {
 			public int compare(RankingRowBean o1, RankingRowBean o2) {
-				int compareTo = o2.getPoints() - o1.getPoints();
-				return compareTo;
+				if (o2.getPoints() - o1.getPoints() < 0)
+					return -1;
+				else if (o2.getPoints() - o1.getPoints() > 0)
+					return 1;
+				return 0;
 			}
 			
 		});
@@ -171,7 +176,7 @@ public class SeasonExecutor {
 
 	private RankingBean createRanking(List<String> teams) {
 		RankingBean ranking = new RankingBean();
-		ranking.setName(i++);
+		ranking.setName(""+i++);
 		
 		RankingRowBean rw; 
 		for (String p : teams){

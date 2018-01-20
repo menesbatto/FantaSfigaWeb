@@ -475,18 +475,27 @@ public class LeagueDao {
 	}
 
 
-	public void saveRealRanking(RankingBean bean, String leagueShortName, String competitionShortName, String username) {
+	public void saveRanking(RankingBean bean, String leagueShortName, String competitionShortName, String username) {
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
-//		rankingRepo.delete(8l);
-		Ranking ent = rankingRepo.findByCompetition(competition);
+		
+		String rankingName = bean.getName();
+		Ranking ent = rankingRepo.findByCompetitionAndName(competition, rankingName);
+		
 		if (ent != null)
 			rankingRepo.delete(ent);
+		
+		
 		ent = new Ranking();
 		ent.setCompetition(competition);
-		ent.setName(bean.getName());
+		ent.setName(rankingName);
 		List<RankingRow> rows = new ArrayList<RankingRow>();
 		for (RankingRowBean rrb : bean.getRows()) {
+			String positions = "";
 			RankingRow rre = createRankingRowEnt(rrb);
+			if ( rrb.getPositions() != null)
+				for (Double pos : rrb.getPositions())
+					positions += pos + "-";
+			rre.setPositions(positions);
 			rows.add(rre);
 		}
 		ent.setRows(rows);
@@ -509,11 +518,11 @@ public class LeagueDao {
 
 
 
-	public RankingBean findRealRanking(String leagueShortName, String competitionShortName, String username) {
+	public RankingBean findRanking(String leagueShortName, String competitionShortName, String username, RankingType name) {
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		RankingBean bean = new RankingBean();
 		
-		Ranking ent = rankingRepo.findByCompetition(competition);
+		Ranking ent = rankingRepo.findByCompetitionAndName(competition, name.name());
 		
 		bean.setName(ent.getName());
 		
@@ -537,8 +546,17 @@ public class LeagueDao {
 		bean.setScoredGoals(ent.getScoredGoals());
 		bean.setSumAllVotes(ent.getSumAllVotes());
 		bean.setTakenGoals(ent.getTakenGoals());
+		
+		String positionsString = ent.getPositions();
+		if (positionsString!= null && positionsString!=  "") {
+			String[] split = positionsString.split("-");
+			List<Double> positions = new ArrayList<Double>();
+			for (int i=0; i< split.length; i++)
+				positions.add(new Double(split[i]));
+			bean.setPositions(positions);
+		}
 		return bean;
 	}
-	
-	
+
+
 }

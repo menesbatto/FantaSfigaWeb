@@ -11,16 +11,17 @@ import org.springframework.stereotype.Service;
 import app.PostponementBean;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
-import app.dao.VoteDao;
+import app.dao.UtilsDao;
+import app.dao.entity.LineUpLight;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
 import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
+import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
 import app.utils.AppConstants;
-import app.utils.IOUtils;
 
 @Service
 public class SeasonAnalyzer {
@@ -35,25 +36,32 @@ public class SeasonAnalyzer {
 	private LeagueDao leagueDao;
 	
 	@Autowired
-	private VoteDao voteDao;
+	private UtilsDao utilsDao;
 	
 	@Autowired
 	private SeasonDayAnalyzer seasonDayAnalyzer;
 	
 	
-	public ArrayList<SeasonDayResultBean> calculateSeasonResult(String competitionShortName, String leagueShortName){
+	public SeasonResultBean calculateSeasonResult(String competitionShortName, String leagueShortName){
+		return calculateSeasonResult(competitionShortName, leagueShortName);
+	}
+	
+	public SeasonResultBean calculateSeasonResult(String competitionShortName, String leagueShortName, RulesBean rulesInput){
 		
-		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
-
+		RulesBean rules;
+		if (rulesInput == null)
+			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
+		else
+			rules = rulesInput;	
 		
 		VotesSourceEnum voteSource = rules.getDataSource().getVotesSource();
 		if  (AppConstants.FORCE_VOTE_SOURCE != null){
 			voteSource = AppConstants.FORCE_VOTE_SOURCE;
 		}
 		
-		Map<String, Map<String, List<PlayerVoteComplete>>> map = voteDao.findVotesBySource(voteSource);
+		Map<String, Map<String, List<PlayerVoteComplete>>> map = utilsDao.findVotesBySource(voteSource);
 		
-		int seriaAActualSeasonDay = voteDao.calculateLastSerieASeasonDayCalculated();
+		int seriaAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
 
 		ArrayList<SeasonDayResultBean> seasonDayResults = new ArrayList<SeasonDayResultBean>();
 		
@@ -72,7 +80,7 @@ public class SeasonAnalyzer {
 		
 		SeasonDayResultBean seasonDayResult;
 		
-		Map<Integer, List<PostponementBean>> postponements = voteDao.findAllPostponement();
+		Map<Integer, List<PostponementBean>> postponements = utilsDao.findAllPostponement();
 
 	
 		
@@ -80,7 +88,8 @@ public class SeasonAnalyzer {
 		for (Entry<Integer, Integer> entry : seasonDayBind.entrySet()) {
 			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) //Controllo per gestire le giornate in cui ci sono i rinvii
 				if (postponements.get(entry.getValue()) != null) {
-					seasonDayResults.add(new SeasonDayResultBean(entry.getKey().toString(), null)); 
+					List<LineUpLightBean> emptyLineUpLight = new ArrayList<LineUpLightBean>();
+					seasonDayResults.add(new SeasonDayResultBean(entry.getKey().toString(), emptyLineUpLight)); 
 					continue;
 				}
 			
@@ -137,7 +146,7 @@ public class SeasonAnalyzer {
 //		IOUtils.write(finalResultSeasonPath, seasonDayResults);
 
 		
-		return seasonDayResults;
+		return seasonResult;
 	}
 	
 

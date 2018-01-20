@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -18,9 +19,9 @@ public class Ranking {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	private int name;
+	private String name;
 	
-	@OneToOne
+	@ManyToOne
 	private Competition competition;
 	
 	@OneToMany(cascade = {CascadeType.ALL})
@@ -39,11 +40,11 @@ public class Ranking {
 		this.id = id;
 	}
 
-	public int getName() {
+	public String getName() {
 		return name;
 	}
 
-	public void setName(int name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 

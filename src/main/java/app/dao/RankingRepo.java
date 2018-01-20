@@ -9,6 +9,6 @@ import app.dao.entity.Ranking;
 @RepositoryRestResource
 public interface RankingRepo extends JpaRepository<Ranking, Long> {
 
-	Ranking findByCompetition(Competition competition);
+	Ranking findByCompetitionAndName(Competition competition, String name);
 
 }

@@ -1,10 +1,8 @@
 package app.logic._3_seasonsGenerator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +10,9 @@ import org.springframework.stereotype.Service;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UtilsDao;
-import app.dao.VoteDao;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.utils.AppConstants;
-import app.utils.IOUtils;
 
 
 //Crea tutti i possibili calendari (40320) e li scrive su file
@@ -36,13 +32,14 @@ public class AllSeasonsGenerator {
 	private RulesDao rulesDao;
 	
 	@Autowired
-	private VoteDao voteDao;
-	
-	@Autowired
 	private SeasonGenerator seasonGenerator;
 	
 	
 	public ArrayList<SeasonBean> generateAllSeasons(String leagueShortName, String competitionShortName){
+		return generateAllSeasons(leagueShortName, competitionShortName, false);
+	}
+	
+	public ArrayList<SeasonBean> generateAllSeasons(String leagueShortName, String competitionShortName, Boolean onlyOne){
 		long startTime = System.nanoTime();
 		System.out.println("Inizio generazione di tutti i calendari");
 		SeasonBean s;
@@ -52,13 +49,14 @@ public class AllSeasonsGenerator {
 		Integer playersNumbers = teams.size();
 		
 		List<String> allInputPermutations = utilsDao.findPermutations(playersNumbers );
-		if (AppConstants.DEBUG_MODE) 
+//		if (AppConstants.DEBUG_MODE) 
+		if (onlyOne)	
 			allInputPermutations = allInputPermutations.subList(0, 1);
 		
 		Integer seasonNumber = 0;
 		
 		Map<Integer, Integer> bindings = rulesDao.findCompetitionToSerieABinding(leagueShortName, competitionShortName, userBean.getUsername());
-		Integer serieAActualSeasonDay = voteDao.calculateLastSerieASeasonDayCalculated();
+		Integer serieAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
 			
 		Integer fantacalcioActualSeasonDay = bindings.get(serieAActualSeasonDay);
 		if (fantacalcioActualSeasonDay == null)
