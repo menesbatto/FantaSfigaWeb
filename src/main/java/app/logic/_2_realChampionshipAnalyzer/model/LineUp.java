@@ -20,6 +20,15 @@ public class LineUp {
 	private List<PlayerVote> reserves;
 	
 	
+	private Double goalkeeperModifierFromWeb;
+	private Double defenderModifierFromWeb;
+	private Double strickerModifierFromWeb;
+	private Double middlefieldersModifierFromWeb;
+	private Double performanceModifierFromWeb;
+	private Double fairPlayModifierFromWeb;
+	
+	
+	
 	private Double goalkeeperModifier;
 	private Double defenderModifier;
 	private Double strickerModifier;
@@ -160,6 +169,42 @@ public class LineUp {
 	}
 	public void setFairPlayModifier(Double fairPlayModifier) {
 		this.fairPlayModifier = fairPlayModifier;
+	}
+	public Double getGoalkeeperModifierFromWeb() {
+		return goalkeeperModifierFromWeb;
+	}
+	public void setGoalkeeperModifierFromWeb(Double goalkeeperModifierFromWeb) {
+		this.goalkeeperModifierFromWeb = goalkeeperModifierFromWeb;
+	}
+	public Double getDefenderModifierFromWeb() {
+		return defenderModifierFromWeb;
+	}
+	public void setDefenderModifierFromWeb(Double defenderModifierFromWeb) {
+		this.defenderModifierFromWeb = defenderModifierFromWeb;
+	}
+	public Double getStrickerModifierFromWeb() {
+		return strickerModifierFromWeb;
+	}
+	public void setStrickerModifierFromWeb(Double strickerModifierFromWeb) {
+		this.strickerModifierFromWeb = strickerModifierFromWeb;
+	}
+	public Double getMiddlefieldersModifierFromWeb() {
+		return middlefieldersModifierFromWeb;
+	}
+	public void setMiddlefieldersModifierFromWeb(Double middlefieldersModifierFromWeb) {
+		this.middlefieldersModifierFromWeb = middlefieldersModifierFromWeb;
+	}
+	public Double getPerformanceModifierFromWeb() {
+		return performanceModifierFromWeb;
+	}
+	public void setPerformanceModifierFromWeb(Double performanceModifierFromWeb) {
+		this.performanceModifierFromWeb = performanceModifierFromWeb;
+	}
+	public Double getFairPlayModifierFromWeb() {
+		return fairPlayModifierFromWeb;
+	}
+	public void setFairPlayModifierFromWeb(Double fairPlayModifierFromWeb) {
+		this.fairPlayModifierFromWeb = fairPlayModifierFromWeb;
 	}
 
 	

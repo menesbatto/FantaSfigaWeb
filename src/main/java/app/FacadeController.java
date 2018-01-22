@@ -235,17 +235,16 @@ public class FacadeController {
 	
 	//###################################################################
 	
-	@RequestMapping(value = "/savePostpomentBehaviour", method = RequestMethod.POST)
-	public ResponseEntity<String> savePostpomentBehaviour(@RequestBody PostponementReq req) {
+	@RequestMapping(value = "/integrateRules", method = RequestMethod.POST)
+	public ResponseEntity<String> integrateRules(@RequestBody RulesReq req) {
 		
-		rulesExpertMain.savePostpomentBehaviour(req);
-		String body = "Save Postpoment Behaviour COMPLETED";
+		rulesExpertMain.integrateRules(req);
+		String body = "Integrate Rules COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
 	}
 		
-	
 	//###################################################################
 
 	@RequestMapping(value = "/calculateBinding", method = RequestMethod.POST)
@@ -309,6 +308,36 @@ public class FacadeController {
 		return response;
 	}
 	
+	
+	//###################################################################
+	
+	@RequestMapping(value = "/downloadSeasonFromWeb", method = RequestMethod.POST)
+	public ResponseEntity<String> downloadSeasonFromWeb(@RequestBody CompetitionBean competition) {
+		
+		String competitionShortName = competition.getShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		
+		seasonAnalyzer.downloadSeasonFromWeb(competitionShortName, leagueShortName);
+		String body = "Download Season From Web COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+
+	//###################################################################
+	
+	@RequestMapping(value = "/calculateSeasonResult", method = RequestMethod.POST)
+	public ResponseEntity<String> calculateSeasonResult(@RequestBody CompetitionBean competition) {
+		
+		String competitionShortName = competition.getShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		
+		seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName);
+		String body = "Download Season From Web COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
 	
 	//###################################################################
 	

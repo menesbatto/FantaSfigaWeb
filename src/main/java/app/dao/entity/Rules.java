@@ -1235,6 +1235,68 @@ public class Rules {
 	public void setPostponementBehaviour(String postponementBehaviour) {
 		this.postponementBehaviour = postponementBehaviour;
 	}
+
+	@Override
+	public String toString() {
+		return "Rules [id=" + id + ", competition=" + competition + ", league=" + league + ", binding=" + binding
+				+ ", redCardP=" + redCardP + ", yellowCardP=" + yellowCardP + ", scoredGoalP=" + scoredGoalP
+				+ ", scoredPenaltyP=" + scoredPenaltyP + ", movementAssistP=" + movementAssistP + ", stationaryAssistP="
+				+ stationaryAssistP + ", autogoalP=" + autogoalP + ", missedPenaltyP=" + missedPenaltyP
+				+ ", savedPenaltyP=" + savedPenaltyP + ", takenGoalP=" + takenGoalP + ", evenGoalP=" + evenGoalP
+				+ ", winGoalP=" + winGoalP + ", redCardD=" + redCardD + ", yellowCardD=" + yellowCardD
+				+ ", scoredGoalD=" + scoredGoalD + ", scoredPenaltyD=" + scoredPenaltyD + ", movementAssistD="
+				+ movementAssistD + ", stationaryAssistD=" + stationaryAssistD + ", autogoalD=" + autogoalD
+				+ ", missedPenaltyD=" + missedPenaltyD + ", savedPenaltyD=" + savedPenaltyD + ", takenGoalD="
+				+ takenGoalD + ", evenGoalD=" + evenGoalD + ", winGoalD=" + winGoalD + ", redCardC=" + redCardC
+				+ ", yellowCardC=" + yellowCardC + ", scoredGoalC=" + scoredGoalC + ", scoredPenaltyC=" + scoredPenaltyC
+				+ ", movementAssistC=" + movementAssistC + ", stationaryAssistC=" + stationaryAssistC + ", autogoalC="
+				+ autogoalC + ", missedPenaltyC=" + missedPenaltyC + ", savedPenaltyC=" + savedPenaltyC
+				+ ", takenGoalC=" + takenGoalC + ", evenGoalC=" + evenGoalC + ", winGoalC=" + winGoalC + ", redCardA="
+				+ redCardA + ", yellowCardA=" + yellowCardA + ", scoredGoalA=" + scoredGoalA + ", scoredPenaltyA="
+				+ scoredPenaltyA + ", movementAssistA=" + movementAssistA + ", stationaryAssistA=" + stationaryAssistA
+				+ ", autogoalA=" + autogoalA + ", missedPenaltyA=" + missedPenaltyA + ", savedPenaltyA=" + savedPenaltyA
+				+ ", takenGoalA=" + takenGoalA + ", evenGoalA=" + evenGoalA + ", winGoalA=" + winGoalA
+				+ ", votesSource=" + votesSource + ", bonusMalusSource=" + bonusMalusSource + ", yellowRedCardSource="
+				+ yellowRedCardSource + ", goalPoints=" + goalPoints + ", formulaUnoPoints=" + formulaUnoPoints
+				+ ", fasciaConIntornoActive=" + fasciaConIntornoActive + ", fasciaConIntorno=" + fasciaConIntorno
+				+ ", intornoActive=" + intornoActive + ", intorno=" + intorno + ", controllaPareggioActive="
+				+ controllaPareggioActive + ", controllaPareggio=" + controllaPareggio + ", differenzaPuntiActive="
+				+ differenzaPuntiActive + ", differenzaPunti=" + differenzaPunti + ", portiereImbattutoActive="
+				+ portiereImbattutoActive + ", portiereImbattuto=" + portiereImbattuto + ", autogolActive="
+				+ autogolActive + ", autogol=" + autogol + ", substitutionNumber=" + substitutionNumber
+				+ ", substitutionMode=" + substitutionMode + ", maxOfficeVotes=" + maxOfficeVotes
+				+ ", yellowCardSvOfficeVoteActive=" + yellowCardSvOfficeVoteActive + ", yellowCardSvOfficeVote="
+				+ yellowCardSvOfficeVote + ", goalkeeperPlayerOfficeVoteActive=" + goalkeeperPlayerOfficeVoteActive
+				+ ", goalkeeperPlayerOfficeVote=" + goalkeeperPlayerOfficeVote + ", movementsPlayerOfficeVoteActive="
+				+ movementsPlayerOfficeVoteActive + ", movementsPlayerOfficeVote=" + movementsPlayerOfficeVote
+				+ ", goalkeeperModifierActive=" + goalkeeperModifierActive + ", goalkeeperVote3=" + goalkeeperVote3
+				+ ", goalkeeperVote3half=" + goalkeeperVote3half + ", goalkeeperVote4=" + goalkeeperVote4
+				+ ", goalkeeperVote4half=" + goalkeeperVote4half + ", goalkeeperVote5=" + goalkeeperVote5
+				+ ", goalkeeperVote5half=" + goalkeeperVote5half + ", goalkeeperVote6=" + goalkeeperVote6
+				+ ", goalkeeperVote6half=" + goalkeeperVote6half + ", goalkeeperVote7=" + goalkeeperVote7
+				+ ", goalkeeperVote7half=" + goalkeeperVote7half + ", goalkeeperVote8=" + goalkeeperVote8
+				+ ", goalkeeperVote8half=" + goalkeeperVote8half + ", goalkeeperVote9=" + goalkeeperVote9
+				+ ", defenderModifierActive=" + defenderModifierActive + ", defenderAvgVote6=" + defenderAvgVote6
+				+ ", defenderAvgVote6half=" + defenderAvgVote6half + ", defenderAvgVote7=" + defenderAvgVote7
+				+ ", middlefielderModifierActive=" + middlefielderModifierActive + ", middlefielderUnderMinus8="
+				+ middlefielderUnderMinus8 + ", middlefielderUnderMinus6=" + middlefielderUnderMinus6
+				+ ", middlefielderUnderMinus4=" + middlefielderUnderMinus4 + ", middlefielderUnderMinus2="
+				+ middlefielderUnderMinus2 + ", middlefielderNear0=" + middlefielderNear0 + ", middlefielderOver2="
+				+ middlefielderOver2 + ", middlefielderOver4=" + middlefielderOver4 + ", middlefielderOver6="
+				+ middlefielderOver6 + ", middlefielderOver8=" + middlefielderOver8 + ", strikerModifierActive="
+				+ strikerModifierActive + ", strikerVote6=" + strikerVote6 + ", strikerVote6half=" + strikerVote6half
+				+ ", strikerVote7=" + strikerVote7 + ", strikerVote7half=" + strikerVote7half + ", strikerVote8="
+				+ strikerVote8 + ", performanceModifierActive=" + performanceModifierActive + ", performance11="
+				+ performance11 + ", performance10=" + performance10 + ", performance9=" + performance9
+				+ ", performance8=" + performance8 + ", performance7=" + performance7 + ", performance6=" + performance6
+				+ ", performance5=" + performance5 + ", performance4=" + performance4 + ", performance3=" + performance3
+				+ ", performance2=" + performance2 + ", performance1=" + performance1 + ", performance0=" + performance0
+				+ ", fairPlayModifierActive=" + fairPlayModifierActive + ", fairPlay=" + fairPlay + ", homeBonusActive="
+				+ homeBonusActive + ", homeBonus=" + homeBonus + ", postponementBehaviour=" + postponementBehaviour
+				+ "]";
+	}
+	
+	
 	
 
 }

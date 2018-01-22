@@ -1,7 +1,10 @@
 package app.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,22 +14,30 @@ import org.springframework.stereotype.Service;
 import app.CompetitionBean;
 import app.dao.entity.Competition;
 import app.dao.entity.League;
+import app.dao.entity.LineUpFromWeb;
 import app.dao.entity.LineUpLight;
 import app.dao.entity.Matcho;
 import app.dao.entity.Ranking;
 import app.dao.entity.RankingRow;
 import app.dao.entity.Season;
 import app.dao.entity.SeasonDay;
+import app.dao.entity.SeasonDayFromWeb;
 import app.dao.entity.SeasonDayResult;
+import app.dao.entity.SeasonFromWeb;
 import app.dao.entity.SeasonResult;
 import app.dao.entity.User;
 import app.logic._0_credentialsSaver.model.LeagueBean;
+import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._1_seasonPatternExtractor.model.PlayerEnum;
 import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
+import app.logic._2_realChampionshipAnalyzer.SeasonDayFromWebBean;
+import app.logic._2_realChampionshipAnalyzer.SeasonFromWebBean;
+import app.logic._2_realChampionshipAnalyzer.model.LineUp;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
+import app.logic._2_realChampionshipAnalyzer.model.PlayerVote;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 import app.logic._4_seasonsExecutor.model.RankingRowBean;
@@ -52,6 +63,9 @@ public class LeagueDao {
 	
 	@Autowired
 	private RankingRepo rankingRepo;
+
+	@Autowired
+	private SeasonFromWebRepo seasonFromWebRepo;
 
 
 
@@ -556,6 +570,226 @@ public class LeagueDao {
 			bean.setPositions(positions);
 		}
 		return bean;
+	}
+
+
+	public void saveSeasonFromWeb(String leagueShortName, String competitionShortName, String username, SeasonFromWebBean seasonFromWeb) {
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+
+		// Se esiste e ha meno giornate cancello tutto e salvo quella nuova....da ottimizzare
+		SeasonFromWeb ent = seasonFromWebRepo.findByCompetition(competition);
+		if (ent != null)
+			if (  ent.getSeasonDaysFromWeb().size() == seasonFromWeb.getSeasonDaysFromWeb().keySet().size()  )
+				return;
+			else
+				seasonFromWebRepo.delete(ent);
+		
+		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = seasonFromWeb.getSeasonDaysFromWeb();
+		
+		List<SeasonDayFromWeb> seasonDayFromWebEntList = new ArrayList<SeasonDayFromWeb>();
+		
+		for (Entry<Integer, SeasonDayFromWebBean> entry : seasonDaysFromWeb.entrySet()) {
+			Integer competitionSeasonDay = entry.getKey();
+			SeasonDayFromWebBean seasonDayFromWebBean = entry.getValue();
+			
+			SeasonDayFromWeb seasonDayFromWebEnt = createSeasonDayFromWebEnt(competitionSeasonDay, seasonDayFromWebBean);
+			seasonDayFromWebEntList.add(seasonDayFromWebEnt);
+			
+		}
+		
+		ent = new SeasonFromWeb();
+		ent.setCompetition(competition);
+		ent.setSeasonDaysFromWeb(seasonDayFromWebEntList);
+		
+		seasonFromWebRepo.save(ent);
+		
+		
+	}
+
+
+	private SeasonDayFromWeb createSeasonDayFromWebEnt(Integer competitionSeasonDay, SeasonDayFromWebBean bean) {
+		
+		SeasonDayFromWeb ent = new SeasonDayFromWeb();
+		
+		ent.setName(bean.getName());
+		List<LineUpFromWeb> lineUpFromWebEntList = new ArrayList<LineUpFromWeb>();
+		LineUpFromWeb lineUpFromWebEnt;
+		for (LineUp lineUpBean : bean.getLinesUp() ){
+			lineUpFromWebEnt = createLineUpFromWeb(lineUpBean);
+			lineUpFromWebEntList.add(lineUpFromWebEnt);
+		}
+		
+		ent.setCompetitionSeasonDay(competitionSeasonDay);
+		ent.setLinesUpFromWeb(lineUpFromWebEntList);
+		
+		return ent;
+		
+	}
+
+
+	private LineUpFromWeb createLineUpFromWeb(LineUp lineUp) {
+		
+		LineUpFromWeb ent = new LineUpFromWeb();
+		String info = "";
+		
+		info += "#" + RoleEnum.P.name() + "@" + getPlayerVotesString(lineUp.getGoalKeeper());
+		info += "#" + RoleEnum.D.name() + "@" + getPlayerVotesString(lineUp.getDefenders());
+		info += "#" + RoleEnum.C.name() + "@" + getPlayerVotesString(lineUp.getMidfielders());
+		info += "#" + RoleEnum.A.name() + "@" + getPlayerVotesString(lineUp.getStrikers());
+		info += "#" + "R" 				+ "@" + getPlayerVotesString(lineUp.getReserves());
+		
+		ent.setName(lineUp.getTeamName());
+		ent.setInfo(info);
+		
+		//#G#BUFFON_JUV_P_6.5_5.5;#D#DE VRIJ_LAZ_D_6.5_6.5;CALDARA_ATA_D_7.0_10.0;...
+		
+		
+		ent.setGoalkeeperModifierFromWeb(lineUp.getGoalkeeperModifierFromWeb());
+		ent.setDefenderModifierFromWeb(lineUp.getDefenderModifierFromWeb());
+		ent.setMiddlefieldersModifierFromWeb(lineUp.getMiddlefieldersModifierFromWeb());
+		ent.setStrickerModifierFromWeb(lineUp.getStrickerModifierFromWeb());
+		ent.setPerformanceModifierFromWeb(lineUp.getPerformanceModifier());
+		ent.setFairPlayModifierFromWeb(lineUp.getFairPlayModifierFromWeb());
+		
+		lineUp.setTeamName(lineUp.getTeamName());
+		
+		return ent;
+	}
+
+
+	private String getPlayerVotesString(List<PlayerVote> list) {
+		String result = "";
+		for (PlayerVote p : list) {
+			result += p.getName() + "_" + p.getTeam() + "_" + p.getRole() + "_" + p.getVoteFromWeb() + "_" + p.getFantaVoteFromWeb() + ";";
+		}
+		return result;
+	}
+
+
+	public SeasonFromWebBean findSeasonFromWeb(String leagueShortName, String competitionShortName, String username) {
+		
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		SeasonFromWeb ent = seasonFromWebRepo.findByCompetition(competition);
+		
+		SeasonFromWebBean bean = new SeasonFromWebBean();
+		
+		bean.setName(ent.getName());
+		
+		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWebBeanList = new HashMap<Integer, SeasonDayFromWebBean>();
+		
+		for (SeasonDayFromWeb seasonDayFromWebEnt: ent.getSeasonDaysFromWeb()) {
+			
+			Integer competitionSeasonDayKey = seasonDayFromWebEnt.getCompetitionSeasonDay();
+			
+			SeasonDayFromWebBean seasonDayFromWebBean = createSeasonDayFromWebEnt(seasonDayFromWebEnt);
+			seasonDaysFromWebBeanList.put(competitionSeasonDayKey, seasonDayFromWebBean);
+			
+			
+		}
+		
+		
+		bean.setSeasonDaysFromWeb(seasonDaysFromWebBeanList);
+		
+		
+		return bean;
+	}
+
+
+	private SeasonDayFromWebBean createSeasonDayFromWebEnt(SeasonDayFromWeb ent) {
+		
+		SeasonDayFromWebBean bean = new SeasonDayFromWebBean();
+		List<LineUp> lineUpList = new ArrayList<LineUp>();
+		LineUp lineUpBean;
+		for (LineUpFromWeb lineUpEnt : ent.getLinesUpFromWeb()) {
+			lineUpBean = createLineUpBean(lineUpEnt);
+			lineUpList.add(lineUpBean);
+		}
+		
+		bean.setLinesUp(lineUpList);
+		bean.setName(ent.getName());
+		
+		return bean;
+	}
+
+
+	private LineUp createLineUpBean(LineUpFromWeb ent) {
+		LineUp bean = new LineUp();
+		bean.setTeamName(ent.getName());
+		
+		bean.setGoalkeeperModifierFromWeb(ent.getGoalkeeperModifierFromWeb());
+		bean.setDefenderModifierFromWeb(ent.getDefenderModifierFromWeb());
+		bean.setMiddlefieldersModifierFromWeb(ent.getMiddlefieldersModifierFromWeb());
+		bean.setStrickerModifierFromWeb(ent.getStrickerModifierFromWeb());
+		bean.setFairPlayModifierFromWeb(ent.getFairPlayModifierFromWeb());
+		bean.setPerformanceModifierFromWeb(ent.getPerformanceModifierFromWeb());
+		
+		
+		populateLineUpWithPlayers(bean, ent.getInfo());
+		
+		
+		
+		
+		return bean;
+	}
+
+	//#P@BUFFON_JUV_P_6.5_5.5;#D#DE VRIJ_LAZ_D_6.5_6.5;CALDARA_ATA_D_7.0_10.0;...
+	private void populateLineUpWithPlayers(LineUp bean, String allPlayersString) {
+		String[] groupByRoleString = allPlayersString.split("#");
+		
+		List<PlayerVote> players = null;
+		for (String group : groupByRoleString) {
+			if (group.equals(""))
+				continue;
+			String role = group.split("@")[0];
+			String rolePlayersString = group.split("@")[1];
+			
+			players = createPlayersFromString(rolePlayersString);
+			
+			if (role.equals("P")) {
+				bean.setGoalKeeper(players);
+			} else if (role.equals("D")) {
+				bean.setDefenders(players);
+			} else if (role.equals("C")) {
+				bean.setMidfielders(players);
+			}  else if (role.equals("A")) {
+				bean.setStrikers(players);
+			}  else if (role.equals("R")) {
+				bean.setReserves(players);
+			} 
+		}
+	}
+
+
+	private List<PlayerVote> createPlayersFromString(String playersString) {
+		List<PlayerVote> listBean = new ArrayList<PlayerVote>();
+		String[] players = playersString.split(";");
+		for (int i=0; i< players.length; i++) {
+			String[] playerData = players[i].split("_");
+			String name = playerData[0];
+			String team = playerData[1];
+			String roleString = playerData[2];
+			RoleEnum role = RoleEnum.valueOf(roleString);
+			
+			String voteFromWebString = playerData[3];
+			Double voteFromWeb = null;
+			if ( !voteFromWebString.equals("null") )
+				voteFromWeb = Double.valueOf(voteFromWebString);
+			
+			String fantaVoteFromWebString = playerData[4];
+			Double fantaVoteFromWeb = null;
+			if ( !fantaVoteFromWebString.equals("null") )
+				fantaVoteFromWeb = Double.valueOf(fantaVoteFromWebString);
+			
+			
+			PlayerVote playerVoteBean = new PlayerVote();
+			listBean.add(playerVoteBean);
+			playerVoteBean.setName(name);
+			playerVoteBean.setTeam(team);
+			playerVoteBean.setRole(role);
+			playerVoteBean.setVoteFromWeb(voteFromWeb);
+			playerVoteBean.setFantaVoteFromWeb(fantaVoteFromWeb);
+		}
+		return listBean;
 	}
 
 

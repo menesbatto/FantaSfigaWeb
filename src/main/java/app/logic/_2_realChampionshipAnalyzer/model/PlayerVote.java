@@ -13,8 +13,14 @@ public class PlayerVote {
 	private Double goalkeerModifier;
 	private Double strikerModifier;
 	
+	private Double voteFromWeb;
+	private Double fantaVoteFromWeb;
 	
 	
+	
+	public PlayerVote() {
+	}
+
 	public PlayerVote(RoleEnum role, String name, String team, Double vote, Double fantaVote) {
 		this.role = role;
 		this.name = name;
@@ -54,12 +60,6 @@ public class PlayerVote {
 		this.fantaVote = fantaVote;
 	}
 
-	@Override
-	public String toString() {
-		return "PlayerVote [role=" + role + ", name=" + name + ", team=" + team + ", vote=" + vote + ", fantaVote="
-				+ fantaVote + "] \n";
-	}
-
 	public boolean isAlreadyUsed() {
 		return alreadyUsed;
 	}
@@ -82,6 +82,30 @@ public class PlayerVote {
 
 	public void setStrikerModifier(Double strikerModifier) {
 		this.strikerModifier = strikerModifier;
+	}
+
+	public Double getVoteFromWeb() {
+		return voteFromWeb;
+	}
+
+	public void setVoteFromWeb(Double voteFromWeb) {
+		this.voteFromWeb = voteFromWeb;
+	}
+
+	public Double getFantaVoteFromWeb() {
+		return fantaVoteFromWeb;
+	}
+
+	public void setFantaVoteFromWeb(Double fantaVoteFromWeb) {
+		this.fantaVoteFromWeb = fantaVoteFromWeb;
+	}
+
+	@Override
+	public String toString() {
+		return "PlayerVote [role=" + role + ", name=" + name + ", team=" + team + ", vote=" + vote + ", fantaVote="
+				+ fantaVote + ", alreadyUsed=" + alreadyUsed + ", goalkeerModifier=" + goalkeerModifier
+				+ ", strikerModifier=" + strikerModifier + ", voteFromWeb=" + voteFromWeb + ", fantaVoteFromWeb="
+				+ fantaVoteFromWeb + "]";
 	}
 
 	

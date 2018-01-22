@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.CompetitionBean;
-import app.PostponementReq;
+import app.RulesReq;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UserDao;
@@ -408,6 +408,7 @@ public class RulesExpertMain {
 		Double movementsPlayerOfficeVote = Double.valueOf(movementsPlayerOfficeVoteString.replace(",", "."));
 		s.setMovementsPlayerOfficeVote(movementsPlayerOfficeVote);;
 		
+		
 		String maxOfficeVotes = doc.getElementsMatchingOwnText("Applica riserva d'ufficio fino al:").parents().get(0).getElementsByAttribute("selected").text();
 		if (maxOfficeVotes.equals("Numero di sostituzioni impostate"))
 			s.setMaxOfficeVotes(MaxOfficeVotesEnum.TILL_SUBSTITUTIONS);
@@ -453,28 +454,28 @@ public class RulesExpertMain {
 		//p.setFormulaUnoPoints(Arrays.asList(8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0));
 		
 		String isFasciaConIntornoActiveString = doc.getElementsMatchingOwnText("Fascia con intorno:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isFasciaConIntornoActive = isFasciaConIntornoActiveString.equals("0");
+		Boolean isFasciaConIntornoActive = isFasciaConIntornoActiveString.equals("1");
 		p.setFasciaConIntornoActive(isFasciaConIntornoActive);
 		String fasciaConIntornoString = doc.getElementsByAttributeValue("id", "valintorno").val();
 		Double fasciaConIntorno = Double.valueOf(fasciaConIntornoString);
 		p.setFasciaConIntorno(fasciaConIntorno);
 		
 		String isIntornoActiveString = doc.getElementsMatchingOwnText("Intorno:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isIntornoActive = isIntornoActiveString.equals("0");
+		Boolean isIntornoActive = isIntornoActiveString.equals("1");
 		p.setIntornoActive(isIntornoActive);
 		String intornoString = doc.getElementsByAttributeValue("id", "vintorno").val();
 		Double intorno = Double.valueOf(intornoString);
 		p.setIntorno(intorno);
 		
 		String isControllaPareggioActiveString = doc.getElementsMatchingOwnText("Controlla pareggio:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isControllaPareggioActive = isControllaPareggioActiveString.equals("0");
+		Boolean isControllaPareggioActive = isControllaPareggioActiveString.equals("1");
 		p.setControllaPareggioActive(isControllaPareggioActive);
 		String controllaPareggioString = doc.getElementsByAttributeValue("id", "vcpareggio").val();
 		Double controllaPareggio = Double.valueOf(controllaPareggioString);
 		p.setControllaPareggio(controllaPareggio);
 		
 		String isDifferenzaPuntiActiveString = doc.getElementsMatchingOwnText("Differenza punti:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isDifferenzaPuntiActive = isDifferenzaPuntiActiveString.equals("0");
+		Boolean isDifferenzaPuntiActive = isDifferenzaPuntiActiveString.equals("1");
 		p.setDifferenzaPuntiActive(isDifferenzaPuntiActive);
 		String differenzaPuntiString = doc.getElementsByAttributeValue("id", "vdpunti").val();
 		Double differenzaPunti = Double.valueOf(differenzaPuntiString);
@@ -482,8 +483,8 @@ public class RulesExpertMain {
 		
 		Elements autogolElems = doc.getElementsMatchingOwnText("Autogol:");
 		if (autogolElems.isEmpty()) {
-			p.setAutogolActive(true);
-			p.setAutogol(59.0);
+			p.setAutogolActive(false);
+			p.setAutogol(0.0);
 		}
 		else {
 			String isAutogolActiveString = autogolElems.parents().get(0).getElementsByAttribute("checked").val();
@@ -615,10 +616,11 @@ public class RulesExpertMain {
 		return map;
 	}
 
-	public void savePostpomentBehaviour(PostponementReq req) {
-		rulesDao.savePostpomentBehaviour(req, userBean.getUsername());
+	public void integrateRules(RulesReq req) {
+		rulesDao.integrateRules(req, userBean.getUsername());
 		
 	}
+
 
 	
 }

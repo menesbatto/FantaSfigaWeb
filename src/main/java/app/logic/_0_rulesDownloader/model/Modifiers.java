@@ -269,6 +269,7 @@ public class Modifiers  implements Serializable {
 				+ "\n strikerVote8=" + strikerVote8  
 				
 				+ "\n\n performanceModifierActive=" + performanceModifierActive
+				+ "\n performance0=" + performance0
 				+ "\n performance1=" + performance1
 				+ "\n performance2=" + performance2
 				+ "\n performance3=" + performance3

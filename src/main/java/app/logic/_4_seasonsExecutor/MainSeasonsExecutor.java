@@ -44,10 +44,10 @@ public class MainSeasonsExecutor {
 	
 	
 	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName) {
-		return execute(allSeasons, leagueShortName, competitionShortName);
+		return execute(allSeasons, leagueShortName, competitionShortName, null, null);
 	}
 	
-	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName, RulesBean rulesInput, SeasonResultBean seasonResultBeanInput ){
+	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName, SeasonResultBean seasonResultBeanInput,  RulesBean rulesInput ){
 //		allSeasons = allSeasonsInput;
 		
 		RulesBean rules;

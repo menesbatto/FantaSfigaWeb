@@ -7,6 +7,9 @@ public class PlayerVoteComplete implements Serializable{
 	
 	private static final long serialVersionUID = -8182568610565154395L;
 
+	
+	private Double voteFromWeb;
+	private Double fantaVoteFromWeb;
 	private String name;
 	private String team;
 	private RoleEnum role;
@@ -35,6 +38,9 @@ public class PlayerVoteComplete implements Serializable{
 	
 	
 	
+	public PlayerVoteComplete() {
+	}
+
 	public PlayerVoteComplete(String name, String team, RoleEnum role, Double vote, Boolean yellowCard, Boolean redCard,
 			Double scoredGoals, Double scoredPenalties, Double movementAssists,  Double stationaryAssists, Double autogoals, Double missedPenalties,
 			Double savedPenalties,  Double takenGoals, Boolean winGoal, Boolean evenGoal, Boolean subIn, Boolean subOut ) {
@@ -217,6 +223,22 @@ public class PlayerVoteComplete implements Serializable{
 
 	public void setSubOut(Boolean subOut) {
 		this.subOut = subOut;
+	}
+
+	public Double getVoteFromWeb() {
+		return voteFromWeb;
+	}
+
+	public void setVoteFromWeb(Double voteFromWeb) {
+		this.voteFromWeb = voteFromWeb;
+	}
+
+	public Double getFantaVoteFromWeb() {
+		return fantaVoteFromWeb;
+	}
+
+	public void setFantaVoteFromWeb(Double fantaVoteFromWeb) {
+		this.fantaVoteFromWeb = fantaVoteFromWeb;
 	}
 	
 	

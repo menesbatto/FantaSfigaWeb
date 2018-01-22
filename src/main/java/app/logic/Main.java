@@ -47,37 +47,36 @@ public class Main {
 		
 	
 	// Genera tutti i possibili calendari (sarebbe inutile farlo sempre ma ci si mette meno ad eseguirlo che a deserializzarli da disco)
-		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName);
+		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, true);
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName);
 		rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
 		
-		System.out.println("execute");
 	}
 
 
 	public void calculateRankingWithCustomRules(String leagueShortName, String competitionShortName, RulesBean rules) {
 		
 		RulesBean rulesDb = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
-		rulesDb.getModifiers().setDefenderModifierActive(true);
-		rulesDb.getModifiers().setDefenderAvgVote6(1.0);
-		rulesDb.getModifiers().setDefenderAvgVote6half(3.0);
-		rulesDb.getModifiers().setDefenderAvgVote7(6.0);
+//		rulesDb.getModifiers().setDefenderModifierActive(true);
+//		rulesDb.getModifiers().setDefenderAvgVote6(1.0);
+//		rulesDb.getModifiers().setDefenderAvgVote6half(3.0);
+//		rulesDb.getModifiers().setDefenderAvgVote7(6.0);
 		
 		SeasonResultBean calculatedSeasonResult = seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName, rulesDb);
 		Boolean onlyOne = true;
 		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
-		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rulesDb, calculatedSeasonResult);
+		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, calculatedSeasonResult, rulesDb);
 		
 		// VIA
-		RankingBean realRanking = allRankings.get(0);
-		System.out.println("CLASSIFICA ATTUALE");
-		for(RankingRowBean rr: realRanking.getRows()){
-			System.out.println(rr);
-		}
+//		RankingBean realRanking = allRankings.get(0);
+//		System.out.println("CLASSIFICA ATTUALE");
+//		for(RankingRowBean rr: realRanking.getRows()){
+//			System.out.println(rr);
+//		}
 		// END VIA
 		
 		
-//		rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
+		rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
 		
 	}
 }

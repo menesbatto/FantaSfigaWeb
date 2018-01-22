@@ -11,7 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
-import app.PostponementReq;
+import app.RulesReq;
 import app.dao.entity.Competition;
 import app.dao.entity.League;
 import app.dao.entity.LineUpLight;
@@ -218,6 +218,24 @@ public class RulesDao {
 		e.setStrikerVote7half(modifiers.getStrikerVote7half());
 		e.setStrikerVote8(modifiers.getStrikerVote8());
 		
+		e.setPerformanceModifierActive(modifiers.isPerformanceModifierActive());
+		e.setPerformance0(modifiers.getPerformance0());
+		e.setPerformance1(modifiers.getPerformance1());
+		e.setPerformance2(modifiers.getPerformance2());
+		e.setPerformance3(modifiers.getPerformance3());
+		e.setPerformance4(modifiers.getPerformance4());
+		e.setPerformance5(modifiers.getPerformance5());
+		e.setPerformance6(modifiers.getPerformance6());
+		e.setPerformance7(modifiers.getPerformance7());
+		e.setPerformance8(modifiers.getPerformance8());
+		e.setPerformance9(modifiers.getPerformance9());
+		e.setPerformance10(modifiers.getPerformance10());
+		e.setPerformance11(modifiers.getPerformance11());
+		
+		e.setFairPlayModifierActive(modifiers.isFairPlayModifierActive());
+		e.setFairPlay(modifiers.getFairPlay());
+		
+		
 		// #################################################################################
 
 		Points points = b.getPoints();
@@ -261,9 +279,9 @@ public class RulesDao {
 		
 		String maxOfficeVotesString;
 		if (substitutions.getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_SUBSTITUTIONS))
-			maxOfficeVotesString = "S";
+			maxOfficeVotesString = "TILL_SUBSTITUTIONS";
 		else //	if (substitutions.getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_ALL))
-			maxOfficeVotesString = "A";
+			maxOfficeVotesString = "TILL_ALL";
 		e.setMaxOfficeVotes(maxOfficeVotesString);
 		
 		e.setGoalkeeperPlayerOfficeVoteActive(substitutions.isGoalkeeperPlayerOfficeVoteActive());
@@ -424,6 +442,23 @@ public class RulesDao {
 		modifiers.setStrikerVote7half(e.getStrikerVote7half());
 		modifiers.setStrikerVote8(e.getStrikerVote8());
 		
+		modifiers.setPerformanceModifierActive(e.isPerformanceModifierActive());
+		modifiers.setPerformance0(e.getPerformance0());
+		modifiers.setPerformance1(e.getPerformance1());
+		modifiers.setPerformance2(e.getPerformance2());
+		modifiers.setPerformance3(e.getPerformance3());
+		modifiers.setPerformance4(e.getPerformance4());
+		modifiers.setPerformance5(e.getPerformance5());
+		modifiers.setPerformance6(e.getPerformance6());
+		modifiers.setPerformance7(e.getPerformance7());
+		modifiers.setPerformance8(e.getPerformance8());
+		modifiers.setPerformance9(e.getPerformance9());
+		modifiers.setPerformance10(e.getPerformance10());
+		modifiers.setPerformance11(e.getPerformance11());
+		
+		modifiers.setFairPlayModifierActive(e.isFairPlayModifierActive());
+		modifiers.setFairPlay(e.getFairPlay());
+		
 		// #################################################################################
 
 		Points points = new Points();
@@ -478,9 +513,9 @@ public class RulesDao {
 		substitution.setSubstitutionMode(e.getSubstitutionMode());
 		
 		MaxOfficeVotesEnum maxOfficeVotesEnum;
-		if (e.getMaxOfficeVotes().equals("S"))
+		if (e.getMaxOfficeVotes().equals("TILL_SUBSTITUTIONS"))
 			maxOfficeVotesEnum = MaxOfficeVotesEnum.TILL_SUBSTITUTIONS;
-		else //	if (e.getMaxOfficeVotes().equals("A"))
+		else //	if (e.getMaxOfficeVotes().equals("TILL_ALL"))
 			maxOfficeVotesEnum = MaxOfficeVotesEnum.TILL_ALL;
 		substitution.setMaxOfficeVotes(maxOfficeVotesEnum);
 		
@@ -557,13 +592,12 @@ public class RulesDao {
 		String[] pairs = rules.getCompetitionRules().getBinding().split(",");
 		for (int i = 0; i < pairs.length; i++) {
 			String[] seasonDays = pairs[i].split("-");
-			Integer serieA = Integer.valueOf(seasonDays[0]);
-			Integer comp = Integer.valueOf(seasonDays[1]);
+			Integer comp = Integer.valueOf(seasonDays[0]);
+			Integer serieA = Integer.valueOf(seasonDays[1]);
 			map.put(serieA, comp);
 		}
 		
 		return map;
-		
 	}
 	
 	
@@ -574,23 +608,30 @@ public class RulesDao {
 		String[] pairs = rules.getCompetitionRules().getBinding().split(",");
 		for (int i = 0; i < pairs.length; i++) {
 			String[] seasonDays = pairs[i].split("-");
-			Integer comp = Integer.valueOf(seasonDays[0]);
-			Integer serieA = Integer.valueOf(seasonDays[1]);
+			Integer serieA = Integer.valueOf(seasonDays[0]);
+			Integer comp = Integer.valueOf(seasonDays[1]);
 			map.put(serieA, comp);
 		}
 		
 		return map;
 		
+		
 	}
 
-	public void savePostpomentBehaviour(PostponementReq req, String username) {
+	public void integrateRules(RulesReq req, String username) {
 		String competitionShortName = req.getCompetitionShortName();
 		String leagueShortName = req.getLeagueShortName();
 		String postponementBehaviour = req.getPostponementBehaviour();
+		Boolean autogolActive = req.getAutogolActive();
+		Double autogol = req.getAutogol();
+		String maxOfficeVoteBehaviour = req.getMaxOfficeVoteBehaviour();
 		
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		Rules ent = rulesRepo.findByCompetition(competition);
 		ent.setPostponementBehaviour(postponementBehaviour);
+		ent.setAutogol(autogol);
+		ent.setAutogolActive(autogolActive);
+		ent.setMaxOfficeVotes(maxOfficeVoteBehaviour);
 		
 		rulesRepo.save(ent);
 		
