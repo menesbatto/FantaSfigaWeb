@@ -59,7 +59,14 @@ public class UtilsDao {
 	public Map<String, Map<String, List<PlayerVoteComplete>>> findVotesBySource(VotesSourceEnum source) {
 		
 		List<Vote> votes = voteRepo.findBySourceOrderBySerieASeasonDayAsc(source.name());
-		
+//		List<Vote> votesToRemove = new ArrayList<Vote>();
+//		for (Vote v : votes) {
+//			if (v.getSerieASeasonDay().equals(21) || v.getSerieASeasonDay().equals(20)) {
+//				votesToRemove.add(v);
+//			}
+//		}
+//		System.out.println();
+//		voteRepo.delete(votesToRemove);
 		Map<String, Map<String, List<PlayerVoteComplete>>> map = new HashMap<String, Map<String, List<PlayerVoteComplete>>>();
 		
 
@@ -115,9 +122,9 @@ public class UtilsDao {
 
 		return bean;
 	}
-@Transactional
+
 	public int calculateLastSerieASeasonDayCalculated() {
-//		voteRepo.deleteBySerieASeasonDay(20);
+//		voteRepo.deleteBySerieASeasonDay(21);
 
 		List<Integer> seasonDays = voteRepo.findAllDistinct();
 		if (seasonDays.isEmpty())

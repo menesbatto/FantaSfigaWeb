@@ -193,10 +193,9 @@ public class LeagueDao {
 
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		SeasonResult seasonResult = seasonResultRepo.findByCompetition(competition);
-//		seasonResultRepo.delete(seasonResult);
-		System.out.println();
+		
 		if (seasonResult != null)
-			return;
+			seasonResultRepo.delete(seasonResult);
 		
 		seasonResult = new SeasonResult();
 		
@@ -574,36 +573,46 @@ public class LeagueDao {
 
 
 	public void saveSeasonFromWeb(String leagueShortName, String competitionShortName, String username, SeasonFromWebBean seasonFromWeb) {
+		
+		if (seasonFromWeb.getSeasonDaysFromWeb().isEmpty())
+			return;
+		
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 
 		// Se esiste e ha meno giornate cancello tutto e salvo quella nuova....da ottimizzare
 		SeasonFromWeb ent = seasonFromWebRepo.findByCompetition(competition);
-		if (ent != null)
-			if (  ent.getSeasonDaysFromWeb().size() == seasonFromWeb.getSeasonDaysFromWeb().keySet().size()  )
-				return;
-			else
-				seasonFromWebRepo.delete(ent);
 		
-		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = seasonFromWeb.getSeasonDaysFromWeb();
-		
-		List<SeasonDayFromWeb> seasonDayFromWebEntList = new ArrayList<SeasonDayFromWeb>();
-		
-		for (Entry<Integer, SeasonDayFromWebBean> entry : seasonDaysFromWeb.entrySet()) {
-			Integer competitionSeasonDay = entry.getKey();
-			SeasonDayFromWebBean seasonDayFromWebBean = entry.getValue();
-			
-			SeasonDayFromWeb seasonDayFromWebEnt = createSeasonDayFromWebEnt(competitionSeasonDay, seasonDayFromWebBean);
-			seasonDayFromWebEntList.add(seasonDayFromWebEnt);
-			
+		if (ent == null) {
+			ent = new SeasonFromWeb();
+			ent.setCompetition(competition);
+			ent.setSeasonDaysFromWeb(new ArrayList<SeasonDayFromWeb>());
 		}
 		
-		ent = new SeasonFromWeb();
-		ent.setCompetition(competition);
-		ent.setSeasonDaysFromWeb(seasonDayFromWebEntList);
+		
+		List<SeasonDayFromWeb> seasonDayFromWebEntList = ent.getSeasonDaysFromWeb();
+			
+		for (Integer key : seasonFromWeb.getSeasonDaysFromWeb().keySet()) {
+			if (isNotAlreadySaved(ent.getSeasonDaysFromWeb(), key)) {
+		
+				Integer competitionSeasonDay = key;
+				SeasonDayFromWebBean seasonDayFromWebBean = seasonFromWeb.getSeasonDaysFromWeb().get(key);
+				
+				SeasonDayFromWeb seasonDayFromWebEnt = createSeasonDayFromWebEnt(competitionSeasonDay, seasonDayFromWebBean);
+				seasonDayFromWebEntList.add(seasonDayFromWebEnt);
+			}
+		}
 		
 		seasonFromWebRepo.save(ent);
 		
-		
+	}
+
+
+	private boolean isNotAlreadySaved(List<SeasonDayFromWeb> seasonDaysFromWeb, Integer key) {
+		for (SeasonDayFromWeb seasonDay : seasonDaysFromWeb)
+			if (seasonDay.getCompetitionSeasonDay() == key){
+				return false;
+			}
+		return true;
 	}
 
 
@@ -669,10 +678,13 @@ public class LeagueDao {
 	public SeasonFromWebBean findSeasonFromWeb(String leagueShortName, String competitionShortName, String username) {
 		
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		
 		SeasonFromWeb ent = seasonFromWebRepo.findByCompetition(competition);
+		//seasonFromWebRepo.delete(ent)
+		if (ent == null)
+			return null;
 		
 		SeasonFromWebBean bean = new SeasonFromWebBean();
-		
 		bean.setName(ent.getName());
 		
 		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWebBeanList = new HashMap<Integer, SeasonDayFromWebBean>();

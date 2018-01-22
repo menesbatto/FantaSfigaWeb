@@ -50,53 +50,31 @@ public class SeasonAnalyzer {
 
 	public SeasonResultBean downloadSeasonFromWeb(String competitionShortName, String leagueShortName){
 		
-//		RulesBean rules;
-//		if (rulesInput == null)
-//			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
-//		else
-//			rules = rulesInput;	
-//		
-//		VotesSourceEnum voteSource = rules.getDataSource().getVotesSource();
-//		if  (AppConstants.FORCE_VOTE_SOURCE != null){
-//			voteSource = AppConstants.FORCE_VOTE_SOURCE;
-//		}
-//		
-//		Map<String, Map<String, List<PlayerVoteComplete>>> map = utilsDao.findVotesBySource(voteSource);
 		
-		int seriaAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
+		SeasonFromWebBean seasonFromWeb = leagueDao.findSeasonFromWeb(leagueShortName, competitionShortName, userBean.getUsername());
 
-//		ArrayList<SeasonDayResultBean> seasonDayResults = new ArrayList<SeasonDayResultBean>();
-		
+		if (seasonFromWeb == null) {
+			seasonFromWeb = new SeasonFromWebBean();
+			seasonFromWeb.setSeasonDaysFromWeb(new HashMap<Integer, SeasonDayFromWebBean>());
+		}
+
+			
+		int seriaAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
 		
 		//	1 - 4		//	5 - 9 		//	10 - 15		//	15 - 21		//	20 - 27
 		//	2 - 5		//	6 - 10		//	11 - 16 	//	16 - 22		//	21 - 28
 		//	3 - 6		//	7 - 11		//	12 - 17 	//	17 - 23		//	22 - 29
 		//	4 - 7		//	8 - 12		//	13 - 18 	//	18 - 24		//	23 - 30
 						//	9 - 13 		//	14 - 19		//	19 - 25		//	24 - 31
-		Map<Integer, Integer> seasonDayBind = rulesDao.findSerieAToCompetitionBinding(leagueShortName, competitionShortName, userBean.getUsername());
+		Map<Integer, Integer> seasonDayBind = rulesDao.findCompetitionToSerieABinding(leagueShortName, competitionShortName, userBean.getUsername());
 		
 		
 		String finalSeasonDayUrl = AppConstants.SEASON_DAY_LINES_UP_URL_TEMPLATE.replace("[COMPETITION_ID]", competitionShortName).replace("[LEAGUE_NAME]", leagueShortName);
 		
 		
-//		
-//		SeasonDayResultBean seasonDayResult;
-//		
-//		Map<Integer, List<PostponementBean>> postponements = utilsDao.findAllPostponement();
-
-	
-		
-		SeasonFromWebBean seasonFromWeb = new SeasonFromWebBean();
 		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = new HashMap<Integer, SeasonDayFromWebBean>();
 		
 		for (Entry<Integer, Integer> entry : seasonDayBind.entrySet()) {
-//			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) { //Controllo per gestire le giornate in cui ci sono i rinvii
-//				if (postponements.get(entry.getValue()) != null) {
-//					List<LineUpLightBean> emptyLineUpLight = new ArrayList<LineUpLightBean>();
-//					seasonDayResults.add(new SeasonDayResultBean(entry.getKey().toString(), emptyLineUpLight)); 
-//					continue;
-//				}
-//			}
 			
 			Integer compSeasonDay = entry.getKey();
 			Integer serieASeasonDay = entry.getValue();
@@ -106,33 +84,19 @@ public class SeasonAnalyzer {
 				break;
 			}
 			
-			List<LineUp> lineUpFromWeb = seasonDayAnalyzer.downloadSeasonDayLinesUpFromWeb(finalSeasonDayUrl + compSeasonDay);
+			if (seasonFromWeb.getSeasonDaysFromWeb().get(compSeasonDay) == null) {
+				List<LineUp> lineUpFromWeb = seasonDayAnalyzer.downloadSeasonDayLinesUpFromWeb(finalSeasonDayUrl + compSeasonDay);
+				SeasonDayFromWebBean seasonDayFromWeb = new SeasonDayFromWebBean();
+				seasonDayFromWeb.setLinesUp(lineUpFromWeb);
+				
+				seasonDaysFromWeb.put(compSeasonDay, seasonDayFromWeb);
+			}
 			
-			
-			SeasonDayFromWebBean seasonDayFromWeb = new SeasonDayFromWebBean();
-			seasonDayFromWeb.setLinesUp(lineUpFromWeb);
-			
-			seasonDaysFromWeb.put(compSeasonDay, seasonDayFromWeb);
-			
-//			seasonDayResult = seasonDayAnalyzer.calculateSingleSeasonDay(lineUpFromWeb, serieASeasonDay , rules, map.get(serieASeasonDay+""), postponements);
-//			
-//			seasonDayResults.add(seasonDayResult);
 			
 			
 		}
 		seasonFromWeb.setSeasonDaysFromWeb(seasonDaysFromWeb);
-		
 		leagueDao.saveSeasonFromWeb(leagueShortName, competitionShortName, userBean.getUsername(), seasonFromWeb);
-		
-		
-
-//		SeasonResultBean seasonResult = new SeasonResultBean();
-//		seasonResult.setSeasonDayResults(seasonDayResults);
-//		seasonResult.setName("BASE");
-//		
-//		leagueDao.saveCalculatedSeasonResult(seasonResult, leagueShortName, competitionShortName, userBean.getUsername());
-		
-//		calculateSeasonResult(competitionShortName, leagueShortName, null, seasonFromWeb);
 		
 		return null;
 	}
@@ -140,11 +104,14 @@ public class SeasonAnalyzer {
 	
 	public SeasonResultBean calculateSeasonResult(String competitionShortName, String leagueShortName, RulesBean rulesInput){
 		
+		Boolean isCustomRules = rulesInput != null;
+		
 		RulesBean rules;
-		if (rulesInput == null)
-			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
-		else
+		if (isCustomRules)
 			rules = rulesInput;	
+		else
+			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
+			
 		
 		VotesSourceEnum voteSource = rules.getDataSource().getVotesSource();
 		if  (AppConstants.FORCE_VOTE_SOURCE != null){
@@ -177,13 +144,13 @@ public class SeasonAnalyzer {
 		
 		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = seasonFromWeb.getSeasonDaysFromWeb();
 		
-		
+		System.out.println();
 //		for (Integer i = 1; i<38; i++){
 		for (Entry<Integer, Integer> entry : seasonDayBind.entrySet()) {
 			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) { //Controllo per gestire le giornate in cui ci sono i rinvii
-				if (postponements.get(entry.getValue()) != null) {
+				if (postponements.get(entry.getKey()) != null) {
 					List<LineUpLightBean> emptyLineUpLight = new ArrayList<LineUpLightBean>();
-					seasonDayResults.add(new SeasonDayResultBean(entry.getKey().toString(), emptyLineUpLight)); 
+					seasonDayResults.add(new SeasonDayResultBean(entry.getValue().toString(), emptyLineUpLight)); 
 					continue;
 				}
 			}
@@ -210,7 +177,8 @@ public class SeasonAnalyzer {
 		seasonResult.setSeasonDayResults(seasonDayResults);
 		seasonResult.setName("BASE");
 		
-		leagueDao.saveCalculatedSeasonResult(seasonResult, leagueShortName, competitionShortName, userBean.getUsername());
+		if (!isCustomRules)
+			leagueDao.saveCalculatedSeasonResult(seasonResult, leagueShortName, competitionShortName, userBean.getUsername());
 		
 
 		

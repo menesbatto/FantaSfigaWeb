@@ -10,6 +10,7 @@ import app.dao.RankingType;
 import app.dao.RulesDao;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_rulesDownloader.model.RulesBean;
+import app.logic._0_votesDownloader.model.VotesSourceEnum;
 import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
 import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
@@ -43,7 +44,7 @@ public class Main {
 	private RankingAnalyzer rankingAnalyzer;
 	
 	
-	public void execute(String leagueShortName, String competitionShortName ){
+	public void calculateRealStats(String leagueShortName, String competitionShortName ){
 		
 	
 	// Genera tutti i possibili calendari (sarebbe inutile farlo sempre ma ci si mette meno ad eseguirlo che a deserializzarli da disco)
@@ -54,29 +55,18 @@ public class Main {
 	}
 
 
-	public void calculateRankingWithCustomRules(String leagueShortName, String competitionShortName, RulesBean rules) {
+	public void calculateStatsWithCustomRules(String leagueShortName, String competitionShortName, RulesBean rules) {
 		
 		RulesBean rulesDb = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
-//		rulesDb.getModifiers().setDefenderModifierActive(true);
-//		rulesDb.getModifiers().setDefenderAvgVote6(1.0);
-//		rulesDb.getModifiers().setDefenderAvgVote6half(3.0);
-//		rulesDb.getModifiers().setDefenderAvgVote7(6.0);
+//		rulesDb.getDataSource().setVotesSource(VotesSourceEnum.ITALIA);
+
 		
 		SeasonResultBean calculatedSeasonResult = seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName, rulesDb);
 		Boolean onlyOne = true;
 		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, calculatedSeasonResult, rulesDb);
 		
-		// VIA
-//		RankingBean realRanking = allRankings.get(0);
-//		System.out.println("CLASSIFICA ATTUALE");
-//		for(RankingRowBean rr: realRanking.getRows()){
-//			System.out.println(rr);
-//		}
-		// END VIA
-		
-		
-		rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
+//		rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
 		
 	}
 }

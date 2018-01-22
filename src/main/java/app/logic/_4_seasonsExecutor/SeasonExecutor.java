@@ -53,9 +53,10 @@ public class SeasonExecutor {
 			seasonDayResult = realChampionshipResults.get(i);
 			if (seasonDayResult.getLinesUpLight().size() > 0) {	//Controllo per gestire le giornate in cui ci sono i rinvii
 				seasonDayResult = seasonDayExecutor.execute(seasonDay, seasonDayResult, rules, teams);
-//				System.out.println(seasonDayResult);
 				updateRanking(seasonDayResult, ranking);	
 				updateFormulaUnoRanking(seasonDayResult, rules, formulaUnoRanking);
+//				System.out.println(seasonDayResult);
+//				System.out.println(ranking);
 			}
 			else {
 				if (AppConstants.DEBUG_MODE)

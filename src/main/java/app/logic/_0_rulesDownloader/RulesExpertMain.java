@@ -138,8 +138,14 @@ public class RulesExpertMain {
 	}
 
 	private Modifiers getPerformanceModifiers(Modifiers m, Document doc) {
-		String isPerformanceActiveString = doc.getElementsMatchingOwnText("Modificatore di rendimento:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isPerformancerActive = isPerformanceActiveString.equals("1");
+//		String isPerformanceActiveString = doc.getElementsMatchingOwnText("Modificatore di rendimento:").parents().get(0).getElementsByAttribute("checked").val();
+//		Boolean isPerformancerActive = isPerformanceActiveString.equals("1");
+		String performanceDisplayedString = doc.getElementsMatchingOwnText("Il modificatore di rendimento").parents().get(1).attr("style");
+		Boolean isPerformancerActive; 
+		if( performanceDisplayedString.contains("none"))
+			isPerformancerActive= false;
+		else 
+			isPerformancerActive= true;
 		
 		if (!isPerformancerActive)
 			return m;

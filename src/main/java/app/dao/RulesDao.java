@@ -317,7 +317,7 @@ public class RulesDao {
 			
 	}
 	
-	@Cacheable("rules")
+//	@Cacheable("rules")
 	public RulesBean retrieveRules(String competitionShortName, String leagueShortName, String username) {
 		
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);

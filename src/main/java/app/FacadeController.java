@@ -333,26 +333,12 @@ public class FacadeController {
 		String leagueShortName = competition.getLeagueShortName();
 		
 		seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName);
-		String body = "Download Season From Web COMPLETED";
+		String body = "Calculate Season Result From Web COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
 	}
 	
-	//###################################################################
-	
-	@RequestMapping(value = "/analyzeCompetition", method = RequestMethod.POST)
-	public ResponseEntity<String> analyzeChampionship(@RequestBody CompetitionBean competition) {
-		
-		String competitionShortName = competition.getShortName();
-		String leagueShortName = competition.getLeagueShortName();
-		
-		seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName);
-		String body = "Analyze Championship COMPLETED";
-		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
-		return response;
-	}
 		
 	//###################################################################
 	
@@ -373,13 +359,13 @@ public class FacadeController {
 	//###################################################################
 	@Autowired
 	private Main main;
-	@RequestMapping(value = "/createStats", method = RequestMethod.POST)
+	@RequestMapping(value = "/calculateRealStats", method = RequestMethod.POST)
 	public ResponseEntity<String> createStats(@RequestBody CompetitionBean competition) {
 		
 		String competitionShortName = competition.getShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		
-		main.execute(leagueShortName, competitionShortName);
+		main.calculateRealStats(leagueShortName, competitionShortName);
 		String body = "Create Stats COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
@@ -389,13 +375,13 @@ public class FacadeController {
 		
 	//###################################################################
 	
-	@RequestMapping(value = "/calculateRankingWithCustomRules", method = RequestMethod.POST)
+	@RequestMapping(value = "/calculateStatsWithCustomRules", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateRankingWithCustomRules(@RequestBody CustomRules req) {
 		
 		String competitionShortName = req.getCompetition().getShortName();
 		String leagueShortName = req.getCompetition().getLeagueShortName();
 		
-		main.calculateRankingWithCustomRules(leagueShortName, competitionShortName, req.getRules());
+		main.calculateStatsWithCustomRules(leagueShortName, competitionShortName, req.getRules());
 		String body = "Calculate Ranking With Custom Rules COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
