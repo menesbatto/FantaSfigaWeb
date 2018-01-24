@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class SerieATeamDao {
 		return map;
 	}
 
-
+	@CacheEvict(value = { "serieateams" }, allEntries = true)
 	public void saveTeamIds(Map<String, String> map) {
 		List<SerieATeam> list = new ArrayList<SerieATeam>();
 		for (String key : map.keySet()) {

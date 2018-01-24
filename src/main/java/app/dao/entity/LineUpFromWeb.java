@@ -22,6 +22,7 @@ public class LineUpFromWeb {
 	private Double performanceModifierFromWeb;
 	private Double fairPlayModifierFromWeb;
 	
+	@Column(length = 2047)
 	private String info;
 
 	public LineUpFromWeb() {

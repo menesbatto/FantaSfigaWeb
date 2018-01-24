@@ -249,7 +249,7 @@ public class FacadeController {
 
 	@RequestMapping(value = "/calculateBinding", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateBinding(@RequestBody CompetitionBean competition) {
-		String competitionShortName = competition.getShortName();
+		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		
 		seasonPatternExtractor.calculateSerieAToCompetitionSeasonDaysBinding(leagueShortName, competitionShortName);
@@ -265,7 +265,7 @@ public class FacadeController {
 
 	@RequestMapping(value = "/calculateCompetitionPattern", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateCompetitionPattern(@RequestBody CompetitionBean competition) {
-		String competitionShortName = competition.getShortName();
+		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		
 		seasonPatternExtractor.calculateCompetitionPattern(leagueShortName, competitionShortName);
@@ -282,7 +282,7 @@ public class FacadeController {
 
 	@RequestMapping(value = "/saveOnlineSeasonAndTeams", method = RequestMethod.POST)
 	public ResponseEntity<String> saveOnlineSeasonAndTeams(@RequestBody CompetitionBean competition) {
-		String competitionShortName = competition.getShortName();
+		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		
 		seasonPatternExtractor.saveOnlineSeasonAndTeams(leagueShortName, competitionShortName);
@@ -314,7 +314,7 @@ public class FacadeController {
 	@RequestMapping(value = "/downloadSeasonFromWeb", method = RequestMethod.POST)
 	public ResponseEntity<String> downloadSeasonFromWeb(@RequestBody CompetitionBean competition) {
 		
-		String competitionShortName = competition.getShortName();
+		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		
 		seasonAnalyzer.downloadSeasonFromWeb(competitionShortName, leagueShortName);
@@ -329,7 +329,7 @@ public class FacadeController {
 	@RequestMapping(value = "/calculateSeasonResult", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateSeasonResult(@RequestBody CompetitionBean competition) {
 		
-		String competitionShortName = competition.getShortName();
+		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		
 		seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName);
@@ -345,7 +345,7 @@ public class FacadeController {
 	@RequestMapping(value = "/generateAllSeason", method = RequestMethod.POST)
 	public ResponseEntity<String> generateAllSeason(@RequestBody CompetitionBean competition) {
 		
-		String competitionShortName = competition.getShortName();
+		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		
 		allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName);
@@ -362,7 +362,7 @@ public class FacadeController {
 	@RequestMapping(value = "/calculateRealStats", method = RequestMethod.POST)
 	public ResponseEntity<String> createStats(@RequestBody CompetitionBean competition) {
 		
-		String competitionShortName = competition.getShortName();
+		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		
 		main.calculateRealStats(leagueShortName, competitionShortName);
@@ -378,7 +378,7 @@ public class FacadeController {
 	@RequestMapping(value = "/calculateStatsWithCustomRules", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateRankingWithCustomRules(@RequestBody CustomRules req) {
 		
-		String competitionShortName = req.getCompetition().getShortName();
+		String competitionShortName = req.getCompetition().getCompetitionShortName();
 		String leagueShortName = req.getCompetition().getLeagueShortName();
 		
 		main.calculateStatsWithCustomRules(leagueShortName, competitionShortName, req.getRules());

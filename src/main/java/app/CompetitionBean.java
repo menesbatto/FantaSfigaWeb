@@ -4,16 +4,16 @@ public class CompetitionBean {
 
 	
 	private String name;
-	private String shortName;
+	private String competitionShortName;
 	private String url;
 	private String leagueShortName;
 	private String type;
 	
 	
 	
-	public CompetitionBean(String name, String shortName, String url, String leagueShortName, String type) {
+	public CompetitionBean(String name, String competitionShortName, String url, String leagueShortName, String type) {
 		this.name = name;
-		this.shortName = shortName;
+		this.setCompetitionShortName(competitionShortName);
 		this.url = url;
 		this.leagueShortName = leagueShortName;
 		this.type = type;
@@ -30,13 +30,6 @@ public class CompetitionBean {
 		this.name = name;
 	}
 
-	public String getShortName() {
-		return shortName;
-	}
-
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
 
 	public String getUrl() {
 		return url;
@@ -64,8 +57,16 @@ public class CompetitionBean {
 
 	@Override
 	public String toString() {
-		return "CompetitionBean [name=" + name + ", shortName=" + shortName + ", url=" + url + ", leagueName="
+		return "CompetitionBean [name=" + name + ", shortName=" + getCompetitionShortName() + ", url=" + url + ", leagueName="
 				+ leagueShortName + ", type=" + type + "]";
+	}
+
+	public String getCompetitionShortName() {
+		return competitionShortName;
+	}
+
+	public void setCompetitionShortName(String competitionShortName) {
+		this.competitionShortName = competitionShortName;
 	}
 
 	

@@ -54,8 +54,13 @@ public class RulesExpertMain {
 	
 	public void saveRulesForLeague(String leagueShortName) {
 		
-		Boolean alreadyDownloadRules = rulesDao.existRulesForLeague(leagueShortName, userBean.getUsername());
+		List<CompetitionBean> competitions = leagueDao.findCompetitionsByLeague(leagueShortName, userBean.getUsername());
+		if (competitions.size() == 0) {
+			return;
+		}
+
 		
+		Boolean alreadyDownloadRules = rulesDao.existRulesForLeague(leagueShortName, userBean.getUsername());
 		if (alreadyDownloadRules)
 			return;
 			
@@ -76,24 +81,21 @@ public class RulesExpertMain {
 		rules.setPoints(points);
 		rules.setModifiers(modifiers);
 		
-		calculateCompetitionsRules(leagueShortName, rules);
+		calculateCompetitionsRules(leagueShortName, rules, competitions);
 		HttpUtils.closeDrivers(userBean.getUsername());
 
 	}
 
-	private void calculateCompetitionsRules(String leagueShortName, RulesBean rules) {
-		List<CompetitionBean> competitions = leagueDao.findCompetitionsByLeague(leagueShortName, userBean.getUsername());
-		System.out.println();
+	private void calculateCompetitionsRules(String leagueShortName, RulesBean rules, List<CompetitionBean> competitions) {
+
 		for (CompetitionBean competition : competitions) {
 			CompetitionRules rulesComp = analyzeRulesForCompetition(competition.getUrl());
 			
 			rules.setCompetitionRules(rulesComp);
 			
-			rulesDao.saveRulesForCompetition(rules, competition.getShortName(), leagueShortName, userBean.getUsername());
+			rulesDao.saveRulesForCompetition(rules, competition.getCompetitionShortName(), leagueShortName, userBean.getUsername());
 			
 		}
-
-
 	}
 
 	private CompetitionRules analyzeRulesForCompetition(String url) {

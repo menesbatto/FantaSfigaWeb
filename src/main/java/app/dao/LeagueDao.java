@@ -19,6 +19,7 @@ import app.dao.entity.LineUpLight;
 import app.dao.entity.Matcho;
 import app.dao.entity.Ranking;
 import app.dao.entity.RankingRow;
+import app.dao.entity.Rules;
 import app.dao.entity.Season;
 import app.dao.entity.SeasonDay;
 import app.dao.entity.SeasonDayFromWeb;
@@ -80,7 +81,7 @@ public class LeagueDao {
 		League existingLeague;
 		for (LeagueBean bean : beans) {
 			
-			existingLeague = leagueRepo.findByUserAndShortName(user, bean.getName());
+			existingLeague = leagueRepo.findByUserAndShortName(user, bean.getShortName());
 			if (existingLeague != null)
 				continue;
 			
@@ -130,13 +131,13 @@ public class LeagueDao {
 		Competition existingCompetition;
 		for (CompetitionBean bean : beans) {
 			
-			existingCompetition = competitionRepo.findByLeagueAndShortName(league, bean.getShortName());
+			existingCompetition = competitionRepo.findByLeagueAndShortName(league, bean.getCompetitionShortName());
 			if (existingCompetition != null)
 				continue;
 			
 			ent = new Competition();
 			ent.setName(bean.getName());
-			ent.setShortName(bean.getShortName());
+			ent.setShortName(bean.getCompetitionShortName());
 			ent.setUrl(bean.getUrl());
 			ent.setLeague(league);
 			ent.setType(bean.getType());
@@ -171,7 +172,7 @@ public class LeagueDao {
 			bean = new CompetitionBean();
 			bean.setLeagueShortName(e.getLeague().getShortName());
 			bean.setName(e.getName());
-			bean.setShortName(e.getShortName());
+			bean.setCompetitionShortName(e.getShortName());
 			bean.setUrl(e.getUrl());
 			bean.setType(e.getType());
 			
