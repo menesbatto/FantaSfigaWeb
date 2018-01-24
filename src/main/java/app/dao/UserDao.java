@@ -17,9 +17,9 @@ public class UserDao {
 	private UserRepo userRepo;
 
 
-	public void saveGazzettaCredentials(Credentials credentials) {
-		String username = "mene"; //TROVA LO USER DALLA SESSION
-		
+	public void saveGazzettaCredentials(Credentials credentials, String username) {
+//		String username = "mene"; //TROVA LO USER DALLA SESSION
+
 		User user = userRepo.findByUsername(username);
 		
 		user.setGazzettaPassword(credentials.getPassword());

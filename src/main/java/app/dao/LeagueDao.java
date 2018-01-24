@@ -753,9 +753,14 @@ public class LeagueDao {
 			if (group.equals(""))
 				continue;
 			String role = group.split("@")[0];
-			String rolePlayersString = group.split("@")[1];
+			if (group.split("@").length != 2) {			// se un giocatore non ha dato la formazione e si ha la regola che chi non da la formazione gioca con 0 giocatori
+				players = new ArrayList<PlayerVote>();
+			}
+			else {
+				String rolePlayersString = group.split("@")[1];
+				players = createPlayersFromString(rolePlayersString);
+			}
 			
-			players = createPlayersFromString(rolePlayersString);
 			
 			if (role.equals("P")) {
 				bean.setGoalKeeper(players);

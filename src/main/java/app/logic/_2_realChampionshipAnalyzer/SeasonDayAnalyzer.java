@@ -96,6 +96,7 @@ public class SeasonDayAnalyzer {
 			if (!AppConstants.FORCE_FAIR_PLAY_MODIFIER_DISABLED)
 				calculateFairPlayTeamsModifier(linesUp);
 		
+			
 		// System.out.println(linesUp);
 		List<LineUpLightBean> linesUpLight = new ArrayList<LineUpLightBean>();
 		LineUpLightBean lineUpLight;
@@ -175,8 +176,10 @@ public class SeasonDayAnalyzer {
 			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.ALL_6)) {
 				List<PostponementBean> postponedMatches = postponementsMap.get(serieASeasonDay);
 				if (postponedMatches != null)
-					 if (isPostponedMatch(postponedMatches, team))
+					 if (isPostponedMatch(postponedMatches, team)) {
 						 pvcVote = new PlayerVoteComplete(name, team, role, 6.0, false, false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false);
+						 pvcVote.setIsOfficeVote(true);
+					 }
 				
 			}
 		}
@@ -205,8 +208,8 @@ public class SeasonDayAnalyzer {
 		}
 		
 		player.setVote(vote);
-		player.setFantaVote(fantaVoteFromWeb);
-		
+		player.setFantaVote(fantaVote);
+		player.setCards(pvcVote.getRedCard() || pvcVote.getYellowCard());
 		
 		if (role.equals(RoleEnum.P)){
 			if (rules.getModifiers().isGoalkeeperModifierActive()){
@@ -320,10 +323,20 @@ public class SeasonDayAnalyzer {
 
 
 
-	private static void calculateFairPlayTeamsModifier(List<LineUp> linesUp) {
-//		for (LineUp lineUp : linesUp){
-//			lineUp.setFairPlayModifier(0.0);
-//		}
+	private void calculateFairPlayTeamsModifier(List<LineUp> linesUp) {
+		Boolean cards;
+		for (LineUp lineUp : linesUp){
+			cards = false;
+			for (PlayerVote player : lineUp.getFinalLineUp()) {
+				if ( player.getCards() != null && player.getCards() == true) {
+					cards = true;
+					break;
+				}
+			}
+			if (!cards)
+				lineUp.setFairPlayModifier(rules.getModifiers().getFairPlay());
+		}
+		
 	}
 		
 	private void calculatePerformanceTeamsModifier(List<LineUp> linesUp) {
@@ -536,7 +549,20 @@ public class SeasonDayAnalyzer {
 
 
 	private void createOfficePlayer(int i, PlayerVote subCandidate) {
-		if (i <=  rules.getSubstitutions().getSubstitutionNumber() - 1 || rules.getSubstitutions().getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_ALL)) {
+		if (!rules.getSubstitutions().isMovementsPlayerOfficeVoteActive() && subCandidate.getRole() != RoleEnum.P) {
+			subCandidate.setName("ZERO");
+			subCandidate.setTeam("ZERO");
+			subCandidate.setVote(0.0);
+			subCandidate.setFantaVote(0.0);
+		}
+		
+		else if (!rules.getSubstitutions().isGoalkeeperPlayerOfficeVoteActive() && subCandidate.getRole() == RoleEnum.P) {
+			subCandidate.setName("ZERO");
+			subCandidate.setTeam("ZERO");
+			subCandidate.setVote(0.0);
+			subCandidate.setFantaVote(0.0);
+		}
+		else if (i <=  rules.getSubstitutions().getSubstitutionNumber() - 1 || rules.getSubstitutions().getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_ALL)) {
 			subCandidate.setName("OFFICE");
 			subCandidate.setTeam("OFFICE");
 			if (subCandidate.getRole().equals(RoleEnum.P)){
@@ -805,8 +831,10 @@ public class SeasonDayAnalyzer {
 		
 		if (rules.getPoints().isPortiereImbattutoActive()){
 			if (p.getRole().equals(RoleEnum.P)){
-				if (p.getTakenGoals() == 0.0){
-					fantaVote += rules.getPoints().getPortiereImbattuto();
+				if (!p.getIsOfficeVote()) {
+					if (p.getTakenGoals() == 0.0){
+						fantaVote += rules.getPoints().getPortiereImbattuto();
+					}
 				}
 			}
 		}

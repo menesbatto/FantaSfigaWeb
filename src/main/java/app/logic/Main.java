@@ -58,7 +58,9 @@ public class Main {
 	public void calculateStatsWithCustomRules(String leagueShortName, String competitionShortName, RulesBean rules) {
 		
 		RulesBean rulesDb = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
-//		rulesDb.getDataSource().setVotesSource(VotesSourceEnum.ITALIA);
+//		rulesDb.getPoints()().setFairPlayModifierActive(true);
+//		rulesDb.getModifiers().setFairPlay(5.0);
+		
 
 		
 		SeasonResultBean calculatedSeasonResult = seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName, rulesDb);
@@ -66,7 +68,8 @@ public class Main {
 		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, calculatedSeasonResult, rulesDb);
 		
-//		rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
+		if (!onlyOne)
+			rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
 		
 	}
 }

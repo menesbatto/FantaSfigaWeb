@@ -87,15 +87,16 @@ public class MatchExecutor {
 				}
 			}
 		}
-		if (AppConstants.FORCE_INVERT_HOME_AWAY != null){
-			if (!AppConstants.FORCE_INVERT_HOME_AWAY){
-				homeSumTotalPoints = homeSumTotalPoints + 2.0; // Chi gioca in casa +2
-			} else if (AppConstants.FORCE_INVERT_HOME_AWAY){
-				awaySumTotalPoints = awaySumTotalPoints + 2.0; // Chi gioca fuori casa +2
+		if (rules.getCompetitionRules().isHomeBonusActive()) {
+			if (AppConstants.FORCE_INVERT_HOME_AWAY != null){
+				if (!AppConstants.FORCE_INVERT_HOME_AWAY){
+					homeSumTotalPoints = homeSumTotalPoints + 2.0; // Chi gioca in casa +2
+				} else if (AppConstants.FORCE_INVERT_HOME_AWAY){
+					awaySumTotalPoints = awaySumTotalPoints + 2.0; // Chi gioca fuori casa +2
+				}
 			}
 		}
-		
-		
+
 		homeTeamResult.setSumTotalPoints(homeSumTotalPoints);
 		awayTeamResult.setSumTotalPoints(awaySumTotalPoints);
 		

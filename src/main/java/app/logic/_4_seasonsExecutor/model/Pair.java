@@ -54,7 +54,10 @@ public class Pair implements Serializable{
 		return s;
 	}
 	private String getFormattedValue(Double value2) {
-		return (value2 + "").replace('.', ',');
+		String result = (value2 + "").replace('.', ',');
+		if (result.length()>5)
+			 result= result.substring(0, 6);
+		return result;
 	}
 	private String getNameToString() {
 		return this.name.length() > 11 ? this.name.substring(0,10) : this.name;

@@ -9,6 +9,16 @@ public class CompetitionBean {
 	private String leagueShortName;
 	private String type;
 	
+	
+	
+	public CompetitionBean(String name, String shortName, String url, String leagueShortName, String type) {
+		this.name = name;
+		this.shortName = shortName;
+		this.url = url;
+		this.leagueShortName = leagueShortName;
+		this.type = type;
+	}
+
 	public CompetitionBean() {
 	}
 

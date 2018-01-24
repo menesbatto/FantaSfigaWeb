@@ -16,6 +16,8 @@ public class PlayerVote {
 	private Double voteFromWeb;
 	private Double fantaVoteFromWeb;
 	
+	private Boolean cards;
+	
 	
 	
 	public PlayerVote() {
@@ -105,7 +107,15 @@ public class PlayerVote {
 		return "PlayerVote [role=" + role + ", name=" + name + ", team=" + team + ", vote=" + vote + ", fantaVote="
 				+ fantaVote + ", alreadyUsed=" + alreadyUsed + ", goalkeerModifier=" + goalkeerModifier
 				+ ", strikerModifier=" + strikerModifier + ", voteFromWeb=" + voteFromWeb + ", fantaVoteFromWeb="
-				+ fantaVoteFromWeb + "]";
+				+ fantaVoteFromWeb + ", cards=" + cards + " ]";
+	}
+
+	public Boolean getCards() {
+		return cards;
+	}
+
+	public void setCards(Boolean cards) {
+		this.cards = cards;
 	}
 
 	

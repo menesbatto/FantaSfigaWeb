@@ -76,8 +76,14 @@ public class RulesExpertMain {
 		rules.setPoints(points);
 		rules.setModifiers(modifiers);
 		
-		
+		calculateCompetitionsRules(leagueShortName, rules);
+		HttpUtils.closeDrivers(userBean.getUsername());
+
+	}
+
+	private void calculateCompetitionsRules(String leagueShortName, RulesBean rules) {
 		List<CompetitionBean> competitions = leagueDao.findCompetitionsByLeague(leagueShortName, userBean.getUsername());
+		System.out.println();
 		for (CompetitionBean competition : competitions) {
 			CompetitionRules rulesComp = analyzeRulesForCompetition(competition.getUrl());
 			
@@ -103,6 +109,11 @@ public class RulesExpertMain {
 			String homeBonusString = doc.getElementById("valore_fattore").val();
 			Double homeBonus = Double.valueOf(homeBonusString.replace(",", "."));
 			cr.setHomeBonus(homeBonus);
+		}
+		else {
+			cr.setHomeBonusActive(false);
+
+			
 		}
 		return cr;
 	}
@@ -416,11 +427,12 @@ public class RulesExpertMain {
 		
 		
 		String maxOfficeVotes = doc.getElementsMatchingOwnText("Applica riserva d'ufficio fino al:").parents().get(0).getElementsByAttribute("selected").text();
-		if (maxOfficeVotes.equals("Numero di sostituzioni impostate"))
-			s.setMaxOfficeVotes(MaxOfficeVotesEnum.TILL_SUBSTITUTIONS);
-		else// if (maxOfficeVotes.equals("Raggiungimento degli 11 calciatori"))
-			s.setMaxOfficeVotes(MaxOfficeVotesEnum.TILL_ALL);
-		
+		if ( maxOfficeVotes != null ) {
+			if (maxOfficeVotes.equals("Numero di sostituzioni impostate"))
+				s.setMaxOfficeVotes(MaxOfficeVotesEnum.TILL_SUBSTITUTIONS);
+			else// if (maxOfficeVotes.equals("Raggiungimento degli 11 calciatori"))
+				s.setMaxOfficeVotes(MaxOfficeVotesEnum.TILL_ALL);
+		}
 		
 		
 		return s;
@@ -557,7 +569,6 @@ public class RulesExpertMain {
 	private BonusMalus analyzeRulesPageBonusMalus(String leagueName) {
 		Document doc = getLoggedPage(AppConstants.RULES_1_BONUS_MALUS_URL, leagueName);
 		
-		System.out.println(doc);
 		BonusMalus bm = new BonusMalus();
 		
 		Elements scoredGoalElements = doc.getElementsMatchingOwnText("Gol segnato:").parents().get(0).select("input");

@@ -513,11 +513,13 @@ public class RulesDao {
 		substitution.setSubstitutionMode(e.getSubstitutionMode());
 		
 		MaxOfficeVotesEnum maxOfficeVotesEnum;
-		if (e.getMaxOfficeVotes().equals("TILL_SUBSTITUTIONS"))
-			maxOfficeVotesEnum = MaxOfficeVotesEnum.TILL_SUBSTITUTIONS;
-		else //	if (e.getMaxOfficeVotes().equals("TILL_ALL"))
-			maxOfficeVotesEnum = MaxOfficeVotesEnum.TILL_ALL;
-		substitution.setMaxOfficeVotes(maxOfficeVotesEnum);
+		if (e.getMaxOfficeVotes()!= null) {
+			if (e.getMaxOfficeVotes().equals("TILL_SUBSTITUTIONS"))
+				maxOfficeVotesEnum = MaxOfficeVotesEnum.TILL_SUBSTITUTIONS;
+			else //	if (e.getMaxOfficeVotes().equals("TILL_ALL"))
+				maxOfficeVotesEnum = MaxOfficeVotesEnum.TILL_ALL;
+			substitution.setMaxOfficeVotes(maxOfficeVotesEnum);
+		}
 		
 		substitution.setGoalkeeperPlayerOfficeVoteActive(e.getGoalkeeperPlayerOfficeVoteActive());
 		substitution.setGoalkeeperPlayerOfficeVote(e.getGoalkeeperPlayerOfficeVote());

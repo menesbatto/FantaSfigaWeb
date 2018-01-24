@@ -36,6 +36,8 @@ public class PlayerVoteComplete implements Serializable{
 	
 	private Double fantavote;
 	
+	private Boolean isOfficeVote;
+	
 	
 	
 	public PlayerVoteComplete() {
@@ -62,6 +64,7 @@ public class PlayerVoteComplete implements Serializable{
 		this.evenGoal = evenGoal;
 		this.subIn = subIn;
 		this.subOut = subOut;
+		this.isOfficeVote = false;
 	}
 
 	public Boolean getYellowCard() {
@@ -239,6 +242,14 @@ public class PlayerVoteComplete implements Serializable{
 
 	public void setFantaVoteFromWeb(Double fantaVoteFromWeb) {
 		this.fantaVoteFromWeb = fantaVoteFromWeb;
+	}
+
+	public Boolean getIsOfficeVote() {
+		return isOfficeVote;
+	}
+
+	public void setIsOfficeVote(Boolean isOfficeVote) {
+		this.isOfficeVote = isOfficeVote;
 	}
 	
 	

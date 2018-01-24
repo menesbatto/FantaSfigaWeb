@@ -33,7 +33,7 @@ public class UserExpert {
 
 	public void saveGazzettaCredentials(Credentials credentials){
 		
-		userDao.saveGazzettaCredentials(credentials);
+		userDao.saveGazzettaCredentials(credentials, userBean.getUsername());
 	}
 
 	public UserBean createUser(UserBean userBean){
@@ -96,40 +96,63 @@ public class UserExpert {
 		String leagueUrl = AppConstants.GAZZETTA_URL + league.getShortName() + "/gestione-competizioni";
 		Document doc = HttpUtils.getHtmlPageLogged(leagueUrl , c.getUsername(), c.getPassword());
 		
-		Elements elements = doc.getElementById("tbcompattive").getElementsByTag("tbody").get(0).getElementsByTag("tr");
+		Element elementsOfGestioneCompetizionePage = doc.getElementById("tbcompattive");
 		
+		List<CompetitionBean> competitions = new ArrayList<CompetitionBean>();
+		
+		Elements elements;
 		String competitionShortName;
 		String competitionName;
 		String competitionRulesUrl;
 		String type;
+		
+		
+		if ( elementsOfGestioneCompetizionePage == null) {	//NON AMMINISTRATORE
+			elements = doc.getElementById("dropCompetizione").getElementsByTag("option");
+			
+			for (Element elem : elements) {
+				type = null;
+				
+				competitionRulesUrl = elem.attr("value");		//http://leghe.fantagazzetta.com/accaniti-division/modifica-competizione-gironi/288971
 
-		List<CompetitionBean> competitions = new ArrayList<CompetitionBean>();
+				competitionShortName = competitionRulesUrl.substring(competitionRulesUrl.lastIndexOf("/") + 1, competitionRulesUrl.length());	//247720
+				
+				competitionName = elem.text();		//CAMPIONATO SERIE A-CCANITA
+				
+				CompetitionBean com = new CompetitionBean(competitionName, competitionShortName, competitionRulesUrl, null, type);
+	
+				competitions.add(com);
+			
+			}
+		}
+		
+		else if ( elementsOfGestioneCompetizionePage!= null) {	//AMMINISTRATORE
+		
+			elements = elementsOfGestioneCompetizionePage.getElementsByTag("tbody").get(0).getElementsByTag("tr");
+			
+			for (Element elem : elements) {
+				competitionRulesUrl = elem.getElementsByTag("a").get(0).attr("href");		//http://leghe.fantagazzetta.com/accaniti-division/modifica-competizione-gironi/288971
+																							//http://leghe.fantagazzetta.com/accaniti-division/home/247720
+				
+				type = elem.getElementsByTag("img").get(0).attr("data-original-title");
+				if (type.equals("Competizione a gruppi stile champions league")) 
+					type = "CL";
+				else if  (type.equals("Competizione in stile formula 1"))
+					type = "F1";
+				else if  (type.equals("Competizione a calendario"))
+					type = "CA";
+				else if  (type.equals("Competizione a calendario"))
+					type = "CA";
+				
+				
+				competitionShortName = competitionRulesUrl.substring(competitionRulesUrl.lastIndexOf("/") + 1, competitionRulesUrl.length());	//247720
+	
+				competitionName = elem.getElementsByTag("span").get(0).text();		//CAMPIONATO SERIE A-CCANITA
+				
+				CompetitionBean com = new CompetitionBean(competitionName, competitionShortName, competitionRulesUrl, null, type);
 
-		for (Element elem : elements) {
-			competitionRulesUrl = elem.getElementsByTag("a").get(0).attr("href");		//http://leghe.fantagazzetta.com/accaniti-division/modifica-competizione-gironi/288971
-																						//http://leghe.fantagazzetta.com/accaniti-division/home/247720
-			
-			type = elem.getElementsByTag("img").get(0).attr("data-original-title");
-			if (type.equals("Competizione a gruppi stile champions league")) 
-				type = "CL";
-			else if  (type.equals("Competizione in stile formula 1"))
-				type = "F1";
-			else if  (type.equals("Competizione a calendario"))
-				type = "CA";
-			else if  (type.equals("Competizione a calendario"))
-				type = "CA";
-			
-			
-			competitionShortName = competitionRulesUrl.substring(competitionRulesUrl.lastIndexOf("/") + 1, competitionRulesUrl.length());	//247720
-
-			competitionName = elem.getElementsByTag("span").get(0).text();		//CAMPIONATO SERIE A-CCANITA
-			
-			CompetitionBean com = new CompetitionBean();
-			com.setName(competitionName);
-			com.setShortName(competitionShortName);
-			com.setUrl(competitionRulesUrl);
-			com.setType(type);
-			competitions.add(com);
+				competitions.add(com);
+			}
 			
 		}
 		

@@ -42,7 +42,7 @@ public class MainSeasonVotesDowloader {
 
 		Integer lastSerieASeasonDay = retrieveLastSerieASeasonDay();
 		
-		int lastSeasonDayCalculated = utilsDao.calculateLastSerieASeasonDayCalculated();
+		int lastSeasonDayCalculated =utilsDao.calculateLastSerieASeasonDayCalculated();
 		
 		String tvStamp = getTVUrlParameter();
 		
@@ -197,8 +197,8 @@ public class MainSeasonVotesDowloader {
 				continue;
 			}
 
-			Elements generalInfoElems = e.getElementsByClass("aleft");
-			if (generalInfoElems.size() > 0) {
+			Elements generalInfoElems = e.parent().getElementsByClass("aleft");
+			if (!generalInfoElems.text().equals("")) {
 				Elements generalEvents = generalInfoElems.get(0).getElementsByTag("em");
 				//e.getElementsByClass("pull-right").get(0);
 				for (Element ne : generalEvents) {

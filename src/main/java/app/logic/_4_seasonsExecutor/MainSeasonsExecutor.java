@@ -99,6 +99,10 @@ public class MainSeasonsExecutor {
 					row.setRankingPosition(j+1);
 				
 			}
+//			if (ranking.getRows().get(0).getName().contains("irst")) {
+//				System.out.println(ranking);
+//				System.out.println(season);
+//			}
 			rankings.add(ranking);
 //			if (ranking.getRows().get(1).getName().equals("Hawkins"))
 //				System.out.println(season);
