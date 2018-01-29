@@ -75,6 +75,22 @@ public class FacadeController {
 
 	//###################################################################
 	
+	
+	@RequestMapping(value = "/cleanVotes", method = RequestMethod.GET)
+	public ResponseEntity<String> cleanVotes() {
+		
+		mainSeasonVotesDowloader.cleanVotes();
+//		User p = personDao.findById(1L);
+		String body = "Clean Votes COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+	
+
+	//###################################################################
+	
+	
 	@RequestMapping(value = "/insertPostponement", method = RequestMethod.POST)
 	public ResponseEntity<String> insertPostponement(@RequestBody PostponementBean m) {
 		
@@ -303,6 +319,22 @@ public class FacadeController {
 		permutationsGenerator.createPermutations(playersNumber);
 
 		String body = "Creating Permutation COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		return response;
+	}
+	
+	
+	//###################################################################
+	
+	@RequestMapping(value = "/cleanSeasonFromWeb", method = RequestMethod.POST)
+	public ResponseEntity<String> cleanSeasonFromWeb(@RequestBody CompetitionBean competition) {
+		
+		String competitionShortName = competition.getCompetitionShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		
+		seasonAnalyzer.cleanSeasonFromWeb(competitionShortName, leagueShortName);
+		String body = "Clean Season From Web COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;

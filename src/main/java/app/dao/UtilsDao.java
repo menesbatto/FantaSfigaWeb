@@ -1,10 +1,12 @@
 package app.dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
@@ -130,7 +132,7 @@ public class UtilsDao {
 		if (seasonDays.isEmpty())
 			return 0;
 		
-		return seasonDays.get(seasonDays.size()-1);
+		return Collections.max(seasonDays);
 	}
 
 
@@ -190,10 +192,14 @@ public class UtilsDao {
 
 	public void insertPostponement(PostponementBean bean) {
 		
-		Postponement ent = new Postponement();
-		ent.setAwayTeam(bean.getAwayTeam());
-		ent.setHomeTeam(bean.getHomeTeam());
-		ent.setSeasonDay(bean.getSeasonDay());
+		Postponement ent = postponementRepo.findByHomeTeamAndAwayTeamAndSeasonDay(bean.getHomeTeam(), bean.getAwayTeam(), bean.getSeasonDay());
+		if (ent == null) {
+			ent = new Postponement();
+			ent.setAwayTeam(bean.getAwayTeam());
+			ent.setHomeTeam(bean.getHomeTeam());
+			ent.setSeasonDay(bean.getSeasonDay());
+		}
+		ent.setPlayed(bean.getPlayed());
 		postponementRepo.save(ent);
 		
 			
@@ -224,7 +230,15 @@ public class UtilsDao {
 		bean.setAwayTeam(ent.getAwayTeam());
 		bean.setHomeTeam(ent.getHomeTeam());
 		bean.setSeasonDay(ent.getSeasonDay());
+		bean.setPlayed(ent.getPlayed());
 		return bean;
+	}
+
+	@Transactional
+	public void removeSeasonDaysVotes(Set<Integer> keySet) {
+		for (Integer serieASeasonDay : keySet)
+			voteRepo.deleteBySerieASeasonDay(serieASeasonDay);
+		
 	}
 
 

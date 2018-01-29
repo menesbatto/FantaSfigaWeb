@@ -90,9 +90,13 @@ public class MatchExecutor {
 		if (rules.getCompetitionRules().isHomeBonusActive()) {
 			if (AppConstants.FORCE_INVERT_HOME_AWAY != null){
 				if (!AppConstants.FORCE_INVERT_HOME_AWAY){
-					homeSumTotalPoints = homeSumTotalPoints + 2.0; // Chi gioca in casa +2
+					if (homeSumTotalPoints != 0.0) {
+						homeSumTotalPoints = homeSumTotalPoints + 2.0; // Chi gioca in casa +2
+					}
 				} else if (AppConstants.FORCE_INVERT_HOME_AWAY){
-					awaySumTotalPoints = awaySumTotalPoints + 2.0; // Chi gioca fuori casa +2
+					if (awaySumTotalPoints != 0.0) {
+						awaySumTotalPoints = awaySumTotalPoints + 2.0; // Chi gioca fuori casa +2
+					}
 				}
 			}
 		}

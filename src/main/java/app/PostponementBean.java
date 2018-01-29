@@ -9,6 +9,7 @@ public class PostponementBean implements Serializable {
 	private String homeTeam;
 	private String awayTeam;
 	private Integer seasonDay;
+	private Boolean played;
 	
 	public PostponementBean() {
 	}
@@ -40,6 +41,14 @@ public class PostponementBean implements Serializable {
 	@Override
 	public String toString() {
 		return "SerieAMatch [homeTeam=" + homeTeam + ", awayTeam=" + awayTeam + ", seasonDay=" + seasonDay + "]";
+	}
+
+	public Boolean getPlayed() {
+		return played;
+	}
+
+	public void setPlayed(Boolean played) {
+		this.played = played;
 	}
 
 	

@@ -23,6 +23,8 @@ public class Postponement {
 	private String homeTeam;
 	
 	private String awayTeam;
+	
+	private Boolean played;
 
 	public Postponement() {
 	}
@@ -59,10 +61,18 @@ public class Postponement {
 		this.awayTeam = awayTeam;
 	}
 
+	public Boolean getPlayed() {
+		return played;
+	}
+
+	public void setPlayed(Boolean played) {
+		this.played = played;
+	}
+
 	@Override
 	public String toString() {
 		return "Postponement [id=" + id + ", seasonDay=" + seasonDay + ", homeTeam=" + homeTeam + ", awayTeam="
-				+ awayTeam + "]";
+				+ awayTeam + ", played=" + played + "]";
 	}
 	
 

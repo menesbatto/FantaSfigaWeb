@@ -1,8 +1,10 @@
 package app.logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.tomcat.util.descriptor.web.ServletDef;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,8 +60,16 @@ public class Main {
 	public void calculateStatsWithCustomRules(String leagueShortName, String competitionShortName, RulesBean rules) {
 		
 		RulesBean rulesDb = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
-//		rulesDb.getPoints()().setFairPlayModifierActive(true);
-//		rulesDb.getModifiers().setFairPlay(5.0);
+//		rulesDb.getModifiers().setDefenderModifierActive(false);
+//		rulesDb.getModifiers().setGoalkeeperModifierActive(false);
+//		rulesDb.getModifiers().setMiddlefielderModifierActive(false);
+//		rulesDb.getModifiers().setStrikerModifierActive(false);
+//		rulesDb.getModifiers().setPerformanceModifierActive(false);
+//		rulesDb.getModifiers().setFairPlayModifierActive(false);
+//		List<Double> GOAL_POINTS = Arrays.asList(66.0, 72.0, 78.0, 84.0, 90.0, 96.0, 102.0, 108.0, 114.0);;
+//		rulesDb.getPoints().setGoalPoints(GOAL_POINTS);
+		
+		
 		
 
 		

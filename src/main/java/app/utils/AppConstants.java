@@ -31,7 +31,8 @@ public class AppConstants {
 	public static String RULES_3_SUBSTITUTIONS_URL = 	"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo3";
 	public static String RULES_4_POINTS_URL = 			"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo4";
 	public static String RULES_5_MODIFIERS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo5";
-	
+	public static String RULES_6_COMPETITION_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-competizione-calendario/[COMPETITION_ID]";	
+
 	
 	
 	
@@ -39,7 +40,7 @@ public class AppConstants {
 	public static String PROXY_HOST = "10.0.1.251";
 	public static String PROXY_PORT = "3128";
 
-	public static boolean DEBUG_MODE =false;
+	public static boolean DEBUG_MODE =true;
 	public static boolean FAST_MODE_ACTIVE = false;
 	public static Boolean FORCE_INVERT_HOME_AWAY = false;
 	public static Boolean FORCE_WINNING_FOR_DISTANCE = false;

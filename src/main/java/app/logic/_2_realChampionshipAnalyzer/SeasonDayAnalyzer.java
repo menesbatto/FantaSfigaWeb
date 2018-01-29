@@ -172,15 +172,13 @@ public class SeasonDayAnalyzer {
 
 		 
 		// Controllo se lo devo forzare a 6
-		if (pvcVote == null){
-			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.ALL_6)) {
-				List<PostponementBean> postponedMatches = postponementsMap.get(serieASeasonDay);
-				if (postponedMatches != null)
-					 if (isPostponedMatch(postponedMatches, team)) {
-						 pvcVote = new PlayerVoteComplete(name, team, role, 6.0, false, false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false);
-						 pvcVote.setIsOfficeVote(true);
-					 }
-				
+		if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.ALL_6)) {
+			List<PostponementBean> postponedMatches = postponementsMap.get(serieASeasonDay);
+			if (postponedMatches != null) {
+				 if (isPostponedMatch(postponedMatches, team)) {
+					 pvcVote = new PlayerVoteComplete(name, team, role, 6.0, false, false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false);
+					 pvcVote.setIsOfficeVote(true);
+				 }
 			}
 		}
 	

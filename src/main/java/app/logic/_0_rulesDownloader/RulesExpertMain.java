@@ -89,7 +89,8 @@ public class RulesExpertMain {
 	private void calculateCompetitionsRules(String leagueShortName, RulesBean rules, List<CompetitionBean> competitions) {
 
 		for (CompetitionBean competition : competitions) {
-			CompetitionRules rulesComp = analyzeRulesForCompetition(competition.getUrl());
+			//http://leghe.fantagazzetta.com/sisisicertocerto-league/visualizza-competizione-calendario/136195			
+			CompetitionRules rulesComp = analyzeRulesForCompetition(competition);
 			
 			rules.setCompetitionRules(rulesComp);
 			
@@ -98,19 +99,26 @@ public class RulesExpertMain {
 		}
 	}
 
-	private CompetitionRules analyzeRulesForCompetition(String url) {
+	private CompetitionRules analyzeRulesForCompetition(CompetitionBean competition) {
+		
+		String url = AppConstants.RULES_6_COMPETITION_URL.replace("[LEAGUE_NAME]", competition.getLeagueShortName()).replace("[COMPETITION_ID]", competition.getCompetitionShortName());
 		Document doc = getLoggedPage(url, "");
 		
 		CompetitionRules cr = new CompetitionRules();
 		
 		Elements fattoreCampoElems = doc.getElementsMatchingOwnText("Fattore campo:");
 		if (!fattoreCampoElems.isEmpty()) {
-			String homeBonusActiveString = fattoreCampoElems.parents().get(0).getElementsByAttribute("checked").val();
-			Boolean isHomeBonusActive = homeBonusActiveString.equals("1");
-			cr.setHomeBonusActive(isHomeBonusActive);
+//			String homeBonusActiveString = fattoreCampoElems.parents().get(0).getElementsByAttribute("checked").val();
+//			Boolean isHomeBonusActive = homeBonusActiveString.equals("1");
+//			cr.setHomeBonusActive(isHomeBonusActive);
+			
 			String homeBonusString = doc.getElementById("valore_fattore").val();
 			Double homeBonus = Double.valueOf(homeBonusString.replace(",", "."));
 			cr.setHomeBonus(homeBonus);
+			
+			
+			boolean homeBonusActive = homeBonus!= null && homeBonus > 0.0;
+			cr.setHomeBonusActive(homeBonusActive);
 		}
 		else {
 			cr.setHomeBonusActive(false);

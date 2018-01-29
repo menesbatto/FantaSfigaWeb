@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,26 @@ public class SeasonAnalyzer {
 	}
 	
 
-	public SeasonResultBean downloadSeasonFromWeb(String competitionShortName, String leagueShortName){
+	public void cleanSeasonFromWeb(String competitionShortName, String leagueShortName){
 		
+		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
+		
+		if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) {
+			
+			Map<Integer, List<PostponementBean>> postponements = utilsDao.findAllPostponement();
+			Map<Integer, Integer> seasonDayBind = rulesDao.findSerieAToCompetitionBinding(leagueShortName, competitionShortName, userBean.getUsername());
+			
+			List<Integer> competitionSeasonDaysToRemove = new ArrayList<Integer>();
+			for (Integer serieASeasonDayPost : postponements.keySet()) {
+				competitionSeasonDaysToRemove.add(seasonDayBind.get(serieASeasonDayPost));
+			}
+			
+			leagueDao.removeSeasonDaysFromWebSeasonDays(leagueShortName, competitionShortName, userBean.getUsername(), competitionSeasonDaysToRemove) ;
+		}
+	}
+	
+	
+	public SeasonResultBean downloadSeasonFromWeb(String competitionShortName, String leagueShortName){
 		
 		SeasonFromWebBean seasonFromWeb = leagueDao.findSeasonFromWeb(leagueShortName, competitionShortName, userBean.getUsername());
 
@@ -74,6 +93,7 @@ public class SeasonAnalyzer {
 		
 		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = new HashMap<Integer, SeasonDayFromWebBean>();
 		
+
 		for (Entry<Integer, Integer> entry : seasonDayBind.entrySet()) {
 			
 			Integer compSeasonDay = entry.getKey();
@@ -83,6 +103,8 @@ public class SeasonAnalyzer {
 			if (serieASeasonDay > seriaAActualSeasonDay) {
 				break;
 			}
+			
+
 			
 			if (seasonFromWeb.getSeasonDaysFromWeb().get(compSeasonDay) == null) {
 				List<LineUp> lineUpFromWeb = seasonDayAnalyzer.downloadSeasonDayLinesUpFromWeb(finalSeasonDayUrl + compSeasonDay);
@@ -148,7 +170,7 @@ public class SeasonAnalyzer {
 //		for (Integer i = 1; i<38; i++){
 		for (Entry<Integer, Integer> entry : seasonDayBind.entrySet()) {
 			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) { //Controllo per gestire le giornate in cui ci sono i rinvii
-				if (postponements.get(entry.getKey()) != null) {
+				if (checkIfJumpSeasonDay(postponements, entry)) {
 					List<LineUpLightBean> emptyLineUpLight = new ArrayList<LineUpLightBean>();
 					seasonDayResults.add(new SeasonDayResultBean(entry.getValue().toString(), emptyLineUpLight)); 
 					continue;
@@ -183,6 +205,20 @@ public class SeasonAnalyzer {
 
 		
 		return seasonResult;
+	}
+
+
+	private boolean checkIfJumpSeasonDay(Map<Integer, List<PostponementBean>> postponements, Entry<Integer, Integer> entry) {
+		
+		
+		List<PostponementBean> list = postponements.get(entry.getKey());
+		if (list != null) {
+			for (PostponementBean post : list) {
+				if (!post.getPlayed())
+					return true;
+			}
+		}
+		return false;
 	}
 	
 	

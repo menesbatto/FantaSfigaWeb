@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 import app.PostponementBean;
 import app.dao.SerieATeamDao;
 import app.dao.UtilsDao;
+import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
+import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
 //import fantapianto._1_realChampionshipAnalyzerFINAL.MainSeasonAnalyzerFINAL;
@@ -34,6 +36,17 @@ public class MainSeasonVotesDowloader {
 	
 
 	
+	public void cleanVotes() {
+			
+			Map<Integer, List<PostponementBean>> postponements = utilsDao.findAllPostponement();
+			
+			utilsDao.removeSeasonDaysVotes(postponements.keySet()) ;
+			
+			String tvStamp = getTVUrlParameter();
+			for (Integer serieASeasonDay : postponements.keySet())
+				saveVotesOfSeasonDay(tvStamp, serieASeasonDay);
+	}
+	
 	public Map<VotesSourceEnum, Map<String, Map<String, List<PlayerVoteComplete>>>> execute(){
 		
 		populateSerieATeam();
@@ -49,27 +62,32 @@ public class MainSeasonVotesDowloader {
 		for (int i = lastSeasonDayCalculated + 1; i <= lastSerieASeasonDay; i++) {
 			
 			
-			System.out.print(i + "\t");
-			finalSeasonDayVotesUrl = AppConstants.SEASON_DAY_VOTES_URL_TEMPLATE.replace("[SEASON_DAY]", i+"").replace("[DATE_TIME_MILLIS]", tvStamp+"");
-			
-			// Creo la mappa con tutti i voti di giornata
-			Map<VotesSourceEnum, Map<String, List<PlayerVoteComplete>>> trisVote = calculateSingleSeasonDay(finalSeasonDayVotesUrl);
-			
-			
-			Map<String, List<PlayerVoteComplete>> napoliVotes = trisVote.get(VotesSourceEnum.FANTAGAZZETTA);
-			utilsDao.saveVotesBySeasonDayAndVoteSource(napoliVotes, i, VotesSourceEnum.FANTAGAZZETTA);
-			
-			Map<String, List<PlayerVoteComplete>> milanoVotes = trisVote.get(VotesSourceEnum.STATISTICO);
-			utilsDao.saveVotesBySeasonDayAndVoteSource(milanoVotes, i, VotesSourceEnum.STATISTICO);
-
-			Map<String, List<PlayerVoteComplete>> italiaVotes = trisVote.get(VotesSourceEnum.ITALIA);
-			utilsDao.saveVotesBySeasonDayAndVoteSource(italiaVotes, i, VotesSourceEnum.ITALIA);
+			saveVotesOfSeasonDay(tvStamp, i);
 			
 			
 		}
 		
 	
 		return null;
+	}
+
+	private void saveVotesOfSeasonDay(String tvStamp, int i) {
+		String finalSeasonDayVotesUrl;
+		System.out.print(i + "\t");
+		finalSeasonDayVotesUrl = AppConstants.SEASON_DAY_VOTES_URL_TEMPLATE.replace("[SEASON_DAY]", i+"").replace("[DATE_TIME_MILLIS]", tvStamp+"");
+		
+		// Creo la mappa con tutti i voti di giornata
+		Map<VotesSourceEnum, Map<String, List<PlayerVoteComplete>>> trisVote = calculateSingleSeasonDay(finalSeasonDayVotesUrl);
+		
+		
+		Map<String, List<PlayerVoteComplete>> napoliVotes = trisVote.get(VotesSourceEnum.FANTAGAZZETTA);
+		utilsDao.saveVotesBySeasonDayAndVoteSource(napoliVotes, i, VotesSourceEnum.FANTAGAZZETTA);
+		
+		Map<String, List<PlayerVoteComplete>> milanoVotes = trisVote.get(VotesSourceEnum.STATISTICO);
+		utilsDao.saveVotesBySeasonDayAndVoteSource(milanoVotes, i, VotesSourceEnum.STATISTICO);
+
+		Map<String, List<PlayerVoteComplete>> italiaVotes = trisVote.get(VotesSourceEnum.ITALIA);
+		utilsDao.saveVotesBySeasonDayAndVoteSource(italiaVotes, i, VotesSourceEnum.ITALIA);
 	}
 	
 	

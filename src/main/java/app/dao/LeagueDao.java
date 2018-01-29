@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,7 +19,6 @@ import app.dao.entity.LineUpLight;
 import app.dao.entity.Matcho;
 import app.dao.entity.Ranking;
 import app.dao.entity.RankingRow;
-import app.dao.entity.Rules;
 import app.dao.entity.Season;
 import app.dao.entity.SeasonDay;
 import app.dao.entity.SeasonDayFromWeb;
@@ -302,14 +301,12 @@ public class LeagueDao {
 
 	public void saveOnlineSeason(SeasonBean bean, String leagueShortName, String competitionShortName, String username) {
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
-
 		Season s = seasonRepo.findByNameAndCompetition(null, competition);
-		if (s != null)
-			return;
-		
-		s = new Season();
-		s.setCompetition(competition);
-		s.setName(bean.getName());
+		if (s == null) {
+			s = new Season();
+			s.setCompetition(competition);
+			s.setName(bean.getName());
+		}
 		List<SeasonDay> seasonDayEnts = new ArrayList<SeasonDay>();
 		for (SeasonDayBean seasonDayBean: bean.getSeasonDays()) {
 			
@@ -587,6 +584,7 @@ public class LeagueDao {
 			ent = new SeasonFromWeb();
 			ent.setCompetition(competition);
 			ent.setSeasonDaysFromWeb(new ArrayList<SeasonDayFromWeb>());
+			ent.setName(seasonFromWeb.getName());
 		}
 		
 		
@@ -808,6 +806,25 @@ public class LeagueDao {
 			playerVoteBean.setFantaVoteFromWeb(fantaVoteFromWeb);
 		}
 		return listBean;
+	}
+
+
+	public void removeSeasonDaysFromWebSeasonDays(String leagueShortName, String competitionShortName, String username,	List<Integer> competitionSeasonDaysToRemove) {
+		
+
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		SeasonFromWeb ent = seasonFromWebRepo.findByCompetition(competition);
+		List<SeasonDayFromWeb> seasonDayToRemove = new ArrayList<SeasonDayFromWeb>();
+		
+		for (SeasonDayFromWeb seasonDayEnt : ent.getSeasonDaysFromWeb()) {
+			if (    competitionSeasonDaysToRemove.contains( seasonDayEnt.getCompetitionSeasonDay() )   ){
+				seasonDayToRemove.add(seasonDayEnt);
+			}
+		}
+		ent.getSeasonDaysFromWeb().removeAll(seasonDayToRemove);
+		seasonFromWebRepo.save(ent);
+		
+		
 	}
 
 
