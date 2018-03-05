@@ -124,7 +124,8 @@ public class UtilsDao {
 
 		return bean;
 	}
-
+	
+	@Transactional
 	public int calculateLastSerieASeasonDayCalculated() {
 //		voteRepo.deleteBySerieASeasonDay(21);
 

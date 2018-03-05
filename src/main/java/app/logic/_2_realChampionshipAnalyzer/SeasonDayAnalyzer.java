@@ -275,7 +275,13 @@ public class SeasonDayAnalyzer {
 				}
 			}
 			boolean goalkeeperHasPlayed = false;
-			PlayerVote goalkeeperVote = lineUp.getFinalLineUp().get(0);
+			PlayerVote goalkeeperVote = null;
+			for (PlayerVote newVote : lineUp.getFinalLineUp()){
+				if (newVote.getRole().equals(RoleEnum.P)){
+					goalkeeperVote = newVote;
+					break;
+				}
+			}
 			if (   !goalkeeperVote.getName().equals("OFFICE") && !goalkeeperVote.getName().equals("ZERO") ){
 				maxFour.add(goalkeeperVote.getVote());
 				goalkeeperHasPlayed = true;
