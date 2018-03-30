@@ -61,7 +61,7 @@ public class FacadeController {
 	@RequestMapping(value = "/hello", method = RequestMethod.GET)
     public ResponseEntity<String> sayHello() {
 		
-		ResponseEntity<String> response = new ResponseEntity<String>("{\"message\": \"Hello, World dal server!\"}", HttpStatus.OK);
+		ResponseEntity<String> response = new ResponseEntity<String>("{\"message\": \"Hello, World dal server pere in diretta o no!\"}", HttpStatus.OK);
 		return response;
     }
 
