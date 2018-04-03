@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-department-list',
@@ -10,17 +11,33 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
         <span class = "badge"> {{department.id}} </span> {{department.name}}
       </li>
     </ul>
+    <span>#####</span>
+
+    <ul class="items">
+      <li  *ngFor = "let user of userList">
+        <span class = "badge"> {{user.firstname}} {{user.lastname}} {{user.email}} </span>
+      </li>
+    </ul>
+
+    <span>{{errorMessage}}</span>
   `,
   styles: []
 })
 export class DepartmentListComponent implements OnInit {
 
 constructor(private router: Router,
-  private route: ActivatedRoute) { }
+            private route: ActivatedRoute,
+            private _userService: UserService) { }
 
 public selectedId;
+public userList;
+public errorMessage = "";
 
 ngOnInit() {
+  this._userService.getUsers().subscribe(
+          data => this.userList = data,
+          error => this.errorMessage = error);
+
   this.route.paramMap.subscribe((params : ParamMap) => {
     let id = parseInt(params.get('id'));
     this.selectedId = id;

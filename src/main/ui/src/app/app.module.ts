@@ -7,6 +7,9 @@ import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { DepartmentDetailComponent } from './department-detail/department-detail.component';
 import { HttpClientModule } from '@angular/common/http';
+import { UserService } from './user.service';
+
+
 
 
 @NgModule({
@@ -21,7 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -64,6 +64,29 @@ public class FacadeController {
 		ResponseEntity<String> response = new ResponseEntity<String>("{\"message\": \"Hello, World dal server pere in diretta o no!\"}", HttpStatus.OK);
 		return response;
     }
+	
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
+    public ResponseEntity<List<UserBean>> getUsers() {
+		
+		List<UserBean> userList = new ArrayList<UserBean>();
+		UserBean u1 = new UserBean();
+		u1.setEmail("prova1@prova.it");
+		u1.setFirstname("Valerio");
+		u1.setLastname("Mene");
+		userList.add(u1);
+		
+		UserBean u2 = new UserBean();
+		u2.setEmail("prova2@prova.it");
+		u2.setFirstname("Gigi");
+		u2.setLastname("Rossi");
+		userList.add(u2);
+		
+		
+		
+		ResponseEntity<List<UserBean>> response = new ResponseEntity<List<UserBean>>(userList, HttpStatus.OK);
+		//("{\"message\": \"Hello, World dal server pere in diretta o no!\"}", HttpStatus.OK);
+		return response;
+    }
 
 	
 	
