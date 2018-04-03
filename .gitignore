@@ -30,4 +30,4 @@ dependency-reduced-pom.xml
 *.idea
 
 README.html
-src/main/resources/static
+# src/main/resources/static
