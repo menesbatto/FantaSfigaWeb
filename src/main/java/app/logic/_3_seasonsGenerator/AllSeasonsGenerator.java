@@ -55,7 +55,7 @@ public class AllSeasonsGenerator {
 		
 		Integer seasonNumber = 0;
 		
-		Map<Integer, Integer> bindings = rulesDao.findCompetitionToSerieABinding(leagueShortName, competitionShortName, userBean.getUsername());
+		Map<Integer, Integer> bindings = rulesDao.findSerieAToCompetitionBinding(leagueShortName, competitionShortName, userBean.getUsername());
 		Integer serieAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
 			
 		Integer fantacalcioActualSeasonDay = bindings.get(serieAActualSeasonDay);

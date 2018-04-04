@@ -184,13 +184,13 @@ public class HttpUtils {
 //	}
 
 	private static WebDriver initDriver() throws InterruptedException {
-		ChromeDriverService service = new ChromeDriverService.Builder().usingDriverExecutable(new File("C:/driver/chromedriver.exe")).build(); 
+		ChromeDriverService service = new ChromeDriverService.Builder().usingDriverExecutable(new File("C:/driver/Nuova Cartella/chromedriver.exe")).build(); 
 		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--allow-file-access-from-files");
 		options.addArguments("--verbose");
-		options.addArguments("load-extension=C:\\Users\\Menesbatto\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cfhdojbkjhnklbpkdaibdccddilifddb\\1.13.5_0");
+		options.addArguments("load-extension=C:\\Users\\Menesbatto-PC\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cfhdojbkjhnklbpkdaibdccddilifddb\\1.13.5_0");
 		capabilities.setVersion("");
 		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 		

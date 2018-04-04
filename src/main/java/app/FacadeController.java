@@ -94,6 +94,10 @@ public class FacadeController {
 	// ##########            1                ############
 	// ###################################################
 	
+	
+	// Scarica tutti i voti di tutte le giornate dall'inizio fino alla giornata odierna.
+	// Se sono gia' stati scaricati salta la giornata.
+	
 	@RequestMapping(value = "/downloadVotes", method = RequestMethod.GET)
 	public ResponseEntity<String> downloadVotes() {
 		
@@ -108,7 +112,11 @@ public class FacadeController {
 
 	//###################################################################
 	
-	
+	// Rimuove i voti di tutte le giornate da recuperare.
+	// Utile per le league in cui si attendono i recuperi.
+	// Da richiamare quando viene giocato un recupero e la giornata si conclude, cosi' facendo la prossima volta che vengono scaricati i voti
+	// verranno scaricati anche quelli della partita/partite recuperate
+	 
 	@RequestMapping(value = "/cleanVotes", method = RequestMethod.GET)
 	public ResponseEntity<String> cleanVotes() {
 		
@@ -123,7 +131,7 @@ public class FacadeController {
 
 	//###################################################################
 	
-	
+	// Inserisce un rinvio
 	@RequestMapping(value = "/insertPostponement", method = RequestMethod.POST)
 	public ResponseEntity<String> insertPostponement(@RequestBody PostponementBean m) {
 		
@@ -138,22 +146,9 @@ public class FacadeController {
 
 	//###################################################################
 	
-	
-	private static Map<String, ArrayList<String>> initTo6MatchesMap() {
-		Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("LAZ");
-		list.add("UDI");
-		map.put("12", list);
-		list = new ArrayList<String>();
-		list.add("SAM");
-		list.add("ROM");
-		map.put("12", list);
-		
-		return map;
-	}
-	
-	
+	// Crea un nuovo user dell'applicativo da validare
+	// Viene richiamato solo una volta all'inizio
+
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
 	public ResponseEntity<String> createUser(@RequestBody UserBean user) {
 		
@@ -170,6 +165,9 @@ public class FacadeController {
 	}
 	
 	//###################################################################
+	// Conferma uno user precendetemente creato
+	// Viene richiamato solo una volta all'inizio
+
 	
 	@RequestMapping(value = "/confirmUser", params = { "username", "rnd" },  method = RequestMethod.GET)
 	public ResponseEntity<String> confirmUser(@RequestParam String username, @RequestParam String rnd) {
@@ -191,6 +189,9 @@ public class FacadeController {
 
 	
 	//###################################################################
+	// Salva le credenziali di FantaGazzetta per il cliente in sessione
+	// Viene richiamato solo una volta all'inizio
+
 	
 	@RequestMapping(value = "/saveFantaGazzettaCredentials", method = RequestMethod.POST)
 	public ResponseEntity<String> saveFantaGazzettaCredentials(@RequestBody Credentials credentials) {
@@ -222,7 +223,7 @@ public class FacadeController {
 	}
 	//###################################################################
 	
-	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ResponseEntity<String> logout() {
 		
 		Boolean confirmed = userExpert.logout();
@@ -239,6 +240,9 @@ public class FacadeController {
 	
 	
 	//###################################################################
+	// Scrive le league dell'utente in sessione
+	// Viene richiamato solo una volta all'inizio
+	
 	
 	@RequestMapping(value = "/downloadLeagues", method = RequestMethod.GET)
 	public ResponseEntity<String> downloadLeagues() {
@@ -256,9 +260,12 @@ public class FacadeController {
 	}
 	//###################################################################
 	
-	@RequestMapping(value = "/downloadCompetitions/{leagueName}", method = RequestMethod.GET)
-	public ResponseEntity<String> downloadCompetitions(@PathVariable String leagueName) {
-		List<CompetitionBean> competitionsInserted= userExpert.downloadCompetitions(leagueName);
+	// Per la lega inviata vengono scaricate le competizioni contenute
+	// Viene richiamato solo una volta all'inizio
+
+	@RequestMapping(value = "/downloadCompetitions/{leagueShortName}", method = RequestMethod.GET)
+	public ResponseEntity<String> downloadCompetitions(@PathVariable String leagueShortName) {
+		List<CompetitionBean> competitionsInserted= userExpert.downloadCompetitions(leagueShortName);
 		
 		String body;
 		if (competitionsInserted.isEmpty())
@@ -271,6 +278,9 @@ public class FacadeController {
 	}
 	
 	//###################################################################
+
+	// Scarica tutte le regole scaricabili per tutte le competizioni di una data league
+	// Viene richiamato solo una volta all'inizio
 	
 	@RequestMapping(value = "/downloadRules/{leagueShortName}", method = RequestMethod.GET)
 	public ResponseEntity<String> downloadRules(@PathVariable String leagueShortName) {
@@ -284,6 +294,9 @@ public class FacadeController {
 	
 	//###################################################################
 	
+	// Per la specifica competizione integra le regole non scaricabili.
+	// Viene richiamato solo una volta all'inizio
+
 	@RequestMapping(value = "/integrateRules", method = RequestMethod.POST)
 	public ResponseEntity<String> integrateRules(@RequestBody RulesReq req) {
 		
@@ -296,6 +309,9 @@ public class FacadeController {
 		
 	//###################################################################
 
+	// Calcola il legame tra le giornate della Serie A e le giornate della specifica competizione
+	// Viene richiamato solo una volta all'inizio
+	
 	@RequestMapping(value = "/calculateBinding", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateBinding(@RequestBody CompetitionBean competition) {
 		String competitionShortName = competition.getCompetitionShortName();
@@ -312,6 +328,10 @@ public class FacadeController {
 	
 	//###################################################################
 
+	// Calcola il pattern della competizione, ovvero il calendario, tutti gli scontro giornata per giornata
+	// Utile per generare poi i 40k calendari
+	// Viene richiamato solo una volta all'inizio
+	
 	@RequestMapping(value = "/calculateCompetitionPattern", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateCompetitionPattern(@RequestBody CompetitionBean competition) {
 		String competitionShortName = competition.getCompetitionShortName();
@@ -329,6 +349,11 @@ public class FacadeController {
 	
 	//###################################################################
 
+	// Scarica il calendario della competizione passata in input
+	// Salva anche i team di una certa competizione
+
+	// Viene richiamato solo all'inizio
+	
 	@RequestMapping(value = "/saveOnlineSeasonAndTeams", method = RequestMethod.POST)
 	public ResponseEntity<String> saveOnlineSeasonAndTeams(@RequestBody CompetitionBean competition) {
 		String competitionShortName = competition.getCompetitionShortName();
@@ -345,7 +370,10 @@ public class FacadeController {
 	
 		
 	//###################################################################
-
+	
+	// Calcola le permutazioni del numero di team inseriti
+	// Viene richiamato solo una volta
+	
 	@RequestMapping(value = "/createPermutations/{playersNumber}", method = RequestMethod.GET)
 	public ResponseEntity<String> createPermutations(@PathVariable Integer playersNumber) {
 		
@@ -359,6 +387,9 @@ public class FacadeController {
 	
 	
 	//###################################################################
+
+	// Rimuove dalla season salvata scaricandola dal web le giornate che concidono con i recuperi (solo per le competizioni in cui si attende)
+	
 	
 	@RequestMapping(value = "/cleanSeasonFromWeb", method = RequestMethod.POST)
 	public ResponseEntity<String> cleanSeasonFromWeb(@RequestBody CompetitionBean competition) {
@@ -376,6 +407,11 @@ public class FacadeController {
 	
 	//###################################################################
 	
+	// Scarica la competizione online e i risultati appena calcolati da FantaGazzetta
+	// Sono utili per fare confronti con quelli calcolati dalla applicazione FantaSfiga
+	// Scarica anche le formazioni scherate
+	// Richiamata ad ogni giornata
+	
 	@RequestMapping(value = "/downloadSeasonFromWeb", method = RequestMethod.POST)
 	public ResponseEntity<String> downloadSeasonFromWeb(@RequestBody CompetitionBean competition) {
 		
@@ -391,6 +427,7 @@ public class FacadeController {
 
 	//###################################################################
 	
+	// Sulla base delle formazioni schierate calcola i risultati con la base dati che ha scaricato in precendenza
 	@RequestMapping(value = "/calculateSeasonResult", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateSeasonResult(@RequestBody CompetitionBean competition) {
 		
@@ -407,6 +444,8 @@ public class FacadeController {
 		
 	//###################################################################
 	
+	// NON CHIAMATO DAL CLIENT
+	
 	@RequestMapping(value = "/generateAllSeason", method = RequestMethod.POST)
 	public ResponseEntity<String> generateAllSeason(@RequestBody CompetitionBean competition) {
 		
@@ -422,6 +461,9 @@ public class FacadeController {
 		
 		
 	//###################################################################
+	
+	// Calcola le statistiche di una certa competizione
+	
 	@Autowired
 	private Main main;
 	@RequestMapping(value = "/calculateRealStats", method = RequestMethod.POST)
@@ -439,6 +481,8 @@ public class FacadeController {
 		
 		
 	//###################################################################
+	
+	// Calcola le statistiche di una certa competizione con regole personalizzate
 	
 	@RequestMapping(value = "/calculateStatsWithCustomRules", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateRankingWithCustomRules(@RequestBody CustomRules req) {

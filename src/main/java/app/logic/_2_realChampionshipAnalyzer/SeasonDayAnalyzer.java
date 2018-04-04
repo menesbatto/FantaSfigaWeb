@@ -195,14 +195,14 @@ public class SeasonDayAnalyzer {
 //		Double voteFromWeb = getVote(playerElem.getElementsByClass("pt").get(1).text());
 		Double voteFromWeb = player.getVoteFromWeb();
 		if (vote != null && !vote.equals(voteFromWeb)){
-			System.out.println("VOTO DIVERSO: " + team + " " + name + " " + "voti ufficiali: " + vote + " - Voti da nostra lega: " + voteFromWeb);
+			System.out.println("VOTO DIVERSO:\t\tGiornata di serie A: " + serieASeasonDay + "\t\t" + team + " " + name + " " + "voti ufficiali: " + vote + " - Voti da nostra lega: " + voteFromWeb);
 		}
 		
 		
 //		Double fantaVoteFromWeb = getVote(playerElem.getElementsByClass("pt").get(2).text());
 		Double fantaVoteFromWeb = player.getFantaVoteFromWeb();
 		if (fantaVote != null && !fantaVote.equals(fantaVoteFromWeb)){
-			System.out.println("FANTAVOTO DIVERSO: " + team + " " + name + " " + "voti ufficiali: " + fantaVote + " - Voti da nostra lega: " + fantaVoteFromWeb);
+			System.out.println("FANTAVOTO DIVERSO:\tGiornata di Serie A: " + serieASeasonDay + "\t\t" + team + " " + name + " " + "voti ufficiali: " + fantaVote + " - Voti da nostra lega: " + fantaVoteFromWeb);
 		}
 		
 		player.setVote(vote);

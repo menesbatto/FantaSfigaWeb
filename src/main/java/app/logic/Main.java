@@ -74,7 +74,7 @@ public class Main {
 
 		
 		SeasonResultBean calculatedSeasonResult = seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName, rulesDb);
-		Boolean onlyOne = true;
+		Boolean onlyOne = false;
 		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, calculatedSeasonResult, rulesDb);
 		

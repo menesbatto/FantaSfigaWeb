@@ -149,12 +149,12 @@ public class MainSeasonsExecutor {
 					
 					if (homeTeamFromApp != null) {
 						if (!homeTeamFromApp.getSumTotalPoints().equals(homeTeamResultFromWeb.getSumTotalPoints())){
-							System.out.println("ERRORE \t Giornata:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getHomeTeam() + "\tPunteggio da web:\t" + homeTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  homeTeamFromApp.getSumTotalPoints());
+							System.out.println("ERRORE \t Giornata della Competizione:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getHomeTeam() + "\tPunteggio da web:\t" + homeTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  homeTeamFromApp.getSumTotalPoints());
 		
 						}
 		
 						if (!awayTeamFromApp.getSumTotalPoints().equals(awayTeamResultFromWeb.getSumTotalPoints())){
-							System.out.println("ERRORE \t Giornata:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getAwayTeam() + "\tPunteggio da web:\t" + awayTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  awayTeamFromApp.getSumTotalPoints());
+							System.out.println("ERRORE \t Giornata della Competizione:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getAwayTeam() + "\tPunteggio da web:\t" + awayTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  awayTeamFromApp.getSumTotalPoints());
 						}
 					}
 				}

@@ -85,13 +85,13 @@ public class UserExpert {
 		return leagues;
 	}
 
-	public List<CompetitionBean> downloadCompetitions(String leagueName){
+	public List<CompetitionBean> downloadCompetitions(String leagueShortName){
 		if (userBean.getUsername() == null)
 			return null;
 		
 		Credentials c = userDao.retrieveGazzettaCredentials(userBean.getUsername());
 		
-		LeagueBean league = leagueDao.findLeagueByShortName(leagueName, userBean.getUsername());
+		LeagueBean league = leagueDao.findLeagueByShortName(leagueShortName, userBean.getUsername());
 		
 		String leagueUrl = AppConstants.GAZZETTA_URL + league.getShortName() + "/gestione-competizioni";
 		Document doc = HttpUtils.getHtmlPageLogged(leagueUrl , c.getUsername(), c.getPassword());

@@ -89,7 +89,10 @@ public class RulesExpertMain {
 	private void calculateCompetitionsRules(String leagueShortName, RulesBean rules, List<CompetitionBean> competitions) {
 
 		for (CompetitionBean competition : competitions) {
-			//http://leghe.fantagazzetta.com/sisisicertocerto-league/visualizza-competizione-calendario/136195			
+			//http://leghe.fantagazzetta.com/accaniti-division/visualizza-competizioni
+			//http://leghe.fantagazzetta.com/accaniti-division/visualizza-competizione-calendario/247720
+			//http://leghe.fantagazzetta.com/accaniti-division/visualizza-competizione-formula1/247741
+			//http://leghe.fantagazzetta.com/accaniti-division/visualizza-competizione-gironi/288971
 			CompetitionRules rulesComp = analyzeRulesForCompetition(competition);
 			
 			rules.setCompetitionRules(rulesComp);
@@ -101,7 +104,8 @@ public class RulesExpertMain {
 
 	private CompetitionRules analyzeRulesForCompetition(CompetitionBean competition) {
 		
-		String url = AppConstants.RULES_6_COMPETITION_URL.replace("[LEAGUE_NAME]", competition.getLeagueShortName()).replace("[COMPETITION_ID]", competition.getCompetitionShortName());
+		String url = competition.getUrl();
+		//String url = AppConstants.RULES_6_COMPETITION_URL.replace("[LEAGUE_NAME]", competition.getLeagueShortName()).replace("[COMPETITION_ID]", competition.getCompetitionShortName());
 		Document doc = getLoggedPage(url, "");
 		
 		CompetitionRules cr = new CompetitionRules();
