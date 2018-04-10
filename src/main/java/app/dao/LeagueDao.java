@@ -11,7 +11,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
-import app.CompetitionBean;
 import app.dao.entity.Competition;
 import app.dao.entity.League;
 import app.dao.entity.LineUpFromWeb;
@@ -41,6 +40,7 @@ import app.logic._2_realChampionshipAnalyzer.model.PlayerVote;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 import app.logic._4_seasonsExecutor.model.RankingRowBean;
+import app.logic.model.CompetitionBean;
 
 @Service
 @EnableCaching

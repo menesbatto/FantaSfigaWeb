@@ -12,8 +12,6 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import app.CompetitionBean;
-import app.RulesReq;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UserDao;
@@ -32,6 +30,8 @@ import app.logic._0_rulesDownloader.model.Substitutions;
 import app.logic._0_rulesDownloader.model.SubstitutionsModeEnum;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
+import app.logic.model.CompetitionBean;
+import app.logic.model.RulesReq;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
 import app.utils.IOUtils;

@@ -9,7 +9,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
-import app.PostponementBean;
 import app.logic._0_rulesDownloader.model.BonusMalus;
 import app.logic._0_rulesDownloader.model.MaxOfficeVotesEnum;
 import app.logic._0_rulesDownloader.model.Modifiers;
@@ -21,6 +20,7 @@ import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.PlayerVote;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
+import app.logic.model.PostponementBean;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
 

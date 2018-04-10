@@ -30,6 +30,10 @@ import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._3_seasonsGenerator.AllSeasonsGenerator;
+import app.logic.model.CompetitionBean;
+import app.logic.model.CustomRules;
+import app.logic.model.PostponementBean;
+import app.logic.model.RulesReq;
 
 @Controller // This means that this class is a Controller
 @RequestMapping(path = "/api") // This means URL's start with /demo (after Application path)

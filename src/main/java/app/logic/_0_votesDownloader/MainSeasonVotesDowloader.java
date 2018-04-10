@@ -12,7 +12,6 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import app.PostponementBean;
 import app.dao.SerieATeamDao;
 import app.dao.UtilsDao;
 import app.logic._0_rulesDownloader.model.RulesBean;
@@ -20,6 +19,7 @@ import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
+import app.logic.model.PostponementBean;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
 //import fantapianto._1_realChampionshipAnalyzerFINAL.MainSeasonAnalyzerFINAL;

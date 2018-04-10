@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import app.PostponementBean;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UtilsDao;
@@ -23,6 +22,7 @@ import app.logic._2_realChampionshipAnalyzer.model.LineUp;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
+import app.logic.model.PostponementBean;
 import app.utils.AppConstants;
 
 @Service

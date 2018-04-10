@@ -1,4 +1,4 @@
-package app;
+package app.logic.model;
 
 import java.io.Serializable;
 

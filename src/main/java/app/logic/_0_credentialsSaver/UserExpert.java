@@ -9,13 +9,13 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import app.CompetitionBean;
 import app.dao.LeagueDao;
 import app.dao.UserDao;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
 import app.logic._0_credentialsSaver.model.LeagueBean;
 import app.logic._0_credentialsSaver.model.UserBean;
+import app.logic.model.CompetitionBean;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
 

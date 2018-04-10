@@ -13,13 +13,13 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import app.PostponementBean;
 import app.dao.entity.Permutation;
 import app.dao.entity.Postponement;
 import app.dao.entity.Vote;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
+import app.logic.model.PostponementBean;
 
 @Service
 @EnableCaching
