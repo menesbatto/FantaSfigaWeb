@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
 
 import app.logic.Main;
 import app.logic._0_credentialsSaver.UserExpert;
@@ -39,7 +43,8 @@ import app.logic.model.RulesReq;
 @RequestMapping(path = "/api") // This means URL's start with /demo (after Application path)
 public class FacadeController {
 
-
+	private static final Gson gson = new Gson();
+	
 	@Autowired
 	private MainSeasonVotesDowloader mainSeasonVotesDowloader;
 
@@ -154,17 +159,21 @@ public class FacadeController {
 	// Viene richiamato solo una volta all'inizio
 
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
-	public ResponseEntity<String> createUser(@RequestBody UserBean user) {
+	public ResponseEntity<UserBean> createUser(@RequestBody UserBean user) {
 		
 		user = userExpert.createUser(user);
 		
 		String body;
-		if (user != null)
-			body = "Saving new User COMPLETED";
-		else
-			body = "Saving new User FAILED";
-		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<UserBean> response;
+
+		if (user != null) {
+			body = "{message : \"Saving new User COMPLETED\"}";
+			response = new ResponseEntity<UserBean>(user, HttpStatus.OK);
+		}
+		else {
+			body = "{message : \"User already exist\"}";
+			response = new ResponseEntity<UserBean>(user, HttpStatus.CONFLICT);
+		}
 		return response;
 	}
 	
@@ -197,32 +206,31 @@ public class FacadeController {
 	// Viene richiamato solo una volta all'inizio
 
 	
-	@RequestMapping(value = "/saveFantaGazzettaCredentials", method = RequestMethod.POST)
-	public ResponseEntity<String> saveFantaGazzettaCredentials(@RequestBody Credentials credentials) {
+	@RequestMapping(value = "/saveFantaGazzettaCredentials", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<String> saveFantaGazzettaCredentials(@RequestBody Credentials credentials) {
 		
 		userExpert.saveGazzettaCredentials(credentials);
-		String body = "Saving Gazzeta Credentials COMPLETED";
+		String body = "Saving Gazzetta Credentials COMPLETED";
 		
 		
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
 		return response;
 	}
 	
 	//###################################################################
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<String> login(@RequestBody Credentials credentials) {
+	public ResponseEntity<UserBean> login(@RequestBody Credentials credentials) {
 		
-		Boolean confirmed = userExpert.login(credentials);
+		UserBean userBean = userExpert.login(credentials);
 		String body;
-		if (confirmed)
+		if (userBean != null)
 			body = "Login COMPLETED";
 		else
 			body = "Login ERROR";
 		
-		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<UserBean> response = new ResponseEntity<UserBean>(userBean, HttpStatus.OK);
 		return response;
 	}
 	//###################################################################
@@ -249,7 +257,7 @@ public class FacadeController {
 	
 	
 	@RequestMapping(value = "/downloadLeagues", method = RequestMethod.GET)
-	public ResponseEntity<String> downloadLeagues() {
+	public ResponseEntity<List<LeagueBean>> downloadLeagues() {
 		
 		List<LeagueBean> leaguesInserted = userExpert.downloadLeagues();
 
@@ -259,16 +267,45 @@ public class FacadeController {
 		else
 			body = "Downloading Leagues COMPLETED";
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<List<LeagueBean>> response = new ResponseEntity<List<LeagueBean>>(leaguesInserted, HttpStatus.OK);
 		return response;
 	}
+	
+	
+	//###################################################################
+		// Recupera le league del cliente messo in sessione
+		// Viene richiamato ogni volta che uno user accede alla app
+	
+		
+
+		@RequestMapping(value = "/retrieveLeagues", method = RequestMethod.GET)
+		public ResponseEntity<List<LeagueBean>> retrieveLeagues() {
+			
+			List<LeagueBean> leaguesInserted = userExpert.retrieveLeagues();
+
+			String body;
+			ResponseEntity<List<LeagueBean>> response;
+			if (leaguesInserted == null) {
+				response = new ResponseEntity<List<LeagueBean>>(leaguesInserted, HttpStatus.UNAUTHORIZED);
+				body = "Retrieve Leagues FAILED";
+			}
+			else {
+				response = new ResponseEntity<List<LeagueBean>>(leaguesInserted, HttpStatus.OK);
+				body = "Retrieve Leagues COMPLETED";
+			}
+			
+			return response;
+		}
+		
+		
+		
 	//###################################################################
 	
 	// Per la lega inviata vengono scaricate le competizioni contenute
 	// Viene richiamato solo una volta all'inizio
 
 	@RequestMapping(value = "/downloadCompetitions/{leagueShortName}", method = RequestMethod.GET)
-	public ResponseEntity<String> downloadCompetitions(@PathVariable String leagueShortName) {
+	public ResponseEntity<List<CompetitionBean>> downloadCompetitions(@PathVariable String leagueShortName) {
 		List<CompetitionBean> competitionsInserted= userExpert.downloadCompetitions(leagueShortName);
 		
 		String body;
@@ -277,7 +314,30 @@ public class FacadeController {
 		else
 			body = "Downloading Competitions COMPLETED";
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<List<CompetitionBean>> response = new ResponseEntity<List<CompetitionBean>>(competitionsInserted, HttpStatus.OK);
+		return response;
+	}
+	
+	//###################################################################
+	
+	// Per la lega inviata vengono scaricate le competizioni contenute
+	// Viene richiamato solo una volta all'inizio
+
+	@RequestMapping(value = "/retrieveCompetitions/{leagueShortName}", method = RequestMethod.GET)
+	public ResponseEntity<List<CompetitionBean>> retrieveCompetitions(@PathVariable String leagueShortName) {
+		List<CompetitionBean> competitionsInserted= userExpert.retrieveCompetitions(leagueShortName);
+		
+		String body;
+		ResponseEntity<List<CompetitionBean>> response;
+		if (competitionsInserted == null) {
+			response = new ResponseEntity<List<CompetitionBean>>(competitionsInserted, HttpStatus.UNAUTHORIZED);
+			body = "Retrieve Competitions FAILED";
+		}
+		else {
+			response = new ResponseEntity<List<CompetitionBean>>(competitionsInserted, HttpStatus.OK);
+			body = "Retrieve Competitions COMPLETED";
+		}
+		
 		return response;
 	}
 	

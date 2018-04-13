@@ -86,6 +86,7 @@ public class UserDao {
 		userBean.setEmail(ent.getEmail());
 		userBean.setUsername(ent.getUsername());
 		userBean.setPassword(ent.getPassword());
+		userBean.setGazzettaUsername(ent.getGazzettaUsername());
 		return userBean;
 		
 	}

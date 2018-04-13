@@ -198,7 +198,18 @@ public class HttpUtils {
 		
 		Thread.sleep(3000);
 		
-		driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "/w");
+		//driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "/w");
+		
+		// CHiude tutti i tab tranne il primo
+		String originalHandle = driver.getWindowHandle();
+		for (String handle : driver.getWindowHandles()) {
+			if (!handle.equals(originalHandle)) {
+				driver.switchTo().window(handle);
+				driver.close();
+			}
+		}
+		driver.switchTo().window(originalHandle);
+		
 		
 		return driver;
 	}

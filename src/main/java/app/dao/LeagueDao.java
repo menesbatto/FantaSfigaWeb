@@ -98,6 +98,27 @@ public class LeagueDao {
 		return true;
 	}
 
+	
+	public List<LeagueBean> findLeaguesByUsername(String username) {
+		User user = userDao.retrieveByUsername(username);
+		List<League> entList = leagueRepo.findByUser(user);
+		
+		List<LeagueBean> beans = new ArrayList<LeagueBean>();
+		LeagueBean bean;
+		for ( League ent : entList) {
+			bean = new LeagueBean();
+			bean.setName(ent.getName());
+			bean.setShortName(ent.getShortName());
+			bean.setUrl(ent.getUrl());
+			beans.add(bean);
+		}
+		
+		return beans;
+	}
+
+
+
+	
 
 	public League findByShortNameEnt(String leagueShortName, String username) {
 		User user = userDao.retrieveByUsername(username);

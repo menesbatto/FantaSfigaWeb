@@ -5,6 +5,7 @@ public class LeagueBean {
 	private String name;
 	private String shortName;
 	private String url;
+	private Boolean competitionsDownloaded;
 	
 	public LeagueBean() {
 	}
@@ -37,6 +38,16 @@ public class LeagueBean {
 	@Override
 	public String toString() {
 		return "LeagueBean [name=" + name + ", shortName=" + shortName + ", url=" + url + "]";
+	}
+
+
+	public Boolean isCompetitionsDownloaded() {
+		return competitionsDownloaded;
+	}
+
+
+	public void setCompetitionsDownloaded(Boolean competitionsDownloaded) {
+		this.competitionsDownloaded = competitionsDownloaded;
 	}
 
 	

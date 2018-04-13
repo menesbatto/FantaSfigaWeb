@@ -4,10 +4,21 @@ import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { DepartmentListComponent } from './department-list/department-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { DepartmentDetailComponent } from './department-detail/department-detail.component';
+import { LoginComponent } from './login/login.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { GazzettaCredentialsComponent } from './gazzetta-credentials/gazzetta-credentials.component';
+import { LeaguesComponent } from './leagues/leagues.component';
+import { AuthGuard } from './_guards/auth.guards';
+import { CompetitionsComponent } from './competitions/competitions.component';
 
 const routes: Routes = [
-  
-  {path: '', redirectTo: '/departments-list', pathMatch : "full" },
+  {path: '', redirectTo: '/login', pathMatch : "full" },
+  //{path: '', redirectTo: '/departments-list', pathMatch : "full" },
+  {path: 'login', component: LoginComponent},
+  {path: 'registration', component: RegistrationComponent},
+  {path: 'gazzettaCredentials', component: GazzettaCredentialsComponent},
+  {path: 'leagues', component: LeaguesComponent, canActivate: [AuthGuard] },
+  {path: 'competitions/:id', component: CompetitionsComponent},
   {path: 'departments-list', component: DepartmentListComponent},
   {path: 'employees', component: EmployeeListComponent},
   {path: 'departments-list/:id', component: DepartmentDetailComponent},
@@ -23,4 +34,5 @@ export class AppRoutingModule { }
 export const routingComponents = [DepartmentListComponent, 
                                   DepartmentDetailComponent,
                                   EmployeeListComponent, 
-                                  PageNotFoundComponent];
+                                  PageNotFoundComponent,
+                                  LoginComponent];

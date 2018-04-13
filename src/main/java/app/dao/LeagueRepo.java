@@ -1,5 +1,7 @@
 package app.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -11,6 +13,7 @@ public interface LeagueRepo extends JpaRepository<League, Long> {
 
 	League findByUserAndShortName(User user, String name);
 
+	List<League> findByUser(User user);
 	
 	
 

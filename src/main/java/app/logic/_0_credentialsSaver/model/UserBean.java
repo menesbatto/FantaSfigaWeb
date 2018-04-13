@@ -18,6 +18,8 @@ public class UserBean {
 	
 	private String password;
 	
+	private String gazzettaUsername;
+	
 	public String getFirstname() {
 		return firstname;
 	}
@@ -60,10 +62,11 @@ public class UserBean {
 	
 	
 
+	
 	@Override
 	public String toString() {
 		return "UserBean [firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", username="
-				+ username + ", password=" + password + "]";
+				+ username + ", password=" + password + ", gazzettaUsername=" + gazzettaUsername + "]";
 	}
 
 	@Override
@@ -113,6 +116,14 @@ public class UserBean {
 		} else if (!username.equals(other.username))
 			return false;
 		return true;
+	}
+
+	public String getGazzettaUsername() {
+		return gazzettaUsername;
+	}
+
+	public void setGazzettaUsername(String gazzettaUsername) {
+		this.gazzettaUsername = gazzettaUsername;
 	}
 	
 	

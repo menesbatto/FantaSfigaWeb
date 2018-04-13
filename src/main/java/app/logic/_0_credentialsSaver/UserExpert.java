@@ -85,6 +85,27 @@ public class UserExpert {
 		return leagues;
 	}
 
+	public List<LeagueBean> retrieveLeagues(){
+		if (userBean.getUsername() == null)
+			return null;
+		
+		List<LeagueBean> leagues = new ArrayList<LeagueBean>();
+		leagues = leagueDao.findLeaguesByUsername(userBean.getUsername());
+		for (LeagueBean league : leagues) {
+			List<CompetitionBean> competitionsByLeague = leagueDao.findCompetitionsByLeague(league.getShortName(), userBean.getUsername());
+			if (competitionsByLeague.isEmpty()) {
+				league.setCompetitionsDownloaded(false);
+			}
+			else {
+				league.setCompetitionsDownloaded(true);
+			}
+		}
+		
+		return leagues;
+	}
+
+	
+	
 	public List<CompetitionBean> downloadCompetitions(String leagueShortName){
 		if (userBean.getUsername() == null)
 			return null;
@@ -161,19 +182,31 @@ public class UserExpert {
 		return competitions;
 	}
 	
+	public List<CompetitionBean> retrieveCompetitions(String leagueShortName){
+		if (userBean.getUsername() == null)
+			return null;
+				
+		LeagueBean league = leagueDao.findLeagueByShortName(leagueShortName, userBean.getUsername());
+		
+		List<CompetitionBean> competitions = new ArrayList<CompetitionBean>();
+		
+		competitions = leagueDao.findCompetitionsByLeague(league.getShortName(), userBean.getUsername());
+		
+		return competitions;
+	}
 	
 	
 	
 	
-	public Boolean login(Credentials credentials) {
-		UserBean dbUserBean = userDao.login(credentials);
+	
+	public UserBean login(Credentials credentials) {
+		UserBean dbUserBean  = userDao.login(credentials);
 		userBean.setEmail(dbUserBean.getEmail());
 		userBean.setUsername(dbUserBean.getUsername());
 		userBean.setFirstname(dbUserBean.getFirstname());
 		
-		if (dbUserBean == null)
-			return false;
-		return true;
+		
+		return dbUserBean;
 	}
 
 	public Boolean logout() {
