@@ -8,40 +8,46 @@ import { LeaguesService } from '../leagues.service';
   selector: 'app-gazzetta-credentials',
   template: `
 
-  <div class="col-md-6 col-md-offset-3">
-    <h2>Credenziali FantaGazzetta</h2>
-    <form name="form" (ngSubmit)="f.form.valid && saveGazzettaCredentials()" #f="ngForm" novalidate>
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !gazzettaUsername.valid }">
-            <label for="gazzettaUsername">Username Fantagazzetta</label>
-            <input type="text" class="form-control" name="gazzettaUsername" [(ngModel)]="model.gazzettaUsername" #gazzettaUsername="ngModel" required />
-            <div *ngIf="f.submitted && !gazzettaUsername.valid" class="help-block">Devi inserire lo Username di Fantagazzetta</div>
-        </div>
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !gazzettaPassword.valid }">
-            <label for="gazzettaPassword">Password Fantagazzetta</label>
-            <input type="password" class="form-control" name="gazzettaPassword" [(ngModel)]="model.gazzettaPassword" #gazzettaPassword="ngModel" required />
-            <div *ngIf="f.submitted && !gazzettaPassword.valid" class="help-block">Devi inserire la Password di Fantagazzetta</div>
-        </div>
-        <div class="form-group">
-            <button [disabled]="loading" class="btn btn-primary">Salva</button>
-        </div>
+<div class="col-md-6 col-md-offset-3" >
+    <div *ngIf="!successMessageLeague">
+        <h2>Credenziali FantaGazzetta</h2>
+        <form name="form" (ngSubmit)="f.form.valid && saveGazzettaCredentials()" #f="ngForm" novalidate>
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !gazzettaUsername.valid }">
+                <label for="gazzettaUsername">Username Fantagazzetta</label>
+                <input type="text" class="form-control" name="gazzettaUsername" [(ngModel)]="model.gazzettaUsername" #gazzettaUsername="ngModel" required />
+                <div *ngIf="f.submitted && !gazzettaUsername.valid" class="help-block">Devi inserire lo Username di Fantagazzetta</div>
+            </div>
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !gazzettaPassword.valid }">
+                <label for="gazzettaPassword">Password Fantagazzetta</label>
+                <input type="password" class="form-control" name="gazzettaPassword" [(ngModel)]="model.gazzettaPassword" #gazzettaPassword="ngModel" required />
+                <div *ngIf="f.submitted && !gazzettaPassword.valid" class="help-block">Devi inserire la Password di Fantagazzetta</div>
+            </div>
+            <div class="form-group">
+                <button [disabled]="loading" class="btn btn-primary">Salva</button>
+            </div>
 
-        <div class="alert alert-danger" *ngIf="errorMessage">
-            <strong>{{errorMessage}}</strong>
-        </div>
+            <div class="alert alert-danger" *ngIf="errorMessage">
+                <strong>{{errorMessage}}</strong>
+            </div>
 
-        <div class="alert alert-success" *ngIf="loadingMessage">
-            <strong>{{loadingMessage}}</strong>
-        </div>
+            <div class="alert alert-success" *ngIf="loadingMessage">
+                <strong>{{loadingMessage}}</strong>
+            </div>
 
-        <div class="alert alert-success" *ngIf="successMessageLeague">
+            
+            
+        </form>
+    
+    </div>
+    <div *ngIf="successMessageLeague">
+        <div class="alert alert-success" >
             <strong>{{successMessageLeague}}</strong>
         </div>
+        <button  class="btn btn-primary btn-block" (click) = "goToLeagues()"> VAI ALLE TUE LEGHE </button>
+    </div>
 
-        <button  *ngIf="successMessageLeague" class="btn btn-primary btn-block" (click) = "goToLeagues()"> VAI ALLE TUE LEGHE </button>
-
-    </form>
-  </div>
-  
+</div>
+    
 
   `,
   providers: [AuthenticationService],

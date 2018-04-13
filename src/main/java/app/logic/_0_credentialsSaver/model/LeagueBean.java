@@ -6,6 +6,8 @@ public class LeagueBean {
 	private String shortName;
 	private String url;
 	private Boolean competitionsDownloaded;
+	private Boolean rulesDownloaded;
+	
 	
 	public LeagueBean() {
 	}
@@ -48,6 +50,16 @@ public class LeagueBean {
 
 	public void setCompetitionsDownloaded(Boolean competitionsDownloaded) {
 		this.competitionsDownloaded = competitionsDownloaded;
+	}
+
+
+	public Boolean getRulesDownloaded() {
+		return rulesDownloaded;
+	}
+
+
+	public void setRulesDownloaded(Boolean rulesDownloaded) {
+		this.rulesDownloaded = rulesDownloaded;
 	}
 
 	

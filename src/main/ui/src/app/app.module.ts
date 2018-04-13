@@ -6,7 +6,7 @@ import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { DepartmentDetailComponent } from './department-detail/department-detail.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UserService } from './user.service';
 import { LoginComponent } from './login/login.component';
 import { FormsModule }   from '@angular/forms';
@@ -16,6 +16,8 @@ import { LeaguesComponent } from './leagues/leagues.component';
 import { LeaguesService } from './leagues.service';
 import { AuthGuard } from './_guards/auth.guards';
 import { CompetitionsComponent } from './competitions/competitions.component';
+import { MyHttpLogInterceptor } from './http.interceptor';
+import { CompetitionRulesComponent } from './competition-rules/competition-rules.component';
 
 
 
@@ -30,7 +32,8 @@ import { CompetitionsComponent } from './competitions/competitions.component';
     RegistrationComponent,
     GazzettaCredentialsComponent,
     LeaguesComponent,
-    CompetitionsComponent
+    CompetitionsComponent,
+    CompetitionRulesComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +41,10 @@ import { CompetitionsComponent } from './competitions/competitions.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [UserService, LeaguesService, AuthGuard],
+  providers: [UserService, 
+              LeaguesService,
+              AuthGuard,
+              { provide: HTTP_INTERCEPTORS, useClass: MyHttpLogInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

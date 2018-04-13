@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.dao.LeagueDao;
+import app.dao.RulesDao;
 import app.dao.UserDao;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
@@ -30,6 +31,10 @@ public class UserExpert {
 	
 	@Autowired
 	private LeagueDao leagueDao;
+	
+	@Autowired
+	private RulesDao rulesDao;
+	
 
 	public void saveGazzettaCredentials(Credentials credentials){
 		
@@ -54,9 +59,14 @@ public class UserExpert {
 			return null;
 		Credentials c = userDao.retrieveGazzettaCredentials(userBean.getUsername());
 		Document doc = HttpUtils.getHtmlPageLogged(AppConstants.LOGIN_PAGE_URL, c.getUsername(), c.getPassword());
-		
-		Elements elements = doc.getElementsByClass("llist").get(0).getElementsByTag("a");
-		
+		Elements elements = null;
+		try {
+			elements = doc.getElementsByClass("llist").get(0).getElementsByTag("a");
+		}
+		catch(Exception e) {
+			HttpUtils.getLoggedWebDriver().close();
+			HttpUtils.setLoggedWebDriver(null);
+		}
 		
 		String leagueName;
 		String leagueShortName;
@@ -93,6 +103,8 @@ public class UserExpert {
 		leagues = leagueDao.findLeaguesByUsername(userBean.getUsername());
 		for (LeagueBean league : leagues) {
 			List<CompetitionBean> competitionsByLeague = leagueDao.findCompetitionsByLeague(league.getShortName(), userBean.getUsername());
+			Boolean existRulesForLeague = rulesDao.existRulesForLeague(league.getShortName(), userBean.getUsername());
+			league.setRulesDownloaded(existRulesForLeague);
 			if (competitionsByLeague.isEmpty()) {
 				league.setCompetitionsDownloaded(false);
 			}

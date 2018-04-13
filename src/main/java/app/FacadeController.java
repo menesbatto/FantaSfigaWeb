@@ -28,6 +28,7 @@ import app.logic._0_credentialsSaver.model.LeagueBean;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_permutationsGenerator.PermutationsGenerator;
 import app.logic._0_rulesDownloader.RulesExpertMain;
+import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.MainSeasonVotesDowloader;
 import app.logic._1_seasonPatternExtractor.SeasonPatternExtractor;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
@@ -347,12 +348,21 @@ public class FacadeController {
 	// Viene richiamato solo una volta all'inizio
 	
 	@RequestMapping(value = "/downloadRules/{leagueShortName}", method = RequestMethod.GET)
-	public ResponseEntity<String> downloadRules(@PathVariable String leagueShortName) {
+	public ResponseEntity<RulesBean> downloadRules(@PathVariable String leagueShortName) {
 		
-		rulesExpertMain.saveRulesForLeague(leagueShortName);
-		String body = "Downloading Rules COMPLETED";
+		RulesBean rules = rulesExpertMain.saveRulesForLeague(leagueShortName);
+
+		ResponseEntity<RulesBean> response;
+		String body;
+		if (rules == null) {
+			response = new ResponseEntity<RulesBean>(rules, HttpStatus.UNAUTHORIZED);
+			body = "Retrieve Competitions FAILED";
+		}
+		else {
+			response = new ResponseEntity<RulesBean>(rules, HttpStatus.OK);
+			body = "Retrieve Competitions COMPLETED";
+		}
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
 	}
 	

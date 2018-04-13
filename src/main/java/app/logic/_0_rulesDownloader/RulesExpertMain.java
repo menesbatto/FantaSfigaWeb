@@ -52,17 +52,19 @@ public class RulesExpertMain {
 	private LeagueDao leagueDao; 
 	
 	
-	public void saveRulesForLeague(String leagueShortName) {
+	public RulesBean saveRulesForLeague(String leagueShortName) {
+		if (userBean.getUsername() == null)
+			return null;
 		
 		List<CompetitionBean> competitions = leagueDao.findCompetitionsByLeague(leagueShortName, userBean.getUsername());
 		if (competitions.size() == 0) {
-			return;
+			return new RulesBean();
 		}
 
 		
 		Boolean alreadyDownloadRules = rulesDao.existRulesForLeague(leagueShortName, userBean.getUsername());
 		if (alreadyDownloadRules)
-			return;
+			return new RulesBean();;
 			
 		BonusMalus bonusMalus = analyzeRulesPageBonusMalus(leagueShortName);
 		
@@ -83,6 +85,8 @@ public class RulesExpertMain {
 		
 		calculateCompetitionsRules(leagueShortName, rules, competitions);
 		HttpUtils.closeDrivers(userBean.getUsername());
+		
+		return rules;
 
 	}
 

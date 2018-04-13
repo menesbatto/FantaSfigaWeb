@@ -10,15 +10,18 @@ import { GazzettaCredentialsComponent } from './gazzetta-credentials/gazzetta-cr
 import { LeaguesComponent } from './leagues/leagues.component';
 import { AuthGuard } from './_guards/auth.guards';
 import { CompetitionsComponent } from './competitions/competitions.component';
+import { CompetitionRulesComponent } from './competition-rules/competition-rules.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch : "full" },
   //{path: '', redirectTo: '/departments-list', pathMatch : "full" },
+  //{path: '', canActivate: [AuthGuard] },
   {path: 'login', component: LoginComponent},
   {path: 'registration', component: RegistrationComponent},
   {path: 'gazzettaCredentials', component: GazzettaCredentialsComponent},
-  {path: 'leagues', component: LeaguesComponent, canActivate: [AuthGuard] },
+  {path: 'leagues', component: LeaguesComponent},
   {path: 'competitions/:id', component: CompetitionsComponent},
+  {path: 'competitionRules', component: CompetitionRulesComponent},
   {path: 'departments-list', component: DepartmentListComponent},
   {path: 'employees', component: EmployeeListComponent},
   {path: 'departments-list/:id', component: DepartmentDetailComponent},

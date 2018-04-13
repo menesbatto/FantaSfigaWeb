@@ -26,4 +26,9 @@ export class LeaguesService {
         
   }
 
+  downloadRules(leagueShortName) {
+    return this.http.get<any>('/app/api/downloadRules/' + leagueShortName);
+        
+  }
+
 }

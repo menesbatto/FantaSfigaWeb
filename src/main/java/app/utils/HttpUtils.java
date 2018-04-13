@@ -46,19 +46,19 @@ public class HttpUtils {
 		
 		try {
 
-			if (loggedWebDriver == null)
+			if (getLoggedWebDriver() == null)
 				initLoggedWebDriver(username, password);
 			
 			Thread.sleep(3000);
 			
-			loggedWebDriver.get(url);
+			getLoggedWebDriver().get(url);
 		    
-		    String pageSource = loggedWebDriver.getPageSource();
+		    String pageSource = getLoggedWebDriver().getPageSource();
 			doc = Jsoup.parse(pageSource);
 			
 		}
 		catch (Exception e){
-			loggedWebDriver = null;
+			setLoggedWebDriver(null);
 			System.out.print("Errore durante il recupero della pagina");
 		}
 		
@@ -118,12 +118,12 @@ public class HttpUtils {
 			    loginButtonModal.click();
 			   
 			    // 3 - Setta il Web Driver nel field della classe
-			    loggedWebDriver = driver;
+			    setLoggedWebDriver(driver);
 			    break;
 			}
 			catch (Exception e) {
 				System.out.println("Errore durante la creazione del Driver loggato. Tentativo: " + i);
-				loggedWebDriver = null;
+				setLoggedWebDriver(null);
 				driver.close();
 			}
 			i++;
@@ -216,10 +216,21 @@ public class HttpUtils {
 
 
 	public static void closeDrivers(String username) {
-		loggedWebDriver.close();
-		loggedWebDriver = null;
+		getLoggedWebDriver().close();
+		setLoggedWebDriver(null);
 		
 	}
+
+
+	public static WebDriver getLoggedWebDriver() {
+		return loggedWebDriver;
+	}
+
+
+	public static void setLoggedWebDriver(WebDriver loggedWebDriver) {
+		HttpUtils.loggedWebDriver = loggedWebDriver;
+	}
+
 
 	
 //	public static void shutdown(ChampEnum champ) {

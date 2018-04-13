@@ -5,21 +5,33 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 @Component({
   selector: 'app-competitions',
   template: `
-  <h3>Le Competizioni della lega {{legueShortName}}</h3>
-  
-  <div class="table-responsive">
-    <table class="table">
-      <tr *ngFor = "let competition of competitionList" >
-        <td> {{competition.name}} </td>
-        <td> <button class="btn btn-primary"   (click)="downloadCompetitionRules(competition)"> Scarica Regole </button>  </td>
-        <td> <button class="btn btn-primary"   (click) = "goToCompetition(competition)"> Vai </button> </td>
-      <tr>
-    </table>
-  </div> 
-  
 
-  <div class="alert alert-danger" *ngIf="errorMessage">
-    <strong>{{errorMessage}}</strong>
+
+  <div class="col-md-6 col-md-offset-3" >
+    <h3>Le Competizioni della lega {{legueShortName}}</h3>
+    
+    <div class="table-responsive">
+      <table class="table">
+        <tr *ngFor = "let competition of competitionList" >
+          <td> {{competition.name}} </td>
+          <td> <button class="btn btn-primary"   (click)="goToCompetitionRules(competition)"> Aggiungi regole </button>  </td>
+          <td> <button class="btn btn-primary"   (click) = "goToCompetition(competition)"> Vai </button> </td>
+        <tr>
+      </table>
+    </div> 
+    
+
+    <div class="alert alert-success" *ngIf="successMessage">
+      <strong>{{successMessage}}</strong>
+    </div>
+
+    <div class="alert alert-success" *ngIf="loadingMessage" >
+    <strong>{{loadingMessage}}</strong>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      <strong>{{errorMessage}}</strong>
+    </div>
   </div>
 
  
@@ -32,7 +44,7 @@ export class CompetitionsComponent implements OnInit {
   constructor(
     private leagueService: LeaguesService,
     private route: ActivatedRoute,
-    private router: Router,
+    private router: Router
   ) { }
 
   competitionList = [];
@@ -43,8 +55,8 @@ export class CompetitionsComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
-      let id = params.get('id');
-      this.leagueShortName = id;
+      let url1 = params.get('id');
+      this.leagueShortName = url1;
     });
 
 
@@ -53,13 +65,14 @@ export class CompetitionsComponent implements OnInit {
 
   
   goToCompetition(competition){
-
   }
 
 
   
 
-  downloadCompetitionRules(competition){
+  goToCompetitionRules(competition){
+    this. router.navigate(['/competitionRules', {league : this.leagueShortName, competition : competition.competitionShortName}])
+
     // this.errorMessage = null;
     // this.loadingMessage = "Stiamo scaricando le competizioni delle lega selezionata...";
 
