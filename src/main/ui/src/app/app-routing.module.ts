@@ -11,6 +11,7 @@ import { LeaguesComponent } from './leagues/leagues.component';
 import { AuthGuard } from './_guards/auth.guards';
 import { CompetitionsComponent } from './competitions/competitions.component';
 import { CompetitionRulesComponent } from './competition-rules/competition-rules.component';
+import { CompetitionComponent } from './competition/competition.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch : "full" },
@@ -22,6 +23,7 @@ const routes: Routes = [
   {path: 'leagues', component: LeaguesComponent},
   {path: 'competitions/:id', component: CompetitionsComponent},
   {path: 'competitionRules', component: CompetitionRulesComponent},
+  {path: 'competition', component: CompetitionComponent},
   {path: 'departments-list', component: DepartmentListComponent},
   {path: 'employees', component: EmployeeListComponent},
   {path: 'departments-list/:id', component: DepartmentDetailComponent},

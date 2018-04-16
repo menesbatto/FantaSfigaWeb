@@ -22,6 +22,7 @@ import app.logic._4_seasonsExecutor.MainSeasonsExecutor;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 import app.logic._4_seasonsExecutor.model.RankingRowBean;
 import app.logic._5_rankingAnalizer.RankingAnalyzer;
+import app.logic.model.StasResponse;
 
 @Service
 public class Main {
@@ -46,18 +47,18 @@ public class Main {
 	private RankingAnalyzer rankingAnalyzer;
 	
 	
-	public void calculateRealStats(String leagueShortName, String competitionShortName ){
+	public StasResponse calculateRealStats(String leagueShortName, String competitionShortName ){
 		
 	
 	// Genera tutti i possibili calendari (sarebbe inutile farlo sempre ma ci si mette meno ad eseguirlo che a deserializzarli da disco)
-		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, true);
+		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, false);
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName);
-		rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
-		
+		StasResponse statsRes = rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
+		return statsRes;
 	}
 
 
-	public void calculateStatsWithCustomRules(String leagueShortName, String competitionShortName, RulesBean rules) {
+	public StasResponse calculateStatsWithCustomRules(String leagueShortName, String competitionShortName, RulesBean rules) {
 		
 		RulesBean rulesDb = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
 //		rulesDb.getModifiers().setDefenderModifierActive(false);
@@ -78,8 +79,13 @@ public class Main {
 		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, calculatedSeasonResult, rulesDb);
 		
-		if (!onlyOne)
-			rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
+		StasResponse statsRes = null;
+		
+		if (!onlyOne) {
+			statsRes = rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
+		}
+		
+		return statsRes;
 		
 	}
 }

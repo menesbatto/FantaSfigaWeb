@@ -31,7 +31,7 @@ import app.logic._0_rulesDownloader.model.SubstitutionsModeEnum;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
 import app.logic.model.CompetitionBean;
-import app.logic.model.RulesReq;
+import app.logic.model.IntegrateRulesReq;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
 import app.utils.IOUtils;
@@ -651,8 +651,12 @@ public class RulesExpertMain {
 		return map;
 	}
 
-	public void integrateRules(RulesReq req) {
+	public IntegrateRulesReq integrateRules(IntegrateRulesReq req) {
+		if (userBean.getUsername() == null)
+			return null;
+		
 		rulesDao.integrateRules(req, userBean.getUsername());
+		return req;
 		
 	}
 

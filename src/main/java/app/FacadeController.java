@@ -35,10 +35,12 @@ import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._3_seasonsGenerator.AllSeasonsGenerator;
+import app.logic._5_rankingAnalizer.RankingAnalyzer;
 import app.logic.model.CompetitionBean;
 import app.logic.model.CustomRules;
 import app.logic.model.PostponementBean;
-import app.logic.model.RulesReq;
+import app.logic.model.StasResponse;
+import app.logic.model.IntegrateRulesReq;
 
 @Controller // This means that this class is a Controller
 @RequestMapping(path = "/api") // This means URL's start with /demo (after Application path)
@@ -66,6 +68,9 @@ public class FacadeController {
 	
 	@Autowired
 	private AllSeasonsGenerator allSeasonsGenerator;
+	
+	@Autowired
+	private RankingAnalyzer rankingAnalyzer;
 	
 	
 	@RequestMapping(value = "/hello", method = RequestMethod.GET)
@@ -254,7 +259,8 @@ public class FacadeController {
 	
 	//###################################################################
 	// Scrive le league dell'utente in sessione
-	// Viene richiamato solo una volta all'inizio
+	
+	// RICHIAMATO DA USER 1 volta all'inizio
 	
 	
 	@RequestMapping(value = "/downloadLeagues", method = RequestMethod.GET)
@@ -275,7 +281,7 @@ public class FacadeController {
 	
 	//###################################################################
 		// Recupera le league del cliente messo in sessione
-		// Viene richiamato ogni volta che uno user accede alla app
+		// RICHIAMATO DA USER ogni volta che accede alla app
 	
 		
 
@@ -303,7 +309,7 @@ public class FacadeController {
 	//###################################################################
 	
 	// Per la lega inviata vengono scaricate le competizioni contenute
-	// Viene richiamato solo una volta all'inizio
+	// RICHIAMATO DA USER 1 volta all'inizio
 
 	@RequestMapping(value = "/downloadCompetitions/{leagueShortName}", method = RequestMethod.GET)
 	public ResponseEntity<List<CompetitionBean>> downloadCompetitions(@PathVariable String leagueShortName) {
@@ -322,7 +328,7 @@ public class FacadeController {
 	//###################################################################
 	
 	// Per la lega inviata vengono scaricate le competizioni contenute
-	// Viene richiamato solo una volta all'inizio
+	// RICHIAMATO DA USER ogni volta che accede ad una lega
 
 	@RequestMapping(value = "/retrieveCompetitions/{leagueShortName}", method = RequestMethod.GET)
 	public ResponseEntity<List<CompetitionBean>> retrieveCompetitions(@PathVariable String leagueShortName) {
@@ -345,7 +351,7 @@ public class FacadeController {
 	//###################################################################
 
 	// Scarica tutte le regole scaricabili per tutte le competizioni di una data league
-	// Viene richiamato solo una volta all'inizio
+	// RICHIAMATO DA USER 1 volta all'inizio
 	
 	@RequestMapping(value = "/downloadRules/{leagueShortName}", method = RequestMethod.GET)
 	public ResponseEntity<RulesBean> downloadRules(@PathVariable String leagueShortName) {
@@ -369,22 +375,30 @@ public class FacadeController {
 	//###################################################################
 	
 	// Per la specifica competizione integra le regole non scaricabili.
-	// Viene richiamato solo una volta all'inizio
+	// RICHIAMATO DA USER 1 volta all'inizio
 
 	@RequestMapping(value = "/integrateRules", method = RequestMethod.POST)
-	public ResponseEntity<String> integrateRules(@RequestBody RulesReq req) {
+	public ResponseEntity<IntegrateRulesReq> integrateRules(@RequestBody IntegrateRulesReq req) {
 		
-		rulesExpertMain.integrateRules(req);
-		String body = "Integrate Rules COMPLETED";
+		IntegrateRulesReq rules = rulesExpertMain.integrateRules(req);
+		ResponseEntity<IntegrateRulesReq> response;
+		String body;
+		if (rules == null) {
+			response = new ResponseEntity<IntegrateRulesReq>(rules, HttpStatus.UNAUTHORIZED);
+			body = "Integrate Rules FAILED";
+		}
+		else {
+			response = new ResponseEntity<IntegrateRulesReq>(rules, HttpStatus.OK);
+			body = "Integrate Rules COMPLETED";
+		}
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
 	}
 		
 	//###################################################################
 
 	// Calcola il legame tra le giornate della Serie A e le giornate della specifica competizione
-	// Viene richiamato solo una volta all'inizio
+	// RICHIAMATO DA USER 1 volta all'inizio
 	
 	@RequestMapping(value = "/calculateBinding", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateBinding(@RequestBody CompetitionBean competition) {
@@ -393,18 +407,19 @@ public class FacadeController {
 		
 		seasonPatternExtractor.calculateSerieAToCompetitionSeasonDaysBinding(leagueShortName, competitionShortName);
 
-		String body = "Calculate binding COMPLETED";
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		String body = "Calculate Binding COMPLETED";
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
+		
 		return response;
 	}
 	
 	
 	//###################################################################
 
-	// Calcola il pattern della competizione, ovvero il calendario, tutti gli scontro giornata per giornata
+	// Calcola il pattern della competizione, ovvero il calendario, tutti gli scontri giornata per giornata
 	// Utile per generare poi i 40k calendari
-	// Viene richiamato solo una volta all'inizio
+	// RICHIAMATO DA USER 1 volta all'inizio
 	
 	@RequestMapping(value = "/calculateCompetitionPattern", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateCompetitionPattern(@RequestBody CompetitionBean competition) {
@@ -414,8 +429,8 @@ public class FacadeController {
 		seasonPatternExtractor.calculateCompetitionPattern(leagueShortName, competitionShortName);
 
 		String body = "Calculate Competition Pattern COMPLETED";
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
 		return response;
 	}
 	
@@ -426,7 +441,7 @@ public class FacadeController {
 	// Scarica il calendario della competizione passata in input
 	// Salva anche i team di una certa competizione
 
-	// Viene richiamato solo all'inizio
+	// RICHIAMATO DA USER 1 volta all'inizio
 	
 	@RequestMapping(value = "/saveOnlineSeasonAndTeams", method = RequestMethod.POST)
 	public ResponseEntity<String> saveOnlineSeasonAndTeams(@RequestBody CompetitionBean competition) {
@@ -436,8 +451,8 @@ public class FacadeController {
 		seasonPatternExtractor.saveOnlineSeasonAndTeams(leagueShortName, competitionShortName);
 
 		String body = "Save Online Season And Teams COMPLETED";
-		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
+
 		return response;
 	}
 	
@@ -446,7 +461,8 @@ public class FacadeController {
 	//###################################################################
 	
 	// Calcola le permutazioni del numero di team inseriti
-	// Viene richiamato solo una volta
+	
+	// RICHIAMATO dall'admin soltanto 3 volte all'inizio e mai piu'
 	
 	@RequestMapping(value = "/createPermutations/{playersNumber}", method = RequestMethod.GET)
 	public ResponseEntity<String> createPermutations(@PathVariable Integer playersNumber) {
@@ -463,6 +479,8 @@ public class FacadeController {
 	//###################################################################
 
 	// Rimuove dalla season salvata scaricandola dal web le giornate che concidono con i recuperi (solo per le competizioni in cui si attende)
+	
+	// Richiamato DA CHI??? solo quando viene recupeata per intero una giornata. 
 	
 	
 	@RequestMapping(value = "/cleanSeasonFromWeb", method = RequestMethod.POST)
@@ -484,6 +502,7 @@ public class FacadeController {
 	// Scarica la competizione online e i risultati appena calcolati da FantaGazzetta
 	// Sono utili per fare confronti con quelli calcolati dalla applicazione FantaSfiga
 	// Scarica anche le formazioni scherate
+	
 	// Richiamata ad ogni giornata
 	
 	@RequestMapping(value = "/downloadSeasonFromWeb", method = RequestMethod.POST)
@@ -495,13 +514,16 @@ public class FacadeController {
 		seasonAnalyzer.downloadSeasonFromWeb(competitionShortName, leagueShortName);
 		String body = "Download Season From Web COMPLETED";
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
 		return response;
 	}
 
 	//###################################################################
 	
 	// Sulla base delle formazioni schierate calcola i risultati con la base dati che ha scaricato in precendenza
+	
+	// Richiamato una volta a settimana, come preludio per il calculateRealStats
+	
 	@RequestMapping(value = "/calculateSeasonResult", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateSeasonResult(@RequestBody CompetitionBean competition) {
 		
@@ -511,14 +533,14 @@ public class FacadeController {
 		seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName);
 		String body = "Calculate Season Result From Web COMPLETED";
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
 		return response;
 	}
 	
 		
 	//###################################################################
 	
-	// NON CHIAMATO DAL CLIENT
+	// NON RICHIAMATO MAI POICHE ACCORPATO NEL MAIN	
 	
 	@RequestMapping(value = "/generateAllSeason", method = RequestMethod.POST)
 	public ResponseEntity<String> generateAllSeason(@RequestBody CompetitionBean competition) {
@@ -533,15 +555,36 @@ public class FacadeController {
 		return response;
 	}
 		
-		
 	//###################################################################
 	
 	// Calcola le statistiche di una certa competizione
 	
+	// Richiamato ogni volta che si vogliono calcolare le statistiche di una competizione (1 volta a settimana)
+	
+	@RequestMapping(value = "/retrieveAllRankings", method = RequestMethod.POST)
+	public ResponseEntity<StasResponse> retrieveAllRankings(@RequestBody CompetitionBean competition) {
+		
+		String competitionShortName = competition.getCompetitionShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		
+		StasResponse stats = rankingAnalyzer.retrieveAllRankings(leagueShortName, competitionShortName);
+		String body = "Create Stats COMPLETED";
+		
+		ResponseEntity<StasResponse> response = new ResponseEntity<StasResponse>(stats, HttpStatus.OK);
+		return response;
+	}
+	
+	
+	//###################################################################
+	
+	// Calcola le statistiche di una certa competizione
+	
+	// Richiamato ogni volta che si vogliono calcolare le statistiche di una competizione (1 volta a settimana)
+	
 	@Autowired
 	private Main main;
 	@RequestMapping(value = "/calculateRealStats", method = RequestMethod.POST)
-	public ResponseEntity<String> createStats(@RequestBody CompetitionBean competition) {
+	public ResponseEntity<String> calculateRealStats(@RequestBody CompetitionBean competition) {
 		
 		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
@@ -549,7 +592,7 @@ public class FacadeController {
 		main.calculateRealStats(leagueShortName, competitionShortName);
 		String body = "Create Stats COMPLETED";
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
 		return response;
 	}
 		
@@ -557,6 +600,9 @@ public class FacadeController {
 	//###################################################################
 	
 	// Calcola le statistiche di una certa competizione con regole personalizzate
+	
+	// Richiamato ogni volta che si vogliono calcolare le statistiche PERSONALIZZATE di una competizione (SEMPRE)
+
 	
 	@RequestMapping(value = "/calculateStatsWithCustomRules", method = RequestMethod.POST)
 	public ResponseEntity<String> calculateRankingWithCustomRules(@RequestBody CustomRules req) {

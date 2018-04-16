@@ -31,4 +31,40 @@ export class LeaguesService {
         
   }
 
+
+  integrateRules(additionalRules){
+    return this.http.post<any>('/app/api/integrateRules/', additionalRules);
+  }
+
+
+  calculateBinding(competitionBean){
+    return this.http.post<any>('/app/api/calculateBinding/', competitionBean);
+  }
+
+  calculateCompetitionPattern(competitionBean){
+    return this.http.post<any>('/app/api/calculateCompetitionPattern/', competitionBean);
+  }
+
+  saveOnlineSeasonAndTeams(competitionBean){
+    return this.http.post<any>('/app/api/saveOnlineSeasonAndTeams/', competitionBean);
+  }
+
+  downloadSeasonFromWeb(competitionBean){
+    return this.http.post<any>('/app/api/downloadSeasonFromWeb/', competitionBean);
+  }
+
+  calculateSeasonResult(competitionBean){
+    return this.http.post<any>('/app/api/calculateSeasonResult/', competitionBean);
+  }
+
+  calculateRealStats(competitionBean){
+    return this.http.post<any>('/app/api/calculateRealStats/', competitionBean);
+  }
+
+  retrieveAllRankings(competitionBean){
+    return this.http.post<any>('/app/api/retrieveAllRankings/', competitionBean);
+  }
+
+  
+  
 }

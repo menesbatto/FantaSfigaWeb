@@ -15,6 +15,7 @@ import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._4_seasonsExecutor.model.Pair;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 import app.logic._4_seasonsExecutor.model.RankingRowBean;
+import app.logic.model.StasResponse;
 import app.utils.UsefulMethods;
 
 @Service
@@ -31,7 +32,27 @@ public class RankingAnalyzer {
 //	private static int playerNumber;
 	
 	
-	public void analyzeAllRankings(List<RankingBean> allRankings, String leagueShortName, String competitionShortName) {
+	public StasResponse retrieveAllRankings(String leagueShortName, String competitionShortName) {
+		System.out.println();
+		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL);
+		
+		RankingBean positionRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.POSITIONS);
+		
+		RankingBean fairRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.FAIR);
+		
+		StasResponse res = new StasResponse();
+		res.setRealRanking(realRanking);
+		res.setFairRanking(fairRanking);
+		res.setPositionRanking(positionRanking);
+		
+		res.setCompetitionShortName(competitionShortName);
+		res.setLeagueShortName(leagueShortName);
+		
+		return res;
+		
+	}
+	
+	public StasResponse analyzeAllRankings(List<RankingBean> allRankings, String leagueShortName, String competitionShortName) {
 		
 		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
 		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL);
@@ -47,6 +68,11 @@ public class RankingAnalyzer {
 		calculateAverageRankingPositions(calculateAllPosition, realRanking, playerNumber);
 		
 		calculateAvgRankingPoints(teams, allRankings, realRanking, playerNumber, leagueShortName, competitionShortName);
+		
+		StasResponse res = new StasResponse();
+		
+		return res;
+		
 	}
 
 	
@@ -94,6 +120,7 @@ public class RankingAnalyzer {
 			current.setName(pair.getName());
 			current.setPoints(pair.getValue());
 			current.setRankingPosition(i);
+			fairRanking.add(current);
 		}
 		
 		RankingBean rankingBean = new RankingBean();
@@ -219,6 +246,7 @@ public class RankingAnalyzer {
 			current.setName(pair.getName());
 			current.setPositions(pair.getValueList());
 			current.setRankingPosition(i);
+			positionsRanking.add(current);
 		}
 		
 		RankingBean rankingBean = new RankingBean();

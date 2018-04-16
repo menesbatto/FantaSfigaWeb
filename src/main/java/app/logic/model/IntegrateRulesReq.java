@@ -2,7 +2,7 @@ package app.logic.model;
 
 import java.io.Serializable;
 
-public class RulesReq implements Serializable {
+public class IntegrateRulesReq implements Serializable {
 
 	private static final long serialVersionUID = 9192412690485788831L;
 
@@ -14,7 +14,7 @@ public class RulesReq implements Serializable {
 	private Boolean autogolActive;
 	private Double autogol;
 	
-	public RulesReq() {
+	public IntegrateRulesReq() {
 	}
 
 	public String getLeagueShortName() {

@@ -35,7 +35,7 @@ import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
-import app.logic.model.RulesReq;
+import app.logic.model.IntegrateRulesReq;
 
 @Service
 @EnableCaching
@@ -99,6 +99,24 @@ public class RulesDao {
 		
 	}
 
+	
+//	public Boolean existIntegratedRulesForCompetition(String competitionShortName, String leagueShortName, String username) {
+//		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+//		
+//		Rules rules = rulesRepo.findByCompetition(competition);
+//		
+//		boolean alreadyExistRules = false;
+//		
+//		if ( rules != null)
+//			if (rules.getPostponementBehaviour() != null)	// se è = null significa che già' ho settato le regole aggiuntive
+//				alreadyExistRules = true; 
+//		
+//		
+//		return alreadyExistRules;
+//		
+//	}
+
+	
 	private Rules populateRules(RulesBean b, String leagueShortName, String username) {
 		Rules e = new Rules();
 		
@@ -534,7 +552,8 @@ public class RulesDao {
 		competitionRules.setHomeBonus(e.getHomeBonus());
 		competitionRules.setHomeBonusActive(e.getHomeBonusActive());
 		competitionRules.setBinding(e.getBinding());
-		competitionRules.setPostponementBehaviour(PostponementBehaviourEnum.valueOf(e.getPostponementBehaviour()));
+		if (e.getPostponementBehaviour() != null)
+			competitionRules.setPostponementBehaviour(PostponementBehaviourEnum.valueOf(e.getPostponementBehaviour()));
 		
 		bean.setCompetitionRules(competitionRules);
 		
@@ -620,7 +639,7 @@ public class RulesDao {
 		
 	}
 
-	public void integrateRules(RulesReq req, String username) {
+	public void integrateRules(IntegrateRulesReq req, String username) {
 		String competitionShortName = req.getCompetitionShortName();
 		String leagueShortName = req.getLeagueShortName();
 		String postponementBehaviour = req.getPostponementBehaviour();

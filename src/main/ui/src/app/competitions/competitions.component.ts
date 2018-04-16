@@ -14,8 +14,9 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
       <table class="table">
         <tr *ngFor = "let competition of competitionList" >
           <td> {{competition.name}} </td>
-          <td> <button class="btn btn-primary"   (click)="goToCompetitionRules(competition)"> Aggiungi regole </button>  </td>
-          <td> <button class="btn btn-primary"   (click) = "goToCompetition(competition)"> Vai </button> </td>
+          <td> <button class="btn btn-primary" *ngIf  = "!competition.rulesIntegrated"  (click)="goToCompetitionRules(competition)"> Aggiungi regole </button>  </td>
+          <td> <button class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && !competition.initialOnlineInfoDownloaded"  (click)="downloadAllCompetitionInfo(competition)"> Scarica tutti i dati </button>  </td>
+          <td> <button class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition) "> Vai </button> </td>
         <tr>
       </table>
     </div> 
@@ -32,6 +33,9 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
     <div class="alert alert-danger" *ngIf="errorMessage">
       <strong>{{errorMessage}}</strong>
     </div>
+
+    <button class="btn btn-primary"(click) = "backToLeagues()"> Torna alle leghe </button>
+
   </div>
 
  
@@ -65,6 +69,8 @@ export class CompetitionsComponent implements OnInit {
 
   
   goToCompetition(competition){
+    this. router.navigate(['/competition', {league : this.leagueShortName, competition : competition.competitionShortName}])
+
   }
 
 
@@ -72,25 +78,7 @@ export class CompetitionsComponent implements OnInit {
 
   goToCompetitionRules(competition){
     this. router.navigate(['/competitionRules', {league : this.leagueShortName, competition : competition.competitionShortName}])
-
-    // this.errorMessage = null;
-    // this.loadingMessage = "Stiamo scaricando le competizioni delle lega selezionata...";
-
-    // this.leagueService.downloadCompetitions(league.shortName)
-    // .subscribe(
-    //   data => {
-    //     league.isCompetitionsDownloaded = true;
-    //     this.loadingMessage = null;
-    //     this.errorMessage = null;
-    //     this.successMessage = "Le competizioni della Lega " + league.name + " sono state scaricate"
-    //   },
-    //   error => {
-    //     this.loadingMessage = null;
-    //     this.successMessage = null;
-    //     this.errorMessage = "Errore del server";
-    //   })
   }
-
   
   retrieveCompetitions(leagueShortName){
     this.leagueService.retrieveCompetitions(leagueShortName)
@@ -106,8 +94,84 @@ export class CompetitionsComponent implements OnInit {
       this.errorMessage = null;
   }
 
-  onSelect(data){
-    console.log(data + " onSelect()")
+  competitionBean = {
+    leagueShortName : null,
+    competitionShortName : null
+  }
+
+  downloadAllCompetitionInfo(competition){
+    // Calculate Binding
+    // Calculate Competition Pattern
+    // Save Online Season And Teams
+    this.loadingMessage = null;
+    this.successMessage = null;
+    this.errorMessage = null;
+
+    this.competitionBean.leagueShortName = this.leagueShortName;
+    this.competitionBean.competitionShortName = competition.competitionShortName;
+
+    this.loadingMessage = "Recupero Legame tra il calendario della competizione e il calendario della Serie A in corso...";
+    this.leagueService.calculateBinding(this.competitionBean)
+    .subscribe(
+      data => {
+        this.loadingMessage = null;
+        this.successMessage = ". . . . . . . . . . . . . . Legame tra il calendario della competizione e il calendario della Serie A eseguito";
+        this.errorMessage = null;
+        this.calculateCompetitionPattern(competition);
+      },
+      error => {
+        this.loadingMessage = null;
+        this.successMessage = null;
+        this.errorMessage = "Errore di comunicazione col server 1";
+
+      });
+  }
+
+  calculateCompetitionPattern(competition){
+    this.loadingMessage = "Calcolo del pattern del calendario della competizione in corso...";
+    this.leagueService.calculateCompetitionPattern(this.competitionBean)
+    .subscribe(
+      data => {
+        this.loadingMessage = null;
+        this.successMessage += ". . . . . . . . . . . . . . Calcolo del pattern del calendario della competizione  eseguito";
+        this.errorMessage = null;
+        this.saveOnlineSeasonAndTeams(competition);
+      },
+      error => {
+        this.loadingMessage = null;
+        this.successMessage = null;
+        this.errorMessage = "Errore di comunicazione col server 2";
+
+      });
+    }
+
+
+  saveOnlineSeasonAndTeams(competition){
+    this.loadingMessage = "Calcolo i risultati online della competizione in corso...";
+    this.leagueService.saveOnlineSeasonAndTeams(this.competitionBean)
+    .subscribe(
+      data => {
+        this.loadingMessage = null;
+        this.successMessage += ". . . . . . . . . . . . . . Calcolo i risultati online della competizione eseguito";
+        this.errorMessage = null;
+        competition.initialOnlineInfoDownloaded = true;
+      },
+      error => {
+        this.loadingMessage = null;
+        this.successMessage = null;
+        this.errorMessage = "Errore di comunicazione col server 3";
+
+   });
+    
+
+  }
+
+
+
+
+  backToLeagues(){
+    this. router.navigate(['/leagues'])
+
   }
   
 

@@ -131,6 +131,8 @@ public class LeagueDao {
 	public LeagueBean findLeagueByShortName(String leagueShortName, String username) {
 		User user = userDao.retrieveByUsername(username);
 		League ent = leagueRepo.findByUserAndShortName(user, leagueShortName);
+		if (ent == null)
+			return null;
 		LeagueBean bean = new LeagueBean();
 		bean.setName(ent.getName());
 		bean.setShortName(ent.getShortName());
@@ -435,6 +437,8 @@ public class LeagueDao {
 		
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		Season ent = seasonRepo.findByNameAndCompetition(seasonName, competition);
+		if (ent == null)
+			return null;
 		
 		SeasonBean seasonBean = new SeasonBean();
 		seasonBean.setName(ent.getName());
@@ -555,6 +559,8 @@ public class LeagueDao {
 		RankingBean bean = new RankingBean();
 		
 		Ranking ent = rankingRepo.findByCompetitionAndName(competition, name.name());
+		if (ent == null)
+			return null;
 		
 		bean.setName(ent.getName());
 		
@@ -580,7 +586,7 @@ public class LeagueDao {
 		bean.setTakenGoals(ent.getTakenGoals());
 		
 		String positionsString = ent.getPositions();
-		if (positionsString!= null && positionsString!=  "") {
+		if (positionsString!= null && !positionsString.equals("")) {
 			String[] split = positionsString.split("-");
 			List<Double> positions = new ArrayList<Double>();
 			for (int i=0; i< split.length; i++)

@@ -16,6 +16,8 @@ import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
 import app.logic._0_credentialsSaver.model.LeagueBean;
 import app.logic._0_credentialsSaver.model.UserBean;
+import app.logic._0_rulesDownloader.model.RulesBean;
+import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic.model.CompetitionBean;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
@@ -204,6 +206,34 @@ public class UserExpert {
 		
 		competitions = leagueDao.findCompetitionsByLeague(league.getShortName(), userBean.getUsername());
 		
+		for (CompetitionBean comp : competitions) {
+			RulesBean rules = rulesDao.retrieveRules(comp.getCompetitionShortName(), leagueShortName, userBean.getUsername());
+			
+			Boolean existIntegratedRulesForCompetition = rules.getCompetitionRules().getPostponementBehaviour() != null;
+			comp.setRulesIntegrated(existIntegratedRulesForCompetition);
+			
+			// calculateBinding
+			Boolean binding = rules.getCompetitionRules().getBinding() != null;
+			
+			Boolean initialOnlineInfoDownloaded = false;
+			if (binding) {
+				//calculateCompetitionPattern
+				SeasonBean findSeasonPatter = leagueDao.findSeason(leagueShortName, comp.getCompetitionShortName(),  userBean.getUsername(), "Pattern");
+				Boolean calculateCompetitionPattern = findSeasonPatter != null; 
+				
+				if (calculateCompetitionPattern) {
+					//saveOnlineSeasonAndTeams
+					SeasonBean findSeason = leagueDao.findSeason(leagueShortName, comp.getCompetitionShortName(),  userBean.getUsername(), null);
+					//Boolean saveOnlineSeasonAndTeams = findSeason != null;
+					initialOnlineInfoDownloaded= true;
+				}
+				
+			}
+			//Boolean initialOnlineInfoDownloaded = binding && calculateCompetitionPattern && saveOnlineSeasonAndTeams;
+			
+			comp.setInitialOnlineInfoDownloaded(initialOnlineInfoDownloaded);
+			
+		}
 		return competitions;
 	}
 	
