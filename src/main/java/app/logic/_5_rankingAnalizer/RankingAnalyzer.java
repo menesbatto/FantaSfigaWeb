@@ -34,16 +34,62 @@ public class RankingAnalyzer {
 	
 	public StasResponse retrieveAllRankings(String leagueShortName, String competitionShortName) {
 		System.out.println();
+		// Ranking reale
 		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL);
 		
-		RankingBean positionRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.POSITIONS);
+		RankingBean realLightRanking = createRealLightRanking(realRanking);
 		
+		
+		// Ranking con numero di evenienze per ogni posizione
+		RankingBean positionsRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.POSITIONS);
+		
+		// Ranking con Percentuale per ogni posizione
+		RankingBean positionsPercentaleRanking =  calculatePositionsPercentageRanking(positionsRanking);
+		
+		// Ranking con Posizione Media
+		RankingBean averagePositionRanking = calculateAveragePositionRankings(positionsRanking);
+
+		// Ranking con Differenza tra la Posizione Reale e la Posizione Media
+		RankingBean deltaPositionRankings = calculateDeltaPositionRankings(averagePositionRanking, realRanking);
+		
+		
+		
+
+		// Ranking giusto
 		RankingBean fairRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.FAIR);
+		
+		// Ranking con Differenza tra i punti giusti e i punti reali
+		RankingBean deltaFairRanking = calculateDeltaRankingPoints(fairRanking, realRanking);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		StasResponse res = new StasResponse();
 		res.setRealRanking(realRanking);
+		res.setRealLightRanking(realLightRanking);
+		
 		res.setFairRanking(fairRanking);
-		res.setPositionRanking(positionRanking);
+		res.setDeltaFairRanking(deltaFairRanking);
+
+		res.setPositionsRanking(positionsRanking);
+		res.setAveragePositionRanking(averagePositionRanking);
+		res.setDeltaPositionRankings(deltaPositionRankings);
+		res.setPositionsPercentaleRanking(positionsPercentaleRanking);
+		
+		
 		
 		res.setCompetitionShortName(competitionShortName);
 		res.setLeagueShortName(leagueShortName);
@@ -52,7 +98,22 @@ public class RankingAnalyzer {
 		
 	}
 	
-	public StasResponse analyzeAllRankings(List<RankingBean> allRankings, String leagueShortName, String competitionShortName) {
+	private RankingBean createRealLightRanking(RankingBean realRanking) {
+		RankingBean light = new RankingBean();
+		RankingRowBean rrLight;
+		List<RankingRowBean> rows = new ArrayList<RankingRowBean>();
+		for (RankingRowBean rr : realRanking.getRows()) {
+			rrLight = new RankingRowBean();
+			rrLight.setName(rr.getName());
+			rrLight.setPoints(rr.getPoints());
+			rows.add(rrLight);
+		}
+		light.setRows(rows);
+		light.setName(RankingType.LIGHT.name());
+		return light;
+	}
+
+	public StasResponse calculateAllStats(List<RankingBean> allRankings, String leagueShortName, String competitionShortName) {
 		
 		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
 		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL);
@@ -61,12 +122,31 @@ public class RankingAnalyzer {
 		for(RankingRowBean rr: realRanking.getRows()){
 			System.out.println(rr);
 		}
+		
 		int playerNumber = realRanking.getRows().size();
 		
-		List<Pair> calculateAllPosition = calculateAllPosition(teams, allRankings, playerNumber, leagueShortName, competitionShortName);
-		calculateAverageRankingPositions(calculateAllPosition, realRanking, playerNumber);
+		List<Pair> positionsList = calculatePositionsList(teams, allRankings);
 		
-		calculateAvgRankingPoints(teams, allRankings, realRanking, playerNumber, leagueShortName, competitionShortName);
+		// Ranking con numero di evenienze per ogni posizione
+		RankingBean positionsRanking = calculatePositionsRanking(positionsList, playerNumber);
+		leagueDao.saveRanking(positionsRanking, leagueShortName, competitionShortName, userBean.getUsername());
+
+		// Ranking con Percentuale per ogni posizione
+		RankingBean positionsPercentaleRanking =  calculatePositionsPercentageRanking(positionsRanking);
+		
+		// Ranking con Posizione Media
+		RankingBean averagePositionRanking = calculateAveragePositionRankings(positionsRanking);
+
+		// Ranking con Differenza tra la Posizione Reale e la Posizione Media
+		RankingBean deltaPositionRankings = calculateDeltaPositionRankings(averagePositionRanking, realRanking);
+		
+		
+		
+		RankingBean fairRanking = calculateAvgRankingPoints(positionsList, playerNumber);
+		leagueDao.saveRanking(fairRanking, leagueShortName, competitionShortName, userBean.getUsername());
+		
+		RankingBean deltaFairRanking = calculateDeltaRankingPoints(fairRanking, realRanking);
+		
 		
 		StasResponse res = new StasResponse();
 		
@@ -76,37 +156,11 @@ public class RankingAnalyzer {
 
 	
 	
-	private void calculateAvgRankingPoints(List<String> teams, List<RankingBean> allRankings, RankingBean realRanking, int playerNumber, String leagueShortName, String competitionShortName) {
-		
-		
-		
+	private RankingBean calculateAvgRankingPoints(List<Pair> results, int playerNumber) {
+
 		System.out.println("\n\n\nCALCOLO DEI PUNTI MEDI");
-		List<Pair> results = createListPairTeams(teams);
 
-		
-		RankingRowBean rr;
-		List<RankingRowBean> rows;
-		Double listPoints = 0.0;
-		for (RankingBean ranking : allRankings) {
-			rows = ranking.getRows();
-			for (int i = 0; i < rows.size(); i++) {
-				rr = rows.get(i);
-				for (Pair result : results) {
-					if (rr.getName().equals(result.getName())){
-						listPoints = result.getValue();
-						result.setValue(listPoints + rr.getPoints() );
-					}
-				}
-			}
-		}
 		int combinations = UsefulMethods.factorial(playerNumber);
-
-		Collections.sort(results, new Comparator<Pair>() {
-			public int compare(Pair o1, Pair o2) {
-				return o2.getValue().compareTo(o1.getValue());
-			}
-		});
-		
 		for(Pair r : results){
 			r.setValue( r.getValue()/combinations);
 		}
@@ -125,43 +179,65 @@ public class RankingAnalyzer {
 		RankingBean rankingBean = new RankingBean();
 		rankingBean.setName(RankingType.FAIR.name());
 		rankingBean.setRows(fairRanking);
-		leagueDao.saveRanking(rankingBean, leagueShortName, competitionShortName, userBean.getUsername());
+		
 		System.out.println(results);
 		
-		
+		return rankingBean;
+	}
+	
+	private RankingBean calculateDeltaRankingPoints(RankingBean fairRanking, RankingBean realRanking) {
 
-		List<Pair> pointsVariation = new ArrayList<Pair>();
-		for (int i = 0; i < results.size(); i++) {
+		System.out.println("\n\n\nCALCOLO DELLA DIFFERENZA DAI PUNTI GIUSTI IN CORSO...");
+
+		List<RankingRowBean> inputRankingRows = fairRanking.getRows();
+		RankingRowBean rr;
+		
+		List<RankingRowBean> resultRankingRows = new ArrayList<RankingRowBean>();
+		for (int i = 0; i < inputRankingRows.size(); i++) {
 			rr = realRanking.getRows().get(i);
-			for(Pair avgPoints : results){
+			for(RankingRowBean avgPoints : inputRankingRows){
 				if (avgPoints.getName().equals(rr.getName())) {
-					pointsVariation.add(new Pair(rr.getName(), rr.getPoints() - avgPoints.getValue() ));
+					RankingRowBean resultRankingRow = new RankingRowBean();
+					resultRankingRow.setName(rr.getName());
+					resultRankingRow.setPoints(rr.getPoints() - avgPoints.getPoints());
+					resultRankingRows.add(resultRankingRow);
 				}
 			}
 		}
-		Collections.sort(pointsVariation, new Comparator<Pair>() {
-			public int compare(Pair o1, Pair o2) {
-				return o1.getValue().compareTo(o2.getValue());
+		Collections.sort(resultRankingRows, new Comparator<RankingRowBean>() {
+			public int compare(RankingRowBean o1, RankingRowBean o2) {
+				return o1.getPoints().compareTo(o2.getPoints());
 			}
 		});
 		
 		System.out.println("\n\n\nCALCOLO DELLA DIFFERENZA DAI PUNTI GIUSTI (+ alto, + culo)");
-		System.out.println(pointsVariation);
+		System.out.println(resultRankingRows);
+		
+		RankingBean rankingBean = new RankingBean();
+		rankingBean.setName(RankingType.DELTA_FAIR.name());
+		rankingBean.setRows(resultRankingRows);
+		
+		
+		return rankingBean;
 		
 	}
 
-	private void calculateAverageRankingPositions(List<Pair> allPositions, RankingBean realRanking, int playerNumber) {
-		System.out.println("\n\n\nCALCOLO DELLA POSIZIONE MEDIA");
+	private RankingBean calculateAveragePositionRankings(RankingBean positionsRanking) {
+		System.out.println("\n\n\nCALCOLO DELLA POSIZIONE GIUSTA IN CORSO...");
+		
+		int playerNumber = positionsRanking.getRows().size();
+		List<RankingRowBean> inputRankingRows = positionsRanking.getRows();
+		
 		List<Double> playerPositions;
 		Double sum;
 		Double avgPosition;
 		Double checkSum = 0.0;;
-		Pair avgPositionResult;
+		RankingRowBean avgPositionResult;
 		Double pp;
-		List<Pair> avgPositions = new ArrayList<Pair>();
-		for(Pair positionInput : allPositions) {
+		List<RankingRowBean> avgPositions = new ArrayList<RankingRowBean>();
+		for(RankingRowBean positionInput : inputRankingRows) {
 			sum = 0.0;
-			playerPositions = positionInput.getValueList();
+			playerPositions = positionInput.getPositions();
 			for (int i = 0; i < playerPositions.size(); i++) {
 				pp = playerPositions.get(i);
 				sum += pp * (i+1);
@@ -173,50 +249,128 @@ public class RankingAnalyzer {
 			String name = positionInput.getName();
 //			System.out.println((name.length()>10 ? name.substring(0,10) : name) + ":\t" + avgPosition);
 			
-			avgPositionResult = new Pair(name, avgPosition);
+			avgPositionResult = new RankingRowBean();
+			avgPositionResult.setName(name);
+			avgPositionResult.setPoints(avgPosition);
 			avgPositions.add(avgPositionResult);
 			checkSum += avgPosition;
 		}
 		
-		Collections.sort(avgPositions, new Comparator<Pair>() {
-			public int compare(Pair o1, Pair o2) {
-				return o1.getValue().compareTo(o2.getValue());
+		Collections.sort(avgPositions, new Comparator<RankingRowBean>() {
+			public int compare(RankingRowBean o1, RankingRowBean o2) {
+				return o1.getPoints().compareTo(o2.getPoints());
 			}
 		});
 		
+		RankingBean ranking = new RankingBean();
+		ranking.setName(RankingType.AVG_POSITION.name());
+		ranking.setRows(avgPositions);
 		
+		System.out.println("\n\n\nCALCOLO DELLA POSIZIONE GIUSTA");
 		System.out.println(avgPositions);
 		System.out.println(checkSum/playerNumber);
 		
+		return ranking;
+	}
 		
 		
-		List<Pair> positionVariation = new ArrayList<Pair>();
+	private RankingBean calculateDeltaPositionRankings(RankingBean avgPositionRanking, RankingBean realRanking) {
+		System.out.println("\n\n\nCALCOLO DELLA DIFFERENZA DALLA POSIZIONE GIUSTA IN CORSO...");
+		List<RankingRowBean> avgPositions  = avgPositionRanking.getRows();
+		
+		List<RankingRowBean> positionVariation = new ArrayList<RankingRowBean>();
 		for (int i = 0; i < avgPositions.size(); i++) {
 			RankingRowBean rr = realRanking.getRows().get(i);
-			for(Pair avgPos :avgPositions){
+			for(RankingRowBean avgPos :avgPositions){
 				if (avgPos.getName().equals(rr.getName())) {
-					positionVariation.add(new Pair(rr.getName(), avgPos.getValue()-(i+1)));
+					
+					RankingRowBean deltaRR = new RankingRowBean();
+					deltaRR.setName(rr.getName());
+					deltaRR.setPoints(avgPos.getPoints()-(i+1));
+					positionVariation.add(deltaRR);
 				}
 			}
 		}
-		Collections.sort(positionVariation, new Comparator<Pair>() {
-			public int compare(Pair o1, Pair o2) {
-				return o1.getValue().compareTo(o2.getValue());
+		Collections.sort(positionVariation, new Comparator<RankingRowBean>() {
+			public int compare(RankingRowBean o1, RankingRowBean o2) {
+				return o1.getPoints().compareTo(o2.getPoints());
 			}
 		});
 		
+		RankingBean ranking = new RankingBean();
+		ranking.setName(RankingType.DELTA_POSITION.name());
+		ranking.setRows(positionVariation);
+		
 		System.out.println("\n\n\nCALCOLO DELLA DIFFERENZA DALLA POSIZIONE GIUSTA (+ alto, + culo)");
 		System.out.println(positionVariation);
+		
+		return ranking;
+		
 	}
 
-	private List<Pair> calculateAllPosition(List<String> teams, List<RankingBean> allRankings, int playerNumber, String leagueShortName, String competitionShortName) {
+	private RankingBean calculatePositionsRanking(List<Pair> positionsList, int playerNumber) {
 		System.out.println("\n\n\nCALCOLO DI TUTTE LE POSIZIONI");
 		
+		List<RankingRowBean> positionsRanking = new ArrayList<RankingRowBean>();
+		for (int i = 0; i < positionsList.size(); i++) {
+			Pair pair = positionsList.get(i);
+			RankingRowBean current = new RankingRowBean();
+			current.setName(pair.getName());
+			current.setPositions(pair.getValueList());
+			current.setRankingPosition(i);
+			positionsRanking.add(current);
+		}
+		
+		RankingBean rankingBean = new RankingBean();
+		rankingBean.setName(RankingType.POSITIONS.name());
+		rankingBean.setRows(positionsRanking);
+//		leagueDao.saveRanking(rankingBean, leagueShortName, competitionShortName, userBean.getUsername());
+		
+		return rankingBean;
+		
+	}
+		
+	private RankingBean calculatePositionsPercentageRanking(RankingBean positionsRanking) {
+		
+		System.out.println(positionsRanking.getRows());
+		List<RankingRowBean> positionsList = positionsRanking.getRows();
+		
+		System.out.println("\n\n\nCALCOLO DI TUTTE LE POSIZIONI IN PERCENTUALE");
+//		List<Pair> percentagePairList = new ArrayList<Pair>(); 
+		RankingRowBean currentRankingRow;
+		Integer playerNumber = positionsRanking.getRows().size();
+		int combinations = UsefulMethods.factorial(playerNumber);
+		List<Double> percentagePositions = null;
+
+		List<RankingRowBean> resultRankingRows = new ArrayList<RankingRowBean>();
+		for( RankingRowBean r : positionsList ){
+			percentagePositions = new ArrayList<Double>();
+			for (Double vl : r.getPositions()){
+				double sum = vl / combinations * 100;
+				double perc = ((int)(sum * 100))/100.0;
+				percentagePositions.add(perc);
+			}
+			currentRankingRow = new RankingRowBean();
+			currentRankingRow.setName(r.getName());
+			currentRankingRow.setPositions(percentagePositions);
+			resultRankingRows.add(currentRankingRow);
+//			r.setValueList(percentages);
+		}
+		
+		RankingBean ranking = new RankingBean();
+		ranking.setName(RankingType.PERC_POSITIONS.name());
+		ranking.setRows(resultRankingRows);
+
+		return ranking;
+	}
+
+	private List<Pair> calculatePositionsList(List<String> teams, List<RankingBean> allRankings) {
 		List<Pair> results = createListPairTeams(teams);
 		
 		RankingRowBean rr;
 		List<RankingRowBean> rows;
 		List<Double> listPositions;
+		Double listPoints = 0.0;
 		for (RankingBean ranking : allRankings) {
 			rows = ranking.getRows();
 			for (int i = 0; i < rows.size(); i++) {
@@ -226,6 +380,9 @@ public class RankingAnalyzer {
 						listPositions = result.getValueList();
 						int rankingPosition = rr.getRankingPosition()-1;
 						listPositions.set(rankingPosition, listPositions.get(rankingPosition) + 1);
+						
+						listPoints = result.getValue();
+						result.setValue(listPoints + rr.getPoints() );
 					}
 				}
 			}
@@ -233,59 +390,10 @@ public class RankingAnalyzer {
 		
 		Collections.sort(results, new Comparator<Pair>() {
 			public int compare(Pair o1, Pair o2) {
-				return o2.getValueList().get(0).compareTo(o1.getValueList().get(0));
+				//return o2.getValueList().get(0).compareTo(o1.getValueList().get(0));
+				return o2.getValue().compareTo(o1.getValue());
 			}
 		});
-		
-		
-		List<RankingRowBean> positionsRanking = new ArrayList<RankingRowBean>();
-		for (int i = 0; i < results.size(); i++) {
-			Pair pair = results.get(i);
-			RankingRowBean current = new RankingRowBean();
-			current.setName(pair.getName());
-			current.setPositions(pair.getValueList());
-			current.setRankingPosition(i);
-			positionsRanking.add(current);
-		}
-		
-//		RankingBean rankingBean = new RankingBean();
-//		rankingBean.setName(RankingType.POSITIONS.name());
-//		rankingBean.setRows(positionsRanking);
-//		leagueDao.saveRanking(rankingBean, leagueShortName, competitionShortName, userBean.getUsername());
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		System.out.println(results);
-		System.out.println("\n\n\nCALCOLO DI TUTTE LE POSIZIONI IN PERCENTUALE");
-		List<Pair> percentagePairList = new ArrayList<Pair>(); 
-		Pair percentagePair;
-		int combinations = UsefulMethods.factorial(playerNumber);
-		List<Double> percentages = null;
-		for( Pair r : results ){
-			percentages = new ArrayList<Double>();
-			for (Double vl : r.getValueList()){
-				double e = vl / combinations * 100;
-				double shorT = ((int)(e * 100))/100.0;
-				percentages.add(shorT);
-			}
-			percentagePair = new Pair(r.getName(), percentages);
-			percentagePairList.add(percentagePair);
-//			r.setValueList(percentages);
-		}
-		
-		System.out.println(percentagePairList);
-		
 		return results;
 	}
 

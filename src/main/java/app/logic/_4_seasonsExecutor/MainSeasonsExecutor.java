@@ -48,10 +48,10 @@ public class MainSeasonsExecutor {
 	}
 	
 	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName, SeasonResultBean seasonResultBeanInput,  RulesBean rulesInput ){
-//		allSeasons = allSeasonsInput;
-		
+
 		RulesBean rules;
 		SeasonResultBean seasonResultBean;
+		System.out.println();
 		if (rulesInput == null) {
 			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
 			seasonResultBean = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
@@ -65,14 +65,11 @@ public class MainSeasonsExecutor {
 		System.out.println("Inizio esecuzione di tutti i calendari");
 		
 		ArrayList<RankingBean> rankings = new ArrayList<RankingBean>();
-	
 
 		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
 
 		
 		for ( SeasonBean season : allSeasons){
-//			i++;
-			
 			
 			RankingBean ranking = seasonExecutor.execute(season, rules, seasonResultBean.getSeasonDayResults(), teams);
 		
@@ -109,7 +106,7 @@ public class MainSeasonsExecutor {
 		} 
 		
 		if(AppConstants.DEBUG_MODE)
-			checkRealSeasonCorrect(seasonResultBean.getSeasonDayResults(),  leagueShortName, competitionShortName);
+			checkRealSeasonCorrect(seasonResultBean.getSeasonDayResults(), leagueShortName, competitionShortName);
 		
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
@@ -117,12 +114,7 @@ public class MainSeasonsExecutor {
 		
 		
 		rankings.get(0).setName(RankingType.REAL.name());
-		leagueDao.saveRanking(rankings.get(0), leagueShortName, competitionShortName, userBean.getUsername());
-		System.out.println(rankings.get(0));
-//		IOUtils.write(AppConstants.REAL_RANKING_DIR + AppConstants.REAL_RANKING_FILE_NAME , rankings.get(0));
-		
-//		if (!AppConstants.FAST_MODE_ACTIVE)
-//			IOUtils.write(AppConstants.RANKING_DIR + AppConstants.RANKING_FILE_NAME , rankings);
+
 		
 		return rankings;
 	}

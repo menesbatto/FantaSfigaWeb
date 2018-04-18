@@ -55,7 +55,7 @@ public class MainSeasonVotesDowloader {
 
 		Integer lastSerieASeasonDay = retrieveLastSerieASeasonDay();
 		
-		int lastSeasonDayCalculated =utilsDao.calculateLastSerieASeasonDayCalculated();
+		int lastSeasonDayCalculated = utilsDao.calculateLastSerieASeasonDayCalculated();
 		
 		String tvStamp = getTVUrlParameter();
 		

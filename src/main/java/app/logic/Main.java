@@ -8,6 +8,7 @@ import org.apache.tomcat.util.descriptor.web.ServletDef;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.dao.LeagueDao;
 import app.dao.RankingType;
 import app.dao.RulesDao;
 import app.logic._0_credentialsSaver.model.UserBean;
@@ -36,6 +37,9 @@ public class Main {
 	@Autowired
 	private SeasonAnalyzer seasonAnalyzer;
 	
+	@Autowired
+	private LeagueDao leagueDao;
+	
 	
 	@Autowired
 	private AllSeasonsGenerator allSeasonsGenerator;
@@ -54,9 +58,17 @@ public class Main {
 		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName);
 		
+		// Salvo il ranking REALE che è sempre il primo
+		RankingBean realRanking = allRankings.get(0);
+		System.out.println(realRanking);
+		leagueDao.saveRanking(realRanking, leagueShortName, competitionShortName, userBean.getUsername());
+		
+		StasResponse stats;
 		if (!onlyOne) {
-			rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
+			stats = rankingAnalyzer.calculateAllStats(allRankings, leagueShortName, competitionShortName);
 		}
+		
+		
 		return null;
 	}
 
@@ -85,7 +97,7 @@ public class Main {
 		StasResponse statsRes = null;
 		
 		if (!onlyOne) {
-			statsRes = rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
+			statsRes = rankingAnalyzer.calculateAllStats(allRankings, leagueShortName, competitionShortName);
 		}
 		
 		return statsRes;

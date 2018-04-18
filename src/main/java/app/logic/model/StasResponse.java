@@ -8,10 +8,59 @@ public class StasResponse {
 	private String leagueShortName;
 	
 	private RankingBean realRanking;
-	private RankingBean positionRanking;
+	
+	private RankingBean realLightRanking;
+	
+	
+	
 	private RankingBean fairRanking;
 	
+	private RankingBean deltaFairRanking;
+
+	
+	
+	private RankingBean positionsRanking;
+	
+	private RankingBean positionsPercentaleRanking;
+	
+	private RankingBean averagePositionRanking;
+	
+	private RankingBean deltaPositionRankings;
+	
+	
 	public StasResponse() {
+	}
+	
+	public RankingBean getPositionsPercentaleRanking() {
+		return positionsPercentaleRanking;
+	}
+
+	public void setPositionsPercentaleRanking(RankingBean positionsPercentaleRanking) {
+		this.positionsPercentaleRanking = positionsPercentaleRanking;
+	}
+
+	public RankingBean getAveragePositionRanking() {
+		return averagePositionRanking;
+	}
+
+	public void setAveragePositionRanking(RankingBean averagePositionRanking) {
+		this.averagePositionRanking = averagePositionRanking;
+	}
+
+	public RankingBean getDeltaPositionRankings() {
+		return deltaPositionRankings;
+	}
+
+	public void setDeltaPositionRankings(RankingBean deltaPositionRankings) {
+		this.deltaPositionRankings = deltaPositionRankings;
+	}
+
+	public RankingBean getDeltaFairRanking() {
+		return deltaFairRanking;
+	}
+
+	public void setDeltaFairRanking(RankingBean deltaFairRanking) {
+		this.deltaFairRanking = deltaFairRanking;
 	}
 
 	public String getCompetitionShortName() {
@@ -38,13 +87,6 @@ public class StasResponse {
 		this.realRanking = realRanking;
 	}
 
-	public RankingBean getPositionRanking() {
-		return positionRanking;
-	}
-
-	public void setPositionRanking(RankingBean positionRanking) {
-		this.positionRanking = positionRanking;
-	}
 
 	public RankingBean getFairRanking() {
 		return fairRanking;
@@ -54,11 +96,29 @@ public class StasResponse {
 		this.fairRanking = fairRanking;
 	}
 
+	public RankingBean getPositionsRanking() {
+		return positionsRanking;
+	}
+
+	public void setPositionsRanking(RankingBean positionsRanking) {
+		this.positionsRanking = positionsRanking;
+	}
+
 	@Override
 	public String toString() {
 		return "StasResponse [competitionShortName=" + competitionShortName + ", leagueShortName=" + leagueShortName
-				+ ", realRanking=" + realRanking + ", positionRanking=" + positionRanking + ", fairRanking="
-				+ fairRanking + "]";
+				+ ", realRanking=" + realRanking + ", positionsRanking=" + positionsRanking + ", fairRanking="
+				+ fairRanking + ", positionsPercentaleRanking=" + positionsPercentaleRanking
+				+ ", averagePositionRanking=" + averagePositionRanking + ", deltaPositionRankings="
+				+ deltaPositionRankings + ", deltaFairRanking=" + deltaFairRanking + "]";
+	}
+
+	public RankingBean getRealLightRanking() {
+		return realLightRanking;
+	}
+
+	public void setRealLightRanking(RankingBean realLightRanking) {
+		this.realLightRanking = realLightRanking;
 	}
 	
 	

@@ -478,9 +478,11 @@ public class FacadeController {
 	
 	//###################################################################
 
-	// Rimuove dalla season salvata scaricandola dal web le giornate che concidono con i recuperi (solo per le competizioni in cui si attende)
+	// Rimuove dalla season salvata scaricandola dal web le giornate che concidono con i recuperi.
 	
-	// Richiamato DA CHI??? solo quando viene recupeata per intero una giornata. 
+	// utile solo per gli user delle competizioni in cui si attende
+	
+	// Richiamato DALL USER solo quando viene recupeata per intero una giornata. UNA VOLTA PER OGNI COMPETIZIONE, POICHE RIPULISCE SOLO QUELLA
 	
 	
 	@RequestMapping(value = "/cleanSeasonFromWeb", method = RequestMethod.POST)

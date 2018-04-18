@@ -146,7 +146,7 @@ public class SeasonAnalyzer {
 		if  (AppConstants.FORCE_VOTE_SOURCE != null){
 			voteSource = AppConstants.FORCE_VOTE_SOURCE;
 		}
-		
+		System.out.println();
 		Map<String, Map<String, List<PlayerVoteComplete>>> map = utilsDao.findVotesBySource(voteSource);
 		
 		int seriaAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
