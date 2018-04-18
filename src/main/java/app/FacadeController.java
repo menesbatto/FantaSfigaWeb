@@ -36,6 +36,7 @@ import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._3_seasonsGenerator.AllSeasonsGenerator;
 import app.logic._5_rankingAnalizer.RankingAnalyzer;
+import app.logic.model.CalculateStatsReq;
 import app.logic.model.CompetitionBean;
 import app.logic.model.CustomRules;
 import app.logic.model.PostponementBean;
@@ -127,10 +128,9 @@ public class FacadeController {
 
 	//###################################################################
 	
-	// Rimuove i voti di tutte le giornate da recuperare.
+	// Rimuove i voti di tutte le giornate da recuperare e li riscarica
 	// Utile per le league in cui si attendono i recuperi.
-	// Da richiamare quando viene giocato un recupero e la giornata si conclude, cosi' facendo la prossima volta che vengono scaricati i voti
-	// verranno scaricati anche quelli della partita/partite recuperate
+	// Da richiamare quando viene giocato un recupero e la giornata si conclude
 	 
 	@RequestMapping(value = "/cleanVotes", method = RequestMethod.GET)
 	public ResponseEntity<String> cleanVotes() {
@@ -584,12 +584,12 @@ public class FacadeController {
 	@Autowired
 	private Main main;
 	@RequestMapping(value = "/calculateRealStats", method = RequestMethod.POST)
-	public ResponseEntity<String> calculateRealStats(@RequestBody CompetitionBean competition) {
-		
+	public ResponseEntity<String> calculateRealStats(@RequestBody CalculateStatsReq req) {
+		CompetitionBean competition = req.getCompetition();
 		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		
-		main.calculateRealStats(leagueShortName, competitionShortName);
+		main.calculateRealStats(leagueShortName, competitionShortName, req.getLight());
 		String body = "Create Stats COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);

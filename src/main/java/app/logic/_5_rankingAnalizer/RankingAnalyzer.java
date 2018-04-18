@@ -57,7 +57,6 @@ public class RankingAnalyzer {
 		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
 		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL);
 		
-		
 		System.out.println("CLASSIFICA ATTUALE");
 		for(RankingRowBean rr: realRanking.getRows()){
 			System.out.println(rr);
@@ -249,10 +248,10 @@ public class RankingAnalyzer {
 			positionsRanking.add(current);
 		}
 		
-		RankingBean rankingBean = new RankingBean();
-		rankingBean.setName(RankingType.POSITIONS.name());
-		rankingBean.setRows(positionsRanking);
-		leagueDao.saveRanking(rankingBean, leagueShortName, competitionShortName, userBean.getUsername());
+//		RankingBean rankingBean = new RankingBean();
+//		rankingBean.setName(RankingType.POSITIONS.name());
+//		rankingBean.setRows(positionsRanking);
+//		leagueDao.saveRanking(rankingBean, leagueShortName, competitionShortName, userBean.getUsername());
 		
 		
 		

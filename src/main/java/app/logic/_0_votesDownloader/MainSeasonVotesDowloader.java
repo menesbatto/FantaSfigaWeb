@@ -38,13 +38,13 @@ public class MainSeasonVotesDowloader {
 	
 	public void cleanVotes() {
 			
-			Map<Integer, List<PostponementBean>> postponements = utilsDao.findAllPostponement();
-			
-			utilsDao.removeSeasonDaysVotes(postponements.keySet()) ;
-			
-			String tvStamp = getTVUrlParameter();
-			for (Integer serieASeasonDay : postponements.keySet())
-				saveVotesOfSeasonDay(tvStamp, serieASeasonDay);
+		Map<Integer, List<PostponementBean>> postponements = utilsDao.findAllPostponement();
+		
+		utilsDao.removeSeasonDaysVotes(postponements.keySet()) ;
+		
+		String tvStamp = getTVUrlParameter();
+		for (Integer serieASeasonDay : postponements.keySet())
+			saveVotesOfSeasonDay(tvStamp, serieASeasonDay);
 	}
 	
 	public Map<VotesSourceEnum, Map<String, Map<String, List<PlayerVoteComplete>>>> execute(){

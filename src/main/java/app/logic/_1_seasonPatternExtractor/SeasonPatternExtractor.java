@@ -101,13 +101,7 @@ public class SeasonPatternExtractor {
 
 
 	private List<SeasonDayBean> downloadSeasonDays(String leagueShortName, String competitionShortName) {
-		String url = AppConstants.CALENDAR_URL_TEMPLATE.replace("[LEAGUE_NAME]", leagueShortName).replace("[COMPETITION_ID]", competitionShortName);
-//		Credentials c = userDao.retrieveGazzettaCredentials(userBean.getUsername());
-//		Document doc = HttpUtils.getHtmlPageNoLogged(url, c.getUsername(), c.getPassword());
-		Document doc = HttpUtils.getHtmlPageNoLogged(url);
-		
-
-		Elements seasonDayElements = doc.getElementsByTag("table");
+		Elements seasonDayElements = downloadSeasonDayHtmlElements(leagueShortName, competitionShortName);
 		
 		List<SeasonDayBean> seasonDays = new ArrayList<SeasonDayBean>();
 		SeasonDayBean seasonDay;
@@ -118,6 +112,30 @@ public class SeasonPatternExtractor {
 			seasonDays.add(seasonDay);
 		}
 		return seasonDays;
+	}
+	
+	public Integer lastCalculatedWebSeasonDay(String leagueShortName, String competitionShortName) {
+		Elements seasonDayElements = downloadSeasonDayHtmlElements(leagueShortName, competitionShortName);
+	
+		for (int i = 0; i < seasonDayElements.size(); i++) {
+			Element lineUpElem = seasonDayElements.get(i);
+			Elements results = lineUpElem.getElementsByClass("result");
+			if (results.isEmpty())
+				return i;
+		}
+		return seasonDayElements.size();
+	}
+
+
+	private Elements downloadSeasonDayHtmlElements(String leagueShortName, String competitionShortName) {
+		String url = AppConstants.CALENDAR_URL_TEMPLATE.replace("[LEAGUE_NAME]", leagueShortName).replace("[COMPETITION_ID]", competitionShortName);
+//		Credentials c = userDao.retrieveGazzettaCredentials(userBean.getUsername());
+//		Document doc = HttpUtils.getHtmlPageNoLogged(url, c.getUsername(), c.getPassword());
+		Document doc = HttpUtils.getHtmlPageNoLogged(url);
+		
+
+		Elements seasonDayElements = doc.getElementsByTag("table");
+		return seasonDayElements;
 	}
 	
 	

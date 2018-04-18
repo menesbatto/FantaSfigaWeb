@@ -13,9 +13,8 @@ import { Router } from '@angular/router';
         <table class="table">
           <tr *ngFor = "let league of leagueList" >
             <td> {{league.name}} </td>
-            <td> <button  [disabled]="loading" class="btn btn-primary" [disabled]="league.competitionsDownloaded"  (click)="downloadCompetitions(league)"> Scarica </button>  </td>
-            <td> <button  [disabled]="loading" class="btn btn-primary" [disabled]="!league.competitionsDownloaded"  (click) = "goToCompetitions(league)"> Vai </button> </td>
-            <td> <button  [disabled]="loading" class="btn btn-primary" *ngIf="league.competitionsDownloaded && !league.rulesDownloaded"  (click) = "downloadCompetitionsCallback(league)"> Prova a riscaricare le regole </button> </td>
+            <td> <button  class="btn btn-primary" [disabled]="loading || league.competitionsDownloaded"  (click)="downloadCompetitions(league)"> Scarica </button>  </td>
+            <td> <button  class="btn btn-primary" [disabled]="loading || !league.competitionsDownloaded || !league.rulesDownloaded"  (click) = "goToCompetitions(league)"> Vai </button> </td>
           <tr>
         </table>
       </div> 
@@ -47,7 +46,7 @@ export class LeaguesComponent implements OnInit {
         private router: Router,
     ) { }
 
-    loading = true;
+    loading = null;
     leagueList = [];
     errorMessage = null;
     loadingMessage = null;
@@ -91,13 +90,16 @@ export class LeaguesComponent implements OnInit {
 
 
     retrieveLeagues() {
+        this.loading = true;
         this.leagueService.retrieveLeagues()
             .subscribe(
                 data => {
+                    this.loading = false;
                     this.leagueList = data
                 },
 
                 error => {
+                    this.loading = false;
                     this.errorMessage = "Errore di comunicazione col server"
                 });
 

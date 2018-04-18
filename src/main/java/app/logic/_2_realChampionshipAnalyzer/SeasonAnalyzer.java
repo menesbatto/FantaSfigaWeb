@@ -17,6 +17,8 @@ import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
+import app.logic._1_seasonPatternExtractor.SeasonPatternExtractor;
+import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUp;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
@@ -42,6 +44,9 @@ public class SeasonAnalyzer {
 	
 	@Autowired
 	private SeasonDayAnalyzer seasonDayAnalyzer;
+	
+	@Autowired
+	private SeasonPatternExtractor seasonPatternExtractor;
 	
 	
 	public SeasonResultBean calculateSeasonResult(String competitionShortName, String leagueShortName){
@@ -78,7 +83,7 @@ public class SeasonAnalyzer {
 		}
 
 			
-		int seriaAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
+		//int seriaAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
 		
 		//	1 - 4		//	5 - 9 		//	10 - 15		//	15 - 21		//	20 - 27
 		//	2 - 5		//	6 - 10		//	11 - 16 	//	16 - 22		//	21 - 28
@@ -92,15 +97,17 @@ public class SeasonAnalyzer {
 		
 		
 		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = new HashMap<Integer, SeasonDayFromWebBean>();
-		
 
+		Integer lastCalculatedWebSeasonDay = seasonPatternExtractor.lastCalculatedWebSeasonDay(leagueShortName, competitionShortName);
+
+		
 		for (Entry<Integer, Integer> entry : seasonDayBind.entrySet()) {
 			
 			Integer compSeasonDay = entry.getKey();
-			Integer serieASeasonDay = entry.getValue();
+			//Integer serieASeasonDay = entry.getValue();
 			
 			
-			if (serieASeasonDay > seriaAActualSeasonDay) {
+			if (compSeasonDay > lastCalculatedWebSeasonDay) {
 				break;
 			}
 			
@@ -181,10 +188,10 @@ public class SeasonAnalyzer {
 			Integer serieASeasonDay = entry.getKey();
 			
 			
-			if (serieASeasonDay > seriaAActualSeasonDay) {
+			if (compSeasonDay > seasonDaysFromWeb.size()) {
 				break;
 			}
-			
+
 			SeasonDayFromWebBean currentSeasonDayFromWeb = seasonDaysFromWeb.get(compSeasonDay);
 			
 			seasonDayResult = seasonDayAnalyzer.calculateSingleSeasonDay(currentSeasonDayFromWeb, serieASeasonDay , rules, map.get(serieASeasonDay+""), postponements);

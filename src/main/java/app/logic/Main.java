@@ -47,14 +47,17 @@ public class Main {
 	private RankingAnalyzer rankingAnalyzer;
 	
 	
-	public StasResponse calculateRealStats(String leagueShortName, String competitionShortName ){
+	public StasResponse calculateRealStats(String leagueShortName, String competitionShortName, Boolean onlyOne ){
 		
 	
 	// Genera tutti i possibili calendari (sarebbe inutile farlo sempre ma ci si mette meno ad eseguirlo che a deserializzarli da disco)
-		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, false);
+		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName);
-		StasResponse statsRes = rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
-		return statsRes;
+		
+		if (!onlyOne) {
+			rankingAnalyzer.analyzeAllRankings(allRankings, leagueShortName, competitionShortName);
+		}
+		return null;
 	}
 
 
