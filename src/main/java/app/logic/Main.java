@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.codec.language.bm.RuleType;
 import org.apache.tomcat.util.descriptor.web.ServletDef;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.RulesType;
 import app.dao.LeagueDao;
 import app.dao.RankingType;
 import app.dao.RulesDao;
@@ -75,7 +77,7 @@ public class Main {
 
 	public StasResponse calculateStatsWithCustomRules(String leagueShortName, String competitionShortName, RulesBean rules) {
 		
-		RulesBean rulesDb = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
+		RulesBean rulesDb = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.CUSTOM, userBean.getUsername());
 //		rulesDb.getModifiers().setDefenderModifierActive(false);
 //		rulesDb.getModifiers().setGoalkeeperModifierActive(false);
 //		rulesDb.getModifiers().setMiddlefielderModifierActive(false);

@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.RulesType;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UserDao;
@@ -50,6 +51,18 @@ public class RulesExpertMain {
 	
 	@Autowired
 	private LeagueDao leagueDao; 
+	
+	
+	public RulesBean retrieveRules(CompetitionBean competition, RulesType type) {
+		
+		if (userBean.getUsername() == null)
+			return null;
+		
+		RulesBean retrieveRules = rulesDao.retrieveRules(competition.getCompetitionShortName(), competition.getLeagueShortName(), type, userBean.getUsername());
+		
+		return retrieveRules;
+	}
+	
 	
 	
 	public RulesBean saveRulesForLeague(String leagueShortName) {
@@ -100,7 +113,7 @@ public class RulesExpertMain {
 			CompetitionRules rulesComp = analyzeRulesForCompetition(competition);
 			
 			rules.setCompetitionRules(rulesComp);
-			
+			rules.setType(RulesType.REAL);
 			rulesDao.saveRulesForCompetition(rules, competition.getCompetitionShortName(), leagueShortName, userBean.getUsername());
 			
 		}

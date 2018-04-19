@@ -31,7 +31,6 @@ export class LeaguesService {
         
   }
 
-
   integrateRules(additionalRules){
     return this.http.post<any>('/app/api/integrateRules/', additionalRules);
   }
@@ -65,6 +64,8 @@ export class LeaguesService {
     return this.http.post<any>('/app/api/retrieveAllRankings/', competitionBean);
   }
 
-  
+  retrieveRules(retrieveRulesReq){
+    return this.http.post<any>('/app/api/retrieveRules/', retrieveRulesReq);
+  }
   
 }

@@ -5,12 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.dom4j.rule.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
+import app.RulesType;
 import app.dao.entity.Competition;
 import app.dao.entity.League;
 import app.dao.entity.LineUpLight;
@@ -91,7 +95,7 @@ public class RulesDao {
 	public Boolean existRulesForCompetition(String competitionShortName, String leagueShortName, String username) {
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		
-		Rules rules = rulesRepo.findByCompetition(competition);
+		Rules rules = rulesRepo.findByCompetitionAndType(competition, RulesType.REAL.name());
 		
 		boolean alreadyExistRules = rules != null;
 		
@@ -309,6 +313,8 @@ public class RulesDao {
 		e.setYellowCardSvOfficeVoteActive(substitutions.isYellowCardSvOfficeVoteActive());
 		e.setYellowCardSvOfficeVote(substitutions.getYellowCardSvOfficeVote());
 		
+		e.setType(b.getType().name());
+		
 		return e;
 	}
 
@@ -330,16 +336,16 @@ public class RulesDao {
 	public Rules retrieveRulesEnt(String competitionShortName, String leagueShortName, String username) {
 			
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
-		Rules e = rulesRepo.findByCompetition(competition);
+		Rules e = rulesRepo.findByCompetitionAndType(competition, RulesType.REAL.name());
 		return e;
 			
 	}
 	
 //	@Cacheable("rules")
-	public RulesBean retrieveRules(String competitionShortName, String leagueShortName, String username) {
+	public RulesBean retrieveRules(String competitionShortName, String leagueShortName, RulesType type, String username) {
 		
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
-		Rules e = rulesRepo.findByCompetition(competition);
+		Rules e = rulesRepo.findByCompetitionAndType(competition, type.name());
 		
 		RulesBean bean = new RulesBean();
 		
@@ -557,7 +563,7 @@ public class RulesDao {
 		
 		bean.setCompetitionRules(competitionRules);
 		
-		
+		bean.setType(RulesType.valueOf(e.getType()));
 		
 		return bean;
 	}
@@ -607,7 +613,7 @@ public class RulesDao {
 	}
 	
 	public Map<Integer, Integer> findSerieAToCompetitionBinding(String leagueShortName, String competitionShortName, String username) {
-		RulesBean rules = retrieveRules(competitionShortName, leagueShortName, username);
+		RulesBean rules = retrieveRules(competitionShortName, leagueShortName, RulesType.REAL, username);
 		
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 		String[] pairs = rules.getCompetitionRules().getBinding().split(",");
@@ -623,7 +629,7 @@ public class RulesDao {
 	
 	
 	public Map<Integer, Integer> findCompetitionToSerieABinding(String leagueShortName, String competitionShortName, String username) {
-		RulesBean rules = retrieveRules(competitionShortName, leagueShortName, username);
+		RulesBean rules = retrieveRules(competitionShortName, leagueShortName, RulesType.REAL, username);
 		
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 		String[] pairs = rules.getCompetitionRules().getBinding().split(",");
@@ -648,7 +654,7 @@ public class RulesDao {
 		String maxOfficeVoteBehaviour = req.getMaxOfficeVoteBehaviour();
 		
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
-		Rules ent = rulesRepo.findByCompetition(competition);
+		Rules ent = rulesRepo.findByCompetitionAndType(competition, RulesType.REAL.name());
 		ent.setPostponementBehaviour(postponementBehaviour);
 		ent.setAutogol(autogol);
 		ent.setAutogolActive(autogolActive);
@@ -656,13 +662,19 @@ public class RulesDao {
 		
 		rulesRepo.save(ent);
 		
+		createCustomRules(ent);
 	}
-	
-	
 
+	@PersistenceContext
+	private EntityManager entityManager;
 	
-	
-
+	private void createCustomRules(Rules ent) {
+		//Crea copia delle regole custom
+		entityManager.detach(ent);
+		ent.setId(0);
+		ent.setType(RulesType.CUSTOM.name());
+		rulesRepo.save(ent);
+	}
 	
 	
 	

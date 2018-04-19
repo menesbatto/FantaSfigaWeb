@@ -8,12 +8,15 @@ import { LeaguesService } from '../leagues.service';
     <div class="col-lg-8 col-md-offset-2" >
         <h2>Competitione {{competitionShortName}} </h2>
         <div class="btn-toolbar">
-               <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> 1 - Scarica le formazioni inserite </button>
-               <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> 2 - Ricalcola i risultati sulla base di quanto scaricato </button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> 1 - Scarica le formazioni inserite </button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> 2 - Ricalcola i risultati sulla base di quanto scaricato </button>
 
-               <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> 3 - Calcola le classifica via FantaSfiga </button>
-               <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> 4 - Calcola le statistiche (qualche secondo)</button>
-               <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveStats()"> 5 - Recupera le statistiche appena calcolate</button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> 3 - Calcola le classifica via FantaSfiga </button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> 4 - Calcola le statistiche (qualche secondo)</button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveStats()"> 5 - Recupera le statistiche appena calcolate</button>
+
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> Calcola le statistiche con regole personalizzate</button>
+
 
         </div>
 
@@ -74,7 +77,10 @@ import { LeaguesService } from '../leagues.service';
         </div>
         
         </ng-template>
-        <div class="container">
+
+
+
+        <div class="container" *ngIf="ctxFairRanking.ranking">
             <h1 align="center"> REALE </h1>
 
             <div class="row">
@@ -132,17 +138,17 @@ import { LeaguesService } from '../leagues.service';
             </div>
 
             <div class="row">
-            <div class="col-lg-6">
-                <h3> Classifica Posizione Media </h3>
-                <ng-container *ngTemplateOutlet="rankingTable;context:ctxAveragePositionRanking">
-                </ng-container>
+                <div class="col-lg-6">
+                    <h3> Classifica Posizione Media </h3>
+                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxAveragePositionRanking">
+                    </ng-container>
+                </div>
+                <div class="col-lg-6">
+                    <h3> Classifica Differenza dalla Posizione Media </h3>
+                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxDeltaPositionRankings">
+                    </ng-container>
+                </div>
             </div>
-            <div class="col-lg-6">
-                <h3> Classifica Differenza dalla Posizione Media </h3>
-                <ng-container *ngTemplateOutlet="rankingTable;context:ctxDeltaPositionRankings">
-                </ng-container>
-            </div>
-        </div>
         
         
         </div>
@@ -352,6 +358,10 @@ export class CompetitionComponent implements OnInit {
     }
 
 
+    
+    goToCustomRules() {
+        this. router.navigate(['/customRules', {league : this.leagueShortName, competition : this.competitionShortName}])
+    }
 
     backToCompetitions() {
         this.router.navigate(['/competitions/', this.leagueShortName])

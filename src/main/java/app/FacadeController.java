@@ -40,6 +40,7 @@ import app.logic.model.CalculateStatsReq;
 import app.logic.model.CompetitionBean;
 import app.logic.model.CustomRules;
 import app.logic.model.PostponementBean;
+import app.logic.model.RetrieveRules;
 import app.logic.model.StasResponse;
 import app.logic.model.IntegrateRulesReq;
 
@@ -362,11 +363,36 @@ public class FacadeController {
 		String body;
 		if (rules == null) {
 			response = new ResponseEntity<RulesBean>(rules, HttpStatus.UNAUTHORIZED);
-			body = "Retrieve Competitions FAILED";
+			body = "Download Rules FAILED";
 		}
 		else {
 			response = new ResponseEntity<RulesBean>(rules, HttpStatus.OK);
-			body = "Retrieve Competitions COMPLETED";
+			body = "Download Rules COMPLETED";
+		}
+		
+		return response;
+	}
+	
+	//###################################################################
+
+	// Scarica tutte le regole scaricabili per tutte le competizioni di una data league
+	// RICHIAMATO DA USER 1 volta all'inizio
+	
+	@RequestMapping(value = "/retrieveRules", method = RequestMethod.POST)
+	public ResponseEntity<RulesBean> retrieveRules(@RequestBody RetrieveRules req) {
+		
+		RulesType type = RulesType.valueOf(req.getType());
+		RulesBean rules = rulesExpertMain.retrieveRules(req.getCompetition(), type);
+
+		ResponseEntity<RulesBean> response;
+		String body;
+		if (rules == null) {
+			response = new ResponseEntity<RulesBean>(rules, HttpStatus.UNAUTHORIZED);
+			body = "Retrieve Rules FAILED";
+		}
+		else {
+			response = new ResponseEntity<RulesBean>(rules, HttpStatus.OK);
+			body = "Retrieve Rules COMPLETED";
 		}
 		
 		return response;
@@ -381,6 +407,7 @@ public class FacadeController {
 	public ResponseEntity<IntegrateRulesReq> integrateRules(@RequestBody IntegrateRulesReq req) {
 		
 		IntegrateRulesReq rules = rulesExpertMain.integrateRules(req);
+		
 		ResponseEntity<IntegrateRulesReq> response;
 		String body;
 		if (rules == null) {

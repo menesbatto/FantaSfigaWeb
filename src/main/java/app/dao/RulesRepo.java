@@ -13,6 +13,6 @@ import app.dao.entity.Rules;
 public interface RulesRepo extends JpaRepository<Rules, Long> {
 
 	List<Rules> findByLeague(League league);
-	Rules findByCompetition(Competition competition);
+	Rules findByCompetitionAndType(Competition competition, String type);
 
 }

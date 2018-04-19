@@ -7,9 +7,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.commons.codec.language.bm.RuleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.RulesType;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UtilsDao;
@@ -56,7 +58,7 @@ public class SeasonAnalyzer {
 
 	public void cleanSeasonFromWeb(String competitionShortName, String leagueShortName){
 		
-		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
+		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.REAL, userBean.getUsername());
 		
 		if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) {
 			
@@ -139,7 +141,7 @@ public class SeasonAnalyzer {
 		if (isCustomRules)
 			rules = rulesInput;	
 		else
-			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
+			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.REAL, userBean.getUsername());
 			
 		
 		VotesSourceEnum voteSource = rules.getDataSource().getVotesSource();

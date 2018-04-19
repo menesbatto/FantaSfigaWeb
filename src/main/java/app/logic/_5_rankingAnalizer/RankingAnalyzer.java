@@ -62,21 +62,6 @@ public class RankingAnalyzer {
 		RankingBean deltaFairRanking = calculateDeltaRankingPoints(fairRanking, realRanking);
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		StasResponse res = new StasResponse();
 		res.setRealRanking(realRanking);
 		res.setRealLightRanking(realLightRanking);
@@ -88,7 +73,6 @@ public class RankingAnalyzer {
 		res.setAveragePositionRanking(averagePositionRanking);
 		res.setDeltaPositionRankings(deltaPositionRankings);
 		res.setPositionsPercentaleRanking(positionsPercentaleRanking);
-		
 		
 		
 		res.setCompetitionShortName(competitionShortName);

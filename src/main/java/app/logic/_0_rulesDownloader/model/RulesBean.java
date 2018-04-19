@@ -3,6 +3,8 @@ package app.logic._0_rulesDownloader.model;
 
 import java.io.Serializable;
 
+import app.RulesType;
+
 public class RulesBean  implements Serializable{
 
 	private static final long serialVersionUID = -8460127535161295547L;
@@ -13,6 +15,8 @@ public class RulesBean  implements Serializable{
 	private Substitutions substitutions;
 	private Modifiers modifiers;
 	private CompetitionRules competitionRules;
+	
+	private RulesType type;
 	
 	
 	public BonusMalus getBonusMalus() {
@@ -50,6 +54,12 @@ public class RulesBean  implements Serializable{
 	}
 	public void setCompetitionRules(CompetitionRules competitionRules) {
 		this.competitionRules = competitionRules;
+	}
+	public RulesType getType() {
+		return type;
+	}
+	public void setType(RulesType type) {
+		this.type = type;
 	}
 	
 	

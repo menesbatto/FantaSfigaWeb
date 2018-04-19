@@ -15,6 +15,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
         <tr *ngFor = "let competition of competitionList" >
           <td> {{competition.name}} </td>
           <td> <button class="btn btn-primary" *ngIf  = "!competition.rulesIntegrated"  (click)="goToCompetitionRules(competition)"> Aggiungi regole </button>  </td>
+          <!--<td> <button class="btn btn-primary" (click)="goToCompetitionRules(competition)"> Integra regole </button>  </td>-->
           <td> <button class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && !competition.initialOnlineInfoDownloaded"  (click)="downloadAllCompetitionInfo(competition)"> Scarica tutti i dati </button>  </td>
           <td> <button class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition) "> Vai </button> </td>
         <tr>

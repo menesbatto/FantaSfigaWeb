@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.RulesType;
 import app.dao.LeagueDao;
 import app.dao.RankingType;
 import app.dao.RulesDao;
@@ -53,7 +54,7 @@ public class MainSeasonsExecutor {
 		SeasonResultBean seasonResultBean;
 		System.out.println();
 		if (rulesInput == null) {
-			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, userBean.getUsername());
+			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.REAL, userBean.getUsername());
 			seasonResultBean = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
 		}
 		else {

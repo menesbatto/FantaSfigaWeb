@@ -16,24 +16,24 @@ import { LeaguesService } from '../leagues.service';
         <div class="form-group" >
             <label for="sel1"> Numero massimo di sostituzioni d'ufficio </label>
             <select class="form-control" id="sel1" name="maxOfficeVoteBehaviour" [(ngModel)]="model.maxOfficeVoteBehaviour" #maxOfficeVoteBehaviour="ngModel">
-              <option value = "TILL_11"> Fino a 11 </option>
-              <option value = "TILL_SUBSTITUTIONS"> Fino al numero di sostituzioni impostato </option>
+                <option value = "TILL_SUBSTITUTIONS"> Fino al numero di sostituzioni impostato </option>
+                <option value = "TILL_11"> Fino a 11 </option>
             </select>
         </div> 
 
         <div class="form-group" >
             <label for="sel1"> In casi di rinvio o sospensione delle partite </label>
             <select class="form-control" id="sel1" name="postponementBehaviour" [(ngModel)]="model.postponementBehaviour" #postponementBehaviour="ngModel">
-              <option value = "WAIT_MATCHES"> Attesa dei recuperi </option>
-              <option value = "ALL_6"> Tutti 6 </option>
+                <option value = "ALL_6"> Tutti 6 </option>
+                <option value = "WAIT_MATCHES"> Attesa dei recuperi </option>
             </select>
         </div> 
 
         <div class="form-group" >
             <label for="sel1"> Autogol </label>
             <select class="form-control" id="sel1" name="autogolActive" [(ngModel)]="model.autogolActive" #autogolActive="ngModel">
-              <option value = true> Si </option>
-              <option value = false> No </option>
+                <option value = false> No </option>
+                <option value = true> Si </option>
             </select>
         </div>
 
@@ -87,8 +87,8 @@ export class CompetitionRulesComponent implements OnInit {
         {
             leagueShortName: null,
             competitionShortName: null,
-            maxOfficeVoteBehaviour: "TILL_SUBSTITUTIONS",
-            postponementBehaviour: "WAIT_MATCHES",
+            maxOfficeVoteBehaviour: "TILL_11",
+            postponementBehaviour: "ALL_6",
             autogolActive: <boolean>false,
             autogol: 59
         };
@@ -100,13 +100,6 @@ export class CompetitionRulesComponent implements OnInit {
 
     ) { }
 
-    isAutogolActive() {
-        let act = this.model.autogolActive;
-        if (act == "true")
-            return true;
-        return false;
-    }
-
     ngOnInit() {
         this.route.paramMap.subscribe((params: ParamMap) => {
             let url1 = params.get('competition');
@@ -117,6 +110,13 @@ export class CompetitionRulesComponent implements OnInit {
 
         });
 
+    }
+
+    isAutogolActive() {
+        let act = this.model.autogolActive;
+        if (act == "true")
+            return true;
+        return false;
     }
 
     saveCustomRules() {

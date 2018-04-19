@@ -19,6 +19,7 @@ import { CompetitionsComponent } from './competitions/competitions.component';
 import { MyHttpLogInterceptor } from './http.interceptor';
 import { CompetitionRulesComponent } from './competition-rules/competition-rules.component';
 import { CompetitionComponent } from './competition/competition.component';
+import { CustomRulesComponent } from './custom-rules/custom-rules.component';
 
 
 
@@ -35,7 +36,8 @@ import { CompetitionComponent } from './competition/competition.component';
     LeaguesComponent,
     CompetitionsComponent,
     CompetitionRulesComponent,
-    CompetitionComponent
+    CompetitionComponent,
+    CustomRulesComponent
   ],
   imports: [
     BrowserModule,

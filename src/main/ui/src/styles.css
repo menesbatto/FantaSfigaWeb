@@ -11,3 +11,51 @@ nav a:hover {
 li.selected {
     color : red;
 }
+.info-ico{
+    width: 20px;
+    height: 16px;
+    display: inline-block;
+    background: url(http://d2lsqxmpmoo5k8.cloudfront.net/web/css/images/sorting_sprite.png) 0 -483px no-repeat;
+}
+.p {
+    background: 0 0;
+        background-color: rgba(0, 0, 0, 0);
+    background-color: #fc961e !important;
+    border: none !important;
+    text-transform: capitalize;
+}
+
+.d {
+    background: 0 0;
+        background-color: rgba(0, 0, 0, 0);
+    background-color: #007c09  !important;
+    border: none !important;
+    text-transform: capitalize;
+}
+
+.c {
+    background: 0 0;
+        background-color: rgba(0, 0, 0, 0);
+    background-color: #1d8dc0  !important;
+    border: none !important;
+    text-transform: capitalize;
+}
+
+.a {
+    background: 0 0;
+        background-color: rgba(0, 0, 0, 0);
+    background-color: #aa0a1c  !important;
+    border: none !important;
+    text-transform: capitalize;
+}
+
+.role {
+    display: inline-block !important;
+    min-width: 20px !important;
+    padding: 0 2px !important;
+    color: #FFF;
+    text-align: center;
+    line-height: 1.5em !important;
+    margin: 1px;
+
+}

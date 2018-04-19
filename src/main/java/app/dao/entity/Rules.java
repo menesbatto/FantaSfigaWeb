@@ -26,6 +26,8 @@ public class Rules {
 	
 	private String binding;
 	
+	private String type;
+	
 	// BonusMalus
 	private Double redCardP;
 	private Double yellowCardP;
@@ -1294,6 +1296,14 @@ public class Rules {
 				+ ", fairPlayModifierActive=" + fairPlayModifierActive + ", fairPlay=" + fairPlay + ", homeBonusActive="
 				+ homeBonusActive + ", homeBonus=" + homeBonus + ", postponementBehaviour=" + postponementBehaviour
 				+ "]";
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	

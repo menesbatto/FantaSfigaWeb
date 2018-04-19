@@ -2,6 +2,7 @@ package app.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -183,7 +184,45 @@ public class HttpUtils {
 //		return driver;
 //	}
 
+	
+	
+	
 	private static WebDriver initDriver() throws InterruptedException {
+		
+		
+		
+		
+		
+//		ClassLoader classLoader = HttpUtils.class.getClassLoader();
+//        URL resource = classLoader.getResource("resources/drivers/chromedriver.exe");
+//        File f = new File("Driver");
+//        if (!f.exists()) {
+//            f.mkdirs();
+//        }
+//        File chromeDriver = new File("Driver" + File.separator + "chromedriver.exe");
+//        if (!chromeDriver.exists()) {
+//            try {
+//				chromeDriver.createNewFile();
+//				org.apache.commons.io.FileUtils.copyURLToFile(resource, chromeDriver);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//        }
+//        System.setProperty("webdriver.chrome.driver", chromeDriver.getAbsolutePath());
+      
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		ChromeDriverService service = new ChromeDriverService.Builder().usingDriverExecutable(new File("C:/driver/Nuova Cartella/chromedriver.exe")).build(); 
 		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 

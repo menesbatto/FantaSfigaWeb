@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.RulesType;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UserDao;
@@ -207,7 +208,7 @@ public class UserExpert {
 		competitions = leagueDao.findCompetitionsByLeague(league.getShortName(), userBean.getUsername());
 		
 		for (CompetitionBean comp : competitions) {
-			RulesBean rules = rulesDao.retrieveRules(comp.getCompetitionShortName(), leagueShortName, userBean.getUsername());
+			RulesBean rules = rulesDao.retrieveRules(comp.getCompetitionShortName(), leagueShortName, RulesType.REAL, userBean.getUsername());
 			
 			Boolean existIntegratedRulesForCompetition = rules.getCompetitionRules().getPostponementBehaviour() != null;
 			comp.setRulesIntegrated(existIntegratedRulesForCompetition);
