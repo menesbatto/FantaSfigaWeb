@@ -52,10 +52,26 @@ li.selected {
 .role {
     display: inline-block !important;
     min-width: 20px !important;
-    padding: 0 2px !important;
     color: #FFF;
     text-align: center;
     line-height: 1.5em !important;
     margin: 1px;
 
+}
+
+.step{
+    margin-top: 50px !important;
+    margin-bottom: 50px !important;
+}
+
+.nobor {
+    border-top: none;
+padding-top: 10px;
+}
+
+.disappear{
+    background-color: lightgrey;
+    padding: 5px;
+    border-top: 1px solid darkgrey;
+    border-bottom: 1px solid darkgrey;
 }

@@ -38,7 +38,7 @@ import { LeaguesService } from '../leagues.service';
         </div>
 
 
-
+        <!--<div class="form-group" *ngIf = "model.autogolActive=='true'" [ngClass]="{ 'has-error': f.submitted && !autogol.valid }">-->
         <div class="form-group" *ngIf = "isAutogolActive()" [ngClass]="{ 'has-error': f.submitted && !autogol.valid }">
           <label for="autogol"> Soglia Autogol </label>
           <input type="number" class="form-control" name="autogol" [(ngModel)]="model.autogol" #autogol="ngModel" required />
