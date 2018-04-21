@@ -38,8 +38,9 @@ import app.logic._3_seasonsGenerator.AllSeasonsGenerator;
 import app.logic._5_rankingAnalizer.RankingAnalyzer;
 import app.logic.model.CalculateStatsReq;
 import app.logic.model.CompetitionBean;
-import app.logic.model.CustomRules;
+import app.logic.model.CustomRulesReq;
 import app.logic.model.PostponementBean;
+import app.logic.model.RetrieveAllRankingsReq;
 import app.logic.model.RetrieveRules;
 import app.logic.model.StasResponse;
 import app.logic.model.IntegrateRulesReq;
@@ -613,12 +614,13 @@ public class FacadeController {
 	// Richiamato ogni volta che si vogliono calcolare le statistiche di una competizione (1 volta a settimana)
 	
 	@RequestMapping(value = "/retrieveAllRankings", method = RequestMethod.POST)
-	public ResponseEntity<StasResponse> retrieveAllRankings(@RequestBody CompetitionBean competition) {
-		
+	public ResponseEntity<StasResponse> retrieveAllRankings(@RequestBody RetrieveAllRankingsReq req) {
+		CompetitionBean competition = req.getCompetition();
 		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
+		RulesType rulesType = req.getRulesType();
 		
-		StasResponse stats = rankingAnalyzer.retrieveAllRankings(leagueShortName, competitionShortName);
+		StasResponse stats = rankingAnalyzer.retrieveAllRankings(leagueShortName, competitionShortName, rulesType);
 		String body = "Create Stats COMPLETED";
 		
 		ResponseEntity<StasResponse> response = new ResponseEntity<StasResponse>(stats, HttpStatus.OK);
@@ -639,8 +641,10 @@ public class FacadeController {
 		CompetitionBean competition = req.getCompetition();
 		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
+		Boolean light = req.getLight();
+		RulesType rulesType = req.getRulesType();
 		
-		main.calculateRealStats(leagueShortName, competitionShortName, req.getLight());
+		main.calculateRealStats(leagueShortName, competitionShortName, light, rulesType);
 		String body = "Create Stats COMPLETED";
 		
 		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
@@ -655,18 +659,18 @@ public class FacadeController {
 	// Richiamato ogni volta che si vogliono calcolare le statistiche PERSONALIZZATE di una competizione (SEMPRE)
 
 	
-	@RequestMapping(value = "/calculateStatsWithCustomRules", method = RequestMethod.POST)
-	public ResponseEntity<String> calculateRankingWithCustomRules(@RequestBody CustomRules req) {
-		
-		String competitionShortName = req.getCompetition().getCompetitionShortName();
-		String leagueShortName = req.getCompetition().getLeagueShortName();
-		
-		main.calculateStatsWithCustomRules(leagueShortName, competitionShortName, req.getRules());
-		String body = "Calculate Ranking With Custom Rules COMPLETED";
-		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
-		return response;
-	}
+//	@RequestMapping(value = "/calculateStatsWithCustomRules", method = RequestMethod.POST)
+//	public ResponseEntity<String> calculateRankingWithCustomRules(@RequestBody CustomRulesReq req) {
+//		
+//		String competitionShortName = req.getCompetition().getCompetitionShortName();
+//		String leagueShortName = req.getCompetition().getLeagueShortName();
+//		
+//		main.calculateStatsWithCustomRules(leagueShortName, competitionShortName, req.getRules());
+//		String body = "Calculate Ranking With Custom Rules COMPLETED";
+//		
+//		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+//		return response;
+//	}
 		
 		
 		

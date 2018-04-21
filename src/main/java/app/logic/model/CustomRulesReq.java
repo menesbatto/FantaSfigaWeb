@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import app.logic._0_rulesDownloader.model.RulesBean;
 
-public class CustomRules implements Serializable {
+public class CustomRulesReq implements Serializable {
 
 	private static final long serialVersionUID = -9074938878778729334L;
 
@@ -12,7 +12,7 @@ public class CustomRules implements Serializable {
 	
 	private RulesBean rules;
 
-	public CustomRules() {
+	public CustomRulesReq() {
 	}
 	
 	public CompetitionBean getCompetition() {

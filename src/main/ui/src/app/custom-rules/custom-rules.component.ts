@@ -1240,9 +1240,9 @@ import { LeaguesService } from '../leagues.service';
 
         <button class="btn btn-primary btn-block" (click) = "saveCustomRules()"> Salva Regole Personalizzate </button>
 
-        <button class="btn btn-primary btn-block" (click) = "goToCompetition('custom')"> Vai alle statistiche con le regole personalizzate</button>
+        <button class="btn btn-primary btn-block" (click) = "goToCompetition('CUSTOM')"> Vai alle statistiche con le regole personalizzate</button>
 
-        <button class="btn btn-primary btn-block" (click) = "goToCompetition('real')"> Torna alle statistiche reali</button>
+        <button class="btn btn-primary btn-block" (click) = "goToCompetition('REAL')"> Torna alle statistiche reali</button>
 
 
 

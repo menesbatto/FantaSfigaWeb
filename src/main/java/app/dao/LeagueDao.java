@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
+import app.RulesType;
 import app.dao.entity.Competition;
 import app.dao.entity.League;
 import app.dao.entity.LineUpFromWeb;
@@ -515,7 +516,8 @@ public class LeagueDao {
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		
 		String rankingName = bean.getName();
-		Ranking ent = rankingRepo.findByCompetitionAndName(competition, rankingName);
+		String rulesType = bean.getRulesType().name();
+		Ranking ent = rankingRepo.findByCompetitionAndNameAndRulesType(competition, rankingName, rulesType);
 		
 		if (ent != null)
 			rankingRepo.delete(ent);
@@ -524,6 +526,7 @@ public class LeagueDao {
 		ent = new Ranking();
 		ent.setCompetition(competition);
 		ent.setName(rankingName);
+		ent.setRulesType(bean.getRulesType().name());
 		List<RankingRow> rows = new ArrayList<RankingRow>();
 		for (RankingRowBean rrb : bean.getRows()) {
 			String positions = "";
@@ -554,11 +557,11 @@ public class LeagueDao {
 
 
 
-	public RankingBean findRanking(String leagueShortName, String competitionShortName, String username, RankingType name) {
+	public RankingBean findRanking(String leagueShortName, String competitionShortName, String username, RankingType name, RulesType rulesType) {
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		RankingBean bean = new RankingBean();
 		
-		Ranking ent = rankingRepo.findByCompetitionAndName(competition, name.name());
+		Ranking ent = rankingRepo.findByCompetitionAndNameAndRulesType(competition, name.name(), rulesType.name());
 		if (ent == null)
 			return null;
 		

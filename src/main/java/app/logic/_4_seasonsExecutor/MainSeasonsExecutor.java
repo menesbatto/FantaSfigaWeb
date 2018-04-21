@@ -44,21 +44,14 @@ public class MainSeasonsExecutor {
 	private UserBean userBean;
 	
 	
-	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName) {
-		return execute(allSeasons, leagueShortName, competitionShortName, null, null);
-	}
-	
-	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName, SeasonResultBean seasonResultBeanInput,  RulesBean rulesInput ){
+	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName, RulesBean rules, SeasonResultBean seasonResultBeanInput ){
 
-		RulesBean rules;
 		SeasonResultBean seasonResultBean;
 		System.out.println();
-		if (rulesInput == null) {
-			rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.REAL, userBean.getUsername());
+		if (seasonResultBeanInput == null) {
 			seasonResultBean = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
 		}
 		else {
-			rules = rulesInput;	
 			seasonResultBean = seasonResultBeanInput;
 		}
 		

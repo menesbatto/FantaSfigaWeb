@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.RulesType;
 import app.dao.LeagueDao;
 import app.dao.RankingType;
 import app.dao.entity.Competition;
@@ -32,16 +33,15 @@ public class RankingAnalyzer {
 //	private static int playerNumber;
 	
 	
-	public StasResponse retrieveAllRankings(String leagueShortName, String competitionShortName) {
-		System.out.println();
+	public StasResponse retrieveAllRankings(String leagueShortName, String competitionShortName, RulesType rulesType) {
 		// Ranking reale
-		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL);
+		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL, rulesType);
 		
 		RankingBean realLightRanking = createRealLightRanking(realRanking);
 		
 		
 		// Ranking con numero di evenienze per ogni posizione
-		RankingBean positionsRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.POSITIONS);
+		RankingBean positionsRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.POSITIONS, rulesType);
 		
 		// Ranking con Percentuale per ogni posizione
 		RankingBean positionsPercentaleRanking =  calculatePositionsPercentageRanking(positionsRanking);
@@ -56,7 +56,7 @@ public class RankingAnalyzer {
 		
 
 		// Ranking giusto
-		RankingBean fairRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.FAIR);
+		RankingBean fairRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.FAIR, rulesType);
 		
 		// Ranking con Differenza tra i punti giusti e i punti reali
 		RankingBean deltaFairRanking = calculateDeltaRankingPoints(fairRanking, realRanking);
@@ -97,10 +97,10 @@ public class RankingAnalyzer {
 		return light;
 	}
 
-	public StasResponse calculateAllStats(List<RankingBean> allRankings, String leagueShortName, String competitionShortName) {
+	public StasResponse calculateAndSaveAllRankings(List<RankingBean> allRankings, String leagueShortName, String competitionShortName, RulesType rulesType) {
 		
 		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
-		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL);
+		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL, rulesType);
 		
 		System.out.println("CLASSIFICA ATTUALE");
 		for(RankingRowBean rr: realRanking.getRows()){
@@ -113,23 +113,25 @@ public class RankingAnalyzer {
 		
 		// Ranking con numero di evenienze per ogni posizione
 		RankingBean positionsRanking = calculatePositionsRanking(positionsList, playerNumber);
+		positionsRanking.setRulesType(rulesType);
 		leagueDao.saveRanking(positionsRanking, leagueShortName, competitionShortName, userBean.getUsername());
 
-		// Ranking con Percentuale per ogni posizione
-		RankingBean positionsPercentaleRanking =  calculatePositionsPercentageRanking(positionsRanking);
+//		// Ranking con Percentuale per ogni posizione
+//		RankingBean positionsPercentaleRanking =  calculatePositionsPercentageRanking(positionsRanking);
 		
-		// Ranking con Posizione Media
-		RankingBean averagePositionRanking = calculateAveragePositionRankings(positionsRanking);
+//		// Ranking con Posizione Media
+//		RankingBean averagePositionRanking = calculateAveragePositionRankings(positionsRanking);
 
-		// Ranking con Differenza tra la Posizione Reale e la Posizione Media
-		RankingBean deltaPositionRankings = calculateDeltaPositionRankings(averagePositionRanking, realRanking);
+//		// Ranking con Differenza tra la Posizione Reale e la Posizione Media
+//		RankingBean deltaPositionRankings = calculateDeltaPositionRankings(averagePositionRanking, realRanking);
 		
 		
 		
 		RankingBean fairRanking = calculateAvgRankingPoints(positionsList, playerNumber);
+		fairRanking.setRulesType(rulesType);
 		leagueDao.saveRanking(fairRanking, leagueShortName, competitionShortName, userBean.getUsername());
 		
-		RankingBean deltaFairRanking = calculateDeltaRankingPoints(fairRanking, realRanking);
+//		RankingBean deltaFairRanking = calculateDeltaRankingPoints(fairRanking, realRanking);
 		
 		
 		StasResponse res = new StasResponse();

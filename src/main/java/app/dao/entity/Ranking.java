@@ -21,6 +21,8 @@ public class Ranking {
 
 	private String name;
 	
+	private String rulesType;
+	
 	@ManyToOne
 	private Competition competition;
 	
@@ -67,6 +69,14 @@ public class Ranking {
 
 	public void setCompetition(Competition competition) {
 		this.competition = competition;
+	}
+
+	public String getRulesType() {
+		return rulesType;
+	}
+
+	public void setRulesType(String rulesType) {
+		this.rulesType = rulesType;
 	}
 	
 	

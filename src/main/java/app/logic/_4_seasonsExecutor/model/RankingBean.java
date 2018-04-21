@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.RulesType;
+
 public class RankingBean implements Serializable{
 
 	private static final long serialVersionUID = 8438190796515182835L;
@@ -11,6 +13,8 @@ public class RankingBean implements Serializable{
 	private String name;
 	
 	private List<RankingRowBean> rows;
+	
+	private RulesType rulesType;
 
 	public RankingBean() {
 		this.rows = new ArrayList<RankingRowBean>();
@@ -35,6 +39,14 @@ public class RankingBean implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public RulesType getRulesType() {
+		return rulesType;
+	}
+
+	public void setRulesType(RulesType rulesType) {
+		this.rulesType = rulesType;
 	}
 
 	

@@ -53,21 +53,32 @@ public class Main {
 	private RankingAnalyzer rankingAnalyzer;
 	
 	
-	public StasResponse calculateRealStats(String leagueShortName, String competitionShortName, Boolean onlyOne ){
+	public StasResponse calculateRealStats(String leagueShortName, String competitionShortName, Boolean onlyOne, RulesType rulesType){
 		
-	
 	// Genera tutti i possibili calendari (sarebbe inutile farlo sempre ma ci si mette meno ad eseguirlo che a deserializzarli da disco)
 		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
-		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName);
+		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, rulesType, userBean.getUsername());
+
+		SeasonResultBean calculatedSeasonResult;
+		if (rulesType.equals(RulesType.REAL)) {
+			calculatedSeasonResult = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
+		}
+		else {
+			// se sono regole personalizzate mi ricalcolo tutti risultati alla luce delle regole personalizzate
+			calculatedSeasonResult = seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName, rules);
+		}
+
+		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rules, calculatedSeasonResult);
 		
-		// Salvo il ranking REALE che è sempre il primo
+		// Salvo il realRanking ovvero quello che se calcolato con le regole REAL dovrebbe essere uguale al ranking del sito
 		RankingBean realRanking = allRankings.get(0);
+		realRanking.setRulesType(rulesType);
 		System.out.println(realRanking);
 		leagueDao.saveRanking(realRanking, leagueShortName, competitionShortName, userBean.getUsername());
 		
-		StasResponse stats;
+		// Salvo i ranking piu' pesanti da calcolare
 		if (!onlyOne) {
-			stats = rankingAnalyzer.calculateAllStats(allRankings, leagueShortName, competitionShortName);
+			rankingAnalyzer.calculateAndSaveAllRankings(allRankings, leagueShortName, competitionShortName, rulesType);
 		}
 		
 		
@@ -75,9 +86,9 @@ public class Main {
 	}
 
 
-	public StasResponse calculateStatsWithCustomRules(String leagueShortName, String competitionShortName, RulesBean rules) {
+	public StasResponse calculateStatsWithCustomRules(String leagueShortName, String competitionShortName, Boolean onlyOne, RulesBean customRules) {
 		
-		RulesBean rulesDb = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.CUSTOM, userBean.getUsername());
+		//RulesBean rulesDb = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.CUSTOM, userBean.getUsername());
 //		rulesDb.getModifiers().setDefenderModifierActive(false);
 //		rulesDb.getModifiers().setGoalkeeperModifierActive(false);
 //		rulesDb.getModifiers().setMiddlefielderModifierActive(false);
@@ -91,18 +102,21 @@ public class Main {
 		
 
 		
-		SeasonResultBean calculatedSeasonResult = seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName, rulesDb);
-		Boolean onlyOne = false;
-		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
-		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, calculatedSeasonResult, rulesDb);
-		
-		StasResponse statsRes = null;
-		
-		if (!onlyOne) {
-			statsRes = rankingAnalyzer.calculateAllStats(allRankings, leagueShortName, competitionShortName);
-		}
-		
-		return statsRes;
+//		SeasonResultBean calculatedSeasonResult = seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName, customRules);
+//		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
+//		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, calculatedSeasonResult, customRules);
+//		
+//		// Salvo il ranking REALE che è sempre il primo
+//		RankingBean realRanking = allRankings.get(0);
+//		realRanking.setRulesType(RulesType.CUSTOM);
+//		System.out.println(realRanking);
+//		leagueDao.saveRanking(realRanking, leagueShortName, competitionShortName, userBean.getUsername());
+//		
+//		if (!onlyOne) {
+//			rankingAnalyzer.calculateAndSaveAllRankings(allRankings, leagueShortName, competitionShortName, RulesType.CUSTOM);
+//		}
+//		
+		return null;
 		
 	}
 }

@@ -70,7 +70,7 @@ export class CompetitionsComponent implements OnInit {
 
   
   goToCompetition(competition){
-    this. router.navigate(['/competition', {league : this.leagueShortName, competition : competition.competitionShortName}])
+    this. router.navigate(['/competition', {league : this.leagueShortName, competition : competition.competitionShortName, type:"REAL"}])
 
   }
 

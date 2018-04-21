@@ -1,10 +1,13 @@
 package app.logic.model;
 
+import app.RulesType;
+
 public class CalculateStatsReq {
 
 	
 	private CompetitionBean competition;
 	private Boolean light;
+	private RulesType rulesType;
 	
 	
 	
@@ -33,6 +36,18 @@ public class CalculateStatsReq {
 
 	public void setLight(Boolean light) {
 		this.light = light;
+	}
+
+
+
+	public RulesType getRulesType() {
+		return rulesType;
+	}
+
+
+
+	public void setRulesType(RulesType rulesType) {
+		this.rulesType = rulesType;
 	}
 
 	

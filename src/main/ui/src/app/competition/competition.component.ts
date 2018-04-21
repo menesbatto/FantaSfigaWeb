@@ -8,12 +8,12 @@ import { LeaguesService } from '../leagues.service';
     <div class="col-lg-8 col-md-offset-2" >
         <h2>Competitione {{competitionShortName}} </h2>
         <div class="btn-toolbar">
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> 1 - Scarica le formazioni inserite </button>
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> 2 - Ricalcola i risultati sulla base di quanto scaricato </button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> 1 - Scarica le formazioni inserite (dopo ogni giornata) </button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> 2 - Ricalcola i risultati sulla base di quanto scaricato (dopo ogni giornata) </button>
 
             <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> 3 - Calcola le classifica via FantaSfiga </button>
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> 4 - Calcola le statistiche (qualche secondo)</button>
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveStats()"> 5 - Recupera le statistiche appena calcolate</button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> 4 - Calcola le statistiche (qualche secondo) </button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> 5 - Recupera le statistiche appena calcolate</button>
 
             <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> Calcola le statistiche con regole personalizzate</button>
 
@@ -191,7 +191,7 @@ export class CompetitionComponent implements OnInit {
     ctxAveragePositionRanking = { ranking: null };
     ctxDeltaPositionRankings = { ranking: null };
 
-    statsType = null;
+    rulesType = null;
 
     loading = false;
     leagueShortName = null;
@@ -226,14 +226,14 @@ export class CompetitionComponent implements OnInit {
             this.leagueShortName = url2;
 
             let url3 = params.get('type');
-            this.statsType = url3;
+            this.rulesType = url3;
 
             this.model = {
                 leagueShortName: this.leagueShortName,
                 competitionShortName: this.competitionShortName
             }
 
-            this.retrieveStats();
+            this.retrieveAllRankings();
 
 
 
@@ -243,13 +243,19 @@ export class CompetitionComponent implements OnInit {
 
 
 
-    retrieveStats() {
+    retrieveAllRankings() {
         this.loading = true;
         this.successMessage = null;
         this.errorMessage = null;
         this.loadingMessage = "Recupero Statistiche in corso...";
 
-        this.leagueService.retrieveAllRankings(this.model).subscribe(data => {
+
+        let req = {
+            competition : this.model,
+            rulesType : this.rulesType.toUpperCase()
+        } 
+
+        this.leagueService.retrieveAllRankings(req).subscribe(data => {
             this.loadingMessage = null;
             this.successMessage = "Statistiche recuperate";
             this.errorMessage = null;
@@ -339,6 +345,7 @@ export class CompetitionComponent implements OnInit {
         this.loadingMessage = "Calcolo delle statistiche in corso...";
         let req = {
             light : light,
+            rulesType : this.rulesType,
             competition : this.model
         };
         this.leagueService.calculateRealStats(req)
