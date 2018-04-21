@@ -2,6 +2,9 @@ package app.logic.model;
 
 import java.io.Serializable;
 
+import app.RulesType;
+import app.logic._0_rulesDownloader.model.RulesBean;
+
 public class IntegrateRulesReq implements Serializable {
 
 	private static final long serialVersionUID = 9192412690485788831L;
@@ -13,6 +16,8 @@ public class IntegrateRulesReq implements Serializable {
 	private String postponementBehaviour;
 	private Boolean autogolActive;
 	private Double autogol;
+	
+	private RulesBean rules;
 	
 	public IntegrateRulesReq() {
 	}
@@ -74,6 +79,14 @@ public class IntegrateRulesReq implements Serializable {
 		return "RulesReq [leagueShortName=" + leagueShortName + ", competitionShortName=" + competitionShortName
 				+ ", maxOfficeVoteBehaviour=" + maxOfficeVoteBehaviour + ", postponementBehaviour="
 				+ postponementBehaviour + ", autogolActive=" + autogolActive + ", autogol=" + autogol + "]";
+	}
+
+	public RulesBean getRules() {
+		return rules;
+	}
+
+	public void setRules(RulesBean rules) {
+		this.rules = rules;
 	}
 	
 	

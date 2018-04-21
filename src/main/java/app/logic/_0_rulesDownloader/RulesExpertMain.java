@@ -674,5 +674,21 @@ public class RulesExpertMain {
 	}
 
 
+
+	public RulesBean saveRules(RulesBean rules, String leagueShortName, String competitionShortName) {
+		if (userBean.getUsername() == null)
+			return null;
+		
+		List<CompetitionBean> competitions = leagueDao.findCompetitionsByLeague(leagueShortName, userBean.getUsername());
+		if (competitions.size() == 0) {
+			return new RulesBean();
+		}
+
+		rulesDao.updateRulesForCompetition(rules, competitionShortName, leagueShortName, userBean.getUsername());
+		
+		return rules;
+	}
+
+
 	
 }

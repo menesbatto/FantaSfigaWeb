@@ -375,8 +375,7 @@ public class FacadeController {
 	
 	//###################################################################
 
-	// Scarica tutte le regole scaricabili per tutte le competizioni di una data league
-	// RICHIAMATO DA USER 1 volta all'inizio
+	// Recupera a DB le regole della competizione, usato spesso per le customRules
 	
 	@RequestMapping(value = "/retrieveRules", method = RequestMethod.POST)
 	public ResponseEntity<RulesBean> retrieveRules(@RequestBody RetrieveRules req) {
@@ -422,8 +421,31 @@ public class FacadeController {
 		return response;
 	}
 		
+	
 	//###################################################################
 
+	// Salva a DB le regole della competizione, usato spesso per le customRules
+	
+	@RequestMapping(value = "/saveRules", method = RequestMethod.POST)
+	public ResponseEntity<RulesBean> saveCustomRules(@RequestBody IntegrateRulesReq req) {
+		
+		
+		RulesBean rules = rulesExpertMain.saveRules(req.getRules(), req.getLeagueShortName(), req.getCompetitionShortName());
+
+		ResponseEntity<RulesBean> response;
+		String body;
+		if (rules == null) {
+			response = new ResponseEntity<RulesBean>(rules, HttpStatus.UNAUTHORIZED);
+			body = "Save Rules FAILED";
+		}
+		else {
+			response = new ResponseEntity<RulesBean>(rules, HttpStatus.OK);
+			body = "Save Rules COMPLETED";
+		}
+		
+		return response;
+	}
+	
 	// Calcola il legame tra le giornate della Serie A e le giornate della specifica competizione
 	// RICHIAMATO DA USER 1 volta all'inizio
 	

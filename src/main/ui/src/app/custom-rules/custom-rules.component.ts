@@ -8,9 +8,20 @@ import { LeaguesService } from '../leagues.service';
     <div class="container col-md-8 col-md-offset-2" >
         <form name="form1" (ngSubmit)="saveCustomRules()" #f="ngForm" novalidate>
 
-            <h2> Bonus/Malus Calciatori </h2>
+            <div class="row">
+                <div class="col-lg-6 col-xs-11">
+                    <span class= "spanxxl"> Bonus/Malus Calciatori </span>
+                </div>
+                <div class="col-lg-6 col-xs-1 pull-right">
+                    <a (click) = "showBonusMalus = !showBonusMalus" class="btn btn-sm btn-info">
+                        <span *ngIf="showBonusMalus" class="glyphicon glyphicon-chevron-up"> </span>
+                        <span *ngIf="!showBonusMalus" class="glyphicon glyphicon-chevron-down"> </span>
+                    </a>
+                </div>
+            </div>
+            
 
-            <div id="form-step1" class="input-group" *ngIf="bonusMalus">
+            <div id="form-step1" class="input-group " *ngIf="bonusMalus && showBonusMalus">
                 <div class="col-lg-12 ">
                     <div class="row">
                         <div class="col-lg-4 col-xs-4"></div>
@@ -223,9 +234,21 @@ import { LeaguesService } from '../leagues.service';
             <br>
             <br>
             <br>
-            <h2> Fonte Voti e Cartellini </h2>
 
-            <div id="form-step2" class="input-group"*ngIf="dataSource">
+            <div class="row">
+                <div class="col-lg-6 col-xs-11">
+                    <span class= "spanxxl"> Fonte Voti e Cartellini </span>
+                </div>
+                <div class="col-lg-6 col-xs-1 pull-right">
+                    <a (click) = "showDataSource = !showDataSource" class="btn btn-sm btn-info">
+                        <span *ngIf="showDataSource" class="glyphicon glyphicon-chevron-up"> </span>
+                        <span *ngIf="!showDataSource" class="glyphicon glyphicon-chevron-down"> </span>
+                    </a>
+                </div>
+            </div>
+            
+
+            <div id="form-step2" class="input-group"*ngIf="dataSource  && showDataSource">
                 <div class="col-lg-12">
                     <div class="row">
                         
@@ -266,10 +289,22 @@ import { LeaguesService } from '../leagues.service';
             <br>
             <br>
             <br>
-            <h2>Sostituzioni</h2>
 
 
-            <div id="form-step3" class="input-group" *ngIf="substitutions">
+            <div class="row">
+                <div class="col-lg-6 col-xs-11">
+                    <span class= "spanxxl"> Sostituzioni </span>
+                </div>
+                <div class="col-lg-6 col-xs-1 pull-right">
+                    <a (click) = "showSubstitutions = !showSubstitutions" class="btn btn-sm btn-info">
+                        <span *ngIf="showSubstitutions" class="glyphicon glyphicon-chevron-up"> </span>
+                        <span *ngIf="!showSubstitutions" class="glyphicon glyphicon-chevron-down"> </span>
+                    </a>
+                </div>
+            </div>
+
+
+            <div id="form-step3" class="input-group" *ngIf="substitutions && showSubstitutions">
                 <div class="col-lg-12 rowb">
                     <div class="row">
                         <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="nsostituzioni">Numero sostituzioni:</label>
@@ -388,9 +423,20 @@ import { LeaguesService } from '../leagues.service';
             <br>
             <br>
             <br>
-            <h2> Punteggio </h2>
+            
+            <div class="row">
+                <div class="col-lg-6 col-xs-11">
+                    <span class= "spanxxl"> Punteggi </span>
+                </div>
+                <div class="col-lg-6 col-xs-1 pull-right">
+                    <a (click) = "showPoints = !showPoints" class="btn btn-sm btn-info">
+                        <span *ngIf="showPoints" class="glyphicon glyphicon-chevron-up"> </span>
+                        <span *ngIf="!showPoints" class="glyphicon glyphicon-chevron-down"> </span>
+                    </a>
+                </div>
+            </div>
 
-            <div id="form-step4" class="input-group" *ngIf="points">
+            <div id="form-step4" class="input-group" *ngIf="points && showPoints">
                 <div class="col-lg-12 rowb">
                     
                     <div class="row">
@@ -736,9 +782,20 @@ import { LeaguesService } from '../leagues.service';
             <br>
             <br>
             <br>
-            <h2> Modificatori </h2>
+            
+            <div class="row">
+                <div class="col-lg-6 col-xs-11">
+                    <span class= "spanxxl" >Modificatori </span>
+                </div>
+                <div class="col-lg-6 col-xs-1 pull-right">
+                    <a (click) = "showModifiers = !showModifiers" class="btn btn-sm btn-info">
+                        <span *ngIf="showModifiers" class="glyphicon glyphicon-chevron-up"> </span>
+                        <span *ngIf="!showModifiers" class="glyphicon glyphicon-chevron-down"> </span>
+                    </a>
+                </div>
+            </div>
 
-            <div id="form-step5" class="step" *ngIf="modifiers">
+            <div id="form-step5" class="step" *ngIf="modifiers && showModifiers">
 
                 <div class="col-lg-12 rowb" *ngIf="modifiers">
                     <div id="mpor" class="row">
@@ -1120,10 +1177,21 @@ import { LeaguesService } from '../leagues.service';
             <br>
             <br>
             <br>
-            <h2> Altre Regole </h2>
-            
+            <div class="row">
+                <div class="col-lg-6 col-xs-11">
+                    <span class= "spanxxl" > Altre Regole </span>
+                </div>
+                <div class="col-lg-6 col-xs-1 pull-right">
+                    <a (click) = "showCompetitionRules = !showCompetitionRules" class="btn btn-sm btn-info">
+                        <span *ngIf="showCompetitionRules" class="glyphicon glyphicon-chevron-up"> </span>
+                        <span *ngIf="!showCompetitionRules" class="glyphicon glyphicon-chevron-down"> </span>
+                    </a>
+                </div>
+            </div>
 
-            <div id="form-step6" class="input-group" *ngIf="competitionRules">
+                      
+
+            <div id="form-step6" class="input-group" *ngIf="competitionRules && showCompetitionRules">
                 <div class="col-lg-12 rowb">
 
                     <div id="sosmoduloclassic" class="row">
@@ -1162,14 +1230,19 @@ import { LeaguesService } from '../leagues.service';
                 </div>
             </div>
 
+            
+
 
         </form>
 
 
 
 
-        <button class="btn btn-primary" (click) = "prova()">prova</button>
+        <button class="btn btn-primary btn-block" (click) = "saveCustomRules()"> Salva Regole Personalizzate </button>
 
+        <button class="btn btn-primary btn-block" (click) = "goToCompetition('custom')"> Vai alle statistiche con le regole personalizzate</button>
+
+        <button class="btn btn-primary btn-block" (click) = "goToCompetition('real')"> Torna alle statistiche reali</button>
 
 
 
@@ -1188,6 +1261,7 @@ export class CustomRulesComponent implements OnInit {
         {
             leagueShortName: null,
             competitionShortName: null,
+            rules : null,
             maxOfficeVoteBehaviour: "TILL_11",
             postponementBehaviour: "ALL_6",
             autogolActive: <boolean>false,
@@ -1201,6 +1275,8 @@ export class CustomRulesComponent implements OnInit {
     substitutions: any = null;
     modifiers: any = null;
     competitionRules: any = null;
+
+
 
     competitionBean = {
         leagueShortName: null,
@@ -1279,7 +1355,22 @@ export class CustomRulesComponent implements OnInit {
         console.log(this.model);
         this.model.leagueShortName = this.leagueShortName;
         this.model.competitionShortName = this.competitionShortName;
-        this.leagueService.integrateRules(this.model)
+        
+        let req = {
+            leagueShortName : this.leagueShortName,
+            competitionShortName : this.competitionShortName,
+            rules : { 
+                bonusMalus: this.bonusMalus,
+                dataSource: this.dataSource,
+                points: this.points,
+                substitutions: this.substitutions,
+                modifiers: this.modifiers,
+                competitionRules: this.competitionRules,
+                type : "CUSTOM"
+            }    
+        }
+
+        this.leagueService.saveCustomRules(req)
             .subscribe(
                 data => {
                     this.successMessage = "Le regole sono state salvate";
@@ -1293,6 +1384,10 @@ export class CustomRulesComponent implements OnInit {
                 });
 
         this.errorMessage = null;
+    }
+
+    goToCompetition(statsType){
+        this. router.navigate(['/competition', {league : this.leagueShortName, competition : this.competitionShortName, type:statsType}])
     }
 
 }

@@ -314,6 +314,11 @@ public class RulesDao {
 		e.setYellowCardSvOfficeVote(substitutions.getYellowCardSvOfficeVote());
 		
 		e.setType(b.getType().name());
+		e.setHomeBonusActive(b.getCompetitionRules().isHomeBonusActive());
+		e.setHomeBonus(b.getCompetitionRules().getHomeBonus());
+		e.setBinding(b.getCompetitionRules().getBinding());
+		if (b.getCompetitionRules().getPostponementBehaviour()!= null)
+			e.setPostponementBehaviour(b.getCompetitionRules().getPostponementBehaviour().name());
 		
 		return e;
 	}
@@ -597,6 +602,28 @@ public class RulesDao {
 	}
 	
 	
+	public RulesBean updateRulesForCompetition(RulesBean rulesBean, String competitionShortName, String leagueShortName, String username) {
+		
+		
+		
+		Rules newRules = populateRules(rulesBean, leagueShortName, username);
+
+		League league = leagueDao.findByShortNameEnt(leagueShortName, username);
+		newRules.setLeague(league);
+		
+		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
+		newRules.setCompetition(competition);
+
+		Rules dbRules = rulesRepo.findByCompetitionAndType(competition, newRules.getType());
+		newRules.setId(dbRules.getId());
+		rulesRepo.save(newRules);
+		
+		
+		return rulesBean; 
+		
+	}
+	
+	
 	public void saveSerieAToCompetitionBinding(SeasonBean season, String leagueShortName, String competitionShortName, String username) {
 		String seasonDayBinding = "";
 		
@@ -670,6 +697,9 @@ public class RulesDao {
 	
 	private void createCustomRules(Rules ent) {
 		//Crea copia delle regole custom
+		Rules customRulesEnt = rulesRepo.findByCompetitionAndType(ent.getCompetition(), RulesType.CUSTOM.name());
+		if (customRulesEnt != null)
+			rulesRepo.delete(customRulesEnt);
 		entityManager.detach(ent);
 		ent.setId(0);
 		ent.setType(RulesType.CUSTOM.name());

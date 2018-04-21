@@ -67,5 +67,9 @@ export class LeaguesService {
   retrieveRules(retrieveRulesReq){
     return this.http.post<any>('/app/api/retrieveRules/', retrieveRulesReq);
   }
+
+  saveCustomRules(retrieveRulesReq){
+    return this.http.post<any>('/app/api/saveRules/', retrieveRulesReq);
+  }
   
 }

@@ -191,7 +191,7 @@ export class CompetitionComponent implements OnInit {
     ctxAveragePositionRanking = { ranking: null };
     ctxDeltaPositionRankings = { ranking: null };
 
-
+    statsType = null;
 
     loading = false;
     leagueShortName = null;
@@ -224,6 +224,9 @@ export class CompetitionComponent implements OnInit {
 
             let url2 = params.get('league');
             this.leagueShortName = url2;
+
+            let url3 = params.get('type');
+            this.statsType = url3;
 
             this.model = {
                 leagueShortName: this.leagueShortName,
