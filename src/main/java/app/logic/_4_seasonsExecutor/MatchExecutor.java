@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.sleepycat.je.rep.elections.RankingProposer;
-
 import app.dao.RankingType;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
@@ -17,14 +15,6 @@ import app.utils.AppConstants;
 
 @Service
 public class MatchExecutor {
-
-	public List<Pair> winOrDrewForHalfPointsList;
-	public List<Pair> loseOrDrewForHalfPointList;
-
-	public List<Pair> rankingPointsWinOrDrawForHalfPointsList;
-	public List<Pair> rankingPointsLoseOrDrawForHalfPointList;
-	
-//	static RulesBean rules = RulesExpertMain.getRules();
 
 	
 	public void execute(MatchBean m, RulesBean rules, List<String> teams) {
@@ -151,18 +141,9 @@ public class MatchExecutor {
 		homeTeamResult.setTakenGoals(awayTeamGoals);
 		awayTeamResult.setTakenGoals(homeTeamGoals);
 		
-		if(rules.getCustomRules()!= null && RankingType.LUCKY_EDGES.equals(rules.getCustomRules().getRankingType())) {
-//			if (winOrDrewForHalfPointsList == null) {
-//				winOrDrewForHalfPointsList = createPairList(teams);
-//				loseOrDrewForHalfPointList = createPairList(teams);
-//				rankingPointsWinOrDrawForHalfPointsList = createPairList(teams);
-//				rankingPointsLoseOrDrawForHalfPointList = createPairList(teams);
-//			}
-			
-			
+		if(rules.getCustomRules()!= null && ( RankingType.LUCKY_EDGES_0_5.equals(rules.getCustomRules().getRankingType())
+				|| RankingType.LUCKY_EDGES_1.equals(rules.getCustomRules().getRankingType())) ) {
 			analyzeLuckyEdges(homeTeamResult, awayTeamResult, rules);
-			
-			
 		}
 	}
 
@@ -194,8 +175,6 @@ public class MatchExecutor {
 				if (homeRankingPoints > 0.0){
 					homeTeamResult.getLuckyEdge().setLuckyEdgeGain(rankingPointsGainedFromHomeTeam);
 					awayTeamResult.getLuckyEdge().setUnluckyEdgeLose(-rankingPointsLostFromAwayTeam);
-					//updateWinForHalfPointList(homeTeamResult.getTeamName(), rankingPointsGainedFromHomeTeam);
-					//updateLoseForHalfPointList(awayTeamResult.getTeamName(), -rankingPointsLostFromAwayTeam);
 				}
 			} 
 			//SCULO PER AWAY
@@ -213,42 +192,9 @@ public class MatchExecutor {
 				if (awayRankingPoints > 0.0){
 					homeTeamResult.getLuckyEdge().setUnluckyEdgeLose( -rankingPointsLostFromHomeTeam);
 					awayTeamResult.getLuckyEdge().setLuckyEdgeGain( rankingPointsGainedFromAwayTeam);
-//					updateWinForHalfPointList(awayTeamResult.getTeamName(), rankingPointsGainedFromAwayTeam);
-//					updateLoseForHalfPointList(homeTeamResult.getTeamName(), -rankingPointsLostFromHomeTeam);
 				}
 			}
 		}
-		
-	}
-
-	private void updateLoseForHalfPointList(String teamName, Double rankingPointsGainedFromHomeTeam) {
-		for ( Pair p : loseOrDrewForHalfPointList){
-			if (p.getName().equalsIgnoreCase(teamName)){
-				p.setValue(p.getValue() + 1);
-			}
-		}
-		for ( Pair p : rankingPointsLoseOrDrawForHalfPointList){
-			if (p.getName().equalsIgnoreCase(teamName)){
-				p.setValue(p.getValue() + rankingPointsGainedFromHomeTeam);
-			}
-		}
-		
-		
-	}
-
-	private void updateWinForHalfPointList(String teamName, Double rankingPointsGainedFromAwayTeam) {
-		for ( Pair p : winOrDrewForHalfPointsList){
-			if (p.getName().equalsIgnoreCase(teamName)){
-				p.setValue(p.getValue() + 1);
-			}
-		}
-		for ( Pair p : rankingPointsWinOrDrawForHalfPointsList){
-			if (p.getName().equalsIgnoreCase(teamName)){
-				p.setValue(p.getValue() + rankingPointsGainedFromAwayTeam);
-			}
-		}
-		
-		
 		
 	}
 

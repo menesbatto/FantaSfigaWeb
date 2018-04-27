@@ -32,8 +32,10 @@ public class StasResponse {
 	
 	private RankingBean invertHomeAwayRanking;
 	
-	private RankingBean luckyEdgeRanking;
+	private RankingBean luckyEdgeRanking05;
 	
+	private RankingBean luckyEdgeRanking1;
+
 	
 	public StasResponse() {
 	}
@@ -136,12 +138,20 @@ public class StasResponse {
 		this.invertHomeAwayRanking = invertHomeAwayRanking;
 	}
 
-	public RankingBean getLuckyEdgeRanking() {
-		return luckyEdgeRanking;
+	public RankingBean getLuckyEdgeRanking05() {
+		return luckyEdgeRanking05;
 	}
 
-	public void setLuckyEdgeRanking(RankingBean luckyEdgeRanking) {
-		this.luckyEdgeRanking = luckyEdgeRanking;
+	public void setLuckyEdgeRanking05(RankingBean luckyEdgeRanking05) {
+		this.luckyEdgeRanking05 = luckyEdgeRanking05;
+	}
+
+	public RankingBean getLuckyEdgeRanking1() {
+		return luckyEdgeRanking1;
+	}
+
+	public void setLuckyEdgeRanking1(RankingBean luckyEdgeRanking1) {
+		this.luckyEdgeRanking1 = luckyEdgeRanking1;
 	}
 	
 	

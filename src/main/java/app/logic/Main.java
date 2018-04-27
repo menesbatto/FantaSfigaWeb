@@ -75,32 +75,13 @@ public class Main {
 		
 		
 		if (onlyOne && rulesType == RulesType.REAL) {
+			// LUCKY EDGE 0.5
+			calculateLuckyEdge(RankingType.LUCKY_EDGES_0_5, 0.5, leagueShortName, competitionShortName, allSeasons, rules, calculatedSeasonResult);
 			
-
-			CustomRules customRulesLuckyEdge = new CustomRules();
-			rules.setCustomRules(customRulesLuckyEdge);
-			customRulesLuckyEdge.setInvertHomeAway(true);
-			customRulesLuckyEdge.setRankingType(RankingType.LUCKY_EDGES);
-			customRulesLuckyEdge.setLuckyEdgePoints(0.5);
+			// LUCKY EDGE 1.0
+			calculateLuckyEdge(RankingType.LUCKY_EDGES_1, 1.0, leagueShortName, competitionShortName, allSeasons, rules, calculatedSeasonResult);
 			
-			List<RankingBean> luckyEdgeRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rules, calculatedSeasonResult);
-			RankingBean luckyEdgeRanking = luckyEdgeRankings.get(0);
-			luckyEdgeRanking.setRulesType(RulesType.REAL);
-			luckyEdgeRanking.setName(RankingType.LUCKY_EDGES.name());
-			leagueDao.saveRanking(luckyEdgeRanking, leagueShortName, competitionShortName, userBean.getUsername());
-			
-			// trova come salvare i punteggi di 0,5 o 1
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			// INVERT HOME AWAY
 			CustomRules customRules = new CustomRules();
 			rules.setCustomRules(customRules);
 			customRules.setInvertHomeAway(true);
@@ -132,6 +113,22 @@ public class Main {
 		
 		
 		return null;
+	}
+
+
+	private void calculateLuckyEdge(RankingType rankingType, Double delta, String leagueShortName, String competitionShortName, List<SeasonBean> allSeasons,
+			RulesBean rules, SeasonResultBean calculatedSeasonResult) {
+		CustomRules customRulesLuckyEdge = new CustomRules();
+		rules.setCustomRules(customRulesLuckyEdge);
+		customRulesLuckyEdge.setInvertHomeAway(true);
+		customRulesLuckyEdge.setRankingType(rankingType);
+		customRulesLuckyEdge.setLuckyEdgePoints(delta);
+		
+		List<RankingBean> luckyEdgeRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rules, calculatedSeasonResult);
+		RankingBean luckyEdgeRanking = luckyEdgeRankings.get(0);
+		luckyEdgeRanking.setRulesType(RulesType.REAL);
+		luckyEdgeRanking.setName(rankingType.name());
+		leagueDao.saveRanking(luckyEdgeRanking, leagueShortName, competitionShortName, userBean.getUsername());
 	}
 
 

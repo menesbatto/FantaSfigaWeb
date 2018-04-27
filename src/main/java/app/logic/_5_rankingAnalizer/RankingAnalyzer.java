@@ -65,10 +65,13 @@ public class RankingAnalyzer {
 		// Ranking con il fattore casa invertito
 		RankingBean invertHomeAwayRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.INVERT_HOME_AWAY, rulesType);
 				
-		// Ranking con le info sui punti sculati
-		RankingBean luckyEdgeRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.LUCKY_EDGES, rulesType);
+		// Ranking con le info sui punti sculati di 0.5
+		RankingBean luckyEdgeRanking05 = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.LUCKY_EDGES_0_5, rulesType);
 						
-		
+		// Ranking con le info sui punti sculati di 1
+		RankingBean luckyEdgeRanking1 = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.LUCKY_EDGES_1, rulesType);
+								
+				
 		
 		StasResponse res = new StasResponse();
 		res.setRealRanking(realRanking);
@@ -83,7 +86,8 @@ public class RankingAnalyzer {
 		res.setPositionsPercentaleRanking(positionsPercentaleRanking);
 		
 		res.setInvertHomeAwayRanking(invertHomeAwayRanking);
-		res.setLuckyEdgeRanking(luckyEdgeRanking);
+		res.setLuckyEdgeRanking1(luckyEdgeRanking1);
+		res.setLuckyEdgeRanking05(luckyEdgeRanking05);
 		
 		
 		res.setCompetitionShortName(competitionShortName);

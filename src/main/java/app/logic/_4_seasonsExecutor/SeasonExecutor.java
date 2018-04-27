@@ -88,7 +88,7 @@ public class SeasonExecutor {
 	
 
 
-	private static void updateFormulaUnoRanking(SeasonDayResultBean seasonDayResult, RulesBean rules, RankingBean formulaUnoRanking) {
+	private void updateFormulaUnoRanking(SeasonDayResultBean seasonDayResult, RulesBean rules, RankingBean formulaUnoRanking) {
 		List<Pair> seasonDayVoteSumRanking = new ArrayList<Pair>();
 		Pair p;
 		for (LineUpLightBean lul : seasonDayResult.getLinesUpLight()){

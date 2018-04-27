@@ -175,7 +175,7 @@ import { LeaguesService } from '../leagues.service';
             <div class="row">
                 <div class="col-lg-12">
                     <h3> Classifica punti fatti o persi per mezzo punto </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxLuckyEdgeRanking">
+                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxLuckyEdgeRanking05">
                     </ng-container>
                 </div>
             </div>
@@ -184,6 +184,19 @@ import { LeaguesService } from '../leagues.service';
             <BR>
             <BR>
             <BR>
+
+            <div class="row">
+            <div class="col-lg-12">
+                <h3> Classifica punti fatti o persi per un punto </h3>
+                <ng-container *ngTemplateOutlet="rankingTable;context:ctxLuckyEdgeRanking1">
+                </ng-container>
+            </div>
+        </div>
+    
+        <BR>
+        <BR>
+        <BR>
+        <BR>
         
         </div>
      
@@ -226,7 +239,8 @@ export class CompetitionComponent implements OnInit {
     ctxDeltaPositionRankings = { ranking: null };
 
     ctxInvertHomeAwayRanking = { ranking: null };
-    ctxLuckyEdgeRanking = { ranking: null };
+    ctxLuckyEdgeRanking05 = { ranking: null };
+    ctxLuckyEdgeRanking1 = { ranking: null };
 
     rulesType = null;
 
@@ -314,7 +328,8 @@ export class CompetitionComponent implements OnInit {
             this.ctxPositionsPercentaleRanking.ranking = this.stats.positionsPercentaleRanking;
 
             this.ctxInvertHomeAwayRanking.ranking =  this.stats.invertHomeAwayRanking;
-            this.ctxLuckyEdgeRanking.ranking =  this.stats.luckyEdgeRanking;
+            this.ctxLuckyEdgeRanking05.ranking =  this.stats.luckyEdgeRanking05;
+            this.ctxLuckyEdgeRanking1.ranking =  this.stats.luckyEdgeRanking1;
         
 
 
