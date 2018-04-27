@@ -39,6 +39,7 @@ import app.logic._2_realChampionshipAnalyzer.model.LineUp;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.PlayerVote;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
+import app.logic._4_seasonsExecutor.model.LuckyEdgeInfo;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 import app.logic._4_seasonsExecutor.model.RankingRowBean;
 import app.logic.model.CompetitionBean;
@@ -552,6 +553,14 @@ public class LeagueDao {
 		ent.setScoredGoals(bean.getScoredGoals());
 		ent.setSumAllVotes(bean.getSumAllVotes());
 		ent.setTakenGoals(bean.getTakenGoals());
+		
+		if (bean.getLuckyEdge()!= null) {
+			ent.setLuckyEdgeGain(bean.getLuckyEdge().getLuckyEdgeGain());
+			ent.setUnluckyEdgeLose(bean.getLuckyEdge().getUnluckyEdgeLose());
+			ent.setLuckyEdgeNumber(bean.getLuckyEdge().getLuckyEdgeNumber());
+			ent.setUnluckyEdgeNumber(bean.getLuckyEdge().getUnluckyEdgeNumber());
+		}
+		
 		return ent;
 	}
 
@@ -570,7 +579,7 @@ public class LeagueDao {
 		
 		List<RankingRowBean> rows = new ArrayList<RankingRowBean>();
 		for (RankingRow rrEnt : ent.getRows()) {
-			RankingRowBean rrBean = createRankingRowEnt(rrEnt);
+			RankingRowBean rrBean = createRankingRowBean(rrEnt);
 			rows.add(rrBean);
 		}
 		bean.setRows(rows);
@@ -579,7 +588,7 @@ public class LeagueDao {
 	}
 
 
-	private RankingRowBean createRankingRowEnt(RankingRow ent) {
+	private RankingRowBean createRankingRowBean(RankingRow ent) {
 		RankingRowBean bean = new RankingRowBean();
 		bean.setName(ent.getName());
 		bean.setPoints(ent.getPoints());
@@ -596,6 +605,16 @@ public class LeagueDao {
 				positions.add(new Double(split[i]));
 			bean.setPositions(positions);
 		}
+		
+		if (ent.getLuckyEdgeGain()!= null) {
+			LuckyEdgeInfo luckyEdge = new LuckyEdgeInfo();
+			luckyEdge.setLuckyEdgeGain(ent.getLuckyEdgeGain());
+			luckyEdge.setLuckyEdgeNumber(ent.getLuckyEdgeNumber());
+			luckyEdge.setUnluckyEdgeLose(ent.getUnluckyEdgeLose());
+			luckyEdge.setUnluckyEdgeNumber(ent.getUnluckyEdgeNumber());
+			bean.setLuckyEdge(luckyEdge);
+		}
+		
 		return bean;
 	}
 

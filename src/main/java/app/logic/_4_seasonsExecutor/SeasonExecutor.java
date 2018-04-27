@@ -13,6 +13,7 @@ import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
+import app.logic._4_seasonsExecutor.model.LuckyEdgeInfo;
 import app.logic._4_seasonsExecutor.model.Pair;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 import app.logic._4_seasonsExecutor.model.RankingRowBean;
@@ -41,7 +42,7 @@ public class SeasonExecutor {
 		RankingBean ranking = createRanking(teams);
 		RankingBean formulaUnoRanking = createRanking(teams);
 		
-		
+		ranking.setPattern(season.getName());
 		for (int i = 0; i < realChampionshipResults.size(); i++) {
 //			Integer fantacalcioStartingSerieASeasonDay = MainSeasonAnalyzerFINAL.getFantacalcioStartingSerieASeasonDay();
 			
@@ -144,7 +145,7 @@ public class SeasonExecutor {
 
 
 
-	private static void updateRanking(SeasonDayResultBean seasonDayResult, RankingBean ranking) {
+	private void updateRanking(SeasonDayResultBean seasonDayResult, RankingBean ranking) {
 		for (LineUpLightBean lul : seasonDayResult.getLinesUpLight()){
 			for (RankingRowBean rr : ranking.getRows()){
 				if (lul.getTeamName().equalsIgnoreCase(rr.getName())){
@@ -158,13 +159,34 @@ public class SeasonExecutor {
 	
 	
 	
-	private static void updateRankingRow(RankingRowBean rr, LineUpLightBean lul) {
+	private void updateRankingRow(RankingRowBean rr, LineUpLightBean lul) {
 		rr.setPoints(rr.getPoints() + lul.getRankingPoints());
 		rr.setScoredGoals(rr.getScoredGoals() + lul.getGoals());
 		rr.setSumAllVotes(rr.getSumAllVotes() + lul.getSumTotalPoints());
 		rr.setTakenGoals(rr.getTakenGoals() +  lul.getTakenGoals());
-		//rr.setTakenGoals(takenGoals);
-		//rr.setRankingPosition(rankingPosition);
+		
+		LuckyEdgeInfo rrLE = rr.getLuckyEdge();
+		LuckyEdgeInfo lulLE = lul.getLuckyEdge();
+		if (lulLE != null) {
+			if (lulLE.getLuckyEdgeGain() != null) {
+				if (rr.getLuckyEdge() == null)		rr.setLuckyEdge(new LuckyEdgeInfo());
+				if (rrLE == null) 					rrLE = new LuckyEdgeInfo();
+				if (lulLE.getLuckyEdgeGain()  != 0) {
+					rrLE.setLuckyEdgeGain(rrLE.getLuckyEdgeGain() + lulLE.getLuckyEdgeGain());
+					rrLE.setLuckyEdgeNumber(rrLE.getLuckyEdgeNumber() + 1);
+				}
+				
+			}
+			if (lulLE.getUnluckyEdgeLose() != null) {
+				if (rr.getLuckyEdge() == null) 		rr.setLuckyEdge(new LuckyEdgeInfo());
+				if (rrLE == null) 					rrLE = new LuckyEdgeInfo();
+				if (lulLE.getUnluckyEdgeLose()  != 0) {
+					rrLE.setUnluckyEdgeLose(rrLE.getUnluckyEdgeLose() + lulLE.getUnluckyEdgeLose());
+					rrLE.setUnluckyEdgeNumber(rrLE.getUnluckyEdgeNumber() + 1);
+				}
+			}
+		}
+		
 		
 	}
 

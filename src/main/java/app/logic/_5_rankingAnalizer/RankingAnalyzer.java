@@ -53,13 +53,21 @@ public class RankingAnalyzer {
 		RankingBean deltaPositionRankings = calculateDeltaPositionRankings(averagePositionRanking, realRanking);
 		
 		
-		
 
 		// Ranking giusto
 		RankingBean fairRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.FAIR, rulesType);
 		
 		// Ranking con Differenza tra i punti giusti e i punti reali
 		RankingBean deltaFairRanking = calculateDeltaRankingPoints(fairRanking, realRanking);
+		
+		
+		
+		// Ranking con il fattore casa invertito
+		RankingBean invertHomeAwayRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.INVERT_HOME_AWAY, rulesType);
+				
+		// Ranking con le info sui punti sculati
+		RankingBean luckyEdgeRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.LUCKY_EDGES, rulesType);
+						
 		
 		
 		StasResponse res = new StasResponse();
@@ -73,6 +81,9 @@ public class RankingAnalyzer {
 		res.setAveragePositionRanking(averagePositionRanking);
 		res.setDeltaPositionRankings(deltaPositionRankings);
 		res.setPositionsPercentaleRanking(positionsPercentaleRanking);
+		
+		res.setInvertHomeAwayRanking(invertHomeAwayRanking);
+		res.setLuckyEdgeRanking(luckyEdgeRanking);
 		
 		
 		res.setCompetitionShortName(competitionShortName);

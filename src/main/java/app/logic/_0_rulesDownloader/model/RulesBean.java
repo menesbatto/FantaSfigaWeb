@@ -17,7 +17,7 @@ public class RulesBean  implements Serializable{
 	private CompetitionRules competitionRules;
 	
 	private RulesType type;
-	
+	private CustomRules customRules;
 	
 	public BonusMalus getBonusMalus() {
 		return bonusMalus;
@@ -60,6 +60,12 @@ public class RulesBean  implements Serializable{
 	}
 	public void setType(RulesType type) {
 		this.type = type;
+	}
+	public CustomRules getCustomRules() {
+		return customRules;
+	}
+	public void setCustomRules(CustomRules customRules) {
+		this.customRules = customRules;
 	}
 	
 	

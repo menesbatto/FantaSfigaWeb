@@ -1,5 +1,6 @@
 package app.logic.model;
 
+import app.dao.RankingType;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 
 public class StasResponse {
@@ -26,6 +27,12 @@ public class StasResponse {
 	private RankingBean averagePositionRanking;
 	
 	private RankingBean deltaPositionRankings;
+	
+	
+	
+	private RankingBean invertHomeAwayRanking;
+	
+	private RankingBean luckyEdgeRanking;
 	
 	
 	public StasResponse() {
@@ -119,6 +126,22 @@ public class StasResponse {
 
 	public void setRealLightRanking(RankingBean realLightRanking) {
 		this.realLightRanking = realLightRanking;
+	}
+
+	public RankingBean getInvertHomeAwayRanking() {
+		return invertHomeAwayRanking;
+	}
+
+	public void setInvertHomeAwayRanking(RankingBean invertHomeAwayRanking) {
+		this.invertHomeAwayRanking = invertHomeAwayRanking;
+	}
+
+	public RankingBean getLuckyEdgeRanking() {
+		return luckyEdgeRanking;
+	}
+
+	public void setLuckyEdgeRanking(RankingBean luckyEdgeRanking) {
+		this.luckyEdgeRanking = luckyEdgeRanking;
 	}
 	
 	

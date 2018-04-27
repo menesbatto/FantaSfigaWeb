@@ -48,12 +48,12 @@ public class MainSeasonsExecutor {
 
 		SeasonResultBean seasonResultBean;
 		System.out.println();
-		if (seasonResultBeanInput == null) {
-			seasonResultBean = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
-		}
-		else {
+//		if (seasonResultBeanInput == null) {
+//			seasonResultBean = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
+//		}
+//		else {
 			seasonResultBean = seasonResultBeanInput;
-		}
+//		}
 		
 		long startTime = System.nanoTime();
 		System.out.println("Inizio esecuzione di tutti i calendari");
@@ -99,7 +99,7 @@ public class MainSeasonsExecutor {
 //				System.out.println(season);
 		} 
 		
-		if(AppConstants.DEBUG_MODE)
+		if(AppConstants.DEBUG_MODE && rules.getCustomRules() == null)
 			checkRealSeasonCorrect(seasonResultBean.getSeasonDayResults(), leagueShortName, competitionShortName);
 		
 		long endTime = System.nanoTime();

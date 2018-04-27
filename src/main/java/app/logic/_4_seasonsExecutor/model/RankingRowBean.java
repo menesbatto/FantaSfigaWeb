@@ -15,6 +15,7 @@ public class RankingRowBean implements Serializable{
 	private Integer rankingPosition;		// 1,2,3,4,5,6,7,8
 	private List<Double> positions;
 
+	private LuckyEdgeInfo luckyEdge;
 	
 	
 	public RankingRowBean() {
@@ -133,6 +134,14 @@ public class RankingRowBean implements Serializable{
 
 	public void setPositions(List<Double> positions) {
 		this.positions = positions;
+	}
+
+	public LuckyEdgeInfo getLuckyEdge() {
+		return luckyEdge;
+	}
+
+	public void setLuckyEdge(LuckyEdgeInfo luckyEdge) {
+		this.luckyEdge = luckyEdge;
 	}
 
 	

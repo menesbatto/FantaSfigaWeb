@@ -8,17 +8,20 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 
   <div class="col-md-6 col-md-offset-3" >
-    <h3>Le Competizioni della lega {{legueShortName}}</h3>
+    <h3>Le Competizioni della lega <strong>{{leagueName}}</strong></h3>
     
     <div class="table-responsive">
       <table class="table">
         <tr *ngFor = "let competition of competitionList" >
-          <td> {{competition.name}} </td>
-          <td> <button class="btn btn-primary" *ngIf  = "!competition.rulesIntegrated"  (click)="goToCompetitionRules(competition)"> Aggiungi regole </button>  </td>
+          <td > {{competition.name}} </td>
+          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "!competition.rulesIntegrated"  (click)="goToCompetitionRules(competition)"> Aggiungi regole </button>  </td>
           <!--<td> <button class="btn btn-primary" (click)="goToCompetitionRules(competition)"> Integra regole </button>  </td>-->
-          <td> <button class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && !competition.initialOnlineInfoDownloaded"  (click)="downloadAllCompetitionInfo(competition)"> Scarica tutti i dati </button>  </td>
-          <td> <button class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition) "> Vai </button> </td>
+          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && !competition.initialOnlineInfoDownloaded"  (click)="downloadAllCompetitionInfo(competition)"> Scarica tutti i dati </button>  </td>
+          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition, 'REAL') "> Statistiche </button> </td>
+          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition, 'CUSTOM') "> Statistiche custom </button> </td>
+
         <tr>
+        
       </table>
     </div> 
     
@@ -57,6 +60,8 @@ export class CompetitionsComponent implements OnInit {
   loadingMessage  = null;
   successMessage = null;
   leagueShortName = null;
+  leagueName = null;
+
 
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
@@ -69,23 +74,13 @@ export class CompetitionsComponent implements OnInit {
   }
 
   
-  goToCompetition(competition){
-    this. router.navigate(['/competition', {league : this.leagueShortName, competition : competition.competitionShortName, type:"REAL"}])
-
-  }
-
-
-  
-
-  goToCompetitionRules(competition){
-    this. router.navigate(['/competitionRules', {league : this.leagueShortName, competition : competition.competitionShortName}])
-  }
   
   retrieveCompetitions(leagueShortName){
     this.leagueService.retrieveCompetitions(leagueShortName)
     .subscribe(
       data => {
-        this.competitionList = data
+          this.competitionList = data
+        this.leagueName = this.competitionList  ? this.competitionList[0].leagueName : "NON HAI COMPETIZIONI";
       },
 
       error => {
@@ -168,7 +163,14 @@ export class CompetitionsComponent implements OnInit {
   }
 
 
+  goToCompetition(competition,rulesType){
+    this. router.navigate(['/competition', {league : this.leagueShortName, competition : competition.competitionShortName, type:rulesType}])
 
+  }
+
+  goToCompetitionRules(competition){
+    this. router.navigate(['/competitionRules', {league : this.leagueShortName, competition : competition.competitionShortName}])
+  }
 
   backToLeagues(){
     this. router.navigate(['/leagues'])

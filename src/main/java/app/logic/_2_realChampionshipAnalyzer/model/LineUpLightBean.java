@@ -2,6 +2,8 @@ package app.logic._2_realChampionshipAnalyzer.model;
 
 import java.io.Serializable;
 
+import app.logic._4_seasonsExecutor.model.LuckyEdgeInfo;
+
 
 public class LineUpLightBean implements Serializable {
 	
@@ -24,6 +26,10 @@ public class LineUpLightBean implements Serializable {
 
 	private int rankingPoints;			//0, 1, 3
 										//X, V, P
+	private LuckyEdgeInfo luckyEdge;
+	
+	
+
 	
 	
 	
@@ -119,6 +125,16 @@ public class LineUpLightBean implements Serializable {
 	public void setGoalkeeperModifier(Double goalkeeperModifier) {
 		this.goalkeeperModifier = goalkeeperModifier;
 	}
+
+	public LuckyEdgeInfo getLuckyEdge() {
+		return luckyEdge;
+	}
+
+	public void setLuckyEdge(LuckyEdgeInfo luckyEdge) {
+		this.luckyEdge = luckyEdge;
+	}
+
+
 
 	
 	

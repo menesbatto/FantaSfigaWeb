@@ -15,6 +15,8 @@ public class RankingBean implements Serializable{
 	private List<RankingRowBean> rows;
 	
 	private RulesType rulesType;
+	
+	private String pattern;
 
 	public RankingBean() {
 		this.rows = new ArrayList<RankingRowBean>();
@@ -47,6 +49,14 @@ public class RankingBean implements Serializable{
 
 	public void setRulesType(RulesType rulesType) {
 		this.rulesType = rulesType;
+	}
+
+	public String getPattern() {
+		return pattern;
+	}
+
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
 	}
 
 	

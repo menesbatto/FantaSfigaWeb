@@ -7,6 +7,7 @@ public class CompetitionBean {
 	private String competitionShortName;
 	private String url;
 	private String leagueShortName;
+	private String leagueName;
 	private String type;
 	
 	private Boolean rulesIntegrated;
@@ -86,6 +87,14 @@ public class CompetitionBean {
 
 	public void setInitialOnlineInfoDownloaded(Boolean initialOnlineInfoDownloaded) {
 		this.initialOnlineInfoDownloaded = initialOnlineInfoDownloaded;
+	}
+
+	public String getLeagueName() {
+		return leagueName;
+	}
+
+	public void setLeagueName(String leagueName) {
+		this.leagueName = leagueName;
 	}
 
 	

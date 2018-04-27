@@ -27,6 +27,46 @@ public class RankingRow {
 	
 	private String positions;
 	
+	private Integer luckyEdgeNumber;
+
+	private Double luckyEdgeGain;
+	
+	private Integer unluckyEdgeNumber;
+	
+	public Integer getLuckyEdgeNumber() {
+		return luckyEdgeNumber;
+	}
+
+	public void setLuckyEdgeNumber(Integer luckyEdgeNumber) {
+		this.luckyEdgeNumber = luckyEdgeNumber;
+	}
+
+	public Double getLuckyEdgeGain() {
+		return luckyEdgeGain;
+	}
+
+	public void setLuckyEdgeGain(Double luckyEdgeGain) {
+		this.luckyEdgeGain = luckyEdgeGain;
+	}
+
+	public Integer getUnluckyEdgeNumber() {
+		return unluckyEdgeNumber;
+	}
+
+	public void setUnluckyEdgeNumber(Integer unluckyEdgeNumber) {
+		this.unluckyEdgeNumber = unluckyEdgeNumber;
+	}
+
+	public Double getUnluckyEdgeLose() {
+		return unluckyEdgeLose;
+	}
+
+	public void setUnluckyEdgeLose(Double unluckyEdgeLose) {
+		this.unluckyEdgeLose = unluckyEdgeLose;
+	}
+
+	private Double unluckyEdgeLose;
+	
 	public RankingRow() {
 	}
 

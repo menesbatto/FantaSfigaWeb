@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
 import { NgForm } from '@angular/forms';
@@ -35,6 +35,7 @@ import { NgForm } from '@angular/forms';
   styles: []
 })
 export class LoginComponent implements OnInit {
+
   model: any = {};
   loading = false;
   returnUrl: string;

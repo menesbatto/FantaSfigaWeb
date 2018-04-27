@@ -17,7 +17,7 @@ import { LeaguesService } from '../leagues.service';
             <label for="sel1"> Numero massimo di sostituzioni d'ufficio </label>
             <select class="form-control" id="sel1" name="maxOfficeVoteBehaviour" [(ngModel)]="model.maxOfficeVoteBehaviour" #maxOfficeVoteBehaviour="ngModel">
                 <option value = "TILL_SUBSTITUTIONS"> Fino al numero di sostituzioni impostato </option>
-                <option value = "TILL_11"> Fino a 11 </option>
+                <option value = "TILL_ALL"> Fino a 11 </option>
             </select>
         </div> 
 
@@ -87,7 +87,7 @@ export class CompetitionRulesComponent implements OnInit {
         {
             leagueShortName: null,
             competitionShortName: null,
-            maxOfficeVoteBehaviour: "TILL_11",
+            maxOfficeVoteBehaviour: "TILL_ALL",
             postponementBehaviour: "ALL_6",
             autogolActive: <boolean>false,
             autogol: 59

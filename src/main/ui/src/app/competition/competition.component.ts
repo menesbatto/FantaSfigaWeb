@@ -52,6 +52,10 @@ import { LeaguesService } from '../leagues.service';
                         <th *ngIf= "rankingIn.rows[0].positions">6</th>
                         <th *ngIf= "rankingIn.rows[0].positions">7</th>
                         <th *ngIf= "rankingIn.rows[0].positions">8</th>
+                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Sculate</th>
+                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Punti Guadagnati</th>
+                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Sfigate</th>
+                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Punti persi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,7 +75,11 @@ import { LeaguesService } from '../leagues.service';
                         <td *ngIf= "team.positions">{{team.positions[6]}}</td>
                         <td *ngIf= "team.positions">{{team.positions[7]}}</td>
                         <td *ngIf= "team.positions">{{team.positions[8]}}</td>
-                    </tr>
+                        <td *ngIf= "team.luckyEdge">{{team.luckyEdge.luckyEdgeNumber}}</td>
+                        <td *ngIf= "team.luckyEdge">{{team.luckyEdge.luckyEdgeGain}}</td>
+                        <td *ngIf= "team.luckyEdge">{{team.luckyEdge.unluckyEdgeNumber}}</td>
+                        <td *ngIf= "team.luckyEdge">{{team.luckyEdge.unluckyEdgeLose}}</td>
+                     </tr>
                 </tbody>
             </table>
         </div>
@@ -91,11 +99,17 @@ import { LeaguesService } from '../leagues.service';
                 </div>
             </div>
         
-            <BR>
-            <BR>
-            <BR>
-            <BR>
         
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3> Classifica con fattore casa invertito </h3>
+                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxInvertHomeAwayRanking">
+                    </ng-container>
+                </div>
+            </div>
+
+
+            
             <h1 align="center"> PUNTI </h1>
 
             <div class="row">
@@ -150,6 +164,26 @@ import { LeaguesService } from '../leagues.service';
                 </div>
             </div>
         
+          
+        
+            <BR>
+            <BR>
+            <BR>
+            <BR>
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3> Classifica punti fatti o persi per mezzo punto </h3>
+                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxLuckyEdgeRanking">
+                    </ng-container>
+                </div>
+            </div>
+        
+            <BR>
+            <BR>
+            <BR>
+            <BR>
         
         </div>
      
@@ -190,6 +224,9 @@ export class CompetitionComponent implements OnInit {
     ctxPositionsPercentaleRanking = { ranking: null };
     ctxAveragePositionRanking = { ranking: null };
     ctxDeltaPositionRankings = { ranking: null };
+
+    ctxInvertHomeAwayRanking = { ranking: null };
+    ctxLuckyEdgeRanking = { ranking: null };
 
     rulesType = null;
 
@@ -275,6 +312,10 @@ export class CompetitionComponent implements OnInit {
             this.ctxDeltaPositionRankings.ranking = this.stats.deltaPositionRankings;
             this.ctxAveragePositionRanking.ranking = this.stats.averagePositionRanking;
             this.ctxPositionsPercentaleRanking.ranking = this.stats.positionsPercentaleRanking;
+
+            this.ctxInvertHomeAwayRanking.ranking =  this.stats.invertHomeAwayRanking;
+            this.ctxLuckyEdgeRanking.ranking =  this.stats.luckyEdgeRanking;
+        
 
 
         },

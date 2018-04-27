@@ -14,6 +14,7 @@ import app.dao.LeagueDao;
 import app.dao.RankingType;
 import app.dao.RulesDao;
 import app.logic._0_credentialsSaver.model.UserBean;
+import app.logic._0_rulesDownloader.model.CustomRules;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
 import app.logic._1_seasonPatternExtractor.model.SeasonBean;
@@ -69,6 +70,54 @@ public class Main {
 		}
 
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rules, calculatedSeasonResult);
+		
+		
+		
+		
+		if (onlyOne && rulesType == RulesType.REAL) {
+			
+
+			CustomRules customRulesLuckyEdge = new CustomRules();
+			rules.setCustomRules(customRulesLuckyEdge);
+			customRulesLuckyEdge.setInvertHomeAway(true);
+			customRulesLuckyEdge.setRankingType(RankingType.LUCKY_EDGES);
+			customRulesLuckyEdge.setLuckyEdgePoints(0.5);
+			
+			List<RankingBean> luckyEdgeRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rules, calculatedSeasonResult);
+			RankingBean luckyEdgeRanking = luckyEdgeRankings.get(0);
+			luckyEdgeRanking.setRulesType(RulesType.REAL);
+			luckyEdgeRanking.setName(RankingType.LUCKY_EDGES.name());
+			leagueDao.saveRanking(luckyEdgeRanking, leagueShortName, competitionShortName, userBean.getUsername());
+			
+			// trova come salvare i punteggi di 0,5 o 1
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			CustomRules customRules = new CustomRules();
+			rules.setCustomRules(customRules);
+			customRules.setInvertHomeAway(true);
+			customRules.setRankingType(RankingType.INVERT_HOME_AWAY);
+			
+			List<RankingBean> invertHomeAwayRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rules, calculatedSeasonResult);
+			RankingBean invertHomeAwayRanking = invertHomeAwayRankings.get(0);
+			invertHomeAwayRanking.setRulesType(RulesType.REAL);
+			invertHomeAwayRanking.setName(RankingType.INVERT_HOME_AWAY.name());
+			leagueDao.saveRanking(invertHomeAwayRanking, leagueShortName, competitionShortName, userBean.getUsername());
+			
+			
+			
+			
+			
+		}
+		
 		
 		// Salvo il realRanking ovvero quello che se calcolato con le regole REAL dovrebbe essere uguale al ranking del sito
 		RankingBean realRanking = allRankings.get(0);

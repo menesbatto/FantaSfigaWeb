@@ -408,7 +408,7 @@ import { LeaguesService } from '../leagues.service';
                             <select name="ctl00$main$ddlappriserva" [(ngModel)]="substitutions.maxOfficeVotes" class="form-control select">
                                 <option value="">Seleziona</option>
                                 <option value="TILL_SUBSTITUTIONS">Numero di sostituzioni impostate</option>
-                                <option value="TILL_11">Raggiungimento degli 11 calciatori</option>
+                                <option value="TILL_ALL">Raggiungimento degli 11 calciatori</option>
                             </select>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Scegliere se applicare la riserva d'ufficio fino al raggiungimento delle sostituzioni impostate oppure fino a raggiungere il numero di 11 calciatori titolari"></i></div>
@@ -1262,7 +1262,7 @@ export class CustomRulesComponent implements OnInit {
             leagueShortName: null,
             competitionShortName: null,
             rules : null,
-            maxOfficeVoteBehaviour: "TILL_11",
+            maxOfficeVotes: "TILL_ALL",
             postponementBehaviour: "ALL_6",
             autogolActive: <boolean>false,
             autogol: 59,

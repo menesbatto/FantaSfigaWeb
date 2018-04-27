@@ -5,9 +5,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.sleepycat.je.rep.elections.RankingProposer;
+
+import app.dao.RankingType;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
+import app.logic._4_seasonsExecutor.model.LuckyEdgeInfo;
 import app.logic._4_seasonsExecutor.model.Pair;
 import app.utils.AppConstants;
 
@@ -24,12 +28,6 @@ public class MatchExecutor {
 
 	
 	public void execute(MatchBean m, RulesBean rules, List<String> teams) {
-		if (winOrDrewForHalfPointsList == null) {
-			winOrDrewForHalfPointsList = createPairList(teams);
-			loseOrDrewForHalfPointList = createPairList(teams);
-			rankingPointsWinOrDrawForHalfPointsList = createPairList(teams);
-			rankingPointsLoseOrDrawForHalfPointList = createPairList(teams);
-		}
 		
 		LineUpLightBean homeTeamResult = m.getHomeTeamResult();
 		LineUpLightBean awayTeamResult = m.getAwayTeamResult();
@@ -41,64 +39,65 @@ public class MatchExecutor {
 		
 		// Modificatore difesa
 		if (rules.getModifiers().isGoalkeeperModifierActive()){
-			if (!AppConstants.FORCE_GOALKEEPER_MODIFIER_DISABLED){
+			//if (!AppConstants.FORCE_GOALKEEPER_MODIFIER_DISABLED){
 				Double homeVarGoalkeeper = homeTeamResult.getGoalkeeperModifier();
 				Double awayVarGoalkeeper = awayTeamResult.getGoalkeeperModifier();
 				homeSumTotalPoints += awayVarGoalkeeper;
 				awaySumTotalPoints += homeVarGoalkeeper;
-			}
+			//}
 		}
 		
 		// Modificatore centrocampo
 		if (rules.getModifiers().isMiddlefielderModifierActive()){
-			if (!AppConstants.FORCE_MIDDLEFIELD_MODIFIER_DISABLED){
+			//if (!AppConstants.FORCE_MIDDLEFIELD_MODIFIER_DISABLED){
 				Double homeVarMid = homeTeamResult.getMiddlefieldersVariation();
 				Double awayVarMid = awayTeamResult.getMiddlefieldersVariation();
 				Double varMid = homeVarMid - awayVarMid;
 				
 				if (varMid <= -2 || varMid >= 2){
 					if (varMid >= 8){
-						homeSumTotalPoints += 4;
-						awaySumTotalPoints -= 4;
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver8();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus8();
 					} else if (varMid >= 6) {
-						homeSumTotalPoints += 3;
-						awaySumTotalPoints -= 3;
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver6();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus6();
 					} else if (varMid >= 4) {
-						homeSumTotalPoints += 2;
-						awaySumTotalPoints -= 2;
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver4();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus4();
 					} else if (varMid >= 2) {
-						homeSumTotalPoints += 1;
-						awaySumTotalPoints -= 1;
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver2();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus2();
 					} else if (varMid <= -8) {
-						homeSumTotalPoints -= 4;
-						awaySumTotalPoints += 4;
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus8();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver8();
 					} else if (varMid <= -6) {
-						homeSumTotalPoints -= 3;
-						awaySumTotalPoints += 3;
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus6();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver6();
 					} else if (varMid <= -4) {
-						homeSumTotalPoints -= 2;
-						awaySumTotalPoints += 2;
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus4();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver4();
 					} else if (varMid <= -2) {
-						homeSumTotalPoints -= 1;
-						awaySumTotalPoints += 1;
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus2();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver2();
 					} else {
 						System.out.println("C'e' un errore");
 					}
 				}
-			}
+				//}
 		}
 		if (rules.getCompetitionRules().isHomeBonusActive()) {
-			if (AppConstants.FORCE_INVERT_HOME_AWAY != null){
-				if (!AppConstants.FORCE_INVERT_HOME_AWAY){
+			//if (AppConstants.FORCE_INVERT_HOME_AWAY != null){
+//				if (!AppConstants.FORCE_INVERT_HOME_AWAY){
+				if (rules.getCustomRules() != null && RankingType.INVERT_HOME_AWAY.equals(rules.getCustomRules().getRankingType())){
 					if (homeSumTotalPoints != 0.0) {
-						homeSumTotalPoints = homeSumTotalPoints + rules.getCompetitionRules().getHomeBonus(); // Chi gioca in casa +2
-					}
-				} else if (AppConstants.FORCE_INVERT_HOME_AWAY){
-					if (awaySumTotalPoints != 0.0) {
 						awaySumTotalPoints = awaySumTotalPoints + rules.getCompetitionRules().getHomeBonus(); // Chi gioca fuori casa +2
 					}
+				} else {//if (AppConstants.FORCE_INVERT_HOME_AWAY){
+					if (awaySumTotalPoints != 0.0) {
+						homeSumTotalPoints = homeSumTotalPoints + rules.getCompetitionRules().getHomeBonus(); // Chi gioca in casa +2
+					}
 				}
-			}
+//			}
 		}
 
 		homeTeamResult.setSumTotalPoints(homeSumTotalPoints);
@@ -116,9 +115,11 @@ public class MatchExecutor {
 		}
 		
 
-		if (AppConstants.FORCE_WINNING_FOR_DISTANCE){
+//		if (AppConstants.FORCE_WINNING_FOR_DISTANCE){
+		if (rules.getPoints().isIntornoActive()){
 			Double difference = homeSumTotalPoints - awaySumTotalPoints;
-			if (difference < AppConstants.FORCE_WINNING_FOR_DISTANCE_POINTS &&  difference > -AppConstants.FORCE_WINNING_FOR_DISTANCE_POINTS){
+			//if (difference < AppConstants.FORCE_WINNING_FOR_DISTANCE_POINTS &&  difference > -AppConstants.FORCE_WINNING_FOR_DISTANCE_POINTS){
+			if (difference < rules.getPoints().getIntorno() &&  difference > - rules.getPoints().getIntorno() ){
 				if (homeTeamGoals>awayTeamGoals)
 					awayTeamGoals= homeTeamGoals;
 				else 
@@ -150,13 +151,27 @@ public class MatchExecutor {
 		homeTeamResult.setTakenGoals(awayTeamGoals);
 		awayTeamResult.setTakenGoals(homeTeamGoals);
 		
-		analyzeLuckyEdges(homeTeamResult, awayTeamResult, 0.5, rules);
-		analyzeLuckyEdges(homeTeamResult, awayTeamResult, 0.1, rules);
-		
-		
+		if(rules.getCustomRules()!= null && RankingType.LUCKY_EDGES.equals(rules.getCustomRules().getRankingType())) {
+//			if (winOrDrewForHalfPointsList == null) {
+//				winOrDrewForHalfPointsList = createPairList(teams);
+//				loseOrDrewForHalfPointList = createPairList(teams);
+//				rankingPointsWinOrDrawForHalfPointsList = createPairList(teams);
+//				rankingPointsLoseOrDrawForHalfPointList = createPairList(teams);
+//			}
+			
+			
+			analyzeLuckyEdges(homeTeamResult, awayTeamResult, rules);
+			
+			
+		}
 	}
 
-	private void analyzeLuckyEdges(LineUpLightBean homeTeamResult, LineUpLightBean awayTeamResult, Double differencePoints, RulesBean rules) {
+	private void analyzeLuckyEdges(LineUpLightBean homeTeamResult, LineUpLightBean awayTeamResult, RulesBean rules) {
+		if (homeTeamResult.getLuckyEdge()== null)
+			homeTeamResult.setLuckyEdge(new LuckyEdgeInfo());
+		if (awayTeamResult.getLuckyEdge()== null)
+			awayTeamResult.setLuckyEdge(new LuckyEdgeInfo());		
+		
 		Integer homeRankingPoints = homeTeamResult.getRankingPoints();
 		Integer awayRankingPoints = awayTeamResult.getRankingPoints();
 		Integer homeTeamGoals = homeTeamResult.getGoals();
@@ -165,7 +180,7 @@ public class MatchExecutor {
 		Double homeSumTotalPoints = homeTeamResult.getSumTotalPoints();
 		if (homeTeamGoals - awayTeamGoals <= 1 && homeTeamGoals - awayTeamGoals >= -1){
 			//SCULO PER HOME
-			if ( rules.getPoints().getGoalPoints().contains(homeSumTotalPoints) ||rules.getPoints().getGoalPoints().contains(awaySumTotalPoints + differencePoints)){
+			if ( rules.getPoints().getGoalPoints().contains(homeSumTotalPoints) ||rules.getPoints().getGoalPoints().contains(awaySumTotalPoints + rules.getCustomRules().getLuckyEdgePoints())){
 				Double rankingPointsGainedFromHomeTeam = 0.0;
 				Double rankingPointsLostFromAwayTeam = 0.0;
 				if (homeRankingPoints == 3.0){
@@ -177,25 +192,29 @@ public class MatchExecutor {
 					rankingPointsLostFromAwayTeam = 2.0;
 				}
 				if (homeRankingPoints > 0.0){
-					updateWinForHalfPointList(homeTeamResult.getTeamName(), rankingPointsGainedFromHomeTeam);
-					updateLoseForHalfPointList(awayTeamResult.getTeamName(), -rankingPointsLostFromAwayTeam);
+					homeTeamResult.getLuckyEdge().setLuckyEdgeGain(rankingPointsGainedFromHomeTeam);
+					awayTeamResult.getLuckyEdge().setUnluckyEdgeLose(-rankingPointsLostFromAwayTeam);
+					//updateWinForHalfPointList(homeTeamResult.getTeamName(), rankingPointsGainedFromHomeTeam);
+					//updateLoseForHalfPointList(awayTeamResult.getTeamName(), -rankingPointsLostFromAwayTeam);
 				}
 			} 
 			//SCULO PER AWAY
-			if ( rules.getPoints().getGoalPoints().contains(awaySumTotalPoints) || rules.getPoints().getGoalPoints().contains(homeSumTotalPoints + differencePoints)){
+			if ( rules.getPoints().getGoalPoints().contains(awaySumTotalPoints) || rules.getPoints().getGoalPoints().contains(homeSumTotalPoints + rules.getCustomRules().getLuckyEdgePoints())){
 				Double rankingPointsGainedFromAwayTeam = 0.0;
 				Double rankingPointsLostFromHomeTeam = 0.0;
 				if (awayRankingPoints == 3.0){
-					rankingPointsGainedFromAwayTeam = 1.0;
-					rankingPointsLostFromHomeTeam = 2.0;
+					rankingPointsGainedFromAwayTeam = 2.0;
+					rankingPointsLostFromHomeTeam = 1.0;
 				}
 				else if (awayRankingPoints == 1.0){
 					rankingPointsGainedFromAwayTeam = 1.0;
 					rankingPointsLostFromHomeTeam = 2.0;
 				}
 				if (awayRankingPoints > 0.0){
-					updateWinForHalfPointList(awayTeamResult.getTeamName(), rankingPointsGainedFromAwayTeam);
-					updateLoseForHalfPointList(homeTeamResult.getTeamName(), -rankingPointsLostFromHomeTeam);
+					homeTeamResult.getLuckyEdge().setUnluckyEdgeLose( -rankingPointsLostFromHomeTeam);
+					awayTeamResult.getLuckyEdge().setLuckyEdgeGain( rankingPointsGainedFromAwayTeam);
+//					updateWinForHalfPointList(awayTeamResult.getTeamName(), rankingPointsGainedFromAwayTeam);
+//					updateLoseForHalfPointList(homeTeamResult.getTeamName(), -rankingPointsLostFromHomeTeam);
 				}
 			}
 		}

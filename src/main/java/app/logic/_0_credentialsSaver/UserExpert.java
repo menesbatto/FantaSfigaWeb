@@ -208,6 +208,7 @@ public class UserExpert {
 		competitions = leagueDao.findCompetitionsByLeague(league.getShortName(), userBean.getUsername());
 		
 		for (CompetitionBean comp : competitions) {
+			comp.setLeagueName(league.getName());
 			RulesBean rules = rulesDao.retrieveRules(comp.getCompetitionShortName(), leagueShortName, RulesType.REAL, userBean.getUsername());
 			
 			Boolean existIntegratedRulesForCompetition = rules.getCompetitionRules().getPostponementBehaviour() != null;
