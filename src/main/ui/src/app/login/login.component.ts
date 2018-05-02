@@ -61,7 +61,10 @@ export class LoginComponent implements OnInit {
           .subscribe(
               data => {
                   let isFirstTime = data.gazzettaUsername == null;
-                  if (isFirstTime){
+                  if (data.role=="ADMIN"){
+                    this.router.navigate(["admin"]);
+                  }
+                  else if (isFirstTime){
                     this.router.navigate(["gazzettaCredentials"]);
                   }
                   else {

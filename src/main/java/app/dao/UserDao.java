@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import app.dao.entity.User;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
 import app.logic._0_credentialsSaver.model.Credentials;
+import app.logic._0_credentialsSaver.model.RoleEnum;
 import app.logic._0_credentialsSaver.model.UserBean;
 
 @Service
@@ -42,6 +43,7 @@ public class UserDao {
 		ent.setEmail(userBean.getEmail());
 		ent.setUsername(userBean.getUsername());
 		ent.setPassword(userBean.getPassword());
+		ent.setRole(RoleEnum.USER.name());
 		Integer rnd = userBean.hashCode();
 		ent.setToBeConfirm(rnd);
 		
@@ -87,6 +89,7 @@ public class UserDao {
 		userBean.setUsername(ent.getUsername());
 		userBean.setPassword(ent.getPassword());
 		userBean.setGazzettaUsername(ent.getGazzettaUsername());
+		userBean.setRole(RoleEnum.valueOf(ent.getRole()));
 		return userBean;
 		
 	}

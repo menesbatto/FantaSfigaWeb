@@ -205,6 +205,12 @@ public class SeasonDayAnalyzer {
 			System.out.println("FANTAVOTO DIVERSO:\tGiornata di Serie A: " + serieASeasonDay + "\t\t" + team + " " + name + " " + "voti ufficiali: " + fantaVote + " - Voti da nostra lega: " + fantaVoteFromWeb);
 		}
 		
+		// Per sistema Alvin, un giocatore che prende SV ed è espulso da regole è voto SV e fantavoto 4, ma non glielo mettono, quindi glielo metto io
+		// quindi non contribuisce ai modificatori.
+		if (vote == null) {
+			if (pvcVote.getRedCard())
+				fantaVote = 4.0;
+		}
 		player.setVote(vote);
 		player.setFantaVote(fantaVote);
 		player.setCards(pvcVote.getRedCard() || pvcVote.getYellowCard());
@@ -259,7 +265,8 @@ public class SeasonDayAnalyzer {
 			defenderNum = 0.0;
 			for (PlayerVote newVote : lineUp.getFinalLineUp()){
 				if (newVote.getRole().equals(RoleEnum.D)){
-					if (   !newVote.getName().equals("OFFICE") && !newVote.getName().equals("ZERO") ){
+					// Il giocatore che prende sv e viene espulso prende fantavoto 4 e voto SV quindi non concorre ai bonus.
+					if (   !newVote.getName().equals("OFFICE") && !newVote.getName().equals("ZERO") && newVote.getVote() != null){
 						defenderNum ++;
 						if (maxFour.size() < 3){
 							maxFour.add(newVote.getVote());
@@ -351,7 +358,9 @@ public class SeasonDayAnalyzer {
 			accceptableVotesNumber = 0;
 			performanceModifier = 0.0;
 			for (PlayerVote pv : lineUp.getFinalLineUp()){
-				if (pv.getVote() >= 6){
+				//if ( pv.getVote() == null || pv.getVote() >= 6 || pv.getTeam().equals("ZERO") || pv.getTeam().equals("OFFICE")){
+				// Il modificatore funziona ugualmente anche in caso si giochi in inferiorità numerica (ovviamente non si arriverà mai a 11 sufficienze). Saranno considerati validi anche gli eventuali 6 politici nei casi in cui si rendano necessari e vengano da voi utilizzati.
+				if (pv.getVote()!= null && pv.getVote() >= 6 ){
 					accceptableVotesNumber ++;
 				}
 			}
@@ -396,6 +405,7 @@ public class SeasonDayAnalyzer {
 	private Double calculateGoalkeeperModifier(PlayerVoteComplete pvcVote) {
 		Double vote = pvcVote.getVote();
 //		if (pvcVote.getTakenGoals() == 0){
+		if (vote != null) {
 			if (vote < 3.0)				return rules.getModifiers().getGoalkeeperVote3();
 			if (vote.equals( 3.0 )) 	return rules.getModifiers().getGoalkeeperVote3();
 			if (vote.equals( 3.5 )) 	return rules.getModifiers().getGoalkeeperVote3half();
@@ -411,7 +421,7 @@ public class SeasonDayAnalyzer {
 			if (vote.equals( 8.5 )) 	return rules.getModifiers().getGoalkeeperVote8half();
 			if (vote.equals( 9.0 )) 	return rules.getModifiers().getGoalkeeperVote9();
 			if (vote > 9.0) 			return rules.getModifiers().getGoalkeeperVote9();
-			
+		}
 //		}
 		return 0.0;	 
 				 
@@ -432,7 +442,7 @@ public class SeasonDayAnalyzer {
 			middlefieldersNumber = 0;
 			for (PlayerVote player : lineUp.getFinalLineUp()) {
 				if (player.getRole().equals(RoleEnum.C)) {
-					if (player.getTeam().equals("OFFICE"))
+					if (player.getTeam().equals("OFFICE") || player.getTeam().equals("ZERO") || player.getVote() == null)
 						middlefieldersComulativeVote += 5;
 					else	
 						middlefieldersComulativeVote += player.getVote();
@@ -591,7 +601,7 @@ public class SeasonDayAnalyzer {
 		PlayerVote playerVoteToAdd;
 		for (PlayerVote pv : roleSet) {
 			playerVoteToAdd = pv;
-			if (playerVoteToAdd.getVote() != null){
+			if (playerVoteToAdd.getFantaVote() != null){
 				finalLineUp.add(playerVoteToAdd);
 			}
 			else {
@@ -614,7 +624,7 @@ public class SeasonDayAnalyzer {
 			if (reserve.getRole().equals( role )){
 				if (!reserve.isAlreadyUsed()){
 					playerVoteToAdd = reserve;
-					if (playerVoteToAdd.getVote() != null) {
+					if (playerVoteToAdd.getFantaVote() != null) {
 						reserve.setAlreadyUsed(true);
 						break;
 					}
@@ -624,7 +634,7 @@ public class SeasonDayAnalyzer {
 				}
 			}
 		}
-		if (playerVoteToAdd != null && playerVoteToAdd.getVote() == null)
+		if (playerVoteToAdd != null && playerVoteToAdd.getFantaVote() == null)
 			playerVoteToAdd = null;
 		return playerVoteToAdd;
 	}
@@ -715,6 +725,9 @@ public class SeasonDayAnalyzer {
 				lineUp.setFairPlayModifierFromWeb(fairPlayModifierFromWeb);
 //			}
 //		}
+				
+//		lineUp.setPoints(getVote(lineUpDomElement.getElementsByClass("numbig4").get(0).text()));
+				
 		//System.out.println(lineUp);
 		return lineUp;
 	}

@@ -8,13 +8,18 @@ import { LeaguesService } from '../leagues.service';
     <div class="col-lg-8 col-md-offset-2" >
         <h2>Competitione {{competitionShortName}} </h2>
         <div class="btn-toolbar">
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> 1 - Scarica le formazioni inserite (dopo ogni giornata) </button>
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> 2 - Ricalcola i risultati sulla base di quanto scaricato (dopo ogni giornata) </button>
-
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> 3 - Calcola le classifica via FantaSfiga </button>
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> 4 - Calcola le statistiche (qualche secondo) </button>
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> 5 - Recupera le statistiche appena calcolate</button>
-
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "saveOnlineSeasonAndTeams()"> 1 - Scarica i risultati online delle partite giocate (dopo ogni giornata) </button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> 2 - Scarica le formazioni inserite (dopo ogni giornata) </button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> 3 - Ricalcola i risultati sulla base di quanto scaricato (dopo ogni giornata) </button>
+            
+            <div align = center> - - - - - </div>
+            
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> 1 - Calcola le classifica via FantaSfiga </button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> 2 - Calcola le statistiche (qualche secondo) </button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> 3 - Recupera le statistiche appena calcolate</button>
+            
+            <div align = center> - - - - - </div>
+            
             <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> Calcola le statistiche con regole personalizzate</button>
 
 
@@ -341,6 +346,22 @@ export class CompetitionComponent implements OnInit {
                 this.errorMessage = "Devi ancora calcolare le statistiche";
                 this.loading = false;
             });
+    }
+
+    saveOnlineSeasonAndTeams(){
+        this.leagueService.saveOnlineSeasonAndTeams(this.model).subscribe(
+            data => {
+              this.loadingMessage = null;
+              this.successMessage == "Aggiornati risultati della competizione online";
+              this.errorMessage = null;
+            },
+            error => {
+              this.loadingMessage = null;
+              this.successMessage = null;
+              this.errorMessage = "Errore di comunicazione col server 3";
+      
+         });
+        
     }
 
     downloadSeasonFromWeb() {

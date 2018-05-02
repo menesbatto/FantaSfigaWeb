@@ -123,7 +123,7 @@ public class FacadeController {
 //		User p = personDao.findById(1L);
 		String body = "Downloading Votes COMPLETED";
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
 		return response;
 	}
 	
@@ -141,7 +141,7 @@ public class FacadeController {
 //		User p = personDao.findById(1L);
 		String body = "Clean Votes COMPLETED";
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
 		return response;
 	}
 	
@@ -156,7 +156,35 @@ public class FacadeController {
 //		User p = personDao.findById(1L);
 		String body = "Insert Postponemen COMPLETED";
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
+		return response;
+	}
+	
+	
+	//###################################################################
+	
+	// Inserisce un rinvio
+	@RequestMapping(value = "/removePostponement", method = RequestMethod.POST)
+	public ResponseEntity<String> removePostponement(@RequestBody PostponementBean m) {
+		
+		mainSeasonVotesDowloader.removePostponement(m);
+//			User p = personDao.findById(1L);d
+		String body = "Remove Postponemen COMPLETED";
+		
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
+		return response;
+	}
+	//###################################################################
+	
+	// Inserisce un rinvio
+	@RequestMapping(value = "/retrievePostponements", method = RequestMethod.GET)
+	public ResponseEntity<List<PostponementBean>> retrievePostponements() {
+		
+		List<PostponementBean> postponements = mainSeasonVotesDowloader.retrievePostponements();
+//			User p = personDao.findById(1L);
+		String body = "Retrieve Postponemen COMPLETED";
+		
+		ResponseEntity<List<PostponementBean>> response = new ResponseEntity<List<PostponementBean>>(postponements, HttpStatus.OK);
 		return response;
 	}
 	
@@ -521,7 +549,7 @@ public class FacadeController {
 
 		String body = "Creating Permutation COMPLETED";
 		
-		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
+		ResponseEntity<String> response = new ResponseEntity<String>(gson.toJson(body), HttpStatus.OK);
 		return response;
 	}
 	

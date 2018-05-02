@@ -20,6 +20,9 @@ import { MyHttpLogInterceptor } from './http.interceptor';
 import { CompetitionRulesComponent } from './competition-rules/competition-rules.component';
 import { CompetitionComponent } from './competition/competition.component';
 import { CustomRulesComponent } from './custom-rules/custom-rules.component';
+import { AdminComponent } from './admin/admin.component';
+import { AdminService } from './admin.service';
+import { AuthenticationService } from './authentication.service';
 
 
 
@@ -37,7 +40,8 @@ import { CustomRulesComponent } from './custom-rules/custom-rules.component';
     CompetitionsComponent,
     CompetitionRulesComponent,
     CompetitionComponent,
-    CustomRulesComponent
+    CustomRulesComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +52,8 @@ import { CustomRulesComponent } from './custom-rules/custom-rules.component';
   providers: [UserService, 
               LeaguesService,
               AuthGuard,
+              AdminService,
+              AuthenticationService,
               { provide: HTTP_INTERCEPTORS, useClass: MyHttpLogInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })

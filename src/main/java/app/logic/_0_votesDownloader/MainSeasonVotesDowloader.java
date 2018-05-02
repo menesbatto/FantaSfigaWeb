@@ -315,7 +315,17 @@ public class MainSeasonVotesDowloader {
 		
 	}
 	
-	
+	public List<PostponementBean> retrievePostponements() {
+		List<PostponementBean> postponements = utilsDao.retrievePostponements();
+		return postponements;
+		
+	}
+
+	public PostponementBean removePostponement(PostponementBean m) {
+		utilsDao.removePostponement(m);
+		return m;
+		
+	}
 	
 //	public static Map<VotesSourceEnum,Map<String, Map<String, List<PlayerVoteComplete>>>> getAllVotes() {
 //		return retrieveAllVotes();

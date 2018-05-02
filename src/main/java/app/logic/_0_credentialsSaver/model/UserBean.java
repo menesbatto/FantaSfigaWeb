@@ -20,6 +20,8 @@ public class UserBean {
 	
 	private String gazzettaUsername;
 	
+	private RoleEnum role;
+	
 	public String getFirstname() {
 		return firstname;
 	}
@@ -124,6 +126,14 @@ public class UserBean {
 
 	public void setGazzettaUsername(String gazzettaUsername) {
 		this.gazzettaUsername = gazzettaUsername;
+	}
+
+	public RoleEnum getRole() {
+		return role;
+	}
+
+	public void setRole(RoleEnum role) {
+		this.role = role;
 	}
 	
 	

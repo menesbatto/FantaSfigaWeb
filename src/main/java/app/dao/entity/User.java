@@ -27,6 +27,8 @@ public class User {
 	
 	private Integer toBeConfirm;
 	
+	private String role;
+	
 
 	public String getFirstname() {
 		return firstname;
@@ -98,6 +100,14 @@ public class User {
 
 	public void setToBeConfirm(Integer toBeConfirm) {
 		this.toBeConfirm = toBeConfirm;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	

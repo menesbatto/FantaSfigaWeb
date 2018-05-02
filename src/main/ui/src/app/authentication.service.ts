@@ -42,4 +42,11 @@ export class AuthenticationService {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
     }
+
+    isAdmin() {
+        var userString = localStorage.getItem('currentUser');
+        var user = JSON.parse(userString);
+        let isAdmin = user.role == "admin";
+        return isAdmin;
+    }
 }

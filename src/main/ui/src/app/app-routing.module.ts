@@ -13,6 +13,7 @@ import { CompetitionsComponent } from './competitions/competitions.component';
 import { CompetitionRulesComponent } from './competition-rules/competition-rules.component';
 import { CompetitionComponent } from './competition/competition.component';
 import { CustomRulesComponent } from './custom-rules/custom-rules.component';
+import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch : "full" },
@@ -26,6 +27,8 @@ const routes: Routes = [
   {path: 'competitionRules', component: CompetitionRulesComponent},
   {path: 'competition', component: CompetitionComponent},
   {path: 'customRules', component: CustomRulesComponent},
+
+  {path: 'admin', component: AdminComponent},
 
   {path: 'departments-list', component: DepartmentListComponent},
   {path: 'employees', component: EmployeeListComponent},

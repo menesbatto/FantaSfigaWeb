@@ -35,11 +35,16 @@ public class UtilsDao {
 	private PostponementRepo postponementRepo;
 
 	public void savePermutations(Integer playersNumber, List<String> calendarPermutations) {
+		Permutation ent = permutationRepo.findByPlayers(playersNumber);
+		if (ent != null) {
+			return;
+		}
+		
 		String permutations = "";
 		for (String perm : calendarPermutations) {
 			permutations += perm + ",";
 		}
-		Permutation ent = new Permutation();
+		ent = new Permutation();
 		ent.setPlayers(playersNumber);
 		ent.setPermutations(permutations);
 		permutationRepo.save(ent);
@@ -204,6 +209,32 @@ public class UtilsDao {
 		postponementRepo.save(ent);
 		
 			
+	}
+	
+	public void removePostponement(PostponementBean bean) {
+		
+		Postponement ent = postponementRepo.findByHomeTeamAndAwayTeamAndSeasonDay(bean.getHomeTeam(), bean.getAwayTeam(), bean.getSeasonDay());
+		
+		postponementRepo.delete(ent);
+		
+			
+	}
+	
+	public List<PostponementBean> retrievePostponements() {
+		List<PostponementBean> postponements = new ArrayList<PostponementBean>();
+		
+		List<Postponement> ents = postponementRepo.findAll();
+		PostponementBean bean;
+		for (Postponement ent: ents) {
+			bean = new PostponementBean();
+			bean.setAwayTeam(ent.getAwayTeam());
+			bean.setHomeTeam(ent.getHomeTeam());
+			bean.setSeasonDay(ent.getSeasonDay());
+			bean.setPlayed(ent.getPlayed());
+			postponements.add(bean);
+		}
+		
+		return postponements;
 	}
 	
 	public Map<Integer, List<PostponementBean>> findAllPostponement() {
