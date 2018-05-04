@@ -32,6 +32,8 @@ import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.MainSeasonVotesDowloader;
 import app.logic._1_seasonPatternExtractor.SeasonPatternExtractor;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
+import app.logic._1_seasonPatternExtractor.model.SeasonBean;
+import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._3_seasonsGenerator.AllSeasonsGenerator;
@@ -42,6 +44,7 @@ import app.logic.model.CustomRulesReq;
 import app.logic.model.PostponementBean;
 import app.logic.model.RetrieveAllRankingsReq;
 import app.logic.model.RetrieveRules;
+import app.logic.model.RetrieveSeasonReq;
 import app.logic.model.StasResponse;
 import app.logic.model.IntegrateRulesReq;
 
@@ -682,23 +685,21 @@ public class FacadeController {
 		
 	//###################################################################
 	
-	// Calcola le statistiche di una certa competizione con regole personalizzate
-	
-	// Richiamato ogni volta che si vogliono calcolare le statistiche PERSONALIZZATE di una competizione (SEMPRE)
-
-	
-//	@RequestMapping(value = "/calculateStatsWithCustomRules", method = RequestMethod.POST)
-//	public ResponseEntity<String> calculateRankingWithCustomRules(@RequestBody CustomRulesReq req) {
-//		
-//		String competitionShortName = req.getCompetition().getCompetitionShortName();
-//		String leagueShortName = req.getCompetition().getLeagueShortName();
-//		
-//		main.calculateStatsWithCustomRules(leagueShortName, competitionShortName, req.getRules());
-//		String body = "Calculate Ranking With Custom Rules COMPLETED";
-//		
-//		ResponseEntity<String> response = new ResponseEntity<String>(body, HttpStatus.OK);
-//		return response;
-//	}
+	// Recupera la stagione dato il pattern
+	@RequestMapping(value = "/retrieveSeason", method = RequestMethod.POST)
+	public ResponseEntity<SeasonBean> calculateRealStats(@RequestBody RetrieveSeasonReq req) {
+		CompetitionBean competition = req.getCompetition();
+		String competitionShortName = competition.getCompetitionShortName();
+		String leagueShortName = competition.getLeagueShortName();
+		String pattern = req.getPattern();
+		
+		SeasonBean season = main.retrieveSeasonFromPattern(pattern, leagueShortName, competitionShortName);
+		
+		String body = "Retrieve Season COMPLETED";
+		
+		ResponseEntity<SeasonBean> response = new ResponseEntity<SeasonBean>(season, HttpStatus.OK);
+		return response;
+	}
 		
 		
 		

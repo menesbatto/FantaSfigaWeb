@@ -12,6 +12,12 @@ public class Pair implements Serializable{
 	private Double value;
 	private List<Double> valueList;
 	
+	private Integer bestPosition;
+	private String bestPattern;
+	private Integer worstPosition;
+	private String worstPattern;
+	
+	
 	
 	public Pair(String name, Double value) {
 		this.name = name;
@@ -21,6 +27,34 @@ public class Pair implements Serializable{
 		this.name = name;
 		this.setValueList(valueList);
 		this.value=0.0;
+	}
+
+
+	
+	
+	public Integer getBestPosition() {
+		return bestPosition;
+	}
+	public void setBestPosition(Integer bestPosition) {
+		this.bestPosition = bestPosition;
+	}
+	public String getBestPattern() {
+		return bestPattern;
+	}
+	public void setBestPattern(String bestPattern) {
+		this.bestPattern = bestPattern;
+	}
+	public Integer getWorstPosition() {
+		return worstPosition;
+	}
+	public void setWorstPosition(Integer worstPosition) {
+		this.worstPosition = worstPosition;
+	}
+	public String getWorstPattern() {
+		return worstPattern;
+	}
+	public void setWorstPattern(String worstPattern) {
+		this.worstPattern = worstPattern;
 	}
 	public String getName() {
 		return name;

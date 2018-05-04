@@ -21,6 +21,7 @@ import { LeaguesService } from '../leagues.service';
             <div align = center> - - - - - </div>
             
             <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> Calcola le statistiche con regole personalizzate</button>
+            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveSeason()"> Recupera una stagione</button>
 
 
         </div>
@@ -71,15 +72,53 @@ import { LeaguesService } from '../leagues.service';
                         <td *ngIf= "team.scoredGoals">{{team.scoredGoals}}</td>
                         <td *ngIf= "team.takenGoals">{{team.takenGoals}}</td>
                         <td *ngIf= "team.sumAllVotes">{{team.sumAllVotes}}</td>
-                        <td *ngIf= "team.positions">{{team.positions[0]}}</td>
-                        <td *ngIf= "team.positions">{{team.positions[1]}}</td>
-                        <td *ngIf= "team.positions">{{team.positions[2]}}</td>
-                        <td *ngIf= "team.positions">{{team.positions[3]}}</td>
-                        <td *ngIf= "team.positions">{{team.positions[4]}}</td>
-                        <td *ngIf= "team.positions">{{team.positions[5]}}</td>
-                        <td *ngIf= "team.positions">{{team.positions[6]}}</td>
-                        <td *ngIf= "team.positions">{{team.positions[7]}}</td>
-                        <td *ngIf= "team.positions">{{team.positions[8]}}</td>
+                        
+                        <td *ngIf= "team.positions">
+                            <button *ngIf="team.bestPosition==1 || team.worstPosition==1" class="btn btn-primary btn-block"(click) = retrieveSeason(team.bestPattern)>{{team.positions[0]}}</button>
+                            <span *ngIf="team.bestPosition!=1 && team.worstPosition!=1">{{team.positions[0]}}</span>
+                        </td>
+                        
+                        <td *ngIf= "team.positions">
+                            <button *ngIf="team.bestPosition==2 || team.worstPosition==2" class="btn btn-primary btn-block"(click) = retrieveSeason(team.bestPattern)>{{team.positions[1]}}</button>
+                            <span *ngIf="team.bestPosition!=2 && team.worstPosition!=2">{{team.positions[1]}}</span>
+                        </td>
+                       
+                        <td *ngIf= "team.positions">
+                            <button *ngIf="team.bestPosition==3 || team.worstPosition==3" class="btn btn-primary btn-block"(click) = retrieveSeason(team.bestPattern)>{{team.positions[2]}}</button>
+                            <span *ngIf="team.bestPosition!=3 && team.worstPosition!=3">{{team.positions[1]}}</span>
+                        </td>
+
+                        <td *ngIf= "team.positions">
+                            <button *ngIf="team.bestPosition==4 || team.worstPosition==4" class="btn btn-primary btn-block"(click) = retrieveSeason(team.bestPattern)>{{team.positions[3]}}</button>
+                            <span *ngIf="team.bestPosition!=4 && team.worstPosition!=4">{{team.positions[3]}}</span>
+                        </td>
+
+                        <td *ngIf= "team.positions">
+                            <button *ngIf="team.bestPosition==5 || team.worstPosition==5" class="btn btn-primary btn-block"(click) = retrieveSeason(team.bestPattern)>{{team.positions[4]}}</button>
+                            <span *ngIf="team.bestPosition!=5 && team.worstPosition!=5">{{team.positions[4]}}</span>
+                        </td>
+
+                        <td *ngIf= "team.positions">
+                            <button *ngIf="team.bestPosition==6 || team.worstPosition==6" class="btn btn-primary btn-block"(click) = retrieveSeason(team.bestPattern)>{{team.positions[5]}}</button>
+                            <span *ngIf="team.bestPosition!=6 && team.worstPosition!=6">{{team.positions[5]}}</span>
+                        </td>
+
+                        <td *ngIf= "team.positions">
+                            <button *ngIf="team.bestPosition==7 || team.worstPosition==7" class="btn btn-primary btn-block"(click) = retrieveSeason(team.bestPattern)>{{team.positions[6]}}</button>
+                            <span *ngIf="team.bestPosition!=7 && team.worstPosition!=7">{{team.positions[6]}}</span>
+                        </td>
+
+                        <td *ngIf= "team.positions">
+                            <button *ngIf="team.bestPosition==8 || team.worstPosition==8" class="btn btn-primary btn-block"(click) = retrieveSeason(team.bestPattern)>{{team.positions[7]}}</button>
+                            <span *ngIf="team.bestPosition!=8 && team.worstPosition!=8">{{team.positions[7]}}</span>
+                        </td>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         <td *ngIf= "team.luckyEdge">{{team.luckyEdge.luckyEdgeNumber}}</td>
                         <td *ngIf= "team.luckyEdge">{{team.luckyEdge.luckyEdgeGain}}</td>
                         <td *ngIf= "team.luckyEdge">{{team.luckyEdge.unluckyEdgeNumber}}</td>
@@ -144,12 +183,16 @@ import { LeaguesService } from '../leagues.service';
             <h1 align="center"> POSIZIONI </h1>
 
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <h3> Classifica Posizioni </h3>
                     <ng-container *ngTemplateOutlet="rankingTable;context:ctxPositionsRanking">
                     </ng-container>       
                 </div>
-                <div class="col-lg-6">
+            </div>
+            
+            
+            <div class="row">
+                <div class="col-lg-12">
                     <h3> Classifica delle Posizioni Percentuali </h3>
                     <ng-container *ngTemplateOutlet="rankingTable;context:ctxPositionsPercentaleRanking">
                     </ng-container>
@@ -349,10 +392,12 @@ export class CompetitionComponent implements OnInit {
     }
 
     saveOnlineSeasonAndTeams(){
+        this.loadingMessage = "Download dei risultati delle giornate mancanti in corso...";
+
         this.leagueService.saveOnlineSeasonAndTeams(this.model).subscribe(
             data => {
               this.loadingMessage = null;
-              this.successMessage == "Aggiornati risultati della competizione online";
+              this.successMessage = "I risultati delle giornate mancanti sono stati scaricati";
               this.errorMessage = null;
             },
             error => {
@@ -368,13 +413,13 @@ export class CompetitionComponent implements OnInit {
         this.loading = true;
         this.successMessage = null;
         this.errorMessage = null;
-        this.loadingMessage = "Download delle informazioni delle giornate mancanti in corso...";
+        this.loadingMessage = "Download delle formazioni delle giornate mancanti in corso...";
 
         this.leagueService.downloadSeasonFromWeb(this.model)
             .subscribe(
                 data => {
                     this.loadingMessage = null;
-                    this.successMessage = "I dati delle giornate mancanti sono stati scaricati";
+                    this.successMessage = "Le formazioni delle giornate mancanti sono stati scaricati";
                     this.errorMessage = null;
                     this.loading = false;
                 },
@@ -444,6 +489,25 @@ export class CompetitionComponent implements OnInit {
         this.errorMessage = null;
     }
 
+
+    retrieveSeason(pattern) {
+        let req = {
+            competition : this.model,
+            pattern : pattern
+        }
+        this.leagueService.retrieveSeason(req) .subscribe(
+            data => {
+               console.log(data)
+            },
+
+            error => {
+                this.loadingMessage = null;
+                this.successMessage = null;
+                this.errorMessage = "Errore di comunicazione col server 3";
+                this.loading = false;
+            });
+
+    }
 
     
     goToCustomRules() {

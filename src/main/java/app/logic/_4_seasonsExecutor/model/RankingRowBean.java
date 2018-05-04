@@ -15,6 +15,43 @@ public class RankingRowBean implements Serializable{
 	private Integer rankingPosition;		// 1,2,3,4,5,6,7,8
 	private List<Double> positions;
 
+	private Integer bestPosition;
+	private String bestPattern;
+	private Integer worstPosition;
+	private String worstPattern;	
+	
+	public Integer getBestPosition() {
+		return bestPosition;
+	}
+
+	public void setBestPosition(Integer bestPosition) {
+		this.bestPosition = bestPosition;
+	}
+
+	public String getBestPattern() {
+		return bestPattern;
+	}
+
+	public void setBestPattern(String bestPattern) {
+		this.bestPattern = bestPattern;
+	}
+
+	public Integer getWorstPosition() {
+		return worstPosition;
+	}
+
+	public void setWorstPosition(Integer worstPosition) {
+		this.worstPosition = worstPosition;
+	}
+
+	public String getWorstPattern() {
+		return worstPattern;
+	}
+
+	public void setWorstPattern(String worstPattern) {
+		this.worstPattern = worstPattern;
+	}
+
 	private LuckyEdgeInfo luckyEdge;
 	
 	

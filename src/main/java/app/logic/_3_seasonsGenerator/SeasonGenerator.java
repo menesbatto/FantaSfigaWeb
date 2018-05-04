@@ -30,7 +30,8 @@ public class SeasonGenerator {
 			}
 		});
 		
-		SeasonBean s = createSeason(seasonNumber + " - " + combination, playerOrderList, fantacalcioActualSeasonDay, seasonPattern); 
+		SeasonBean s = createSeason(combination, playerOrderList, fantacalcioActualSeasonDay, seasonPattern); 
+//		SeasonBean s = createSeason(seasonNumber + " - " + combination, playerOrderList, fantacalcioActualSeasonDay, seasonPattern); 
 		
 		return s;
 		

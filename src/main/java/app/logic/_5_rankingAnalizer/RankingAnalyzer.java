@@ -3,10 +3,15 @@ package app.logic._5_rankingAnalizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import app.RulesType;
 import app.dao.LeagueDao;
@@ -125,7 +130,6 @@ public class RankingAnalyzer {
 		int playerNumber = realRanking.getRows().size();
 		
 		List<Pair> positionsList = calculatePositionsList(teams, allRankings);
-		
 		// Ranking con numero di evenienze per ogni posizione
 		RankingBean positionsRanking = calculatePositionsRanking(positionsList, playerNumber);
 		positionsRanking.setRulesType(rulesType);
@@ -319,13 +323,18 @@ public class RankingAnalyzer {
 			current.setName(pair.getName());
 			current.setPositions(pair.getValueList());
 			current.setRankingPosition(i);
+			
+			current.setBestPattern(pair.getBestPattern());
+			current.setBestPosition(pair.getBestPosition());
+			current.setWorstPattern(pair.getWorstPattern());
+			current.setWorstPosition(pair.getWorstPosition());
+			
 			positionsRanking.add(current);
 		}
 		
 		RankingBean rankingBean = new RankingBean();
 		rankingBean.setName(RankingType.POSITIONS.name());
 		rankingBean.setRows(positionsRanking);
-//		leagueDao.saveRanking(rankingBean, leagueShortName, competitionShortName, userBean.getUsername());
 		
 		return rankingBean;
 		
@@ -366,8 +375,8 @@ public class RankingAnalyzer {
 	}
 
 	private List<Pair> calculatePositionsList(List<String> teams, List<RankingBean> allRankings) {
-		List<Pair> results = createListPairTeams(teams);
-		
+		Map<String, Pair> map = createMapPairTeams(teams);
+
 		RankingRowBean rr;
 		List<RankingRowBean> rows;
 		List<Double> listPositions;
@@ -376,26 +385,46 @@ public class RankingAnalyzer {
 			rows = ranking.getRows();
 			for (int i = 0; i < rows.size(); i++) {
 				rr = rows.get(i);
-				for (Pair result : results) {
-					if (rr.getName().equals(result.getName())){
-						listPositions = result.getValueList();
-						int rankingPosition = rr.getRankingPosition()-1;
-						listPositions.set(rankingPosition, listPositions.get(rankingPosition) + 1);
-						
-						listPoints = result.getValue();
-						result.setValue(listPoints + rr.getPoints() );
-					}
+				Pair result = map.get(rr.getName());
+				listPositions = result.getValueList();
+				int rankingPosition = rr.getRankingPosition();
+				int rankingPositionArrayIndex = rankingPosition-1;
+				listPositions.set(rankingPositionArrayIndex, listPositions.get(rankingPositionArrayIndex) + 1);
+				listPoints = result.getValue();
+				result.setValue(listPoints + rr.getPoints() );
+				
+				if (rankingPosition < result.getBestPosition()) {
+					result.setBestPosition(rankingPosition);
+					result.setBestPattern(ranking.getPattern());
 				}
+				else if(rankingPosition > result.getWorstPosition()) {
+					result.setWorstPosition(rankingPosition);
+					result.setWorstPattern(ranking.getPattern());
+				}
+				
 			}
 		}
-		
-		Collections.sort(results, new Comparator<Pair>() {
+		List<Pair> list = new ArrayList<Pair>(map.values());
+		Collections.sort(list, new Comparator<Pair>() {
 			public int compare(Pair o1, Pair o2) {
-				//return o2.getValueList().get(0).compareTo(o1.getValueList().get(0));
 				return o2.getValue().compareTo(o1.getValue());
 			}
 		});
-		return results;
+		return list;
+	}
+
+	private Map<String, Pair> createMapPairTeams(List<String> teams) {
+		Map<String, Pair> map = new HashMap<String, Pair>();
+		Pair p;
+		for (String player : teams) {
+			List<Double> positions = getArrayOfSize(teams.size());
+			p = new Pair(player , positions);
+			p.setBestPosition(teams.size());
+			p.setWorstPosition(1);
+			map.put(player, p);
+			
+		}
+		return map;
 	}
 
 	private List<Pair> createListPairTeams(List<String> teams) {

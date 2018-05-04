@@ -3,6 +3,7 @@ package app.logic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.language.bm.RuleType;
 import org.apache.tomcat.util.descriptor.web.ServletDef;
@@ -13,6 +14,7 @@ import app.RulesType;
 import app.dao.LeagueDao;
 import app.dao.RankingType;
 import app.dao.RulesDao;
+import app.dao.UtilsDao;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_rulesDownloader.model.CustomRules;
 import app.logic._0_rulesDownloader.model.RulesBean;
@@ -22,6 +24,7 @@ import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
 import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
 import app.logic._3_seasonsGenerator.AllSeasonsGenerator;
+import app.logic._3_seasonsGenerator.SeasonGenerator;
 import app.logic._4_seasonsExecutor.MainSeasonsExecutor;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 import app.logic._4_seasonsExecutor.model.RankingRowBean;
@@ -56,7 +59,7 @@ public class Main {
 	
 	public StasResponse calculateRealStats(String leagueShortName, String competitionShortName, Boolean onlyOne, RulesType rulesType){
 		
-	// Genera tutti i possibili calendari (sarebbe inutile farlo sempre ma ci si mette meno ad eseguirlo che a deserializzarli da disco)
+		// Genera tutti i possibili calendari (sarebbe inutile farlo sempre ma ci si mette meno ad eseguirlo che a deserializzarli da disco)
 		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
 		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, rulesType, userBean.getUsername());
 
@@ -132,38 +135,29 @@ public class Main {
 	}
 
 
-	public StasResponse calculateStatsWithCustomRules(String leagueShortName, String competitionShortName, Boolean onlyOne, RulesBean customRules) {
-		
-		//RulesBean rulesDb = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.CUSTOM, userBean.getUsername());
-//		rulesDb.getModifiers().setDefenderModifierActive(false);
-//		rulesDb.getModifiers().setGoalkeeperModifierActive(false);
-//		rulesDb.getModifiers().setMiddlefielderModifierActive(false);
-//		rulesDb.getModifiers().setStrikerModifierActive(false);
-//		rulesDb.getModifiers().setPerformanceModifierActive(false);
-//		rulesDb.getModifiers().setFairPlayModifierActive(false);
-//		List<Double> GOAL_POINTS = Arrays.asList(66.0, 72.0, 78.0, 84.0, 90.0, 96.0, 102.0, 108.0, 114.0);;
-//		rulesDb.getPoints().setGoalPoints(GOAL_POINTS);
-		
-		
-		
+	@Autowired
+	private UtilsDao utilsDao;
+	@Autowired
+	private SeasonGenerator seasonGenerator;
+	
+	
+	public SeasonBean retrieveSeasonFromPattern(String pattern, String leagueShortName, String competitionShortName) {
+		Integer serieAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
+		Map<Integer, Integer> bindings = rulesDao.findSerieAToCompetitionBinding(leagueShortName, competitionShortName, userBean.getUsername());
+		SeasonBean seasonPattern = leagueDao.findSeason(leagueShortName, competitionShortName, userBean.getUsername(), "Pattern");
+		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
+		Integer fantacalcioActualSeasonDay = bindings.get(serieAActualSeasonDay);
+		SeasonBean s = seasonGenerator.generateSingleSeason(pattern, 0, fantacalcioActualSeasonDay, seasonPattern, teams);
 
+		List<SeasonBean> allSeasons = new ArrayList<SeasonBean>();
+		allSeasons.add(s);
 		
-//		SeasonResultBean calculatedSeasonResult = seasonAnalyzer.calculateSeasonResult(competitionShortName, leagueShortName, customRules);
-//		List<SeasonBean> allSeasons = allSeasonsGenerator.generateAllSeasons(leagueShortName, competitionShortName, onlyOne);
-//		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, calculatedSeasonResult, customRules);
-//		
-//		// Salvo il ranking REALE che è sempre il primo
-//		RankingBean realRanking = allRankings.get(0);
-//		realRanking.setRulesType(RulesType.CUSTOM);
-//		System.out.println(realRanking);
-//		leagueDao.saveRanking(realRanking, leagueShortName, competitionShortName, userBean.getUsername());
-//		
-//		if (!onlyOne) {
-//			rankingAnalyzer.calculateAndSaveAllRankings(allRankings, leagueShortName, competitionShortName, RulesType.CUSTOM);
-//		}
-//		
-		return null;
+		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.REAL, userBean.getUsername());
+		SeasonResultBean calculatedSeasonResult = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
 		
+		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons , leagueShortName, competitionShortName, rules, calculatedSeasonResult);
+		
+		return s;
 	}
 }
 

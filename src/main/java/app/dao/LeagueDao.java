@@ -561,6 +561,11 @@ public class LeagueDao {
 			ent.setUnluckyEdgeNumber(bean.getLuckyEdge().getUnluckyEdgeNumber());
 		}
 		
+		ent.setBestPattern(bean.getBestPattern());
+		ent.setBestPosition(bean.getBestPosition());
+		ent.setWorstPattern(bean.getWorstPattern());
+		ent.setWorstPosition(bean.getWorstPosition());
+		
 		return ent;
 	}
 
@@ -614,6 +619,11 @@ public class LeagueDao {
 			luckyEdge.setUnluckyEdgeNumber(ent.getUnluckyEdgeNumber());
 			bean.setLuckyEdge(luckyEdge);
 		}
+		
+		bean.setBestPattern(ent.getBestPattern());
+		bean.setBestPosition(ent.getBestPosition());
+		bean.setWorstPattern(ent.getWorstPattern());
+		bean.setWorstPosition(ent.getWorstPosition());
 		
 		return bean;
 	}

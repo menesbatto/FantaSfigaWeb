@@ -33,6 +33,47 @@ public class RankingRow {
 	
 	private Integer unluckyEdgeNumber;
 	
+	private Integer bestPosition;
+	
+	private String bestPattern;
+	
+	private Integer worstPosition;
+	
+	public Integer getBestPosition() {
+		return bestPosition;
+	}
+
+	public void setBestPosition(Integer bestPosition) {
+		this.bestPosition = bestPosition;
+	}
+
+	public String getBestPattern() {
+		return bestPattern;
+	}
+
+	public void setBestPattern(String bestPattern) {
+		this.bestPattern = bestPattern;
+	}
+
+	public Integer getWorstPosition() {
+		return worstPosition;
+	}
+
+	public void setWorstPosition(Integer worstPosition) {
+		this.worstPosition = worstPosition;
+	}
+
+	public String getWorstPattern() {
+		return worstPattern;
+	}
+
+	public void setWorstPattern(String worstPattern) {
+		this.worstPattern = worstPattern;
+	}
+
+	private String worstPattern;
+	
+	
 	public Integer getLuckyEdgeNumber() {
 		return luckyEdgeNumber;
 	}

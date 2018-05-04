@@ -11,21 +11,27 @@ public class Points  implements Serializable{
 	private List<Double> goalPoints;
 	private List<Double> formulaUnoPoints;
 	
+	//Se due squadre totalizzano un punteggio all'interno della stessa fascia, si aggiunge un gol alla squadra che avra' distaccato l'avversario del valore specificato.
 	private Boolean fasciaConIntornoActive;
 	private Double fasciaConIntorno;
 	
+	//Se i punteggi delle due squadre cadono in fasce differenti, vince chi distacca l'avversario di almeno del valore specificato
 	private Boolean intornoActive;
 	private Double intorno;
 	
+	//Se due squadre ottengono un punteggio inferiore a Soglia gol specificare lo scarto per far scattare il gol alla squadra con punteggio maggiore
 	private Boolean controllaPareggioActive;
 	private Double controllaPareggio;
 	
+	//Se la differenza dei punti-squadra è uguale o superiore al valore impostato, si attribuisce un altro gol alla squadra con piu' punti
 	private Boolean differenzaPuntiActive;
 	private Double differenzaPunti;
 	
+	//Se una delle due squadre ottiene un punteggio inferiore al valore impostato, si attribuisce un altro gol alla squadra avversaria
 	private Boolean autogolActive;
 	private Double autogol;
 	
+	//Impostare su Si per attribuire un bonus al portiere che non subisce gol. Il portiere deve eaver giocato almeno 25 minuti
 	private Boolean portiereImbattutoActive;
 	private Double portiereImbattuto;
 	

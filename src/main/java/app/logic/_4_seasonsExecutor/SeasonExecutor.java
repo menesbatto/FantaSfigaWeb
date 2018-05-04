@@ -89,6 +89,17 @@ public class SeasonExecutor {
 
 
 	private void updateFormulaUnoRanking(SeasonDayResultBean seasonDayResult, RulesBean rules, RankingBean formulaUnoRanking) {
+		//		SI
+		//		difesa
+		//		attacco
+		//		performance
+		//		fairplay
+		//		portiere imbattuto
+		
+		// 		NO PORTIERE CENTROCAMPO
+		
+		// OK GRATUITO
+
 		List<Pair> seasonDayVoteSumRanking = new ArrayList<Pair>();
 		Pair p;
 		for (LineUpLightBean lul : seasonDayResult.getLinesUpLight()){

@@ -192,7 +192,7 @@ import { LeaguesService } from '../leagues.service';
                             <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'autogol"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="autogol">Gol decisivo pareggio:</label>
+                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="golPareggio">Gol decisivo pareggio:</label>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                                 <input name="ctl00$main$golpareggio1" [(ngModel)]="bonusMalus.evenGoal.P" class="form-control chk" type="number">
                             </div>
@@ -640,8 +640,8 @@ import { LeaguesService } from '../leagues.service';
                     </div>
                     <div class="row inner nobor" *ngIf="points.fasciaConIntornoActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="valintorno">Valore per fascia con intorno:</label>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
-                            <input name="ctl00$main$vriservap" [(ngModel)]="points.fasciaConIntorno" class="form-control textinner" type="number">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <input name="ctl00$main$valintorno" [(ngModel)]="points.fasciaConIntorno" class="form-control textinner" type="number">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore della fascia con intorno"></i></div>
                     </div>
@@ -667,8 +667,8 @@ import { LeaguesService } from '../leagues.service';
                     </div>
                     <div class="row inner nobor" *ngIf="points.intornoActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="vintorno">Valore per intorno:</label>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
-                            <input name="ctl00$main$vriservap" [(ngModel)]="points.intorno" class="form-control textinner" type="number">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <input name="ctl00$main$vintorno" [(ngModel)]="points.intorno" class="form-control textinner" type="number">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore dell'intorno"></i></div>
                     </div>
@@ -691,8 +691,8 @@ import { LeaguesService } from '../leagues.service';
                     </div>
                     <div class="row inner nobor" *ngIf="points.controllaPareggioActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="vcpareggio">Valore per controlla pareggio:</label>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
-                            <input name="ctl00$main$vriservap" [(ngModel)]="points.controllaPareggio" class="form-control textinner" type="number">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <input name="ctl00$main$vcpareggio" [(ngModel)]="points.controllaPareggio" class="form-control textinner" type="number">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore del controlla pareggio"></i></div>
                     </div>
@@ -715,8 +715,8 @@ import { LeaguesService } from '../leagues.service';
                     </div>
                     <div class="row inner nobor" *ngIf="points.differenzaPuntiActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="vdpunti">Valore per differenza punti:</label>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
-                            <input name="ctl00$main$vriservap" [(ngModel)]="points.differenzaPunti" class="form-control textinner" type="number">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <input name="ctl00$main$vdpunti" [(ngModel)]="points.differenzaPunti" class="form-control textinner" type="number">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore della differenza punti"></i></div>
                     </div>
@@ -739,8 +739,8 @@ import { LeaguesService } from '../leagues.service';
                     </div>
                     <div class="row inner nobor" *ngIf="points.autogolActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="dautogol">Valore autogol:</label>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
-                            <input name="ctl00$main$vriservap" [(ngModel)]="points.autogol" class="form-control textinner" type="number">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <input name="ctl00$main$dautogol" [(ngModel)]="points.autogol" class="form-control textinner" type="number">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore dell'autogol"></i></div>
                     </div>
@@ -763,8 +763,8 @@ import { LeaguesService } from '../leagues.service';
                     </div>
                     <div class="row inner nobor" *ngIf="points.portiereImbattutoActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="vpimbattuto">Valore per bonus portiere imbattuto:</label>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
-                            <input name="ctl00$main$vriservap" [(ngModel)]="points.portiereImbattuto" class="form-control textinner" type="number">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                            <input name="ctl00$main$vpimbattuto" [(ngModel)]="points.portiereImbattuto" class="form-control textinner" type="number">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore del bonus da assegnare al portiere imbattuto"></i></div>
                     </div>

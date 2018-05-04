@@ -83,14 +83,7 @@ public class AllSeasonsGenerator {
 		
 	}
 
-//	public static ArrayList<SeasonBean> getAllGeneratedSeasonStructures() {
-//		long startTime = System.nanoTime();
-//		System.out.println("Inizio caricamento di tutti i calendari");
-//		ArrayList<SeasonBean> allSeasons = IOUtils.read(AppConstants.GENERATED_SEASONS_DIR + AppConstants.GENERATED_SEASONS_FILE_NAME, ArrayList.class);
-//		long endTime = System.nanoTime();
-//		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
-//		System.out.println("Fine caricamento " + duration/1000000);
-//		return allSeasons;
-//	}
+
+
 	
 }

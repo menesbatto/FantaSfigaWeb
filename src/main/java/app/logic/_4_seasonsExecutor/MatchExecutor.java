@@ -16,7 +16,7 @@ import app.utils.AppConstants;
 @Service
 public class MatchExecutor {
 
-	
+
 	public void execute(MatchBean m, RulesBean rules, List<String> teams) {
 		
 		LineUpLightBean homeTeamResult = m.getHomeTeamResult();
@@ -97,6 +97,75 @@ public class MatchExecutor {
 		Integer homeTeamGoals = calculateGoal(homeSumTotalPoints, rules);
 		Integer awayTeamGoals = calculateGoal(awaySumTotalPoints, rules);
 		
+		
+
+		
+		// FASCIA CON INTORNO
+		//Se due squadre totalizzano un punteggio all'interno della stessa fascia, si aggiunge un gol alla squadra che avra' distaccato l'avversario del valore specificato.
+		// Maggiore di 0 goal
+		//Si aggiunge il gol
+
+		Double firstGoalPoints = rules.getPoints().getGoalPoints().get(0);
+
+		if (rules.getPoints().isFasciaConIntornoActive()){
+			if (homeTeamGoals == awayTeamGoals) {
+				if ( homeSumTotalPoints > firstGoalPoints)
+					if (  homeSumTotalPoints > awaySumTotalPoints && homeSumTotalPoints - awaySumTotalPoints > rules.getPoints().getFasciaConIntorno()  ){
+						homeTeamGoals++;
+					}
+					else if (  awaySumTotalPoints > homeSumTotalPoints && awaySumTotalPoints - homeSumTotalPoints > rules.getPoints().getFasciaConIntorno()  ) {
+						awayTeamGoals++;
+					}
+			}
+		}
+
+		// INTORNO
+		//Se i punteggi delle due squadre cadono in fasce differenti, vince chi distacca l'avversario di almeno del valore specificato
+		//Si toglie il gol
+		if (rules.getPoints().isIntornoActive()){
+			Double difference = homeSumTotalPoints - awaySumTotalPoints;
+			if (difference <= rules.getPoints().getIntorno() &&  difference >= - rules.getPoints().getIntorno() ){
+				if (homeTeamGoals > awayTeamGoals) {
+					homeTeamGoals = awayTeamGoals;
+				}
+				else {//if (awayTeamGoals > homeTeamGoals)
+					awayTeamGoals = homeTeamGoals;
+				}
+			} 
+		}
+		
+		
+		// CONTROLLA PAREGGIO
+		//Se due squadre ottengono un punteggio inferiore a Soglia gol specificare lo scarto per far scattare il gol alla squadra con punteggio maggiore
+		// Uguale a 0 goal
+		//Si aggiunge il gol
+		if (rules.getPoints().isControllaPareggioActive()){
+			if (homeSumTotalPoints < firstGoalPoints && awaySumTotalPoints < firstGoalPoints) {
+				if (  homeSumTotalPoints > awaySumTotalPoints && homeSumTotalPoints - awaySumTotalPoints > rules.getPoints().getControllaPareggio()  ){
+					homeTeamGoals++;
+				}
+				else if (  awaySumTotalPoints > homeSumTotalPoints && awaySumTotalPoints - homeSumTotalPoints > rules.getPoints().getControllaPareggio()  ){
+					awayTeamGoals++;
+				}
+			}
+		}
+	
+		// DIFFERENZA PUNTI
+		//Se la differenza dei punti-squadra è uguale o superiore al valore impostato, si attribuisce un altro gol alla squadra con piu' punti
+		//Si aggiunge il gol
+		if (rules.getPoints().isDifferenzaPuntiActive()){
+			if (  homeSumTotalPoints > awaySumTotalPoints && homeSumTotalPoints - awaySumTotalPoints > rules.getPoints().getDifferenzaPunti()  ){
+				homeTeamGoals++;
+			}
+			else if (  awaySumTotalPoints > homeSumTotalPoints && awaySumTotalPoints - homeSumTotalPoints > rules.getPoints().getDifferenzaPunti()  ){
+				awayTeamGoals++;
+			}
+			
+		}
+		
+		// AUTOGOL
+		//Se una delle due squadre ottiene un punteggio inferiore al valore impostato, si attribuisce un altro gol alla squadra avversaria
+		//Si aggiunge il gol
 		if (rules.getPoints().getAutogolActive()) {
 			if ( homeSumTotalPoints < rules.getPoints().getAutogol() )
 				awayTeamGoals++;
@@ -104,18 +173,6 @@ public class MatchExecutor {
 				homeTeamGoals++;
 		}
 		
-
-//		if (AppConstants.FORCE_WINNING_FOR_DISTANCE){
-		if (rules.getPoints().isIntornoActive()){
-			Double difference = homeSumTotalPoints - awaySumTotalPoints;
-			//if (difference < AppConstants.FORCE_WINNING_FOR_DISTANCE_POINTS &&  difference > -AppConstants.FORCE_WINNING_FOR_DISTANCE_POINTS){
-			if (difference < rules.getPoints().getIntorno() &&  difference > - rules.getPoints().getIntorno() ){
-				if (homeTeamGoals>awayTeamGoals)
-					awayTeamGoals= homeTeamGoals;
-				else 
-					homeTeamGoals = awayTeamGoals;
-			} 
-		}
 		
 		homeTeamResult.setGoals(homeTeamGoals);
 		awayTeamResult.setGoals(awayTeamGoals);
@@ -141,8 +198,8 @@ public class MatchExecutor {
 		homeTeamResult.setTakenGoals(awayTeamGoals);
 		awayTeamResult.setTakenGoals(homeTeamGoals);
 		
-		if(rules.getCustomRules()!= null && ( RankingType.LUCKY_EDGES_0_5.equals(rules.getCustomRules().getRankingType())
-				|| RankingType.LUCKY_EDGES_1.equals(rules.getCustomRules().getRankingType())) ) {
+		if(		rules.getCustomRules()!= null && 
+				( RankingType.LUCKY_EDGES_0_5.equals(rules.getCustomRules().getRankingType()) || RankingType.LUCKY_EDGES_1.equals(rules.getCustomRules().getRankingType())) ) {
 			analyzeLuckyEdges(homeTeamResult, awayTeamResult, rules);
 		}
 	}
@@ -161,7 +218,7 @@ public class MatchExecutor {
 		Double homeSumTotalPoints = homeTeamResult.getSumTotalPoints();
 		if (homeTeamGoals - awayTeamGoals <= 1 && homeTeamGoals - awayTeamGoals >= -1){
 			//SCULO PER HOME
-			if ( rules.getPoints().getGoalPoints().contains(homeSumTotalPoints) ||rules.getPoints().getGoalPoints().contains(awaySumTotalPoints + rules.getCustomRules().getLuckyEdgePoints())){
+			if ( rules.getPoints().getGoalPoints().contains(homeSumTotalPoints) || rules.getPoints().getGoalPoints().contains(awaySumTotalPoints + rules.getCustomRules().getLuckyEdgePoints())){
 				Double rankingPointsGainedFromHomeTeam = 0.0;
 				Double rankingPointsLostFromAwayTeam = 0.0;
 				if (homeRankingPoints == 3.0){
