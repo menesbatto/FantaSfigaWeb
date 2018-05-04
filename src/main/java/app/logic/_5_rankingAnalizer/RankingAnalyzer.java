@@ -391,15 +391,22 @@ public class RankingAnalyzer {
 				int rankingPositionArrayIndex = rankingPosition-1;
 				listPositions.set(rankingPositionArrayIndex, listPositions.get(rankingPositionArrayIndex) + 1);
 				listPoints = result.getValue();
-				result.setValue(listPoints + rr.getPoints() );
+				Double points = rr.getPoints();
+				result.setValue(listPoints + points );
 				
-				if (rankingPosition < result.getBestPosition()) {
-					result.setBestPosition(rankingPosition);
-					result.setBestPattern(ranking.getPattern());
+				if (rankingPosition <= result.getBestPosition()) {
+					if (points > result.getBestPoints()) {
+						result.setBestPoints(points);
+						result.setBestPosition(rankingPosition);
+						result.setBestPattern(ranking.getPattern());
+					}
 				}
-				else if(rankingPosition > result.getWorstPosition()) {
-					result.setWorstPosition(rankingPosition);
-					result.setWorstPattern(ranking.getPattern());
+				else if(rankingPosition >= result.getWorstPosition()) {
+					if (points < result.getWorstPoints()) {
+						result.setWorstPoints(points);
+						result.setWorstPosition(rankingPosition);
+						result.setWorstPattern(ranking.getPattern());
+					}
 				}
 				
 			}
@@ -421,6 +428,8 @@ public class RankingAnalyzer {
 			p = new Pair(player , positions);
 			p.setBestPosition(teams.size());
 			p.setWorstPosition(1);
+			p.setBestPoints(0.0);
+			p.setWorstPoints(300.0);
 			map.put(player, p);
 			
 		}

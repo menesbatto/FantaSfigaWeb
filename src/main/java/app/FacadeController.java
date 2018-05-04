@@ -45,6 +45,7 @@ import app.logic.model.PostponementBean;
 import app.logic.model.RetrieveAllRankingsReq;
 import app.logic.model.RetrieveRules;
 import app.logic.model.RetrieveSeasonReq;
+import app.logic.model.SeasonAndRankingRes;
 import app.logic.model.StasResponse;
 import app.logic.model.IntegrateRulesReq;
 
@@ -687,17 +688,18 @@ public class FacadeController {
 	
 	// Recupera la stagione dato il pattern
 	@RequestMapping(value = "/retrieveSeason", method = RequestMethod.POST)
-	public ResponseEntity<SeasonBean> calculateRealStats(@RequestBody RetrieveSeasonReq req) {
+	public ResponseEntity<SeasonAndRankingRes> calculateRealStats(@RequestBody RetrieveSeasonReq req) {
 		CompetitionBean competition = req.getCompetition();
 		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		String pattern = req.getPattern();
 		
-		SeasonBean season = main.retrieveSeasonFromPattern(pattern, leagueShortName, competitionShortName);
+		SeasonAndRankingRes res = main.retrieveSeasonFromPattern(pattern, leagueShortName, competitionShortName);
+		
 		
 		String body = "Retrieve Season COMPLETED";
 		
-		ResponseEntity<SeasonBean> response = new ResponseEntity<SeasonBean>(season, HttpStatus.OK);
+		ResponseEntity<SeasonAndRankingRes> response = new ResponseEntity<SeasonAndRankingRes>(res, HttpStatus.OK);
 		return response;
 	}
 		

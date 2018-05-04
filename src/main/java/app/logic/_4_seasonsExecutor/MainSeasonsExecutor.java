@@ -62,10 +62,13 @@ public class MainSeasonsExecutor {
 
 		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
 
-		
+		RankingRowBean prevRow;
+		List<RankingRowBean> rows;
+		RankingRowBean row;
+		RankingBean ranking;
 		for ( SeasonBean season : allSeasons){
 			
-			RankingBean ranking = seasonExecutor.execute(season, rules, seasonResultBean.getSeasonDayResults(), teams);
+			ranking = seasonExecutor.execute(season, rules, seasonResultBean.getSeasonDayResults(), teams);
 		
 			
 			Collections.sort(ranking.getRows(), new Comparator<RankingRowBean>() {
@@ -78,25 +81,21 @@ public class MainSeasonsExecutor {
 					return 0;
 				}
 			});
-			List<RankingRowBean> rows = ranking.getRows();
+			rows = ranking.getRows();
+			
 			
 			rows.get(0).setRankingPosition(1); 
 			for (int j = 1; j < rows.size(); j++) {
-				RankingRowBean row = rows.get(j);
-				RankingRowBean prevRow = rows.get(j-1);
-				if (row.getPoints()== prevRow.getPoints())
+				row = rows.get(j);
+				prevRow = rows.get(j-1);
+				if (row.getPoints().equals(prevRow.getPoints()))
 					row.setRankingPosition(prevRow.getRankingPosition());
 				else 
 					row.setRankingPosition(j+1);
 				
 			}
-//			if (ranking.getRows().get(0).getName().contains("irst")) {
-//				System.out.println(ranking);
-//				System.out.println(season);
-//			}
+			System.out.println();
 			rankings.add(ranking);
-//			if (ranking.getRows().get(1).getName().equals("Hawkins"))
-//				System.out.println(season);
 		} 
 		
 		if(AppConstants.DEBUG_MODE && rules.getCustomRules() == null)

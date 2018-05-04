@@ -459,6 +459,7 @@ public class LeagueDao {
 	private SeasonDayBean createSeasonDayBean(SeasonDay ent) {
 		SeasonDayBean bean = new SeasonDayBean();
 		bean.setName(ent.getName());
+		bean.setSerieANumber(ent.getSerieANumber());
 		
 		List<MatchBean> matchesBean = new ArrayList<MatchBean>();
 		for(Matcho match : ent.getMatches()) {

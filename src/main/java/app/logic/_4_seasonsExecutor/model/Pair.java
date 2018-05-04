@@ -14,11 +14,15 @@ public class Pair implements Serializable{
 	
 	private Integer bestPosition;
 	private String bestPattern;
+	private Double bestPoints;
+	
 	private Integer worstPosition;
 	private String worstPattern;
+	private Double worstPoints;
 	
 	
 	
+
 	public Pair(String name, Double value) {
 		this.name = name;
 		this.value = value;
@@ -30,7 +34,18 @@ public class Pair implements Serializable{
 	}
 
 
-	
+	public Double getBestPoints() {
+		return bestPoints;
+	}
+	public void setBestPoints(Double bestPoints) {
+		this.bestPoints = bestPoints;
+	}
+	public Double getWorstPoints() {
+		return worstPoints;
+	}
+	public void setWorstPoints(Double worstPoints) {
+		this.worstPoints = worstPoints;
+	}
 	
 	public Integer getBestPosition() {
 		return bestPosition;

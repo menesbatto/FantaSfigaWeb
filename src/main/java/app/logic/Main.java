@@ -29,6 +29,7 @@ import app.logic._4_seasonsExecutor.MainSeasonsExecutor;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 import app.logic._4_seasonsExecutor.model.RankingRowBean;
 import app.logic._5_rankingAnalizer.RankingAnalyzer;
+import app.logic.model.SeasonAndRankingRes;
 import app.logic.model.StasResponse;
 
 @Service
@@ -141,7 +142,7 @@ public class Main {
 	private SeasonGenerator seasonGenerator;
 	
 	
-	public SeasonBean retrieveSeasonFromPattern(String pattern, String leagueShortName, String competitionShortName) {
+	public SeasonAndRankingRes retrieveSeasonFromPattern(String pattern, String leagueShortName, String competitionShortName) {
 		Integer serieAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
 		Map<Integer, Integer> bindings = rulesDao.findSerieAToCompetitionBinding(leagueShortName, competitionShortName, userBean.getUsername());
 		SeasonBean seasonPattern = leagueDao.findSeason(leagueShortName, competitionShortName, userBean.getUsername(), "Pattern");
@@ -156,8 +157,13 @@ public class Main {
 		SeasonResultBean calculatedSeasonResult = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
 		
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons , leagueShortName, competitionShortName, rules, calculatedSeasonResult);
+		RankingBean ranking = allRankings.get(0);
 		
-		return s;
+		
+		SeasonAndRankingRes res = new SeasonAndRankingRes();
+		res.setSeason(s);
+		res.setRanking(ranking);
+		return res;
 	}
 }
 

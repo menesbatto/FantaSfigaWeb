@@ -14,6 +14,7 @@ import { CompetitionRulesComponent } from './competition-rules/competition-rules
 import { CompetitionComponent } from './competition/competition.component';
 import { CustomRulesComponent } from './custom-rules/custom-rules.component';
 import { AdminComponent } from './admin/admin.component';
+import { SeasonComponent } from './season/season.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch : "full" },
@@ -27,6 +28,7 @@ const routes: Routes = [
   {path: 'competitionRules', component: CompetitionRulesComponent},
   {path: 'competition', component: CompetitionComponent},
   {path: 'customRules', component: CustomRulesComponent},
+  {path: 'season', component: SeasonComponent},
 
   {path: 'admin', component: AdminComponent},
 

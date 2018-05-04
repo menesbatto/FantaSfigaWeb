@@ -40,24 +40,16 @@ public class SeasonExecutor {
 		SeasonDayBean seasonDay = null;
 		SeasonDayResultBean seasonDayResult;
 		RankingBean ranking = createRanking(teams);
-		RankingBean formulaUnoRanking = createRanking(teams);
+//		RankingBean formulaUnoRanking = createRanking(teams);
 		
 		ranking.setPattern(season.getName());
 		for (int i = 0; i < realChampionshipResults.size(); i++) {
-//			Integer fantacalcioStartingSerieASeasonDay = MainSeasonAnalyzerFINAL.getFantacalcioStartingSerieASeasonDay();
-			
-//			if (serieAseasonToWait.contains(i + fantacalcioStartingSerieASeasonDay)){
-//				continue;
-//			}
-//			if (AppConstants.SEASON_DAYS_TO_WAIT.contains(i+1))
 			seasonDay = seasonDays.get(i);
 			seasonDayResult = realChampionshipResults.get(i);
 			if (seasonDayResult.getLinesUpLight().size() > 0) {	//Controllo per gestire le giornate in cui ci sono i rinvii
 				seasonDayResult = seasonDayExecutor.execute(seasonDay, seasonDayResult, rules, teams);
 				updateRanking(seasonDayResult, ranking);	
-				updateFormulaUnoRanking(seasonDayResult, rules, formulaUnoRanking);
-//				System.out.println(seasonDayResult);
-//				System.out.println(ranking);
+//				updateFormulaUnoRanking(seasonDayResult, rules, formulaUnoRanking);
 			}
 			else {
 				if (AppConstants.DEBUG_MODE)
@@ -65,20 +57,6 @@ public class SeasonExecutor {
 			}
 		}
 		
-		
-//		System.out.println(ranking);
-//		System.out.println("");
-//		System.out.println(formulaUnoRanking);
-//		System.out.println("");
-		
-//		System.out.println("numero sculate");
-//		System.out.println(MatchExecutor.winOrDrewForHalfPointsList);
-//		System.out.println("punti sculati");
-//		System.out.println(MatchExecutor.rankingPointsWinOrDrewForHalfPointsList);
-//		System.out.println("numero  sfigate");
-//		System.out.println(MatchExecutor.loseOrDrewForHalfPointList);
-//		System.out.println("punti sfigate");
-//		System.out.println(MatchExecutor.rankingPointsLoseOrDrewForHalfPointList);
 		return ranking;
 		
 

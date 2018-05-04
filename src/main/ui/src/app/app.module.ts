@@ -23,6 +23,7 @@ import { CustomRulesComponent } from './custom-rules/custom-rules.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminService } from './admin.service';
 import { AuthenticationService } from './authentication.service';
+import { SeasonComponent } from './season/season.component';
 
 
 
@@ -41,7 +42,8 @@ import { AuthenticationService } from './authentication.service';
     CompetitionRulesComponent,
     CompetitionComponent,
     CustomRulesComponent,
-    AdminComponent
+    AdminComponent,
+    SeasonComponent
   ],
   imports: [
     BrowserModule,
