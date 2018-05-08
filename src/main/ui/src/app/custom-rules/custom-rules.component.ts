@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { LeaguesService } from '../leagues.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-custom-rules',
@@ -1303,22 +1304,38 @@ import { LeaguesService } from '../leagues.service';
 
         </form>
 
-
-
-
-        <button class="btn btn-primary btn-block" (click) = "saveCustomRules()"> Salva Regole Personalizzate </button>
-
-        <button class="btn btn-primary btn-block" (click) = "goToCompetition('CUSTOM')"> Vai alle statistiche con le regole personalizzate</button>
-
-        <button class="btn btn-primary btn-block" (click) = "goToCompetition('REAL')"> Torna alle statistiche reali</button>
-
+        <br>
+        <br>
         <div class="alert alert-success" *ngIf="successMessage">
             <strong>{{successMessage}}</strong>
         </div>
-    
+
         <div class="alert alert-danger" *ngIf="errorMessage">
             <strong>{{errorMessage}}</strong>
         </div>
+    
+        <br>
+        <br>
+
+        <div class= "row">
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-3" >
+                <button class="btn btn-primary  btn-block" (click) = "saveCustomRules()">  Salva </button>
+            </div>
+        </div>
+      
+      
+        <br>
+        <br>
+        <br>
+        <br>
+        
+        <!--<button class="btn btn-primary btn-block" (click) = "goToCompetition('CUSTOM')"> Vai alle statistiche con le regole personalizzate</button>-->
+
+        <!--<button class="btn btn-primary btn-block" (click) = "goToCompetition('REAL')"> Torna alle statistiche reali</button>-->
+
+      
+
+        
 
     </div>
   `,
@@ -1355,6 +1372,7 @@ export class CustomRulesComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private leagueService: LeaguesService,
+        private _location: Location,
 
     ) { }
 
@@ -1433,7 +1451,7 @@ export class CustomRulesComponent implements OnInit {
                 data => {
                     this.successMessage = "Le regole sono state salvate";
                     this.errorMessage = null;
-
+                    this._location.back();
                 },
 
                 error => {

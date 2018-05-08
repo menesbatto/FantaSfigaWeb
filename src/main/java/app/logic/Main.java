@@ -78,12 +78,12 @@ public class Main {
 		
 		
 		
-		if (onlyOne && rulesType == RulesType.REAL) {
+		if (onlyOne) {
 			// LUCKY EDGE 0.5
-			calculateLuckyEdge(RankingType.LUCKY_EDGES_0_5, 0.5, leagueShortName, competitionShortName, allSeasons, rules, calculatedSeasonResult);
+			calculateLuckyEdge(RankingType.LUCKY_EDGES_0_5, 0.5, leagueShortName, competitionShortName, allSeasons, rules, calculatedSeasonResult, rulesType);
 			
 			// LUCKY EDGE 1.0
-			calculateLuckyEdge(RankingType.LUCKY_EDGES_1, 1.0, leagueShortName, competitionShortName, allSeasons, rules, calculatedSeasonResult);
+			calculateLuckyEdge(RankingType.LUCKY_EDGES_1, 1.0, leagueShortName, competitionShortName, allSeasons, rules, calculatedSeasonResult, rulesType);
 			
 			// INVERT HOME AWAY
 			CustomRules customRules = new CustomRules();
@@ -93,7 +93,7 @@ public class Main {
 			
 			List<RankingBean> invertHomeAwayRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rules, calculatedSeasonResult);
 			RankingBean invertHomeAwayRanking = invertHomeAwayRankings.get(0);
-			invertHomeAwayRanking.setRulesType(RulesType.REAL);
+			invertHomeAwayRanking.setRulesType(rulesType);
 			invertHomeAwayRanking.setName(RankingType.INVERT_HOME_AWAY.name());
 			leagueDao.saveRanking(invertHomeAwayRanking, leagueShortName, competitionShortName, userBean.getUsername());
 			
@@ -121,7 +121,7 @@ public class Main {
 
 
 	private void calculateLuckyEdge(RankingType rankingType, Double delta, String leagueShortName, String competitionShortName, List<SeasonBean> allSeasons,
-			RulesBean rules, SeasonResultBean calculatedSeasonResult) {
+			RulesBean rules, SeasonResultBean calculatedSeasonResult, RulesType rulesType) {
 		CustomRules customRulesLuckyEdge = new CustomRules();
 		rules.setCustomRules(customRulesLuckyEdge);
 		customRulesLuckyEdge.setInvertHomeAway(true);
@@ -130,7 +130,7 @@ public class Main {
 		
 		List<RankingBean> luckyEdgeRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rules, calculatedSeasonResult);
 		RankingBean luckyEdgeRanking = luckyEdgeRankings.get(0);
-		luckyEdgeRanking.setRulesType(RulesType.REAL);
+		luckyEdgeRanking.setRulesType(rulesType);
 		luckyEdgeRanking.setName(rankingType.name());
 		leagueDao.saveRanking(luckyEdgeRanking, leagueShortName, competitionShortName, userBean.getUsername());
 	}
@@ -142,7 +142,7 @@ public class Main {
 	private SeasonGenerator seasonGenerator;
 	
 	
-	public SeasonAndRankingRes retrieveSeasonFromPattern(String pattern, String leagueShortName, String competitionShortName) {
+	public SeasonAndRankingRes retrieveSeasonFromPattern(String pattern, String leagueShortName, String competitionShortName, RulesType rulesType) {
 		Integer serieAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
 		Map<Integer, Integer> bindings = rulesDao.findSerieAToCompetitionBinding(leagueShortName, competitionShortName, userBean.getUsername());
 		SeasonBean seasonPattern = leagueDao.findSeason(leagueShortName, competitionShortName, userBean.getUsername(), "Pattern");
@@ -153,7 +153,7 @@ public class Main {
 		List<SeasonBean> allSeasons = new ArrayList<SeasonBean>();
 		allSeasons.add(s);
 		
-		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.REAL, userBean.getUsername());
+		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, rulesType, userBean.getUsername());
 		SeasonResultBean calculatedSeasonResult = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
 		
 		List<RankingBean> allRankings = mainSeasonsExecutor.execute(allSeasons , leagueShortName, competitionShortName, rules, calculatedSeasonResult);

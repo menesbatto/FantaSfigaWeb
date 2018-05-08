@@ -20,6 +20,7 @@ import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
 import app.logic._1_seasonPatternExtractor.SeasonPatternExtractor;
+import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUp;
@@ -77,11 +78,23 @@ public class SeasonAnalyzer {
 	
 	public SeasonResultBean downloadSeasonFromWeb(String competitionShortName, String leagueShortName){
 		
-		SeasonFromWebBean seasonFromWeb = leagueDao.findSeasonFromWeb(leagueShortName, competitionShortName, userBean.getUsername());
+		SeasonFromWebBean calculatedSeason = leagueDao.findSeasonFromWeb(leagueShortName, competitionShortName, userBean.getUsername());
 
-		if (seasonFromWeb == null) {
-			seasonFromWeb = new SeasonFromWebBean();
-			seasonFromWeb.setSeasonDaysFromWeb(new HashMap<Integer, SeasonDayFromWebBean>());
+//		
+//		SeasonBean downloadedSeason = leagueDao.findSeason(leagueShortName, competitionShortName, userBean.getUsername(), "Pattern");
+//		int calculatedSeasonDay = 0;
+//		if (calculatedSeason != null)
+//			calculatedSeasonDay = calculatedSeason.getSeasonDaysFromWeb().size();
+//		
+//		int downloadedSeasonDays = downloadedSeason.getSeasonDays().size();
+//		
+//		if ( downloadedSeasonDays == calculatedSeasonDay )
+//			return null;
+						
+		
+		if (calculatedSeason == null) {
+			calculatedSeason = new SeasonFromWebBean();
+			calculatedSeason.setSeasonDaysFromWeb(new HashMap<Integer, SeasonDayFromWebBean>());
 		}
 
 			
@@ -115,7 +128,7 @@ public class SeasonAnalyzer {
 			
 
 			
-			if (seasonFromWeb.getSeasonDaysFromWeb().get(compSeasonDay) == null) {
+			if (calculatedSeason.getSeasonDaysFromWeb().get(compSeasonDay) == null) {
 				List<LineUp> lineUpFromWeb = seasonDayAnalyzer.downloadSeasonDayLinesUpFromWeb(finalSeasonDayUrl + compSeasonDay);
 				SeasonDayFromWebBean seasonDayFromWeb = new SeasonDayFromWebBean();
 				seasonDayFromWeb.setLinesUp(lineUpFromWeb);
@@ -126,8 +139,8 @@ public class SeasonAnalyzer {
 			
 			
 		}
-		seasonFromWeb.setSeasonDaysFromWeb(seasonDaysFromWeb);
-		leagueDao.saveSeasonFromWeb(leagueShortName, competitionShortName, userBean.getUsername(), seasonFromWeb);
+		calculatedSeason.setSeasonDaysFromWeb(seasonDaysFromWeb);
+		leagueDao.saveSeasonFromWeb(leagueShortName, competitionShortName, userBean.getUsername(), calculatedSeason);
 		
 		return null;
 	}

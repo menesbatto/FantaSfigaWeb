@@ -12,13 +12,15 @@ public class Pair implements Serializable{
 	private Double value;
 	private List<Double> valueList;
 	
-	private Integer bestPosition;
+	private Double bestDifferenzeFromUp;
+	private Double bestDifferenzeFromDown;
 	private String bestPattern;
-	private Double bestPoints;
+	private Integer bestPosition;
 	
 	private Integer worstPosition;
 	private String worstPattern;
-	private Double worstPoints;
+	private Double worstDifferenceFromUp;
+	private Double worstDifferenzeFromDown;
 	
 	
 	
@@ -34,24 +36,29 @@ public class Pair implements Serializable{
 	}
 
 
-	public Double getBestPoints() {
-		return bestPoints;
+	public Double getBestDifferenzeFromUp() {
+		return bestDifferenzeFromUp;
 	}
-	public void setBestPoints(Double bestPoints) {
-		this.bestPoints = bestPoints;
+	public void setBestDifferenzeFromUp(Double bestDifferenzeFromUp) {
+		this.bestDifferenzeFromUp = bestDifferenzeFromUp;
 	}
-	public Double getWorstPoints() {
-		return worstPoints;
+	public Double getBestDifferenzeFromDown() {
+		return bestDifferenzeFromDown;
 	}
-	public void setWorstPoints(Double worstPoints) {
-		this.worstPoints = worstPoints;
+	public void setBestDifferenceFromDown(Double bestDifferenzeFromDown) {
+		this.bestDifferenzeFromDown = bestDifferenzeFromDown;
 	}
-	
-	public Integer getBestPosition() {
-		return bestPosition;
+	public Double getWorstDifferenceFromUp() {
+		return worstDifferenceFromUp;
 	}
-	public void setBestPosition(Integer bestPosition) {
-		this.bestPosition = bestPosition;
+	public void setWorstDifferenzeFromUp(Double worstDifferenzeFromUp) {
+		this.worstDifferenceFromUp = worstDifferenzeFromUp;
+	}
+	public Double getWorstDifferenzeFromDown() {
+		return worstDifferenzeFromDown;
+	}
+	public void setWorstDifferenzeFromDown(Double worstDifferenzeFromDown) {
+		this.worstDifferenzeFromDown = worstDifferenzeFromDown;
 	}
 	public String getBestPattern() {
 		return bestPattern;
@@ -110,6 +117,12 @@ public class Pair implements Serializable{
 	}
 	private String getNameToString() {
 		return this.name.length() > 11 ? this.name.substring(0,10) : this.name;
+	}
+	public Integer getBestPosition() {
+		return bestPosition;
+	}
+	public void setBestPosition(Integer bestPosition) {
+		this.bestPosition = bestPosition;
 	}
 
 	 

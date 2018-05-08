@@ -13,7 +13,7 @@ export class HeaderService {
         this.messageSource.next(message);
     }
 
-D
+
     private titleParamSource = new BehaviorSubject<string>("");
     currentTitleParam = this.titleParamSource.asObservable();
 

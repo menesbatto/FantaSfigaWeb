@@ -422,10 +422,13 @@ public class RankingAnalyzer {
 					if (i != teams.size()-1) {
 						downRR = rows.get(i+1);
 						double differenceFromDown = points - downRR.getPoints();
-						result.setBestPoints(differenceFromDown);
+						if (i>rankingPosition-1) {
+							differenceFromDown = 0;
+						}
+						result.setBestDifferenceFromDown(differenceFromDown);
 					}
 					else {
-						result.setBestPoints(0.0);
+						result.setBestDifferenceFromDown(0.0);
 					}
 					result.setBestPattern(ranking.getPattern());
 				}
@@ -434,22 +437,31 @@ public class RankingAnalyzer {
 					if (i != teams.size()-1) {
 						downRR = rows.get(i+1);
 						double differenceFromDown = points - downRR.getPoints();
-						if (differenceFromDown > result.getBestPoints()) {
-							result.setBestPoints(differenceFromDown);
+						if (i>rankingPosition-1) {
+							differenceFromDown = 0;
+						}
+						if (differenceFromDown > result.getBestDifferenzeFromDown()) {
+							result.setBestDifferenceFromDown(differenceFromDown);
 							result.setBestPattern(ranking.getPattern());
 						}
 					}
 				}
+				
+				
+				
 				
 				else if (rankingPosition > result.getWorstPosition()) {
 					result.setWorstPosition(rankingPosition);
 					if (i != 0) {
 						upRR = rows.get(i-1);
 						double differenceFromUp = upRR.getPoints() - points;
-						result.setWorstPoints(differenceFromUp);
+						if (i<rankingPosition-1) {
+							differenceFromUp = 0;
+						}
+						result.setWorstDifferenzeFromUp(differenceFromUp);
 					}
 					else {
-						result.setBestPoints(0.0);
+						result.setWorstDifferenzeFromUp(0.0);
 					}
 					result.setWorstPattern(ranking.getPattern());
 				}
@@ -458,8 +470,11 @@ public class RankingAnalyzer {
 					if (i != 0) {
 						upRR = rows.get(i-1);
 						double differenceFromUp = upRR.getPoints() - points;
-						if (differenceFromUp > result.getWorstPoints()) {
-							result.setWorstPoints(differenceFromUp);
+						if (i<rankingPosition-1) {
+							differenceFromUp = 0;
+						}
+						if (differenceFromUp > result.getWorstDifferenceFromUp()) {
+							result.setWorstDifferenzeFromUp(differenceFromUp);
 							result.setWorstPattern(ranking.getPattern());
 						}
 					}
@@ -490,8 +505,8 @@ public class RankingAnalyzer {
 			p = new Pair(player , positions);
 			p.setBestPosition(teams.size());
 			p.setWorstPosition(1);
-			p.setBestPoints(0.0);
-			p.setWorstPoints(0.0);
+			p.setBestDifferenceFromDown(0.0);
+			p.setWorstDifferenzeFromUp(0.0);
 			map.put(player, p);
 			
 		}

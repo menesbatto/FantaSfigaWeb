@@ -109,3 +109,28 @@ body {
 
 
 }
+
+.customStats{
+    background: linear-gradient(to bottom right, white , rgb(253, 97, 97), white );
+}
+
+.right {
+  margin-bottom: solid 1px grey
+}
+
+
+
+.sub{
+         border-bottom: 1px solid lightgray;
+}
+
+.nobor {
+    border-top: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.team{
+    background: lightblue
+}
+    

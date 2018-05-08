@@ -58,12 +58,13 @@ export class AuthenticationService {
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
+        localStorage.removeItem("alreadyDownloadInfo")
     }
 
     isAdmin() {
         var userString = localStorage.getItem('currentUser');
         var user = JSON.parse(userString);
-        let isAdmin = user.role == "admin";
+        let isAdmin = user.role == "ADMIN";
         return isAdmin;
     }
 

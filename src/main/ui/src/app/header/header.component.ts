@@ -7,8 +7,6 @@ import { HeaderService } from '../header.service';
 @Component({
   selector: 'app-header',
   template: `
-  <span>message: {{message}}</span>
-
 <nav class="header navbar navbar-light bg-faded">
 
     <div>
@@ -101,9 +99,9 @@ export class HeaderComponent implements OnInit {
         "registration" : "Registrazione",
         "gazzettaCredentials" : "Credenziali Gazzetta",
         "leagues" : "Leghe",
-        "competitions" : "Le Competizioni di lega",
+        "competitions" : "Competizioni della lega",
         "competitionRules" : "Integrazione regole",
-        "competition" : "Competizione",
+        "competition" : "Statistiche della competizione",
         "customRules" : "Regole",
         "season" : "Stagione",
         "admin" : "Admin",
@@ -113,8 +111,28 @@ export class HeaderComponent implements OnInit {
         let path = this._location.path();
         let currentRouteExtends = path.split(";")[0].substr(1);
         let currentRoute = currentRouteExtends.split("/")[0];
-        let params = currentRouteExtends.split("/").length==2 ? currentRouteExtends.split("/")[1]:"";
+        let params = currentRouteExtends.split("/");
+        let rulesType = null;
+        for (var i=0; i<params.length; i++){
+            var param = params[i];
+            if (param.startsWith("type"))
+                rulesType = param.substr(5);
+        }
+
         return params
+    }
+
+    getParamRulesType(){
+        let path = this._location.path();
+        
+        let params = path.split(";");
+        let rulesType = null;
+        for (var i=0; i<params.length; i++){
+            var param = params[i];
+            if (param.startsWith("type"))
+                rulesType = param.substr(5);
+        }
+        return rulesType;
     }
 
     getPageName(){
@@ -122,7 +140,8 @@ export class HeaderComponent implements OnInit {
         let currentRouteExtends = path.split(";")[0].substr(1);
         let currentRoute = currentRouteExtends.split("/")[0];
         let title = this.namePages[currentRoute]
-       
+        if (this.getParamRulesType()=="CUSTOM")
+            title = "Statistiche Custom della competizione";
 
         return title;
     }

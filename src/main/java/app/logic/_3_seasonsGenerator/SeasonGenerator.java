@@ -48,6 +48,7 @@ public class SeasonGenerator {
 			if(i <= fantacalcioActualSeasonDay){
 				SeasonDayBean currentSeasonDay = seasonDays.get(i);
 				seasonDay = new SeasonDayBean(currentSeasonDay.getName());
+				seasonDay.setSerieANumber(currentSeasonDay.getSerieANumber());
 				season.getSeasonDays().add(seasonDay);
 				for (MatchBean currentMatch : currentSeasonDay.getMatches()){
 					m = new MatchBean();

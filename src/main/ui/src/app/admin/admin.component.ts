@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-admin',
   template: `
-<div class="col-md-6 col-md-offset-3" >
+<div>
     <div class="container nobor">
         <div class="row">
             <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
@@ -130,9 +130,9 @@ export class AdminComponent implements OnInit {
 
     ngOnInit() {
         let isAdmin = this.authService.isAdmin();
-        if (!isAdmin){}
+        if (!isAdmin){
             this.router.navigate(['/leagues']);
-            
+        }
     }
 
 

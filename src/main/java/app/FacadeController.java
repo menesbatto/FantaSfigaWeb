@@ -693,8 +693,9 @@ public class FacadeController {
 		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
 		String pattern = req.getPattern();
+		RulesType rulesType = req.getRulesType();
 		
-		SeasonAndRankingRes res = main.retrieveSeasonFromPattern(pattern, leagueShortName, competitionShortName);
+		SeasonAndRankingRes res = main.retrieveSeasonFromPattern(pattern, leagueShortName, competitionShortName, rulesType);
 		
 		
 		String body = "Retrieve Season COMPLETED";
