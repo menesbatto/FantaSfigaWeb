@@ -10,7 +10,7 @@ import { LeaguesService } from '../leagues.service';
 
 <div class="col-md-6 col-md-offset-3" >
     <div *ngIf="!successMessageLeague">
-        <h2>Credenziali FantaGazzetta</h2>
+        <!--<h2>Credenziali FantaGazzetta</h2>-->
         <form name="form" (ngSubmit)="f.form.valid && saveGazzettaCredentials()" #f="ngForm" novalidate>
             <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !gazzettaUsername.valid }">
                 <label for="gazzettaUsername">Username Fantagazzetta</label>

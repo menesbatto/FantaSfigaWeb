@@ -8,7 +8,7 @@ import { NgForm } from '@angular/forms';
   template: `
 
   <div class="col-md-6 col-md-offset-3">
-    <h2>Login</h2>
+    <!--<h2>Registrazione</h2>-->
     <form name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
             <label for="username">Username</label>

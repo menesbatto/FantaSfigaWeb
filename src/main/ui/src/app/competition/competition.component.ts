@@ -1,12 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { LeaguesService } from '../leagues.service';
+import { HeaderService } from '../header.service';
 
 @Component({
     selector: 'app-competition',
     template: `
+    <!-- prova su come si richiamanto components fratelli -->
+    <!-- <span>message: {{message}}</span>
+    <button class ="button" (click)="newMessage()"> prova a cambiare</button>
+  -->
     <div>
-        <h3 align="center">Competitione </h3>
+        <!--<h3 align="center">Competitione </h3>-->
+        
+        
+        
         <h3 align="center"><strong>{{competitionName | uppercase}}</strong></h3>
         <div>
             <div class="row nobor">
@@ -328,6 +336,7 @@ import { LeaguesService } from '../leagues.service';
     styles: []
 })
 export class CompetitionComponent implements OnInit {
+    
     totalEstimate = 10;
     ctx = { estimate: this.totalEstimate };
     ctx2 = { estimate: 20 };
@@ -367,16 +376,30 @@ export class CompetitionComponent implements OnInit {
     };
 
 
+
+    // VIA 
+    // message:string ="";
+    titleParam:string ="";
+
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private leagueService: LeaguesService,
+        private headerService: HeaderService
 
     ) { }
-
-
+    
+    //VIA
+    //newMessage(){
+    //    this.headerService.changeMessage("APPENA MOFIGICATO");
+    //}
 
     ngOnInit() {
+        //VIA
+        //this.headerService.currentMessage.subscribe(message => this.message = message);
+        //this.headerService.currentTitleParam.subscribe(titleParam => this.titleParam = titleParam);
+
         this.route.paramMap.subscribe((params: ParamMap) => {
             let url1 = params.get('competition');
             this.competitionShortName = url1;
@@ -393,7 +416,7 @@ export class CompetitionComponent implements OnInit {
             }
 
             this.retrieveAllRankings();
-
+            
 
 
         });
@@ -440,7 +463,7 @@ export class CompetitionComponent implements OnInit {
             this.ctxLuckyEdgeRanking05.ranking =  this.stats.luckyEdgeRanking05;
             this.ctxLuckyEdgeRanking1.ranking =  this.stats.luckyEdgeRanking1;
         
-
+            this.headerService.changeTitleParam(this.competitionName);
 
         },
 

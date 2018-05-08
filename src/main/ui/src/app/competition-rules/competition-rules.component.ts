@@ -7,8 +7,8 @@ import { LeaguesService } from '../leagues.service';
     template: `
   <div class="col-md-6 col-md-offset-3" >
   <div *ngIf="!successMessageLeague">
-      <h2>Regole della Competizione {{competitionShortName}} </h2>
-      <h5>Indici queste regole che non siamo riusciti a scaricare da FantaGazzetta</h5>
+      <!-- <h2>Regole della Competizione {{competitionShortName}} </h2>-->
+      <h5>Indica queste regole che non siamo riusciti a scaricare da FantaGazzetta</h5>
 
       <form name="form" (ngSubmit)="saveCustomRules()" #f="ngForm" novalidate>
 

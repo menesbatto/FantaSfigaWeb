@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LeaguesService } from '../leagues.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { HeaderService } from '../header.service';
 
 @Component({
   selector: 'app-competitions',
@@ -8,8 +9,8 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 
   <div>
-    <h3 align = "center">Le Competizioni della lega </h3>
-    <h3 align = "center"><strong>{{leagueName | uppercase}}</strong></h3>
+    <!--<h3 align = "center">Competizioni di lega</h3>-->
+    <!--<h3 align = "center"><strong>{{leagueName | uppercase}}</strong></h3>-->
     
     <div class="table table-responsive">
       <table class="table">
@@ -52,7 +53,8 @@ export class CompetitionsComponent implements OnInit {
   constructor(
     private leagueService: LeaguesService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private headerService: HeaderService
   ) { }
 
   competitionList = [];
@@ -87,6 +89,8 @@ export class CompetitionsComponent implements OnInit {
         }
           this.competitionList = data
           this.leagueName = this.competitionList  ? this.competitionList[0].leagueName : "NON HAI COMPETIZIONI";
+          this.headerService.changeTitleParam(this.leagueName);
+
       },
 
       error => {

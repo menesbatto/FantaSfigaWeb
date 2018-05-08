@@ -5,11 +5,8 @@ import { LeaguesService } from '../leagues.service';
 @Component({
     selector: 'app-custom-rules',
     template: `
-
-   
- 
-   
-    <div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <!--<h2 align = "center">Regole</h2>-->
         <form name="form1" (ngSubmit)="saveCustomRules()" #f="ngForm" novalidate>
 
         
@@ -1315,31 +1312,33 @@ import { LeaguesService } from '../leagues.service';
 
         <button class="btn btn-primary btn-block" (click) = "goToCompetition('REAL')"> Torna alle statistiche reali</button>
 
-
+        <div class="alert alert-success" *ngIf="successMessage">
+            <strong>{{successMessage}}</strong>
+        </div>
+    
+        <div class="alert alert-danger" *ngIf="errorMessage">
+            <strong>{{errorMessage}}</strong>
+        </div>
 
     </div>
   `,
     styles: []
 })
 export class CustomRulesComponent implements OnInit {
-    leagueShortName = null;
-    competitionShortName = null;
+
     errorMessage = null;
     successMessage = null;
-    provaz = 1;
 
-    model: any =
-        {
-            leagueShortName: null,
-            competitionShortName: null,
-            rules : null,
-            maxOfficeVotes: "TILL_ALL",
-            postponementBehaviour: "ALL_6",
-            autogolActive: <boolean>false,
-            autogol: 59,
-            golSegnato1: 3
-        };
 
+    leagueShortName = null;
+    competitionShortName = null;
+    competitionBean = {
+        leagueShortName: null,
+        competitionShortName: null
+    };
+   
+   
+   
     bonusMalus: any = null;
     dataSource: any = null;
     points: any = null;
@@ -1349,10 +1348,6 @@ export class CustomRulesComponent implements OnInit {
 
 
 
-    competitionBean = {
-        leagueShortName: null,
-        competitionShortName: null
-    };
 
 
 
@@ -1377,16 +1372,6 @@ export class CustomRulesComponent implements OnInit {
     }
 
    
-    
-    prova() {
-        console.log(this.bonusMalus);
-        console.log(this.dataSource);
-        console.log(this.points);
-        console.log(this.substitutions);
-        console.log(this.modifiers);
-        console.log(this.competitionRules);
-    }
-
     retrieveCustomRules() {
         let retrieveRulesReq = {
             competition: {
@@ -1396,13 +1381,13 @@ export class CustomRulesComponent implements OnInit {
             type: "CUSTOM"
 
         }
-        // this.competitionBean.leagueShortName = this.leagueShortName;
-        // this.competitionBean.competitionShortName = this.competitionShortName;
+        
         this.leagueService.retrieveRules(retrieveRulesReq)
             .subscribe(
                 data => {
                     this.successMessage = "Le regole sono state recuperate";
                     this.errorMessage = null;
+                    
                     this.bonusMalus = data.bonusMalus;
                     this.dataSource = data.dataSource;
                     this.points = data.points;
@@ -1425,9 +1410,9 @@ export class CustomRulesComponent implements OnInit {
 
 
     saveCustomRules() {
-        console.log(this.model);
-        this.model.leagueShortName = this.leagueShortName;
-        this.model.competitionShortName = this.competitionShortName;
+        console.log(this.competitionBean);
+        this.competitionBean.leagueShortName = this.leagueShortName;
+        this.competitionBean.competitionShortName = this.competitionShortName;
         
         let req = {
             leagueShortName : this.leagueShortName,
@@ -1463,8 +1448,6 @@ export class CustomRulesComponent implements OnInit {
         this. router.navigate(['/competition', {league : this.leagueShortName, competition : this.competitionShortName, type:statsType}])
     }
 
-    alert(){
-        alert("coap")
-    }
+    
 
 }

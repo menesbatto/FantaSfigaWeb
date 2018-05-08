@@ -25,6 +25,7 @@ import { AdminService } from './admin.service';
 import { AuthenticationService } from './authentication.service';
 import { SeasonComponent } from './season/season.component';
 import { HeaderComponent } from './header/header.component';
+import { HeaderService } from './header.service';
 
 
 
@@ -60,6 +61,7 @@ import { HeaderComponent } from './header/header.component';
               AuthGuard,
               AdminService,
               AuthenticationService,
+              HeaderService,
               { provide: HTTP_INTERCEPTORS, useClass: MyHttpLogInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })

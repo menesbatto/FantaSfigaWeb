@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
     template: `
 
     <div>
-        <h3 align = "center">Le tue leghe </h3>
+        <!--<h3 align = "center">Le tue leghe </h3>-->
         
         <div class="table-responsive">
             <table class="table">

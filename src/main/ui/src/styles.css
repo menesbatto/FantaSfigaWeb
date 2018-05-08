@@ -103,7 +103,9 @@ body {
     
 }
 
-.popover {
-    white-space: nowrap;
-    max-width: none;
+.header{
+    border-bottom: 1px solid black;
+    
+
+
 }
