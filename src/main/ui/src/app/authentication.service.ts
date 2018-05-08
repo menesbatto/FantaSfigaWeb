@@ -3,9 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
 
+import { Subject, BehaviorSubject } from "rxjs/Rx";
+
 @Injectable()
 export class AuthenticationService {
     constructor(private http: HttpClient) { }
+
+
 
     login(username: string, password: string) {
         return this.http.post<any>('/app/api/login', { username: username, password: password })
@@ -15,10 +19,23 @@ export class AuthenticationService {
                 if (user) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify(user));
+                    this.emit({user: user})
                 }
 
                 return user;
             });
+    }
+
+    isCustomerInSession(){
+        var userString = localStorage.getItem('currentUser');
+        var user = JSON.parse(userString);
+        return user != null;
+    }
+
+    getUser(){
+        var userString = localStorage.getItem('currentUser');
+        var user = JSON.parse(userString);
+        return user;
     }
 
     create(username: string, password: string, firstname: string, lastname: string, email: string) {
@@ -49,4 +66,18 @@ export class AuthenticationService {
         let isAdmin = user.role == "admin";
         return isAdmin;
     }
+
+
+
+    emit(value: any) {
+        this.profile$.next(value);
+      }
+
+    profile$: Subject<any> = new BehaviorSubject<any>({});
+  
+    get profile(): BehaviorSubject<any> {
+        return this.profile$ as BehaviorSubject<any>;
+      }
+
+   
 }

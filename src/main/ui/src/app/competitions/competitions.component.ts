@@ -7,18 +7,18 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
   template: `
 
 
-  <div class="col-md-6 col-md-offset-3" >
-    <h3>Le Competizioni della lega <strong>{{leagueName}}</strong></h3>
+  <div>
+    <h3 align = "center">Le Competizioni della lega </h3>
+    <h3 align = "center"><strong>{{leagueName | uppercase}}</strong></h3>
     
-    <div class="table-responsive">
+    <div class="table table-responsive">
       <table class="table">
-        <tr *ngFor = "let competition of competitionList" >
-          <td > {{competition.name}} </td>
-          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "!competition.rulesIntegrated"  (click)="goToCompetitionRules(competition)"> Aggiungi regole </button>  </td>
-          <!--<td> <button class="btn btn-primary" (click)="goToCompetitionRules(competition)"> Integra regole </button>  </td>-->
-          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && !competition.initialOnlineInfoDownloaded"  (click)="downloadAllCompetitionInfo(competition)"> Scarica tutti i dati </button>  </td>
-          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition, 'REAL') "> Statistiche </button> </td>
-          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition, 'CUSTOM') "> Statistiche custom </button> </td>
+        <tr *ngFor = "let competition of competitionList">
+          <td> {{competition.name}} </td>
+          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && !competition.rulesIntegrated"  (click)="goToCompetitionRules(competition)"> Regole </button>  </td>
+          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && competition.rulesIntegrated && !competition.initialOnlineInfoDownloaded"  (click)="downloadAllCompetitionInfo(competition)"> Scarica tutti i dati </button>  </td>
+          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition, 'REAL') "> Stats </button> </td>
+          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition, 'CUSTOM') "> Stats custom </button> </td>
 
         <tr>
         
@@ -79,8 +79,14 @@ export class CompetitionsComponent implements OnInit {
     this.leagueService.retrieveCompetitions(leagueShortName)
     .subscribe(
       data => {
+        let i = data.length
+        while (i--) {
+            if (data[i].type != 'CA') { 
+                data.splice(i, 1);
+            } 
+        }
           this.competitionList = data
-        this.leagueName = this.competitionList  ? this.competitionList[0].leagueName : "NON HAI COMPETIZIONI";
+          this.leagueName = this.competitionList  ? this.competitionList[0].leagueName : "NON HAI COMPETIZIONI";
       },
 
       error => {

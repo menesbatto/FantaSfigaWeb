@@ -7,6 +7,8 @@ public class StasResponse {
 	
 	private String competitionShortName;
 	private String leagueShortName;
+	private CompetitionBean competition;
+
 	
 	private RankingBean realRanking;
 	
@@ -152,6 +154,14 @@ public class StasResponse {
 
 	public void setLuckyEdgeRanking1(RankingBean luckyEdgeRanking1) {
 		this.luckyEdgeRanking1 = luckyEdgeRanking1;
+	}
+
+	public CompetitionBean getCompetition() {
+		return competition;
+	}
+
+	public void setCompetition(CompetitionBean competition) {
+		this.competition = competition;
 	}
 	
 	

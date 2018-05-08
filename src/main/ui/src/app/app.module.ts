@@ -24,6 +24,8 @@ import { AdminComponent } from './admin/admin.component';
 import { AdminService } from './admin.service';
 import { AuthenticationService } from './authentication.service';
 import { SeasonComponent } from './season/season.component';
+import { HeaderComponent } from './header/header.component';
+
 
 
 
@@ -43,13 +45,15 @@ import { SeasonComponent } from './season/season.component';
     CompetitionComponent,
     CustomRulesComponent,
     AdminComponent,
-    SeasonComponent
-  ],
+    SeasonComponent,
+    HeaderComponent
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule
+
   ],
   providers: [UserService, 
               LeaguesService,

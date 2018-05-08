@@ -5,223 +5,294 @@ import { LeaguesService } from '../leagues.service';
 @Component({
     selector: 'app-custom-rules',
     template: `
-    <div class="container col-md-8 col-md-offset-2" >
+
+   
+ 
+   
+    <div>
         <form name="form1" (ngSubmit)="saveCustomRules()" #f="ngForm" novalidate>
 
-            <div class="row">
-                <div class="col-lg-6 col-xs-11">
+        
+            <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
                     <span class= "spanxxl"> Bonus/Malus Calciatori </span>
                 </div>
-                <div class="col-lg-6 col-xs-1 pull-right">
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right">
                     <a (click) = "showBonusMalus = !showBonusMalus" class="btn btn-sm btn-info">
                         <span *ngIf="showBonusMalus" class="glyphicon glyphicon-chevron-up"> </span>
                         <span *ngIf="!showBonusMalus" class="glyphicon glyphicon-chevron-down"> </span>
                     </a>
                 </div>
             </div>
-            
+
 
             <div id="form-step1" class="input-group " *ngIf="bonusMalus && showBonusMalus">
                 <div class="col-lg-12 ">
-                    <div class="row">
-                        <div class="col-lg-4 col-xs-4"></div>
-                        <div class="col-lg-2 col-xs-2 p "><span class="role">P</span> </div>
-                        <div class="col-lg-2 col-xs-2 d "><span class="role">D</span> </div>
-                        <div class="col-lg-2 col-xs-2 c "><span class="role">C</span> </div>
-                        <div class="col-lg-2 col-xs-2 a "><span class="role">A</span> </div>
-                    </div>
                     <div class="col-lg-12">
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="golsegnato">Gol segnato:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golsegnato1" [(ngModel)]="bonusMalus.scoredGoal.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="golsegnato">Gol segnato:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$golsegnato1" [(ngModel)]="bonusMalus.scoredGoal.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d "><span class="role">D</span> </div>
+                                    <input name="ctl00$main$golsegnato2" [(ngModel)]="bonusMalus.scoredGoal.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c "><span class="role">C</span> </div>
+                                    <input name="ctl00$main$golsegnato3" [(ngModel)]="bonusMalus.scoredGoal.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a "><span class="role">A</span> </div>
+                                    <input name="ctl00$main$golsegnato4" [(ngModel)]="bonusMalus.scoredGoal.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golsegnato2" [(ngModel)]="bonusMalus.scoredGoal.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golsegnato3" [(ngModel)]="bonusMalus.scoredGoal.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golsegnato4" [(ngModel)]="bonusMalus.scoredGoal.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del gol segnato"></i></div>
+                             
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" data-toggle="tooltip"  data-placement="top" title="Tooltip on top" data-original-title="Inserisci per ogni ruolo il valore del gol segnato"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="golsubito">Gol subito:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golsubito1" [(ngModel)]="bonusMalus.takenGoal.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="golsubito">Gol subito:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$golsubito1" [(ngModel)]="bonusMalus.takenGoal.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d "><span class="role">D</span> </div>
+                                    <input name="ctl00$main$golsubito2" [(ngModel)]="bonusMalus.takenGoal.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c "><span class="role">C</span> </div>
+                                    <input name="ctl00$main$golsubito3" [(ngModel)]="bonusMalus.takenGoal.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a "><span class="role">A</span> </div>
+                                    <input name="ctl00$main$golsubito4" [(ngModel)]="bonusMalus.takenGoal.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golsubito2" [(ngModel)]="bonusMalus.takenGoal.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golsubito3" [(ngModel)]="bonusMalus.takenGoal.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golsubito4" [(ngModel)]="bonusMalus.takenGoal.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del gol subito"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del gol subito"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="rigoresegnato">Rigore segnato:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoresegnato1" [(ngModel)]="bonusMalus.scoredPenalty.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="rigoresegnato">Rigore segnato:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$rigoresegnato1" [(ngModel)]="bonusMalus.scoredPenalty.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d "><span class="role">D</span> </div>
+                                    <input name="ctl00$main$rigoresegnato2" [(ngModel)]="bonusMalus.scoredPenalty.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c "><span class="role">C</span> </div>
+                                    <input name="ctl00$main$rigoresegnato3" [(ngModel)]="bonusMalus.scoredPenalty.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a "><span class="role">A</span> </div>
+                                    <input name="ctl00$main$rigoresegnato4" [(ngModel)]="bonusMalus.scoredPenalty.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoresegnato2" [(ngModel)]="bonusMalus.scoredPenalty.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoresegnato3" [(ngModel)]="bonusMalus.scoredPenalty.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoresegnato4" [(ngModel)]="bonusMalus.scoredPenalty.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del rigore segnato"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del rigore segnato"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="rigoresbagliato">Rigore sbagliato:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoresbagliato1" [(ngModel)]="bonusMalus.missedPenalty.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="rigoresbagliato">Rigore sbagliato:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$rigoresbagliato1" [(ngModel)]="bonusMalus.missedPenalty.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d "><span class="role">D</span> </div>
+                                    <input name="ctl00$main$rigoresbagliato2" [(ngModel)]="bonusMalus.missedPenalty.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c"><span class="role">C</span> </div>
+                                    <input name="ctl00$main$rigoresbagliato3" [(ngModel)]="bonusMalus.missedPenalty.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a"><span class="role">A</span> </div>
+                                    <input name="ctl00$main$rigoresbagliato4" [(ngModel)]="bonusMalus.missedPenalty.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoresbagliato2" [(ngModel)]="bonusMalus.missedPenalty.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoresbagliato3" [(ngModel)]="bonusMalus.missedPenalty.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoresbagliato4" [(ngModel)]="bonusMalus.missedPenalty.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del rigore sbagliato"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del rigore sbagliato"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="rigoreparato">Rigore parato:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoreparato1" [(ngModel)]="bonusMalus.savedPenalty.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="rigoreparato">Rigore parato:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$rigoreparato1" [(ngModel)]="bonusMalus.savedPenalty.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d"><span class="role">D</span> </div>
+                                    <input name="ctl00$main$rigoreparato2" [(ngModel)]="bonusMalus.savedPenalty.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c"><span class="role">C</span> </div>
+                                    <input name="ctl00$main$rigoreparato3" [(ngModel)]="bonusMalus.savedPenalty.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a"><span class="role">A</span> </div>
+                                    <input name="ctl00$main$rigoreparato4" [(ngModel)]="bonusMalus.savedPenalty.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoreparato2" [(ngModel)]="bonusMalus.savedPenalty.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoreparato3" [(ngModel)]="bonusMalus.savedPenalty.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$rigoreparato4" [(ngModel)]="bonusMalus.savedPenalty.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del rigore parato"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del rigore parato"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="ammonizione">Ammonizione:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$ammonizione1" [(ngModel)]="bonusMalus.yellowCard.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="ammonizione">Ammonizione:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div   class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$ammonizione1" [(ngModel)]="bonusMalus.yellowCard.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d"><span class="role">D</span> </div>
+                                    <input name="ctl00$main$ammonizione2" [(ngModel)]="bonusMalus.yellowCard.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c"><span class="role">C</span> </div>
+                                    <input name="ctl00$main$ammonizione3" [(ngModel)]="bonusMalus.yellowCard.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a"><span class="role">A</span> </div>
+                                    <input name="ctl00$main$ammonizione4" [(ngModel)]="bonusMalus.yellowCard.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$ammonizione2" [(ngModel)]="bonusMalus.yellowCard.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$ammonizione3" [(ngModel)]="bonusMalus.yellowCard.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$ammonizione4" [(ngModel)]="bonusMalus.yellowCard.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'ammonizione"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'ammonizione"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="esplusione">Espulsione:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$esplusione1" [(ngModel)]="bonusMalus.redCard.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="esplusione">Espulsione:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$esplusione1" [(ngModel)]="bonusMalus.redCard.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d"><span class="role">D</span> </div>
+                                    <input name="ctl00$main$esplusione2" [(ngModel)]="bonusMalus.redCard.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c"><span class="role">C</span> </div>
+                                    <input name="ctl00$main$esplusione3" [(ngModel)]="bonusMalus.redCard.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a"><span class="role">A</span> </div>
+                                    <input name="ctl00$main$esplusione4" [(ngModel)]="bonusMalus.redCard.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$esplusione2" [(ngModel)]="bonusMalus.redCard.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$esplusione3" [(ngModel)]="bonusMalus.redCard.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$esplusione4" [(ngModel)]="bonusMalus.redCard.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'espulsione"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'espulsione"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="assist">Assist:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$assist1" [(ngModel)]="bonusMalus.movementAssist.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="assist">Assist:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$assist1" [(ngModel)]="bonusMalus.movementAssist.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d"><span class="role">D</span> </div>
+                                    <input name="ctl00$main$assist2" [(ngModel)]="bonusMalus.movementAssist.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c "><span class="role">C</span> </div>
+                                    <input name="ctl00$main$assist3" [(ngModel)]="bonusMalus.movementAssist.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a "><span class="role">A</span> </div>
+                                    <input name="ctl00$main$assist4" [(ngModel)]="bonusMalus.movementAssist.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$assist2" [(ngModel)]="bonusMalus.movementAssist.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$assist3" [(ngModel)]="bonusMalus.movementAssist.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$assist4" [(ngModel)]="bonusMalus.movementAssist.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'assist"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'assist"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="assistfermo">Assist da fermo:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$assistfermo1" [(ngModel)]="bonusMalus.stationaryAssist.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="assistfermo">Assist da fermo:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$assistfermo1" [(ngModel)]="bonusMalus.stationaryAssist.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d "><span class="role">D</span> </div>
+                                    <input name="ctl00$main$assistfermo2" [(ngModel)]="bonusMalus.stationaryAssist.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c "><span class="role">C</span> </div>
+                                    <input name="ctl00$main$assistfermo3" [(ngModel)]="bonusMalus.stationaryAssist.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a "><span class="role">A</span> </div>
+                                    <input name="ctl00$main$assistfermo4" [(ngModel)]="bonusMalus.stationaryAssist.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$assistfermo2" [(ngModel)]="bonusMalus.stationaryAssist.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$assistfermo3" [(ngModel)]="bonusMalus.stationaryAssist.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$assistfermo4" [(ngModel)]="bonusMalus.stationaryAssist.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'assist da fermo (solo redazioni napoli e italia)"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'assist da fermo (solo redazioni napoli e italia)"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="autogol">Autogol:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$autogol1" [(ngModel)]="bonusMalus.autogoal.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="autogol">Autogol:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$autogol1" [(ngModel)]="bonusMalus.autogoal.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d "><span class="role">C</span> </div>
+                                    <input name="ctl00$main$autogol2" [(ngModel)]="bonusMalus.autogoal.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c "><span class="role">D</span> </div>
+                                    <input name="ctl00$main$autogol3" [(ngModel)]="bonusMalus.autogoal.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a "><span class="role">A</span> </div>
+                                    <input name="ctl00$main$autogol4" [(ngModel)]="bonusMalus.autogoal.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$autogol2" [(ngModel)]="bonusMalus.autogoal.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$autogol3" [(ngModel)]="bonusMalus.autogoal.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$autogol4" [(ngModel)]="bonusMalus.autogoal.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'autogol"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore dell'autogol"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="golPareggio">Gol decisivo pareggio:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golpareggio1" [(ngModel)]="bonusMalus.evenGoal.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="golPareggio">Gol decisivo pareggio:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$golpareggio1" [(ngModel)]="bonusMalus.evenGoal.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d"><span class="role">D</span> </div>
+                                    <input name="ctl00$main$golpareggio2" [(ngModel)]="bonusMalus.evenGoal.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c"><span class="role">C</span> </div>
+                                    <input name="ctl00$main$golpareggio3" [(ngModel)]="bonusMalus.evenGoal.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a"><span class="role">a</span> </div>
+                                    <input name="ctl00$main$golpareggio4" [(ngModel)]="bonusMalus.evenGoal.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golpareggio2" [(ngModel)]="bonusMalus.evenGoal.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golpareggio3" [(ngModel)]="bonusMalus.evenGoal.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golpareggio4" [(ngModel)]="bonusMalus.evenGoal.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del gol decisivo pareggio"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del gol decisivo pareggio"></i></div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="golvittoria">Gol decisivo vittoria:</label>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golvittoria1" [(ngModel)]="bonusMalus.winGoal.P" class="form-control chk" type="number">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="golvittoria">Gol decisivo vittoria:</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="p "><span class="role">P</span> </div>
+                                    <input name="ctl00$main$golvittoria1" [(ngModel)]="bonusMalus.winGoal.P" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="d "><span class="role">D</span> </div>
+                                    <input name="ctl00$main$golvittoria2" [(ngModel)]="bonusMalus.winGoal.D" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="c "><span class="role">C</span> </div>
+                                    <input name="ctl00$main$golvittoria3" [(ngModel)]="bonusMalus.winGoal.C" class="form-control chk" type="number" step="0.5">
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <div class="a "><span class="role">A</span> </div>
+                                    <input name="ctl00$main$golvittoria4" [(ngModel)]="bonusMalus.winGoal.A" class="form-control chk" type="number" step="0.5">
+                                </div>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golvittoria2" [(ngModel)]="bonusMalus.winGoal.D" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golvittoria3" [(ngModel)]="bonusMalus.winGoal.C" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$golvittoria4" [(ngModel)]="bonusMalus.winGoal.A" class="form-control chk" type="number">
-                            </div>
-                            <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del gol decisivo vittoria"></i></div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserisci per ogni ruolo il valore del gol decisivo vittoria"></i></div>
                         </div>
                     </div>
                 </div>
@@ -235,11 +306,11 @@ import { LeaguesService } from '../leagues.service';
             <br>
             <br>
 
-            <div class="row">
-                <div class="col-lg-6 col-xs-11">
+            <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
                     <span class= "spanxxl"> Fonte Voti e Cartellini </span>
                 </div>
-                <div class="col-lg-6 col-xs-1 pull-right">
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1  pull-right">
                     <a (click) = "showDataSource = !showDataSource" class="btn btn-sm btn-info">
                         <span *ngIf="showDataSource" class="glyphicon glyphicon-chevron-up"> </span>
                         <span *ngIf="!showDataSource" class="glyphicon glyphicon-chevron-down"> </span>
@@ -291,11 +362,11 @@ import { LeaguesService } from '../leagues.service';
             <br>
 
 
-            <div class="row">
-                <div class="col-lg-6 col-xs-11">
+            <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
                     <span class= "spanxxl"> Sostituzioni </span>
                 </div>
-                <div class="col-lg-6 col-xs-1 pull-right">
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right ">
                     <a (click) = "showSubstitutions = !showSubstitutions" class="btn btn-sm btn-info">
                         <span *ngIf="showSubstitutions" class="glyphicon glyphicon-chevron-up"> </span>
                         <span *ngIf="!showSubstitutions" class="glyphicon glyphicon-chevron-down"> </span>
@@ -346,7 +417,7 @@ import { LeaguesService } from '../leagues.service';
                     <div class="row ammonitosv inner nobor" *ngIf="substitutions.yellowCardSvOfficeVoteActive">
                         <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="vammonitosv">Valore ammonito sv:</label>
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
-                            <input name="ctl00$main$vammonitosv" value="0" [(ngModel)]="substitutions.yellowCardSvOfficeVote" class="form-control textinner" type="number">
+                            <input name="ctl00$main$vammonitosv" value="0" [(ngModel)]="substitutions.yellowCardSvOfficeVote" class="form-control textinner" type="number" step="0.5">
                         </div>
                         <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserire il valore da attribuire all'ammonito con sv"></i></div>
                     </div>
@@ -370,7 +441,7 @@ import { LeaguesService } from '../leagues.service';
                     <div class="row riservaufficiop inner nobor" *ngIf="substitutions.goalkeeperPlayerOfficeVoteActive">
                         <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="vriservap">Valore riserva d'ufficio portieri:</label>
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <input name="ctl00$main$vriservap" value="3"  [(ngModel)]="substitutions.goalkeeperPlayerOfficeVote" class="form-control textinner" type="number">
+                            <input name="ctl00$main$vriservap" value="3"  [(ngModel)]="substitutions.goalkeeperPlayerOfficeVote" class="form-control textinner" type="number" step="0.5">
                         </div>
                         <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserire il valore della riserva d'ufficio per i portieri"></i></div>
                     </div>
@@ -395,7 +466,7 @@ import { LeaguesService } from '../leagues.service';
                     <div class="row riservaufficiogm inner nobor" *ngIf="substitutions.movementsPlayerOfficeVoteActive">
                         <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="vriservagm">Valore riserva d'ufficio giocatori di movimento:</label>
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <input name="ctl00$main$vriservagm" value="4" [(ngModel)]="substitutions.movementsPlayerOfficeVote" class="form-control textinner" type="number">
+                            <input name="ctl00$main$vriservagm" value="4" [(ngModel)]="substitutions.movementsPlayerOfficeVote" class="form-control textinner" type="number" step="0.5">
                         </div>
                         <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Inserir eil valore della riserva d'ufficio per i calciatori di movimento"></i></div>
                     </div>
@@ -424,11 +495,11 @@ import { LeaguesService } from '../leagues.service';
             <br>
             <br>
             
-            <div class="row">
-                <div class="col-lg-6 col-xs-11">
+            <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
                     <span class= "spanxxl"> Punteggi </span>
                 </div>
-                <div class="col-lg-6 col-xs-1 pull-right">
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right ">
                     <a (click) = "showPoints = !showPoints" class="btn btn-sm btn-info">
                         <span *ngIf="showPoints" class="glyphicon glyphicon-chevron-up"> </span>
                         <span *ngIf="!showPoints" class="glyphicon glyphicon-chevron-down"> </span>
@@ -641,7 +712,7 @@ import { LeaguesService } from '../leagues.service';
                     <div class="row inner nobor" *ngIf="points.fasciaConIntornoActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="valintorno">Valore per fascia con intorno:</label>
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                            <input name="ctl00$main$valintorno" [(ngModel)]="points.fasciaConIntorno" class="form-control textinner" type="number">
+                            <input name="ctl00$main$valintorno" [(ngModel)]="points.fasciaConIntorno" class="form-control textinner" type="number" step="0.5">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore della fascia con intorno"></i></div>
                     </div>
@@ -668,7 +739,7 @@ import { LeaguesService } from '../leagues.service';
                     <div class="row inner nobor" *ngIf="points.intornoActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="vintorno">Valore per intorno:</label>
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                            <input name="ctl00$main$vintorno" [(ngModel)]="points.intorno" class="form-control textinner" type="number">
+                            <input name="ctl00$main$vintorno" [(ngModel)]="points.intorno" class="form-control textinner" type="number" step="0.5">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore dell'intorno"></i></div>
                     </div>
@@ -692,7 +763,7 @@ import { LeaguesService } from '../leagues.service';
                     <div class="row inner nobor" *ngIf="points.controllaPareggioActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="vcpareggio">Valore per controlla pareggio:</label>
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                            <input name="ctl00$main$vcpareggio" [(ngModel)]="points.controllaPareggio" class="form-control textinner" type="number">
+                            <input name="ctl00$main$vcpareggio" [(ngModel)]="points.controllaPareggio" class="form-control textinner" type="number" step="0.5">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore del controlla pareggio"></i></div>
                     </div>
@@ -716,7 +787,7 @@ import { LeaguesService } from '../leagues.service';
                     <div class="row inner nobor" *ngIf="points.differenzaPuntiActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="vdpunti">Valore per differenza punti:</label>
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                            <input name="ctl00$main$vdpunti" [(ngModel)]="points.differenzaPunti" class="form-control textinner" type="number">
+                            <input name="ctl00$main$vdpunti" [(ngModel)]="points.differenzaPunti" class="form-control textinner" type="number" step="0.5">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore della differenza punti"></i></div>
                     </div>
@@ -764,7 +835,7 @@ import { LeaguesService } from '../leagues.service';
                     <div class="row inner nobor" *ngIf="points.portiereImbattutoActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="vpimbattuto">Valore per bonus portiere imbattuto:</label>
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                            <input name="ctl00$main$vpimbattuto" [(ngModel)]="points.portiereImbattuto" class="form-control textinner" type="number">
+                            <input name="ctl00$main$vpimbattuto" [(ngModel)]="points.portiereImbattuto" class="form-control textinner" type="number" step="0.5">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore del bonus da assegnare al portiere imbattuto"></i></div>
                     </div>
@@ -783,11 +854,11 @@ import { LeaguesService } from '../leagues.service';
             <br>
             <br>
             
-            <div class="row">
-                <div class="col-lg-6 col-xs-11">
+            <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
                     <span class= "spanxxl" >Modificatori </span>
                 </div>
-                <div class="col-lg-6 col-xs-1 pull-right">
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right ">
                     <a (click) = "showModifiers = !showModifiers" class="btn btn-sm btn-info">
                         <span *ngIf="showModifiers" class="glyphicon glyphicon-chevron-up"> </span>
                         <span *ngIf="!showModifiers" class="glyphicon glyphicon-chevron-down"> </span>
@@ -820,91 +891,91 @@ import { LeaguesService } from '../leagues.service';
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha un <strong>voto &lt;=3</strong>, si aggiunge</div>
                             <div class="col-lg-2 col-md-4 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p1" [(ngModel)]="modifiers.goalkeeperVote3" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p1" [(ngModel)]="modifiers.goalkeeperVote3" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto 3,5</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p2" [(ngModel)]="modifiers.goalkeeperVote3half" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p2" [(ngModel)]="modifiers.goalkeeperVote3half" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto4</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p3" [(ngModel)]="modifiers.goalkeeperVote4" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p3" [(ngModel)]="modifiers.goalkeeperVote4" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto 4,5</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p4" [(ngModel)]="modifiers.goalkeeperVote4half" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p4" [(ngModel)]="modifiers.goalkeeperVote4half" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto 5</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p5" [(ngModel)]="modifiers.goalkeeperVote5" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p5" [(ngModel)]="modifiers.goalkeeperVote5" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto 5,5</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p6" [(ngModel)]="modifiers.goalkeeperVote5half" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p6" [(ngModel)]="modifiers.goalkeeperVote5half" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto 6</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p7" [(ngModel)]="modifiers.goalkeeperVote6" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p7" [(ngModel)]="modifiers.goalkeeperVote6" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto 6,5</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p8" [(ngModel)]="modifiers.goalkeeperVote6half" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p8" [(ngModel)]="modifiers.goalkeeperVote6half" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto 7</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p9" [(ngModel)]="modifiers.goalkeeperVote7" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p9" [(ngModel)]="modifiers.goalkeeperVote7" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5  col-md-5  col-sm-5 col-xs-9  control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto 7,5</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p10" [(ngModel)]="modifiers.goalkeeperVote7half" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p10" [(ngModel)]="modifiers.goalkeeperVote7half" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto 8</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p11" [(ngModel)]="modifiers.goalkeeperVote8" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p11" [(ngModel)]="modifiers.goalkeeperVote8" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label">punti al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto 8,5</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p12" [(ngModel)]="modifiers.goalkeeperVote8half" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p12" [(ngModel)]="modifiers.goalkeeperVote8half" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha come <strong>voto &gt;=9</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$p13" [(ngModel)]="modifiers.goalkeeperVote9" class="form-control textinner" type="number">
+                                <input name="ctl00$main$p13" [(ngModel)]="modifiers.goalkeeperVote9" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> al totale dell'avversario</div>
                         </div>
@@ -938,21 +1009,21 @@ import { LeaguesService } from '../leagues.service';
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=7</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$d6" [(ngModel)]="modifiers.defenderAvgVote6" class="form-control textinner" type="number">
+                                <input name="ctl00$main$d6" [(ngModel)]="modifiers.defenderAvgVote6" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=6,5 e &lt;7</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$d6h" [(ngModel)]="modifiers.defenderAvgVote6half" class="form-control textinner" type="number">
+                                <input name="ctl00$main$d6h" [(ngModel)]="modifiers.defenderAvgVote6half" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
                         </div>
                         <div class="row nobor">
                             <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=6 e &lt;6,5</strong> si aggiunge</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$d7" [(ngModel)]="modifiers.defenderAvgVote7" class="form-control textinner" type="number">
+                                <input name="ctl00$main$d7" [(ngModel)]="modifiers.defenderAvgVote7" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
                         </div>
@@ -984,51 +1055,51 @@ import { LeaguesService } from '../leagues.service';
                         <div class="row nobor">
                             <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12 control-label">se la <strong>differenza</strong> tra i centrocampisti è <strong>&lt;2</strong>, si assegna:</p>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$m0" [(ngModel)]="modifiers.middlefielderNear0" class="form-control textinner" type="number">
+                                <input name="ctl00$main$m0" [(ngModel)]="modifiers.middlefielderNear0" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> a entrambe le squadre</div>
                         </div>
                         <div class="row nobor">
                             <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12 control-label">se la <strong>differenza</strong> tra i centrocampisti è <strong>compresa tra 2 e 3,99</strong> si assegna:</p>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$mp2" [(ngModel)]="modifiers.middlefielderOver2" class="form-control textinner" type="number">
+                                <input name="ctl00$main$mp2" [(ngModel)]="modifiers.middlefielderOver2" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> alla squadra con totale centrocampo migliore e</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$mm2" [(ngModel)]="modifiers.middlefielderUnderMinus2" class="form-control textinner" type="number">
+                                <input name="ctl00$main$mm2" [(ngModel)]="modifiers.middlefielderUnderMinus2" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 control-label"><strong>punti</strong> all'altra</div>
                         </div>
                         <div class="row nobor">
                             <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12 control-label">se la <strong>differenza</strong> tra i centrocampisti è <strong>compresa tra 4 e 5,99</strong> si assegna:</p>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$mp4" [(ngModel)]="modifiers.middlefielderOver4" class="form-control textinner" type="number">
+                                <input name="ctl00$main$mp4" [(ngModel)]="modifiers.middlefielderOver4" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> alla squadra con totale centrocampo migliore e</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$mm4" [(ngModel)]="modifiers.middlefielderUnderMinus4" class="form-control textinner" type="number">
+                                <input name="ctl00$main$mm4" [(ngModel)]="modifiers.middlefielderUnderMinus4" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 control-label"><strong>punti</strong> all'altra</div>
                         </div>
                         <div class="row nobor">
                             <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12 control-label">se la <strong>differenza</strong> tra i centrocampisti è <strong>compresa tra 6 e 7,99</strong> si assegna:</p>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$mp6" [(ngModel)]="modifiers.middlefielderOver6" class="form-control textinner" type="number">
+                                <input name="ctl00$main$mp6" [(ngModel)]="modifiers.middlefielderOver6" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> alla squadra con totale centrocampo migliore e</div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$mm6" [(ngModel)]="modifiers.middlefielderUnderMinus6" class="form-control textinner" type="number">
+                                <input name="ctl00$main$mm6" [(ngModel)]="modifiers.middlefielderUnderMinus6" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-2 col-md-2  col-sm-2 col-xs-2 control-label"><strong>punti</strong>  all'altra</div>
                         </div>
                         <div class="row nobor">
                             <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12 control-label">se la <strong>differenza</strong> tra i centrocampisti è <strong>&gt;=8</strong> si assegna:</p>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$mp8" [(ngModel)]="modifiers.middlefielderOver8" class="form-control textinner" type="number">
+                                <input name="ctl00$main$mp8" [(ngModel)]="modifiers.middlefielderOver8" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong> alla squadra con totale centrocampo migliore e </div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$mm8" [(ngModel)]="modifiers.middlefielderUnderMinus8" class="form-control textinner" type="number">
+                                <input name="ctl00$main$mm8" [(ngModel)]="modifiers.middlefielderUnderMinus8" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 control-label"><strong>punti</strong> all'altra</div>
                         </div>
@@ -1064,7 +1135,7 @@ import { LeaguesService } from '../leagues.service';
                                 se un attaccante prende <strong>6</strong> il suo modificatore dell'attacco è pari a
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$s6" [(ngModel)]="modifiers.strikerVote6" class="form-control textinner" type="number">
+                                <input name="ctl00$main$s6" [(ngModel)]="modifiers.strikerVote6" class="form-control textinner" type="number" step="0.5">
                             </div>
                             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3"><strong>punti</strong></div>
                         </div>
@@ -1073,7 +1144,7 @@ import { LeaguesService } from '../leagues.service';
                                 se un attaccante prende <strong>6,5</strong> il modificatore dell'attacco è pari a
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$s6h" [(ngModel)]="modifiers.strikerVote6half" class="form-control textinner" type="number">                            </div>
+                                <input name="ctl00$main$s6h" [(ngModel)]="modifiers.strikerVote6half" class="form-control textinner" type="number" step="0.5">                            </div>
                             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3"><strong>punti</strong></div>
                         </div>
                         <div class="row nobor">
@@ -1081,7 +1152,7 @@ import { LeaguesService } from '../leagues.service';
                                 se un attaccante prende <strong>7</strong> il modificatore dell'attacco è pari a
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$s7" [(ngModel)]="modifiers.strikerVote7" class="form-control textinner" type="number">                            </div>
+                                <input name="ctl00$main$s7" [(ngModel)]="modifiers.strikerVote7" class="form-control textinner" type="number" step="0.5">                            </div>
                             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3"><strong>punti</strong></div>
                         </div>
                         <div class="row nobor">
@@ -1089,7 +1160,7 @@ import { LeaguesService } from '../leagues.service';
                                 se un attaccante prende <strong>7,5</strong> il modificatore dell'attacco è pari a
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$s8" [(ngModel)]="modifiers.strikerVote7half" class="form-control textinner" type="number">                            </div>
+                                <input name="ctl00$main$s8" [(ngModel)]="modifiers.strikerVote7half" class="form-control textinner" type="number" step="0.5">                            </div>
                             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3"><strong>punti</strong></div>
                         </div>
                         <div class="row nobor">
@@ -1097,7 +1168,7 @@ import { LeaguesService } from '../leagues.service';
                                 se un attaccante prende <strong>8</strong> o più il modificatore dell'attacco è pari a
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <input name="ctl00$main$s8" [(ngModel)]="modifiers.strikerVote8" class="form-control textinner" type="number">                            </div>
+                                <input name="ctl00$main$s8" [(ngModel)]="modifiers.strikerVote8" class="form-control textinner" type="number" step="0.5">                            </div>
                             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3">
                                 <strong>punti</strong>
                             </div>
@@ -1130,7 +1201,7 @@ import { LeaguesService } from '../leagues.service';
                         </div>
                         <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="dfairplay">Punteggio FairPlay:</label>
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <input name="ctl00$main$f" [(ngModel)]="modifiers.fairPlay" class="form-control textinner" type="number">
+                            <input name="ctl00$main$f" [(ngModel)]="modifiers.fairPlay" class="form-control textinner" type="number" step="0.5">
                         </div>
                         <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore del modificatore FairPlay"></i></div>
                     </div>
@@ -1177,11 +1248,11 @@ import { LeaguesService } from '../leagues.service';
             <br>
             <br>
             <br>
-            <div class="row">
-                <div class="col-lg-6 col-xs-11">
+            <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
                     <span class= "spanxxl" > Altre Regole </span>
                 </div>
-                <div class="col-lg-6 col-xs-1 pull-right">
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right ">
                     <a (click) = "showCompetitionRules = !showCompetitionRules" class="btn btn-sm btn-info">
                         <span *ngIf="showCompetitionRules" class="glyphicon glyphicon-chevron-up"> </span>
                         <span *ngIf="!showCompetitionRules" class="glyphicon glyphicon-chevron-down"> </span>
@@ -1223,7 +1294,7 @@ import { LeaguesService } from '../leagues.service';
                     <div class="row inner nobor" *ngIf="competitionRules.homeBonusActive">
                         <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="dautogol">Bonus Casalingo:</label>
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
-                            <input name="ctl00$main$vriservap" [(ngModel)]="competitionRules.homeBonus" class="form-control textinner" type="number">
+                            <input name="ctl00$main$vriservap" [(ngModel)]="competitionRules.homeBonus" class="form-control textinner" type="number" step="0.5">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore del bonus per la squadra che gioca in casa"></i></div>
                     </div>
@@ -1305,6 +1376,8 @@ export class CustomRulesComponent implements OnInit {
         this.retrieveCustomRules();
     }
 
+   
+    
     prova() {
         console.log(this.bonusMalus);
         console.log(this.dataSource);
@@ -1388,6 +1461,10 @@ export class CustomRulesComponent implements OnInit {
 
     goToCompetition(statsType){
         this. router.navigate(['/competition', {league : this.leagueShortName, competition : this.competitionShortName, type:statsType}])
+    }
+
+    alert(){
+        alert("coap")
     }
 
 }

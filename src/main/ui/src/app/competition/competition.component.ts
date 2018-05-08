@@ -5,22 +5,76 @@ import { LeaguesService } from '../leagues.service';
 @Component({
     selector: 'app-competition',
     template: `
-    <div class="col-lg-8 col-md-offset-2" >
-        <h2>Competitione {{competitionShortName}} </h2>
-        <div class="btn-toolbar">
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "saveOnlineSeasonAndTeams()"> 1 - Scarica i risultati online delle partite giocate (dopo ogni giornata) </button>
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> 2 - Scarica le formazioni inserite (dopo ogni giornata) </button>
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> 3 - Ricalcola i risultati sulla base di quanto scaricato (dopo ogni giornata) </button>
+    <div>
+        <h3 align="center">Competitione </h3>
+        <h3 align="center"><strong>{{competitionName | uppercase}}</strong></h3>
+        <div>
+            <div class="row nobor">
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
+                    <label>Scarica i risultati online delle partite giocate (dopo ogni giornata)</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "saveOnlineSeasonAndTeams()"> OK </button>
+                </div>
+            </div>
+            <div class="row nobor">
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                    <label> Scarica le formazioni inserite (dopo ogni giornata)</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> OK  </button>
+                </div>
+            </div>
+            <div class="row nobor">
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                    <label> Ricalcola i risultati sulla base di quanto scaricato (dopo ogni giornata)</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> OK  </button>
+                </div>
+            </div>
+            
             
             <div align = center> - - - - - </div>
             
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> 1 - Calcola le classifica via FantaSfiga </button>
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> 2 - Calcola le statistiche (qualche secondo) </button>
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> 3 - Recupera le statistiche appena calcolate</button>
+
+            <div class="row nobor">
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                    <label> Calcola le classifica via FantaSfiga </label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> OK </button>
+                </div>
+            </div>
+             <div class="row nobor">
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                    <label>  Calcola le statistiche (qualche secondo)</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
+                </div>
+            </div>
+             <div class="row nobor">
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                    <label> Recupera le statistiche appena calcolate</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> OK </button>
+                </div>
+            </div>
+
             
             <div align = center> - - - - - </div>
             
-            <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> Calcola le statistiche con regole personalizzate</button>
+
+            <div class="row nobor">
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                    <label> Calcola le statistiche con regole personalizzate</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> OK </button>
+                </div>
+            </div>
             
 
 
@@ -40,7 +94,7 @@ import { LeaguesService } from '../leagues.service';
 
         
         <ng-template #rankingTable let-rankingIn="ranking">
-        <div *ngIf= "rankingIn" >
+        <div class="table-responsive" *ngIf= "rankingIn" >
             <table class="table table-striped">
                 <thead class="thead-light">
                     <tr>
@@ -59,8 +113,8 @@ import { LeaguesService } from '../leagues.service';
                         <th *ngIf= "rankingIn.rows[0].positions">7</th>
                         <th *ngIf= "rankingIn.rows[0].positions">8</th>
                         <th *ngIf= "rankingIn.rows[0].luckyEdge">Sculate</th>
-                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Punti Guadagnati</th>
-                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Sfigate</th>
+                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Punti Sculate</th>
+                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Sfighe</th>
                         <th *ngIf= "rankingIn.rows[0].luckyEdge">Punti persi</th>
                     </tr>
                 </thead>
@@ -121,12 +175,7 @@ import { LeaguesService } from '../leagues.service';
                             <span *ngIf="team.bestPosition!=8 && team.worstPosition!=8">{{team.positions[7]}}</span>
                         </td>
                         
-                        
-                        
-                        
-                        
-                        
-                        
+                       
                         <td *ngIf= "team.luckyEdge">{{team.luckyEdge.luckyEdgeNumber}}</td>
                         <td *ngIf= "team.luckyEdge">{{team.luckyEdge.luckyEdgeGain}}</td>
                         <td *ngIf= "team.luckyEdge">{{team.luckyEdge.unluckyEdgeNumber}}</td>
@@ -257,7 +306,7 @@ import { LeaguesService } from '../leagues.service';
         </div>
      
 
-        <ng-template #estimateTemplate let-lessonsCounter="estimate">
+        <!--<ng-template #estimateTemplate let-lessonsCounter="estimate">
             <div> Approximately {{lessonsCounter}} lessons ...</div>
         </ng-template>
         
@@ -267,6 +316,8 @@ import { LeaguesService } from '../leagues.service';
 
         <ng-container *ngTemplateOutlet="estimateTemplate;context:ctx2">
         </ng-container>
+
+        -->
 
 
         <button class="btn btn-primary"(click) = "backToCompetitions()"> Torna alle competizioni </button>
@@ -303,6 +354,7 @@ export class CompetitionComponent implements OnInit {
     loading = false;
     leagueShortName = null;
     competitionShortName = null;
+    competitionName = null;
     loadingMessage = null;
     errorMessage = null;
     successMessage = null;
@@ -360,6 +412,7 @@ export class CompetitionComponent implements OnInit {
         let req = {
             competition : this.model,
             rulesType : this.rulesType.toUpperCase()
+            
         } 
 
         this.leagueService.retrieveAllRankings(req).subscribe(data => {
@@ -368,7 +421,7 @@ export class CompetitionComponent implements OnInit {
             this.errorMessage = null;
             this.loading = false;
             this.stats = data;
-            
+            this.competitionName = data.competition.name;
             
             this.ctxRealRanking.ranking = this.stats.realRanking;
             this.ctxRealLightRanking.ranking = this.stats.realLightRanking;

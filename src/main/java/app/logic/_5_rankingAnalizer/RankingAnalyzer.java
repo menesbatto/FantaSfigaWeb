@@ -21,6 +21,7 @@ import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._4_seasonsExecutor.model.Pair;
 import app.logic._4_seasonsExecutor.model.RankingBean;
 import app.logic._4_seasonsExecutor.model.RankingRowBean;
+import app.logic.model.CompetitionBean;
 import app.logic.model.StasResponse;
 import app.utils.UsefulMethods;
 
@@ -76,9 +77,15 @@ public class RankingAnalyzer {
 		// Ranking con le info sui punti sculati di 1
 		RankingBean luckyEdgeRanking1 = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.LUCKY_EDGES_1, rulesType);
 								
+		
+		
+		CompetitionBean competition = leagueDao.findCompetitionByShortNameAndLeagueShortName(competitionShortName, leagueShortName, userBean.getUsername());
+
 				
 		
 		StasResponse res = new StasResponse();
+		res.setCompetition(competition);
+		
 		res.setRealRanking(realRanking);
 		res.setRealLightRanking(realLightRanking);
 		
@@ -381,6 +388,7 @@ public class RankingAnalyzer {
 		List<RankingRowBean> rows;
 		List<Double> listPositions;
 		Double listPoints = 0.0;
+		RankingRowBean downRR, upRR;
 		for (RankingBean ranking : allRankings) {
 			rows = ranking.getRows();
 			for (int i = 0; i < rows.size(); i++) {
@@ -394,20 +402,74 @@ public class RankingAnalyzer {
 				Double points = rr.getPoints();
 				result.setValue(listPoints + points );
 				
-				if (rankingPosition <= result.getBestPosition()) {
-					if (points > result.getBestPoints()) {
-						result.setBestPoints(points);
-						result.setBestPosition(rankingPosition);
-						result.setBestPattern(ranking.getPattern());
+//				if (rankingPosition <= result.getBestPosition()) {
+//					if (points > result.getBestPoints()) {
+//						result.setBestPoints(points);
+//						result.setBestPosition(rankingPosition);
+//						result.setBestPattern(ranking.getPattern());
+//					}
+//				}
+//				else if(rankingPosition >= result.getWorstPosition()) {
+//					if (points < result.getWorstPoints()) {
+//						result.setWorstPoints(points);
+//						result.setWorstPosition(rankingPosition);
+//						result.setWorstPattern(ranking.getPattern());
+//					}
+//				}
+				
+				if (rankingPosition < result.getBestPosition()) {
+					result.setBestPosition(rankingPosition);
+					if (i != teams.size()-1) {
+						downRR = rows.get(i+1);
+						double differenceFromDown = points - downRR.getPoints();
+						result.setBestPoints(differenceFromDown);
+					}
+					else {
+						result.setBestPoints(0.0);
+					}
+					result.setBestPattern(ranking.getPattern());
+				}
+				
+				else if (rankingPosition == result.getBestPosition()) {
+					if (i != teams.size()-1) {
+						downRR = rows.get(i+1);
+						double differenceFromDown = points - downRR.getPoints();
+						if (differenceFromDown > result.getBestPoints()) {
+							result.setBestPoints(differenceFromDown);
+							result.setBestPattern(ranking.getPattern());
+						}
 					}
 				}
-				else if(rankingPosition >= result.getWorstPosition()) {
-					if (points < result.getWorstPoints()) {
-						result.setWorstPoints(points);
-						result.setWorstPosition(rankingPosition);
-						result.setWorstPattern(ranking.getPattern());
+				
+				else if (rankingPosition > result.getWorstPosition()) {
+					result.setWorstPosition(rankingPosition);
+					if (i != 0) {
+						upRR = rows.get(i-1);
+						double differenceFromUp = upRR.getPoints() - points;
+						result.setWorstPoints(differenceFromUp);
+					}
+					else {
+						result.setBestPoints(0.0);
+					}
+					result.setWorstPattern(ranking.getPattern());
+				}
+				
+				else if(rankingPosition == result.getWorstPosition()) {
+					if (i != 0) {
+						upRR = rows.get(i-1);
+						double differenceFromUp = upRR.getPoints() - points;
+						if (differenceFromUp > result.getWorstPoints()) {
+							result.setWorstPoints(differenceFromUp);
+							result.setWorstPattern(ranking.getPattern());
+						}
 					}
 				}
+				
+				
+				
+				
+			
+				
 				
 			}
 		}
@@ -429,7 +491,7 @@ public class RankingAnalyzer {
 			p.setBestPosition(teams.size());
 			p.setWorstPosition(1);
 			p.setBestPoints(0.0);
-			p.setWorstPoints(300.0);
+			p.setWorstPoints(0.0);
 			map.put(player, p);
 			
 		}

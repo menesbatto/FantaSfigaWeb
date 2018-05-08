@@ -193,17 +193,24 @@ public class LeagueDao {
 		List<CompetitionBean> beans = new ArrayList<CompetitionBean>();
 		CompetitionBean bean;
 		for (Competition e : ents) {
-			bean = new CompetitionBean();
-			bean.setLeagueShortName(e.getLeague().getShortName());
-			bean.setName(e.getName());
-			bean.setCompetitionShortName(e.getShortName());
-			bean.setUrl(e.getUrl());
-			bean.setType(e.getType());
+			bean = createCompetitionBeanFromEnt(e);
 			
 			beans.add(bean);
 		}
 		
 		return beans; 		
+	}
+
+
+	private CompetitionBean createCompetitionBeanFromEnt(Competition e) {
+		CompetitionBean bean;
+		bean = new CompetitionBean();
+		bean.setLeagueShortName(e.getLeague().getShortName());
+		bean.setName(e.getName());
+		bean.setCompetitionShortName(e.getShortName());
+		bean.setUrl(e.getUrl());
+		bean.setType(e.getType());
+		return bean;
 	}
 
 
@@ -885,6 +892,16 @@ public class LeagueDao {
 		seasonFromWebRepo.save(ent);
 		
 		
+	}
+
+
+	public CompetitionBean findCompetitionByShortNameAndLeagueShortName(String competitionShortName, String leagueShortName, String username) {
+		User user = userDao.retrieveByUsername(username);
+		League league = leagueRepo.findByUserAndShortName(user, leagueShortName);
+		Competition ent = competitionRepo.findByLeagueAndShortName(league, competitionShortName);
+		CompetitionBean bean = createCompetitionBeanFromEnt(ent);
+		
+		return bean;
 	}
 
 

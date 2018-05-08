@@ -6,7 +6,8 @@ import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-login',
   template:   `
-    <div class="col-md-6 col-md-offset-3">
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <h2>Login</h2>
         <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
             <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">

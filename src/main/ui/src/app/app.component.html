@@ -1,16 +1,28 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
-    Routing and Navigation
+   
   </h1>
 </div>
-<nav>
+
+
   <!-- <a href="/employees" routerLinkActive = "strong"> Employees </a> -->
   <!-- <a href="/departments" routerLinkActive = "strong"> Departments </a> -->
-  <span> Ciao {{user}}</span>
-  <button class="btn btn-primary " [routerLink]="['/login']" routerLinkActive = "strong"> Logout </button>
+ 
+ 
+ <!-- <nav>   
+  <div>
+        <div class="col-lg-11 col-md-11 col-sm-9 col-xs-9">
+            <span> Ciao {{user.username}}</span>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-3 col-xs-3">
+            
+            <button class="btn btn-primary " [routerLink]="['../']" routerLinkActive = "strong"> Logout </button>
+        </div>
+  </div>
 
-</nav>
+</nav>-->
 
-<router-outlet></router-outlet>
+<app-header></app-header>
+<router-outlet ></router-outlet>
 <!-- Routed view go here -->

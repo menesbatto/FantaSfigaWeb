@@ -6,19 +6,19 @@ import { Router } from '@angular/router';
     selector: 'app-leagues',
     template: `
 
-    <div class="col-md-6 col-md-offset-3" >
-      <h3>Le tue leghe</h3>
-      
-      <div class="table-responsive">
-        <table class="table">
-          <tr *ngFor = "let league of leagueList" >
-            <td> {{league.name}} </td>
-            <td> <button  class="btn btn-primary" [disabled]="loading || league.competitionsDownloaded"  (click)="downloadCompetitions(league)"> Scarica </button>  </td>
-            <td> <button  class="btn btn-primary" [disabled]="loading || !league.competitionsDownloaded || !league.rulesDownloaded"  (click) = "goToCompetitions(league)"> Vai </button> </td>
-          <tr>
-        </table>
-      </div> 
-    
+    <div>
+        <h3 align = "center">Le tue leghe </h3>
+        
+        <div class="table-responsive">
+            <table class="table">
+            <tr *ngFor = "let league of leagueList" >
+                <td> {{league.name}} </td>
+                <td> <button  class="btn btn-primary" [disabled]="loading || league.competitionsDownloaded"  (click)="downloadCompetitions(league)"> Scarica </button>  </td>
+                <td> <button  class="btn btn-primary" [disabled]="loading || !league.competitionsDownloaded || !league.rulesDownloaded"  (click) = "goToCompetitions(league)"> Vai </button> </td>
+            <tr>
+            </table>
+        </div> 
+        
       <div class="alert alert-success" *ngIf="successMessage">
           <strong>{{successMessage}}</strong>
       </div>
