@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
+import app.dao.entity.Mismatch;
 import app.logic.Main;
 import app.logic._0_credentialsSaver.UserExpert;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
@@ -34,6 +35,7 @@ import app.logic._1_seasonPatternExtractor.SeasonPatternExtractor;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
+import app.logic._2_realChampionshipAnalyzer.ReportBean;
 import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._3_seasonsGenerator.AllSeasonsGenerator;
@@ -43,7 +45,9 @@ import app.logic.model.CompetitionBean;
 import app.logic.model.CustomRulesReq;
 import app.logic.model.PostponementBean;
 import app.logic.model.RetrieveAllRankingsReq;
+import app.logic.model.RetrieveReportRes;
 import app.logic.model.RetrieveRules;
+import app.logic.model.RetrieveRulesRes;
 import app.logic.model.RetrieveSeasonReq;
 import app.logic.model.SeasonAndRankingRes;
 import app.logic.model.StasResponse;
@@ -411,19 +415,23 @@ public class FacadeController {
 	// Recupera a DB le regole della competizione, usato spesso per le customRules
 	
 	@RequestMapping(value = "/retrieveRules", method = RequestMethod.POST)
-	public ResponseEntity<RulesBean> retrieveRules(@RequestBody RetrieveRules req) {
+	public ResponseEntity<RetrieveRulesRes> retrieveRules(@RequestBody RetrieveRules req) {
 		
-		RulesType type = RulesType.valueOf(req.getType());
-		RulesBean rules = rulesExpertMain.retrieveRules(req.getCompetition(), type);
+//		RulesType type = RulesType.valueOf(req.getType());
+		RulesBean customRules = rulesExpertMain.retrieveRules(req.getCompetition(), RulesType.CUSTOM);
+		RulesBean realRules = rulesExpertMain.retrieveRules(req.getCompetition(), RulesType.REAL);
+		RetrieveRulesRes resBean = new RetrieveRulesRes();
+		resBean.setRealRules(realRules);
+		resBean.setCustomRules(customRules);
 
-		ResponseEntity<RulesBean> response;
+		ResponseEntity<RetrieveRulesRes> response;
 		String body;
-		if (rules == null) {
-			response = new ResponseEntity<RulesBean>(rules, HttpStatus.UNAUTHORIZED);
+		if (customRules == null) {
+			response = new ResponseEntity<RetrieveRulesRes>(resBean , HttpStatus.UNAUTHORIZED);
 			body = "Retrieve Rules FAILED";
 		}
 		else {
-			response = new ResponseEntity<RulesBean>(rules, HttpStatus.OK);
+			response = new ResponseEntity<RetrieveRulesRes>(resBean, HttpStatus.OK);
 			body = "Retrieve Rules COMPLETED";
 		}
 		
@@ -479,6 +487,9 @@ public class FacadeController {
 		return response;
 	}
 	
+	
+	//###################################################################
+
 	// Calcola il legame tra le giornate della Serie A e le giornate della specifica competizione
 	// RICHIAMATO DA USER 1 volta all'inizio
 	
@@ -704,6 +715,25 @@ public class FacadeController {
 		return response;
 	}
 		
+	//###################################################################
+
+	// Recupera il report sugli errori
+	@RequestMapping(value = "/retrieveReport", method = RequestMethod.POST)
+	public ResponseEntity<RetrieveReportRes> retrieveReport(@RequestBody CompetitionBean competition) {
+		String competitionShortName = competition.getCompetitionShortName();
+		String leagueShortName = competition.getLeagueShortName();
 		
+		ReportBean report = seasonAnalyzer.retrieveReport(competitionShortName, leagueShortName);
+		
+		RetrieveReportRes res = new RetrieveReportRes();
+		res.setReport(report);
+		
+		
+		String body = "Retrieve Report COMPLETED";
+		
+		ResponseEntity<RetrieveReportRes> response = new ResponseEntity<RetrieveReportRes>(res, HttpStatus.OK);
+		return response;
+	}
+	
 		
 }

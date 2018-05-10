@@ -143,6 +143,8 @@ public class SeasonPatternExtractor {
 	private static SeasonDayBean createSeasonDay(Element seasonDayElements, String seasonDayName) {
 		SeasonDayBean seasonDay = new SeasonDayBean(seasonDayName);
 		Elements matchesDomElems = seasonDayElements.getElementsByClass("match");
+		Elements matchesGoalsDomElems = seasonDayElements.getElementsByClass("result");
+
 		Element serieASeasonDayElem = seasonDayElements.getElementsByTag("tr").get(0).getElementsByClass("thtitle").get(0);
 		String serieASeasonDayApp = serieASeasonDayElem.text().split("-")[1];
 		String serieASeasonDay = serieASeasonDayApp.substring(1, serieASeasonDayApp.length()-9);
@@ -152,7 +154,10 @@ public class SeasonPatternExtractor {
 		String awayTeam;
 		Double homeSumTotalPoints;
 		Double awaySumTotalPoints;
-		for (Element matchElem : matchesDomElems) {
+		for (int i = 0; i < matchesDomElems.size(); i++) {
+			Element matchElem = matchesDomElems.get(i);
+			Element goalsElem = matchesGoalsDomElems.get(i);
+
 			teamsDomElems = matchElem.getElementsByTag("a");
 			homeTeam = teamsDomElems.get(0).text();
 			awayTeam = teamsDomElems.get(1).text();
@@ -163,6 +168,12 @@ public class SeasonPatternExtractor {
 				awaySumTotalPoints = Double.valueOf(resultPoints.get(1).text().replace(",", "."));
 				m.getHomeTeamResult().setSumTotalPoints(homeSumTotalPoints);
 				m.getAwayTeamResult().setSumTotalPoints(awaySumTotalPoints);
+				
+				
+				int homeGoals = Integer.valueOf(goalsElem.text().split("-")[0]);
+				int awayGoals = Integer.valueOf(goalsElem.text().split("-")[1]);
+				m.getHomeTeamResult().setGoals(homeGoals);
+				m.getAwayTeamResult().setGoals(awayGoals);
 			}
 			seasonDay.getMatches().add(m);
 		}

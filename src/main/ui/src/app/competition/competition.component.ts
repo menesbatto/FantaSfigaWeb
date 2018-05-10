@@ -20,10 +20,18 @@ import { HeaderService } from '../header.service';
                     <label>Scarica i dati</label>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading || isAlreadyDownloaded()" class="btn btn-primary btn-block" (click) = "downloadInfo()"> OK </button>
+                    <button [disabled]="loading || isAlreadyDownloaded() && false" class="btn btn-primary btn-block" (click) = "downloadInfo()"> OK </button>
                 </div>
             </div>
-            
+                
+            <div class="row nobor" >
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
+                    <label>Report Errori</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToReport()"> Vai </button>
+                </div>
+            </div>
 
 
             <!--<div class="row nobor">
@@ -68,7 +76,7 @@ import { HeaderService } from '../header.service';
                     <label> Calcola statistiche pesanti (qualche secondo)</label>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading || isAlreadyCalculated()" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
+                    <button [disabled]="loading || isAlreadyCalculated() && false" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
                 </div>
             </div>
             <!--<div class="row nobor">
@@ -83,10 +91,18 @@ import { HeaderService } from '../header.service';
             
             <!--<div align = center> - - - - - </div>-->
             
+            <div class="row nobor" *ngIf="rulesType=='REAL'">
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                    <label> Regole</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCompetitionRules()"> OK </button>
+                </div>
+            </div>
 
             <div class="row nobor" *ngIf="rulesType=='CUSTOM'">
                 <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                    <label> Calcola le statistiche con regole personalizzate</label>
+                    <label> Personalizza le regole</label>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                     <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> OK </button>
@@ -651,6 +667,9 @@ export class CompetitionComponent implements OnInit {
         this.errorMessage = null;
     }
 
+    goToCompetitionRules(competition){
+        this. router.navigate(['/competitionRules', {league : this.leagueShortName, competition : this.competitionShortName}])
+    }
 
     goToSeason(pattern, teamIn) {
         this. router.navigate(['/season', {league : this.leagueShortName, competition : this.competitionShortName, season: pattern, team:teamIn, rulesType: this.rulesType}])
@@ -666,5 +685,8 @@ export class CompetitionComponent implements OnInit {
 
     }
 
-
+    
+    goToReport() {
+        this. router.navigate(['/report', {league : this.leagueShortName, competition : this.competitionShortName}])
+    }
 }

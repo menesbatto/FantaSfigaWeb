@@ -58,7 +58,7 @@ public class SeasonDayAnalyzer {
 	}
 
 	
-	public SeasonDayResultBean calculateSingleSeasonDay(SeasonDayFromWebBean seasonDayFromWeb, Integer serieASeasonDay, RulesBean rules, Map<String, List<PlayerVoteComplete>> seasonDayVotesInput,  Map<Integer, List<PostponementBean>> postponementsMapInput) {
+	public SeasonDayResultBean calculateSingleSeasonDay(SeasonDayFromWebBean seasonDayFromWeb, Integer serieASeasonDay, RulesBean rules, Map<String, List<PlayerVoteComplete>> seasonDayVotesInput,  Map<Integer, List<PostponementBean>> postponementsMapInput, 	List<VoteMismatchBean> voteMismatches ) {
 		List<LineUp> linesUp = seasonDayFromWeb.getLinesUp();
 		this.seasonDayVotes = seasonDayVotesInput;
 		if (postponementsMap== null) {
@@ -66,11 +66,14 @@ public class SeasonDayAnalyzer {
 		}
 
 		this.rules = rules;
-		
+		List<VoteMismatchBean> voteMismatchesApp = new ArrayList<VoteMismatchBean>();
 		for (LineUp lineUp : linesUp) {
-
-			calculateTeamsFantaVote(lineUp, serieASeasonDay);
 			
+			calculateTeamsFantaVote(lineUp, serieASeasonDay, voteMismatchesApp);
+			for (VoteMismatchBean miss: voteMismatchesApp)	
+				miss.setPlayer(lineUp.getTeamName());
+			voteMismatches.addAll(voteMismatchesApp);
+			voteMismatchesApp.clear();
 		}
 		
 		// Calcola la formazione scesa in campo
@@ -78,23 +81,17 @@ public class SeasonDayAnalyzer {
 		
 		// Calcola i modificatori
 		if ( rules.getModifiers().isGoalkeeperModifierActive() )
-			if (!AppConstants.FORCE_GOALKEEPER_MODIFIER_DISABLED)
-				calculateGoalkeeperTeamsModifier(linesUp);
+			calculateGoalkeeperTeamsModifier(linesUp);
 		if ( rules.getModifiers().isDefenderModifierActive() )
-			if (!AppConstants.FORCE_DEFENDER_MODIFIER_DISABLED) 
-				calculateDefenderTeamsModifier(linesUp);
+			calculateDefenderTeamsModifier(linesUp);
 		if ( rules.getModifiers().isMiddlefielderModifierActive() )
-			if (!AppConstants.FORCE_MIDDLEFIELD_MODIFIER_DISABLED)
-				calculateMiddlefieldTeamsVariation(linesUp);
+			calculateMiddlefieldTeamsVariation(linesUp);
 		if ( rules.getModifiers().isStrikerModifierActive() )
-			if (!AppConstants.FORCE_STRIKER_MODIFIER_DISABLED)
-				calculateStrikerTeamsModifier(linesUp);
+			calculateStrikerTeamsModifier(linesUp);
 		if ( rules.getModifiers().isPerformanceModifierActive())
-			if (!AppConstants.FORCE_PERFORMANCE_MODIFIER_DISABLED)
-				calculatePerformanceTeamsModifier(linesUp);
+			calculatePerformanceTeamsModifier(linesUp);
 		if ( rules.getModifiers().isFairPlayModifierActive())
-			if (!AppConstants.FORCE_FAIR_PLAY_MODIFIER_DISABLED)
-				calculateFairPlayTeamsModifier(linesUp);
+			calculateFairPlayTeamsModifier(linesUp);
 		
 			
 		// System.out.println(linesUp);
@@ -139,27 +136,27 @@ public class SeasonDayAnalyzer {
 
 
 
-	private void calculateTeamsFantaVote(LineUp lineUp, Integer serieASeasonDay) {
-		updatePlayers(serieASeasonDay, lineUp.getGoalKeeper());
-		updatePlayers(serieASeasonDay, lineUp.getGoalKeeperReserve());
-		updatePlayers(serieASeasonDay, lineUp.getDefenders());
-		updatePlayers(serieASeasonDay, lineUp.getDefendersReserves());
-		updatePlayers(serieASeasonDay, lineUp.getMidfielders());
-		updatePlayers(serieASeasonDay, lineUp.getMidfieldersReserves());
-		updatePlayers(serieASeasonDay, lineUp.getStrikers());
-		updatePlayers(serieASeasonDay, lineUp.getStrikersReserves());
-		updatePlayers(serieASeasonDay, lineUp.getReserves());
+	private void calculateTeamsFantaVote(LineUp lineUp, Integer serieASeasonDay, List<VoteMismatchBean> voteMismatches) {
+		updatePlayers(serieASeasonDay, lineUp.getGoalKeeper(), voteMismatches);
+		updatePlayers(serieASeasonDay, lineUp.getGoalKeeperReserve(), voteMismatches);
+		updatePlayers(serieASeasonDay, lineUp.getDefenders(), voteMismatches);
+		updatePlayers(serieASeasonDay, lineUp.getDefendersReserves(), voteMismatches);
+		updatePlayers(serieASeasonDay, lineUp.getMidfielders(), voteMismatches);
+		updatePlayers(serieASeasonDay, lineUp.getMidfieldersReserves(), voteMismatches);
+		updatePlayers(serieASeasonDay, lineUp.getStrikers(),voteMismatches);
+		updatePlayers(serieASeasonDay, lineUp.getStrikersReserves(),voteMismatches);
+		updatePlayers(serieASeasonDay, lineUp.getReserves(), voteMismatches);
 	}
 
 
-	private void updatePlayers(Integer serieASeasonDay, List<PlayerVote> allPlayers) {
+	private void updatePlayers(Integer serieASeasonDay, List<PlayerVote> allPlayers, List<VoteMismatchBean> voteMismatches) {
 		for (PlayerVote player : allPlayers) {
-			calculatePlayerFantaVote(player, serieASeasonDay);
+			calculatePlayerFantaVote(player, serieASeasonDay, voteMismatches);
 		}
 	}
 
 
-	private void calculatePlayerFantaVote(PlayerVote player, Integer serieASeasonDay) {
+	private void calculatePlayerFantaVote(PlayerVote player, Integer serieASeasonDay, List<VoteMismatchBean> voteMissmatches) {
 		Double vote = null;
 		Double fantaVote = null;
 		
@@ -192,17 +189,17 @@ public class SeasonDayAnalyzer {
 		vote = pvcVote.getVote();
 		fantaVote = getFantaVote(pvcVote);
 		
-//		Double voteFromWeb = getVote(playerElem.getElementsByClass("pt").get(1).text());
+
 		Double voteFromWeb = player.getVoteFromWeb();
-		if (vote != null && !vote.equals(voteFromWeb)){
-			System.out.println("VOTO DIVERSO:\t\tGiornata di serie A: " + serieASeasonDay + "\t\t" + team + " " + name + " " + "voti ufficiali: " + vote + " - Voti da nostra lega: " + voteFromWeb);
-		}
-		
-		
-//		Double fantaVoteFromWeb = getVote(playerElem.getElementsByClass("pt").get(2).text());
 		Double fantaVoteFromWeb = player.getFantaVoteFromWeb();
-		if (fantaVote != null && !fantaVote.equals(fantaVoteFromWeb)){
-			System.out.println("FANTAVOTO DIVERSO:\tGiornata di Serie A: " + serieASeasonDay + "\t\t" + team + " " + name + " " + "voti ufficiali: " + fantaVote + " - Voti da nostra lega: " + fantaVoteFromWeb);
+
+		
+		
+		if (vote != null && !vote.equals(voteFromWeb) 		|| 		fantaVote != null && !fantaVote.equals(fantaVoteFromWeb)){
+			String missmatch = "VOTO DIVERSO:\t\tGiornata di serie A: " + serieASeasonDay + "\t\t" + team + " " + name + " " + "voti ufficiali: " + vote + " - Voti da nostra lega: " + voteFromWeb;
+			missmatch += "\nFANTAVOTO DIVERSO:\tGiornata di Serie A: " + serieASeasonDay + "\t\t" + team + " " + name + " " + "voti ufficiali: " + fantaVote + " - Voti da nostra lega: " + fantaVoteFromWeb;
+			System.out.println(missmatch);
+			voteMissmatches.add(new VoteMismatchBean(serieASeasonDay, pvcVote, vote, voteFromWeb, fantaVote, fantaVoteFromWeb));
 		}
 		
 		// Per sistema Alvin, un giocatore che prende SV ed è espulso da regole è voto SV e fantavoto 4, ma non glielo mettono, quindi glielo metto io

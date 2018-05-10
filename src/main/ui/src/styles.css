@@ -137,3 +137,20 @@ body {
 .table>tbody>tr{
     border-bottom: 1px solid #ddd
 }
+
+.diff {
+    background-color : rgb(255, 173, 173);
+}
+
+td {
+    width: auto;
+}
+
+td.min {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.bord{
+    border-left: 1px solid grey;
+}

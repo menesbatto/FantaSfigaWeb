@@ -76,4 +76,12 @@ export class LeaguesService {
     return this.http.post<any>('/app/api/retrieveSeason', req);
   }
   
+  resetCustomRules(){
+    return this.http.get<any>('/app/api/resetCustomRules/');
+  }
+  
+  retrieveReport(req){
+    return this.http.post<any>('/app/api/retrieveReport/', req);
+  }
+
 }

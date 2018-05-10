@@ -1248,7 +1248,7 @@ import { Location } from '@angular/common';
             <br>
             <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
-                    <span class= "spanxxl" > Altre Regole </span>
+                    <span class= "spanxxl"> Altre Regole </span>
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right ">
                     <a (click) = "showCompetitionRules = !showCompetitionRules" class="btn btn-sm btn-info">
@@ -1264,8 +1264,9 @@ import { Location } from '@angular/common';
                 <div class="col-lg-12 rowb">
 
                     <div id="sosmoduloclassic" class="row">
-                        <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="priorità">Rinvio o sospensione delle partite</label>
-                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        <label [ngClass]="{ 'diff': competitionRules.postponementBehaviour != realRules.competitionRules.postponementBehaviour }"
+                           class="  col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="priorità">Rinvio o sospensione delle partite</label>
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 ">
                             <select name="ctl00$main$postponementBehaviour"  [(ngModel)]="competitionRules.postponementBehaviour" class="form-control chk">
                                 <option value="ALL_6"> Tutti 6 </option>
                                 <option value="WAIT_MATCHES"> Attesa dei recuperi </option>
@@ -1276,9 +1277,10 @@ import { Location } from '@angular/common';
 
 
                     <div class="row">
-                        <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="dautogol">Bonus Casalingo:</label>
+                        <label [ngClass]="{ 'diff': competitionRules.homeBonusActive != realRules.competitionRules.homeBonusActive }"
+                            class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="dautogol">Bonus Casalingo Attivo:</label>
                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                            <div class="radio">
+                            <div class="radio" >
                                 <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="competitionRules.homeBonusActive" name="homeBonusActive1" [value]="true" ></span>Sì </label>
                             </div>
                         </div>
@@ -1287,10 +1289,11 @@ import { Location } from '@angular/common';
                                 <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="competitionRules.homeBonusActive" name="homeBonusActive2" [value]="false" ></span>No </label>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="La squadra che gioca in casa riceve un bonus"></i></div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" rel="tooltip" title="" data-original-title="La squadra che gioca in casa riceve un bonus"></i></div>
                     </div>
                     <div class="row inner nobor" *ngIf="competitionRules.homeBonusActive">
-                        <label class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="dautogol">Bonus Casalingo:</label>
+                        <label [ngClass]="{ 'diff': competitionRules.homeBonus != realRules.competitionRules.homeBonus }"
+                            class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="dautogol">Bonus Casalingo:</label>
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
                             <input name="ctl00$main$vriservap" [(ngModel)]="competitionRules.homeBonus" class="form-control textinner" type="number" step="0.5">
                         </div>
@@ -1317,12 +1320,18 @@ import { Location } from '@angular/common';
         <br>
         <br>
 
-        <div class= "row">
+        <div class= "row nobor">
             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-3" >
-                <button class="btn btn-primary  btn-block" (click) = "saveCustomRules()">  Salva </button>
+                <button class="btn btn-primary  btn-block" (click) = "saveCustomRules()"> Salva </button>
             </div>
         </div>
       
+        <div class= "row nobor">
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-3" >
+                <button class="btn btn-primary  btn-block" (click) = "resetCustomRules()">  Reset delle regole </button>
+            </div>
+        </div>
+
       
         <br>
         <br>
@@ -1354,7 +1363,7 @@ export class CustomRulesComponent implements OnInit {
         competitionShortName: null
     };
    
-   
+    realRules = null;
    
     bonusMalus: any = null;
     dataSource: any = null;
@@ -1389,16 +1398,17 @@ export class CustomRulesComponent implements OnInit {
         this.retrieveCustomRules();
     }
 
-   
+   objEquals(obj1, obj2){
+    return obj1!= null && obj2 != null && JSON.stringify(obj1) == JSON.stringify(obj2);
+   }
+
     retrieveCustomRules() {
         let retrieveRulesReq = {
             competition: {
                 leagueShortName: this.leagueShortName,
                 competitionShortName: this.competitionShortName
-            },
-            type: "CUSTOM"
-
-        }
+            }
+         }
         
         this.leagueService.retrieveRules(retrieveRulesReq)
             .subscribe(
@@ -1406,12 +1416,14 @@ export class CustomRulesComponent implements OnInit {
                     this.successMessage = "Le regole sono state recuperate";
                     this.errorMessage = null;
                     
-                    this.bonusMalus = data.bonusMalus;
-                    this.dataSource = data.dataSource;
-                    this.points = data.points;
-                    this.substitutions = data.substitutions;
-                    this.modifiers = data.modifiers;
-                    this.competitionRules = data.competitionRules;
+                    this.realRules= data.realRules;
+
+                    this.bonusMalus = data.customRules.bonusMalus;
+                    this.dataSource = data.customRules.dataSource;
+                    this.points = data.customRules.points;
+                    this.substitutions = data.customRules.substitutions;
+                    this.modifiers = data.customRules.modifiers;
+                    this.competitionRules = data.customRules.competitionRules;
 
                 },
 
@@ -1425,7 +1437,39 @@ export class CustomRulesComponent implements OnInit {
 
     }
 
+    resetCustomRules(){
+        let req = {
+            leagueShortName : this.leagueShortName,
+            competitionShortName : this.competitionShortName,
+            rules : { 
+                bonusMalus: this.realRules.bonusMalus,
+                dataSource: this.realRules.dataSource,
+                points: this.realRules.points,
+                substitutions: this.realRules.substitutions,
+                modifiers: this.realRules.modifiers,
+                competitionRules: this.realRules.competitionRules,
+                type : "CUSTOM"
+            }    
+        }
+        this.leagueService.saveCustomRules(req)
+        .subscribe(
+            data => {
+                this.bonusMalus = data.bonusMalus;
+                this.dataSource = data.dataSource;
+                this.points = data.points;
+                this.substitutions = data.substitutions;
+                this.modifiers = data.modifiers;
+                this.competitionRules = data.competitionRules;
 
+                this.successMessage = "Le regole custom sono state resettate";
+                this.errorMessage = null;
+            },
+
+            error => {
+                this.successMessage = null;
+                this.errorMessage = "Errore di comunicazione col server"
+            });
+    }
 
     saveCustomRules() {
         console.log(this.competitionBean);

@@ -26,6 +26,7 @@ import { AuthenticationService } from './authentication.service';
 import { SeasonComponent } from './season/season.component';
 import { HeaderComponent } from './header/header.component';
 import { HeaderService } from './header.service';
+import { ReportComponent } from './report/report.component';
 
 
 
@@ -47,7 +48,8 @@ import { HeaderService } from './header.service';
     CustomRulesComponent,
     AdminComponent,
     SeasonComponent,
-    HeaderComponent
+    HeaderComponent,
+    ReportComponent
     ],
   imports: [
     BrowserModule,

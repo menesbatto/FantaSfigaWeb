@@ -16,7 +16,9 @@ import app.dao.entity.Competition;
 import app.dao.entity.League;
 import app.dao.entity.LineUpFromWeb;
 import app.dao.entity.LineUpLight;
+import app.dao.entity.MatchMismatch;
 import app.dao.entity.Matcho;
+import app.dao.entity.Mismatch;
 import app.dao.entity.Ranking;
 import app.dao.entity.RankingRow;
 import app.dao.entity.Season;
@@ -26,15 +28,22 @@ import app.dao.entity.SeasonDayResult;
 import app.dao.entity.SeasonFromWeb;
 import app.dao.entity.SeasonResult;
 import app.dao.entity.User;
+import app.dao.entity.Vote;
+import app.dao.entity.VoteMismatch;
 import app.logic._0_credentialsSaver.model.LeagueBean;
+import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.RoleEnum;
+import app.logic._0_votesDownloader.model.VotesSourceEnum;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._1_seasonPatternExtractor.model.PlayerEnum;
 import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
+import app.logic._2_realChampionshipAnalyzer.MatchMismatchBean;
+import app.logic._2_realChampionshipAnalyzer.ReportBean;
 import app.logic._2_realChampionshipAnalyzer.SeasonDayFromWebBean;
 import app.logic._2_realChampionshipAnalyzer.SeasonFromWebBean;
+import app.logic._2_realChampionshipAnalyzer.VoteMismatchBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUp;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.PlayerVote;
@@ -900,6 +909,171 @@ public class LeagueDao {
 		League league = leagueRepo.findByUserAndShortName(user, leagueShortName);
 		Competition ent = competitionRepo.findByLeagueAndShortName(league, competitionShortName);
 		CompetitionBean bean = createCompetitionBeanFromEnt(ent);
+		
+		return bean;
+	}
+
+	@Autowired
+	private MismatchRepo mismatchRepo;
+
+	public void saveVoteMismatches(List<VoteMismatchBean> voteMismatchesBean,   String competitionShortName, String leagueShortName, String username) {
+		User user = userDao.retrieveByUsername(username);
+		League league = leagueRepo.findByUserAndShortName(user, leagueShortName);
+		Competition competition = competitionRepo.findByLeagueAndShortName(league, competitionShortName);
+		
+		Mismatch m = mismatchRepo.findByCompetition(competition);
+		if (m != null){
+			m.getVoteMismatches().clear();
+		}
+		else {
+			m = new Mismatch(); 
+			m.setCompetition(competition);
+		}
+		List<VoteMismatch> voteMismatchEnts = new ArrayList<VoteMismatch>();
+		VoteMismatch voteMismatchEnt;
+		
+		for (VoteMismatchBean bean : voteMismatchesBean) {
+			voteMismatchEnt = createVoteMismatchEnt(bean);
+			
+			voteMismatchEnts.add(voteMismatchEnt);
+		}
+		m.setVoteMismatches(voteMismatchEnts);
+		
+		mismatchRepo.save(m);
+	}
+	
+	public void saveMatchMismatches(List<MatchMismatchBean> matchMismatchesBean,   String competitionShortName, String leagueShortName, String username) {
+		User user = userDao.retrieveByUsername(username);
+		League league = leagueRepo.findByUserAndShortName(user, leagueShortName);
+		Competition competition = competitionRepo.findByLeagueAndShortName(league, competitionShortName);
+		
+		Mismatch m = mismatchRepo.findByCompetition(competition);
+		if (m != null){
+			m.getMatchMismatches().clear();
+		}
+		else {
+			m = new Mismatch(); 
+			m.setCompetition(competition);
+		}
+		
+		List<MatchMismatch> matchMismatchEnts = new ArrayList<MatchMismatch>();
+		MatchMismatch matchMismatchEnt;
+		
+		for (MatchMismatchBean bean : matchMismatchesBean) {
+			matchMismatchEnt = createMatchMismatchEnt(bean);
+			
+			matchMismatchEnts.add(matchMismatchEnt);
+		}
+		m.setMatchMismatches(matchMismatchEnts);
+		
+		mismatchRepo.save(m);
+	}
+		
+	private MatchMismatch createMatchMismatchEnt(MatchMismatchBean bean) {
+		MatchMismatch ent = new MatchMismatch();
+		LineUpLight homeLulApp = createLineUpLight(bean.getHomeLulApp());
+		LineUpLight awayLulApp = createLineUpLight(bean.getAwayLulApp());
+		LineUpLight homeLulWeb = createLineUpLight(bean.getHomeLulWeb());
+		LineUpLight awayLulWeb = createLineUpLight(bean.getAwayLulWeb());
+		
+		ent.setCompetitonSeasonDay(bean.getCompetitonSeasonDay());
+		ent.setSerieASeasonDay(bean.getSerieASeasonDay());
+		ent.setHomeLulApp(homeLulApp);
+		ent.setAwayLulApp(awayLulApp);
+
+		ent.setHomeLulWeb(homeLulWeb);
+		ent.setAwayLulWeb(awayLulWeb);
+	
+	
+		return ent;
+	}
+
+	@Autowired
+	private UtilsDao utilsDao;
+
+	private VoteMismatch createVoteMismatchEnt(VoteMismatchBean bean) {
+
+		VoteMismatch ent = new VoteMismatch();
+		PlayerVoteComplete voteBean = bean.getPvcVote();
+		
+		Vote voteEnt = utilsDao.populateVote(voteBean, bean.getSerieASeasonDay(), VotesSourceEnum.NULL);
+		ent.setRealVote(voteEnt);
+
+		ent.setVote(voteBean.getVote());
+		ent.setFantavote(voteBean.getFantavote());
+		ent.setVoteFromWeb(voteBean.getVoteFromWeb());
+		ent.setFantaVoteFromWeb(voteBean.getFantaVoteFromWeb());
+		
+		ent.setPlayer(bean.getPlayer());
+		return ent;
+	}
+	
+	
+	public ReportBean findVoteMismatches(String competitionShortName, String leagueShortName, String username) {
+		
+		
+		User user = userDao.retrieveByUsername(username);
+		League league = leagueRepo.findByUserAndShortName(user, leagueShortName);
+		Competition competition = competitionRepo.findByLeagueAndShortName(league, competitionShortName);
+		Mismatch m = mismatchRepo.findByCompetition(competition);
+		
+		List<VoteMismatchBean> voteMismatchBeans = new ArrayList<VoteMismatchBean>();
+		VoteMismatchBean voteMismatchBean;
+		
+		for (VoteMismatch vEnt : m.getVoteMismatches()) {
+			voteMismatchBean = createVoteMismatchBean(vEnt);
+			voteMismatchBeans.add(voteMismatchBean);
+		}
+		
+		
+		
+		List<MatchMismatchBean> matchMismatchBeans = new ArrayList<MatchMismatchBean>();
+		MatchMismatchBean matchMismatchBean;
+		for (MatchMismatch mEnt : m.getMatchMismatches()) {
+			matchMismatchBean = createMatchMismatchBean(mEnt);
+			matchMismatchBeans.add(matchMismatchBean);
+		}
+		
+		
+		ReportBean report = new ReportBean();
+		report.setVoteMismatches(voteMismatchBeans);
+		report.setMatchMismatches(matchMismatchBeans);
+		
+		return report;
+		
+	}
+
+
+	private MatchMismatchBean createMatchMismatchBean(MatchMismatch ent) {
+		MatchMismatchBean bean = new MatchMismatchBean();
+		
+		
+		bean.setHomeLulApp(createLineUpLightBean(ent.getHomeLulApp()));
+		bean.setAwayLulApp(createLineUpLightBean(ent.getAwayLulApp()));
+		bean.setHomeLulWeb(createLineUpLightBean(ent.getHomeLulWeb()));
+		bean.setAwayLulWeb(createLineUpLightBean(ent.getAwayLulWeb()));
+
+		bean.setCompetitonSeasonDay(ent.getCompetitonSeasonDay());
+		bean.setSerieASeasonDay(ent.getSerieASeasonDay());
+		return bean;
+	}
+
+
+	private VoteMismatchBean createVoteMismatchBean(VoteMismatch ent) {
+		VoteMismatchBean bean = new VoteMismatchBean();
+		PlayerVoteComplete voteBean = utilsDao.createPlayerVote(ent.getRealVote());
+		
+		voteBean.setVote(ent.getVote());
+		voteBean.setFantavote(ent.getFantavote());
+		voteBean.setVoteFromWeb(ent.getVoteFromWeb());
+		voteBean.setFantaVoteFromWeb(ent.getFantaVoteFromWeb());
+
+		
+		bean.setPvcVote(voteBean);
+
+		bean.setPlayer(ent.getPlayer());
+		
+		bean.setSerieASeasonDay(ent.getRealVote().getSerieASeasonDay());
 		
 		return bean;
 	}

@@ -18,6 +18,8 @@ import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonResultBean;
+import app.logic._2_realChampionshipAnalyzer.MatchMismatchBean;
+import app.logic._2_realChampionshipAnalyzer.ReportBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
 import app.logic._4_seasonsExecutor.model.RankingBean;
@@ -65,6 +67,7 @@ public class MainSeasonsExecutor {
 		List<RankingRowBean> rows;
 		RankingRowBean row;
 		RankingBean ranking;
+		boolean first= true;
 		for ( SeasonBean season : allSeasons){
 			
 			ranking = seasonExecutor.execute(season, rules, seasonResultBean.getSeasonDayResults(), teams);
@@ -94,10 +97,15 @@ public class MainSeasonsExecutor {
 				
 			}
 			rankings.add(ranking);
+			
+			if(first && rules.getCustomRules() == null) {
+				first = false;
+				ReportBean report = checkRealSeasonCorrect(seasonResultBean.getSeasonDayResults(), leagueShortName, competitionShortName);
+				leagueDao.saveMatchMismatches(report.getMatchMismatches(),  competitionShortName, leagueShortName, userBean.getUsername());
+			}
 		} 
 		
-		if(AppConstants.DEBUG_MODE && rules.getCustomRules() == null)
-			checkRealSeasonCorrect(seasonResultBean.getSeasonDayResults(), leagueShortName, competitionShortName);
+		
 		
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
@@ -112,12 +120,13 @@ public class MainSeasonsExecutor {
 	
 	
 	
-	private void checkRealSeasonCorrect(List<SeasonDayResultBean> realChampionshipResults, String leagueShortName, String competitionShortName) {
+	private ReportBean checkRealSeasonCorrect(List<SeasonDayResultBean> realChampionshipResults, String leagueShortName, String competitionShortName) {
 		
 		SeasonBean seasonPattern = leagueDao.findSeason(leagueShortName, competitionShortName, userBean.getUsername(), null);
 //		SeasonBean seasonPattern = MainSeasonPatternExtractorNEW.getSeasonPattern();
 		
 		List<SeasonDayBean> seasonDays = seasonPattern.getSeasonDays();
+		List<MatchMismatchBean> mismatches = new ArrayList<MatchMismatchBean>();
 		for (int j = 0; j < seasonDays.size(); j++) {
 			SeasonDayBean seasonDayFromWeb = seasonDays.get(j);
 			if (j < realChampionshipResults.size()){
@@ -131,19 +140,33 @@ public class MainSeasonsExecutor {
 					LineUpLightBean awayTeamFromApp = getTeamFromApp(seasonDayFromApp.getLinesUpLight(), matchFromWeb.getAwayTeam());
 					
 					if (homeTeamFromApp != null) {
-						if (!homeTeamFromApp.getSumTotalPoints().equals(homeTeamResultFromWeb.getSumTotalPoints())){
+						if (
+								!homeTeamFromApp.getSumTotalPoints().equals(homeTeamResultFromWeb.getSumTotalPoints())
+																	||
+								!awayTeamFromApp.getSumTotalPoints().equals(awayTeamResultFromWeb.getSumTotalPoints())
+								
+							){
+							MatchMismatchBean mismatch = new MatchMismatchBean();
+							mismatch.setHomeLulApp(homeTeamFromApp);
+							mismatch.setAwayLulApp(awayTeamFromApp);
+							
+							mismatch.setHomeLulWeb(homeTeamResultFromWeb);
+							mismatch.setAwayLulWeb(awayTeamResultFromWeb);
+							
+							mismatch.setCompetitonSeasonDay((Integer)(Integer.valueOf(j)+1) );
+							
+							mismatches.add(mismatch);
 							System.out.println("ERRORE \t Giornata della Competizione:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getHomeTeam() + "\tPunteggio da web:\t" + homeTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  homeTeamFromApp.getSumTotalPoints());
-		
-						}
-		
-						if (!awayTeamFromApp.getSumTotalPoints().equals(awayTeamResultFromWeb.getSumTotalPoints())){
 							System.out.println("ERRORE \t Giornata della Competizione:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getAwayTeam() + "\tPunteggio da web:\t" + awayTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  awayTeamFromApp.getSumTotalPoints());
+		
 						}
 					}
 				}
 			}
 		}
-		
+		ReportBean report = new ReportBean();
+		report.setMatchMismatches(mismatches);
+		return report;
 		
 	}
 	private static LineUpLightBean getTeamFromApp(List<LineUpLightBean> linesUpLight, String teamName) {

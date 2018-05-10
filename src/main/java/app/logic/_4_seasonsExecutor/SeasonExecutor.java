@@ -52,8 +52,7 @@ public class SeasonExecutor {
 //				updateFormulaUnoRanking(seasonDayResult, rules, formulaUnoRanking);
 			}
 			else {
-				if (AppConstants.DEBUG_MODE)
-					System.out.println( (i + 1) + " Giornata da recuperare");
+				System.out.println( (i + 1) + " Giornata da recuperare");
 			}
 		}
 		

@@ -705,6 +705,14 @@ public class RulesDao {
 		ent.setType(RulesType.CUSTOM.name());
 		rulesRepo.save(ent);
 	}
+
+	public RulesBean resetCustomRules(String competitionShortName, String leagueShortName, String username) {
+		RulesBean realRules = retrieveRules(competitionShortName, leagueShortName, RulesType.REAL, username);
+		realRules.setType(RulesType.CUSTOM);
+		RulesBean customRules = saveRulesForCompetition(realRules, competitionShortName, leagueShortName, username);
+			
+		return customRules;
+	}
 	
 	
 	

@@ -27,6 +27,7 @@ import app.logic._2_realChampionshipAnalyzer.model.LineUp;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._2_realChampionshipAnalyzer.model.SeasonDayResultBean;
+import app.logic.model.CompetitionBean;
 import app.logic.model.PostponementBean;
 import app.utils.AppConstants;
 
@@ -189,6 +190,8 @@ public class SeasonAnalyzer {
 		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = seasonFromWeb.getSeasonDaysFromWeb();
 		
 		System.out.println();
+		List<VoteMismatchBean> voteMismatches = new ArrayList<VoteMismatchBean>(); 
+
 //		for (Integer i = 1; i<38; i++){
 		for (Entry<Integer, Integer> entry : seasonDayBind.entrySet()) {
 			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) { //Controllo per gestire le giornate in cui ci sono i rinvii
@@ -209,21 +212,23 @@ public class SeasonAnalyzer {
 
 			SeasonDayFromWebBean currentSeasonDayFromWeb = seasonDaysFromWeb.get(compSeasonDay);
 			
-			seasonDayResult = seasonDayAnalyzer.calculateSingleSeasonDay(currentSeasonDayFromWeb, serieASeasonDay , rules, map.get(serieASeasonDay+""), postponements);
+			seasonDayResult = seasonDayAnalyzer.calculateSingleSeasonDay(currentSeasonDayFromWeb, serieASeasonDay , rules, map.get(serieASeasonDay+""), postponements, 	voteMismatches );
 			
 			seasonDayResults.add(seasonDayResult);
 			
 			
 		}
 		
-
 		SeasonResultBean seasonResult = new SeasonResultBean();
 		seasonResult.setSeasonDayResults(seasonDayResults);
 		seasonResult.setName("BASE");
 		
-		if (!isCustomRules)
-			leagueDao.saveCalculatedSeasonResult(seasonResult, leagueShortName, competitionShortName, userBean.getUsername());
 		
+		
+		if (!isCustomRules) {
+			leagueDao.saveCalculatedSeasonResult(seasonResult, leagueShortName, competitionShortName, userBean.getUsername());
+			leagueDao.saveVoteMismatches(voteMismatches, competitionShortName, leagueShortName,  userBean.getUsername());
+		}
 
 		
 		return seasonResult;
@@ -241,6 +246,14 @@ public class SeasonAnalyzer {
 			}
 		}
 		return false;
+	}
+
+
+	public ReportBean retrieveReport(String competitionShortName, String leagueShortName) {
+		ReportBean report = leagueDao.findVoteMismatches(competitionShortName, leagueShortName,  userBean.getUsername());
+		CompetitionBean competition = leagueDao.findCompetitionByShortNameAndLeagueShortName(competitionShortName, leagueShortName,  userBean.getUsername());
+		report.setCompetition(competition);
+		return report;
 	}
 	
 	

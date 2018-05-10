@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { LeaguesService } from '../leagues.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-competition-rules',
@@ -64,9 +65,7 @@ import { LeaguesService } from '../leagues.service';
           <strong>{{successMessage}}</strong>
       </div>
 
-      <button class="btn btn-primary"(click) = "backToCompetition()"> Torna alla competizione </button>
-         
-  
+   
   </div>
   
   
@@ -97,6 +96,7 @@ export class CompetitionRulesComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private leagueService: LeaguesService,
+        private _location: Location,
 
     ) { }
 
@@ -127,7 +127,7 @@ export class CompetitionRulesComponent implements OnInit {
                 data => {
                     this.successMessage = "Le regole sono state salvate";
                     this.errorMessage = null;
-
+                    this._location.back();
                 },
 
                 error => {
@@ -138,10 +138,5 @@ export class CompetitionRulesComponent implements OnInit {
         this.errorMessage = null;
     }
 
-    backToCompetition() {
-        this.router.navigate(['/competitions', this.leagueShortName])
-
-    }
-
-
+    
 }

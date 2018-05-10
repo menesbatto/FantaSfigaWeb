@@ -103,7 +103,7 @@ public class UtilsDao {
 		return map;
 	}
 
-	private PlayerVoteComplete createPlayerVote(Vote voteEnt) {
+	public PlayerVoteComplete createPlayerVote(Vote voteEnt) {
 		
 		String name = voteEnt.getName();
 		String team = voteEnt.getTeam();
@@ -159,7 +159,7 @@ public class UtilsDao {
 
 
 
-	private Vote populateVote(PlayerVoteComplete voteBean, Integer serieASeasonDay, VotesSourceEnum voteSource) {
+	public Vote populateVote(PlayerVoteComplete voteBean, Integer serieASeasonDay, VotesSourceEnum voteSource) {
 		Vote ent = new Vote();
 		ent.setSerieASeasonDay(serieASeasonDay);
 		ent.setSource(voteSource.name());
