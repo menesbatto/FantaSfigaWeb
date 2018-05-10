@@ -55,20 +55,20 @@ import { HeaderService } from '../header.service';
             <!--<div align = center> - - - - - </div>-->
             
 
-            <div class="row nobor">
+            <!--<div class="row nobor">
                 <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
                     <label> Calcola statistiche leggere </label>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                     <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> OK </button>
                 </div>
-            </div>
+            </div>-->
              <div class="row nobor">
                 <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
                     <label> Calcola statistiche pesanti (qualche secondo)</label>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
+                    <button [disabled]="loading || isAlreadyCalculated()" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
                 </div>
             </div>
             <!--<div class="row nobor">
@@ -433,6 +433,21 @@ export class CompetitionComponent implements OnInit {
 
     }
 
+    
+
+    isAlreadyCalculated(){
+        if (this.rulesType=="REAL"){
+            let isStatslreadyCalculated = localStorage.getItem('statsAlreadyCalculated');
+            if (isStatslreadyCalculated == "true"){
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+
     isAlreadyDownloaded(){
         let alreadyDownloaded = localStorage.getItem('alreadyDownloadInfo');
         if (alreadyDownloaded == "true")
@@ -442,6 +457,10 @@ export class CompetitionComponent implements OnInit {
     }
 
     downloadInfo(){
+        this.successMessage=null;
+        this.errorMessage=null;
+        this.loadingMessage = "Download dei risultati delle giornate mancanti e delle formazioni in corso...";
+        this.loading = true;
         this.leagueService.saveOnlineSeasonAndTeams(this.model).subscribe(
             data => {
                 this.leagueService.downloadSeasonFromWeb(this.model)
@@ -617,6 +636,8 @@ export class CompetitionComponent implements OnInit {
                     this.successMessage = "Calcolo delle statistiche terminato. Dati pronti";
                     this.errorMessage = null;
                     this.loading = false;
+                    if (this.rulesType == "REAL")
+                        localStorage.setItem('statsAlreadyCalculated', "true");
                     this.retrieveAllRankings();
                 },
 

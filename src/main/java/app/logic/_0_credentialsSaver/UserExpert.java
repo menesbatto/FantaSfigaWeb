@@ -129,13 +129,25 @@ public class UserExpert {
 		
 		LeagueBean league = leagueDao.findLeagueByShortName(leagueShortName, userBean.getUsername());
 		
-		String leagueUrl = AppConstants.GAZZETTA_URL + league.getShortName() + "/gestione-competizioni";
+		String leagueUrl = AppConstants.GAZZETTA_URL + league.getShortName() + "/visualizza-competizioni";
+		System.out.println();
 		Document doc = HttpUtils.getHtmlPageLogged(leagueUrl , c.getUsername(), c.getPassword());
 		
-		Element elementsOfGestioneCompetizionePage = doc.getElementById("tbcompattive");
-		
 		List<CompetitionBean> competitions = new ArrayList<CompetitionBean>();
+
+		Element elementsOfGestioneCompetizionePage = doc.getElementById("tbcompattive");
+		createCompetitions(doc, elementsOfGestioneCompetizionePage, competitions);
 		
+		elementsOfGestioneCompetizionePage = doc.getElementById("tbcompterminate");
+		createCompetitions(doc, elementsOfGestioneCompetizionePage, competitions);
+		
+		leagueDao.saveCompetitions(competitions, league.getShortName(), userBean.getUsername());
+		
+		return competitions;
+	}
+
+	private void createCompetitions(Document doc, Element elementsOfGestioneCompetizionePage,
+			List<CompetitionBean> competitions) {
 		Elements elements;
 		String competitionShortName;
 		String competitionName;
@@ -150,7 +162,7 @@ public class UserExpert {
 				type = null;
 				
 				competitionRulesUrl = elem.attr("value");		//http://leghe.fantagazzetta.com/accaniti-division/modifica-competizione-gironi/288971
-
+																//http://leghe.fantagazzetta.com/sisisicertocerto-league/visualizza-competizioni
 				competitionShortName = competitionRulesUrl.substring(competitionRulesUrl.lastIndexOf("/") + 1, competitionRulesUrl.length());	//247720
 				
 				competitionName = elem.text();		//CAMPIONATO SERIE A-CCANITA
@@ -167,6 +179,8 @@ public class UserExpert {
 			elements = elementsOfGestioneCompetizionePage.getElementsByTag("tbody").get(0).getElementsByTag("tr");
 			
 			for (Element elem : elements) {
+				if (elem.getElementsByTag("a").isEmpty())
+					continue;
 				competitionRulesUrl = elem.getElementsByTag("a").get(0).attr("href");		//http://leghe.fantagazzetta.com/accaniti-division/modifica-competizione-gironi/288971
 																							//http://leghe.fantagazzetta.com/accaniti-division/home/247720
 				
@@ -191,10 +205,6 @@ public class UserExpert {
 			}
 			
 		}
-		
-		leagueDao.saveCompetitions(competitions, league.getShortName(), userBean.getUsername());
-		
-		return competitions;
 	}
 	
 	public List<CompetitionBean> retrieveCompetitions(String leagueShortName){

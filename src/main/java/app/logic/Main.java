@@ -78,30 +78,22 @@ public class Main {
 		
 		
 		
-		if (onlyOne) {
-			// LUCKY EDGE 0.5
-			calculateLuckyEdge(RankingType.LUCKY_EDGES_0_5, 0.5, leagueShortName, competitionShortName, allSeasons, rules, calculatedSeasonResult, rulesType);
+		//if (onlyOne) {
+			List<SeasonBean> onlyOneSeasonList = allSeasons.subList(0, 1);
+			// INVERT HOME AWAY
+			calculateInvertHomeAway(leagueShortName, competitionShortName, onlyOneSeasonList, rules, calculatedSeasonResult, rulesType);
+			
+			// LUCKY EDGE 0.5onlyOneSeasonList
+			calculateLuckyEdge(RankingType.LUCKY_EDGES_0_5, 0.5, leagueShortName, competitionShortName, onlyOneSeasonList, rules, calculatedSeasonResult, rulesType);
 			
 			// LUCKY EDGE 1.0
-			calculateLuckyEdge(RankingType.LUCKY_EDGES_1, 1.0, leagueShortName, competitionShortName, allSeasons, rules, calculatedSeasonResult, rulesType);
-			
-			// INVERT HOME AWAY
-			CustomRules customRules = new CustomRules();
-			rules.setCustomRules(customRules);
-			customRules.setInvertHomeAway(true);
-			customRules.setRankingType(RankingType.INVERT_HOME_AWAY);
-			
-			List<RankingBean> invertHomeAwayRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rules, calculatedSeasonResult);
-			RankingBean invertHomeAwayRanking = invertHomeAwayRankings.get(0);
-			invertHomeAwayRanking.setRulesType(rulesType);
-			invertHomeAwayRanking.setName(RankingType.INVERT_HOME_AWAY.name());
-			leagueDao.saveRanking(invertHomeAwayRanking, leagueShortName, competitionShortName, userBean.getUsername());
+			calculateLuckyEdge(RankingType.LUCKY_EDGES_1, 1.0, leagueShortName, competitionShortName, onlyOneSeasonList, rules, calculatedSeasonResult, rulesType);
 			
 			
 			
 			
 			
-		}
+		//}
 		
 		
 		// Salvo il realRanking ovvero quello che se calcolato con le regole REAL dovrebbe essere uguale al ranking del sito
@@ -117,6 +109,21 @@ public class Main {
 		
 		
 		return null;
+	}
+
+
+	private void calculateInvertHomeAway(String leagueShortName, String competitionShortName,
+			List<SeasonBean> allSeasons, RulesBean rules, SeasonResultBean calculatedSeasonResult, RulesType rulesType) {
+		CustomRules customRules = new CustomRules();
+		rules.setCustomRules(customRules);
+		customRules.setInvertHomeAway(true);
+		customRules.setRankingType(RankingType.INVERT_HOME_AWAY);
+
+		List<RankingBean> invertHomeAwayRankings = mainSeasonsExecutor.execute(allSeasons, leagueShortName, competitionShortName, rules, calculatedSeasonResult);
+		RankingBean invertHomeAwayRanking = invertHomeAwayRankings.get(0);
+		invertHomeAwayRanking.setRulesType(rulesType);
+		invertHomeAwayRanking.setName(RankingType.INVERT_HOME_AWAY.name());
+		leagueDao.saveRanking(invertHomeAwayRanking, leagueShortName, competitionShortName, userBean.getUsername());
 	}
 
 

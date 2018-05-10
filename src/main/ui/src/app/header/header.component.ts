@@ -9,22 +9,26 @@ import { HeaderService } from '../header.service';
   template: `
 <nav class="header navbar navbar-light bg-faded">
 
-    <div>
-        <div class="col-lg-1 col-md-1 col-sm-3 col-xs-3">
-            <a class="btn btn-sm btn-primary">
+    <div class= "row">
+        <div class="col-lg-1 col-md-1 col-sm-3 col-xs-3" >
+            <a class="btn btn-sm btn-primary"  *ngIf= "existsBack()">
                 <span  (click)="backClicked()" class="glyphicon glyphicon-chevron-left"> </span>
             </a>
         </div>
         <div class="center col-lg-10 col-md-10 col-sm-6 col-xs-6">
             <!--<span *ngIf="getUsername()!= null"> Ciao {{getUsername()}}</span>-->
-            <h2 align = "center"> {{getPageName()}}</h2>
-            <h2 align = "center"><strong> {{titleParam | uppercase}} </strong></h2>
+            <h4 align = "center"> {{getPageName()}}</h4>
         </div>
         <div class="col-lg-1 col-md-1 col-sm-3 col-xs-3">
             <button *ngIf="isCustomerInSession()" class="btn btn-primary " [routerLink]="['../']" routerLinkActive = "strong"> Logout </button>
         </div>
     </div>
 
+    <div class= "row">
+        <div align = "center" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h4 align = "center"><strong> {{titleParam | uppercase}} </strong></h4>
+        </div>
+    </div>
 
 
     <!--<a class="navbar-brand" (click)="goHome()">iTunes Search App</a> 
@@ -69,7 +73,10 @@ export class HeaderComponent implements OnInit {
     }
             
 
-    
+    existsBack(){
+        let path = this._location.path();
+        return path!="/login";
+    }
 
     backClicked() {
         this._location.back();

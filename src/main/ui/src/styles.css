@@ -134,3 +134,6 @@ body {
     background: lightblue
 }
     
+.table>tbody>tr{
+    border-bottom: 1px solid #ddd
+}

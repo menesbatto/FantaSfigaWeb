@@ -14,13 +14,13 @@ import { LeaguesService } from '../leagues.service';
         <form name="form" (ngSubmit)="f.form.valid && saveGazzettaCredentials()" #f="ngForm" novalidate>
             <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !gazzettaUsername.valid }">
                 <label for="gazzettaUsername">Username Fantagazzetta</label>
-                <input type="text" class="form-control" name="gazzettaUsername" [(ngModel)]="model.gazzettaUsername" #gazzettaUsername="ngModel" required />
-                <div *ngIf="f.submitted && !gazzettaUsername.valid" class="help-block">Devi inserire lo Username di Fantagazzetta</div>
+                <input [disabled]="loading" type="text" class="form-control" name="gazzettaUsername" [(ngModel)]="model.gazzettaUsername" #gazzettaUsername="ngModel" required />
+                <div *ngIf="f.submitted && !gazzettaUsername.valid && !loading" class="help-block">Devi inserire lo Username di Fantagazzetta</div>
             </div>
             <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !gazzettaPassword.valid }">
                 <label for="gazzettaPassword">Password Fantagazzetta</label>
-                <input type="password" class="form-control" name="gazzettaPassword" [(ngModel)]="model.gazzettaPassword" #gazzettaPassword="ngModel" required />
-                <div *ngIf="f.submitted && !gazzettaPassword.valid" class="help-block">Devi inserire la Password di Fantagazzetta</div>
+                <input [disabled]="loading" type="password" class="form-control" name="gazzettaPassword" [(ngModel)]="model.gazzettaPassword" #gazzettaPassword="ngModel" required />
+                <div *ngIf="f.submitted && !gazzettaPassword.valid && !loading" class="help-block">Devi inserire la Password di Fantagazzetta</div>
             </div>
             <div class="form-group">
                 <button [disabled]="loading" class="btn btn-primary">Salva</button>

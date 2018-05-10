@@ -13,22 +13,22 @@ import { HeaderService } from '../header.service';
     <!--<h3 align = "center"><strong>{{leagueName | uppercase}}</strong></h3>-->
     
     <div class="table table-responsive">
-      <table class="table">
-        <tr *ngFor = "let competition of competitionList">
-          <td> {{competition.name}} </td>
-          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && !competition.rulesIntegrated"  (click)="goToCompetitionRules(competition)"> Regole </button>  </td>
-          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && competition.rulesIntegrated && !competition.initialOnlineInfoDownloaded"  (click)="downloadAllCompetitionInfo(competition)"> Scarica tutti i dati </button>  </td>
-          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition, 'REAL') "> Stats </button> </td>
-          <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition, 'CUSTOM') "> Stats custom </button> </td>
+        <table class="table">
+            <tr *ngFor = "let competition of competitionList" >
+                <td> {{competition.name}} </td>
+                <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && !competition.rulesIntegrated"  (click)="goToCompetitionRules(competition)"> Integra Regole </button>  </td>
+                <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && competition.rulesIntegrated && !competition.initialOnlineInfoDownloaded"  (click)="downloadAllCompetitionInfo(competition)"> Scarica tutti i dati </button>  </td>
+                <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition, 'REAL') "> Stats </button> </td>
+                <td> <button [disabled] = "competition.type != 'CA'" class="btn btn-primary" *ngIf  = "competition.type == 'CA' && competition.rulesIntegrated && competition.initialOnlineInfoDownloaded"  (click) = "goToCompetition(competition, 'CUSTOM') "> Stats custom </button> </td>
 
-        <tr>
-        
-      </table>
+            <tr>
+            
+        </table>
     </div> 
     
 
     <div class="alert alert-success" *ngIf="successMessage">
-      <strong>{{successMessage}}</strong>
+      <strong  [innerHTML]= "successMessage"></strong>
     </div>
 
     <div class="alert alert-success" *ngIf="loadingMessage" >
@@ -121,7 +121,7 @@ export class CompetitionsComponent implements OnInit {
     .subscribe(
       data => {
         this.loadingMessage = null;
-        this.successMessage = ". . . . . . . . . . . . . . Legame tra il calendario della competizione e il calendario della Serie A eseguito";
+        this.successMessage = "<p>Legame tra il calendario della competizione e il calendario della Serie A eseguito</p>";
         this.errorMessage = null;
         this.calculateCompetitionPattern(competition);
       },
@@ -139,7 +139,7 @@ export class CompetitionsComponent implements OnInit {
     .subscribe(
       data => {
         this.loadingMessage = null;
-        this.successMessage += ". . . . . . . . . . . . . . Calcolo del pattern del calendario della competizione  eseguito";
+        this.successMessage += "<p> Calcolo del pattern del calendario della competizione  eseguito</p>";
         this.errorMessage = null;
         this.saveOnlineSeasonAndTeams(competition);
       },
@@ -158,7 +158,7 @@ export class CompetitionsComponent implements OnInit {
     .subscribe(
       data => {
         this.loadingMessage = null;
-        this.successMessage += ". . . . . . . . . . . . . . Calcolo i risultati online della competizione eseguito";
+        this.successMessage += "<p>Calcolo i risultati online della competizione eseguito</p>";
         this.errorMessage = null;
         competition.initialOnlineInfoDownloaded = true;
       },

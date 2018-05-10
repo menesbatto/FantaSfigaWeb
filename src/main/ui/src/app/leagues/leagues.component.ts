@@ -113,7 +113,7 @@ export class LeaguesComponent implements OnInit {
     downloadCompetitionsCallback(league) {
         this.loading = true;
         league.competitionsDownloaded = true;
-        this.loadingMessage = "Download delle regole in corso...";
+        this.loadingMessage = "Download delle regole in corso (impiega quale secondo)...";
         this.errorMessage = null;
 
 

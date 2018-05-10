@@ -20,7 +20,7 @@ import { NgForm } from '@angular/forms';
             <input type="password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required />
             <div *ngIf="f.submitted && !password.valid" class="help-block">Password is required</div>
         </div>
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !firstname.valid }">
+        <!--<div class="form-group" [ngClass]="{ 'has-error': f.submitted && !firstname.valid }">
             <label for="firstname">FirstName</label>
             <input type="text" class="form-control" name="firstname" [(ngModel)]="model.firstname" #firstname="ngModel" required />
             <div *ngIf="f.submitted && !firstname.valid" class="help-block">Firstname is required</div>
@@ -37,7 +37,7 @@ import { NgForm } from '@angular/forms';
   
           
           
-        </div>
+        </div>-->
 
        
        
@@ -87,6 +87,7 @@ export class RegistrationComponent implements OnInit {
 
   register() {
       this.loading = true;
+      this.model.username = this.model.username.toUpperCase();
       this.authenticationService.create(this.model.username, this.model.password,this.model.firstname, this.model.lastname, this.model.email )
           .subscribe(
               data => {

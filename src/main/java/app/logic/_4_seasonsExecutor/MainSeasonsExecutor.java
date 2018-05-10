@@ -47,7 +47,6 @@ public class MainSeasonsExecutor {
 	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName, RulesBean rules, SeasonResultBean seasonResultBeanInput ){
 
 		SeasonResultBean seasonResultBean;
-		System.out.println();
 //		if (seasonResultBeanInput == null) {
 //			seasonResultBean = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
 //		}
@@ -94,7 +93,6 @@ public class MainSeasonsExecutor {
 					row.setRankingPosition(j+1);
 				
 			}
-			System.out.println();
 			rankings.add(ranking);
 		} 
 		
