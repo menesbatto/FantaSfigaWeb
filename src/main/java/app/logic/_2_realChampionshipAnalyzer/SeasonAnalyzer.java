@@ -15,6 +15,7 @@ import app.RulesType;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UtilsDao;
+import app.dao.entity.Postponement;
 import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
@@ -62,9 +63,9 @@ public class SeasonAnalyzer {
 		
 		RulesBean rules = rulesDao.retrieveRules(competitionShortName, leagueShortName, RulesType.REAL, userBean.getUsername());
 		
-		if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) {
+		//if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) {
 			
-			Map<Integer, List<PostponementBean>> postponements = utilsDao.findAllPostponement();
+			Map<Integer, List<PostponementBean>> postponements = rules.getCompetitionRules().getPostponementMap();
 			Map<Integer, Integer> seasonDayBind = rulesDao.findSerieAToCompetitionBinding(leagueShortName, competitionShortName, userBean.getUsername());
 			
 			List<Integer> competitionSeasonDaysToRemove = new ArrayList<Integer>();
@@ -73,7 +74,7 @@ public class SeasonAnalyzer {
 			}
 			
 			leagueDao.removeSeasonDaysFromWebSeasonDays(leagueShortName, competitionShortName, userBean.getUsername(), competitionSeasonDaysToRemove) ;
-		}
+		//}
 	}
 	
 	
@@ -180,9 +181,11 @@ public class SeasonAnalyzer {
 		
 		SeasonDayResultBean seasonDayResult;
 		
-		Map<Integer, List<PostponementBean>> postponements = utilsDao.findAllPostponement();
+//		Map<Integer, List<PostponementBean>> postponements = utilsDao.findAllPostponement();
+//		Map<Integer, List<PostponementBean>> postponements = createPostponementMap(rules.getCompetitionRules().getPostponements());
 		
-//		
+		
+		
 		SeasonFromWebBean seasonFromWeb = leagueDao.findSeasonFromWeb(leagueShortName, competitionShortName, userBean.getUsername());
 		
 //		seasonFromWeb = input;
@@ -194,13 +197,13 @@ public class SeasonAnalyzer {
 
 //		for (Integer i = 1; i<38; i++){
 		for (Entry<Integer, Integer> entry : seasonDayBind.entrySet()) {
-			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) { //Controllo per gestire le giornate in cui ci sono i rinvii
-				if (checkIfJumpSeasonDay(postponements, entry)) {
+//			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.WAIT_MATCHES)) { //Controllo per gestire le giornate in cui ci sono i rinvii
+				if (checkIfJumpSeasonDay(rules.getCompetitionRules().getPostponementMap(), entry)) {
 					List<LineUpLightBean> emptyLineUpLight = new ArrayList<LineUpLightBean>();
 					seasonDayResults.add(new SeasonDayResultBean(entry.getValue().toString(), emptyLineUpLight)); 
 					continue;
 				}
-			}
+//			}
 			
 			Integer compSeasonDay = entry.getValue();
 			Integer serieASeasonDay = entry.getKey();
@@ -212,7 +215,7 @@ public class SeasonAnalyzer {
 
 			SeasonDayFromWebBean currentSeasonDayFromWeb = seasonDaysFromWeb.get(compSeasonDay);
 			
-			seasonDayResult = seasonDayAnalyzer.calculateSingleSeasonDay(currentSeasonDayFromWeb, serieASeasonDay , rules, map.get(serieASeasonDay+""), postponements, 	voteMismatches );
+			seasonDayResult = seasonDayAnalyzer.calculateSingleSeasonDay(currentSeasonDayFromWeb, serieASeasonDay , rules, map.get(serieASeasonDay+""), voteMismatches );
 			
 			seasonDayResults.add(seasonDayResult);
 			
@@ -235,6 +238,25 @@ public class SeasonAnalyzer {
 	}
 
 
+	private Map<Integer, List<PostponementBean>> createPostponementMap(List<PostponementBean> postponements) {
+		Map<Integer, List<PostponementBean>> map = new HashMap<Integer, List<PostponementBean>>();
+	
+		for (PostponementBean bean : postponements) {
+			
+			Integer seasonDay = bean.getSeasonDay();
+			List<PostponementBean> beans =  map.get(seasonDay);
+			if (beans == null) {
+				beans = new ArrayList<PostponementBean>();
+				map.put(seasonDay, beans);
+			}
+			beans.add(bean);
+			
+		}
+		return map;
+		
+	}
+
+
 	private boolean checkIfJumpSeasonDay(Map<Integer, List<PostponementBean>> postponements, Entry<Integer, Integer> entry) {
 		
 		
@@ -242,7 +264,8 @@ public class SeasonAnalyzer {
 		if (list != null) {
 			for (PostponementBean post : list) {
 				if (!post.getPlayed())
-					return true;
+					if (post.getWait())
+						return true;
 			}
 		}
 		return false;

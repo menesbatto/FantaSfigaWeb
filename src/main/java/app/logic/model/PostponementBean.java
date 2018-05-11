@@ -10,6 +10,7 @@ public class PostponementBean implements Serializable {
 	private String awayTeam;
 	private Integer seasonDay;
 	private Boolean played;
+	private Boolean wait;
 	
 	public PostponementBean() {
 	}
@@ -49,6 +50,14 @@ public class PostponementBean implements Serializable {
 
 	public void setPlayed(Boolean played) {
 		this.played = played;
+	}
+
+	public Boolean getWait() {
+		return wait;
+	}
+
+	public void setWait(Boolean wait) {
+		this.wait = wait;
 	}
 
 	

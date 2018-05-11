@@ -2,11 +2,13 @@ package app.dao.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import app.logic._0_rulesDownloader.model.SubstitutionsModeEnum;
@@ -188,6 +190,9 @@ public class Rules {
 	private Boolean homeBonusActive;
 	private Double homeBonus;
 	private String postponementBehaviour;
+	
+	@OneToMany(cascade = {CascadeType.ALL})
+	private List<Postponement> postponements;
 	
 	public Rules() {
 	}
@@ -1304,6 +1309,14 @@ public class Rules {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public List<Postponement> getPostponements() {
+		return postponements;
+	}
+
+	public void setPostponements(List<Postponement> postponements) {
+		this.postponements = postponements;
 	}
 	
 	

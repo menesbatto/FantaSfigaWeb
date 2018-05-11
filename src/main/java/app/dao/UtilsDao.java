@@ -200,15 +200,24 @@ public class UtilsDao {
 		
 		Postponement ent = postponementRepo.findByHomeTeamAndAwayTeamAndSeasonDay(bean.getHomeTeam(), bean.getAwayTeam(), bean.getSeasonDay());
 		if (ent == null) {
-			ent = new Postponement();
-			ent.setAwayTeam(bean.getAwayTeam());
-			ent.setHomeTeam(bean.getHomeTeam());
-			ent.setSeasonDay(bean.getSeasonDay());
+			ent = createPostponementEnt(bean);
 		}
 		ent.setPlayed(bean.getPlayed());
 		postponementRepo.save(ent);
 		
 			
+	}
+
+	public Postponement createPostponementEnt(PostponementBean bean) {
+		Postponement ent;
+		ent = new Postponement();
+		ent.setAwayTeam(bean.getAwayTeam());
+		ent.setHomeTeam(bean.getHomeTeam());
+		ent.setSeasonDay(bean.getSeasonDay());
+		ent.setPlayed(bean.getPlayed());
+		ent.setWait(bean.getWait());
+
+		return ent;
 	}
 	
 	public void removePostponement(PostponementBean bean) {
@@ -220,27 +229,25 @@ public class UtilsDao {
 			
 	}
 	
-	public List<PostponementBean> retrievePostponements() {
-		List<PostponementBean> postponements = new ArrayList<PostponementBean>();
-		
-		List<Postponement> ents = postponementRepo.findAll();
-		PostponementBean bean;
-		for (Postponement ent: ents) {
-			bean = new PostponementBean();
-			bean.setAwayTeam(ent.getAwayTeam());
-			bean.setHomeTeam(ent.getHomeTeam());
-			bean.setSeasonDay(ent.getSeasonDay());
-			bean.setPlayed(ent.getPlayed());
-			postponements.add(bean);
-		}
-		
-		return postponements;
-	}
+//	public List<PostponementBean> retrieveGeneralPostponements() {
+//		List<PostponementBean> postponements = new ArrayList<PostponementBean>();
+//		
+//		List<Postponement> ents = postponementRepo.findByWaitIsNull();
+//		PostponementBean bean;
+//		for (Postponement ent: ents) {
+//			bean = createPostponementBean(ent);
+//			postponements.add(bean);
+//		}
+//		
+//		return postponements;
+//	}
+
+
 	
-	public Map<Integer, List<PostponementBean>> findAllPostponement() {
+	public Map<Integer, List<PostponementBean>> findGeneralPostponementMap() {
 		Map<Integer, List<PostponementBean>> map = new HashMap<Integer, List<PostponementBean>>();
 		
-		List<Postponement> ents = postponementRepo.findAll();
+		List<Postponement> ents = postponementRepo.findByWaitIsNull();
 		for (Postponement ent : ents) {
 			
 			PostponementBean bean = createPostponementBean(ent);
@@ -257,12 +264,13 @@ public class UtilsDao {
 		
 	}
 
-	private PostponementBean createPostponementBean(Postponement ent) {
+	public PostponementBean createPostponementBean(Postponement ent) {
 		PostponementBean bean = new PostponementBean();
 		bean.setAwayTeam(ent.getAwayTeam());
 		bean.setHomeTeam(ent.getHomeTeam());
 		bean.setSeasonDay(ent.getSeasonDay());
 		bean.setPlayed(ent.getPlayed());
+		bean.setWait(ent.getWait());
 		return bean;
 	}
 

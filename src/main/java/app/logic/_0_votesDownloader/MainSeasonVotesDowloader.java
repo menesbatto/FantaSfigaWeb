@@ -38,7 +38,7 @@ public class MainSeasonVotesDowloader {
 	
 	public void cleanVotes() {
 			
-		Map<Integer, List<PostponementBean>> postponements = utilsDao.findAllPostponement();
+		Map<Integer, List<PostponementBean>> postponements = utilsDao.findGeneralPostponementMap();
 		
 		utilsDao.removeSeasonDaysVotes(postponements.keySet()) ;
 		
@@ -316,7 +316,11 @@ public class MainSeasonVotesDowloader {
 	}
 	
 	public List<PostponementBean> retrievePostponements() {
-		List<PostponementBean> postponements = utilsDao.retrievePostponements();
+		Map<Integer, List<PostponementBean>> findGeneralPostponementMap = utilsDao.findGeneralPostponementMap();
+		
+		List<PostponementBean> postponements = new ArrayList<PostponementBean>();
+		for (List<PostponementBean> val : findGeneralPostponementMap.values())
+			postponements.addAll(val);
 		return postponements;
 		
 	}

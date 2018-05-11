@@ -50,7 +50,7 @@ public class HttpUtils {
 			if (getLoggedWebDriver() == null)
 				initLoggedWebDriver(username, password);
 			
-			Thread.sleep(3000);
+			Thread.sleep(1000);
 			
 			getLoggedWebDriver().get(url);
 		    
@@ -235,7 +235,7 @@ public class HttpUtils {
 		
 		WebDriver driver = new ChromeDriver(service, capabilities);
 		
-		Thread.sleep(3000);
+		Thread.sleep(1000);
 		
 		//driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "/w");
 		

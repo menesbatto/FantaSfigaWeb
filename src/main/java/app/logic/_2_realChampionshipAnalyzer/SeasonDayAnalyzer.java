@@ -30,7 +30,7 @@ public class SeasonDayAnalyzer {
 	private Map<String, List<PlayerVoteComplete>> seasonDayVotes;
 	private RulesBean rules;
 	
-	private Map<Integer, List<PostponementBean>> postponementsMap;
+//	private Map<Integer, List<PostponementBean>> postponementsMap;
 	
 	
 	public List<LineUp> downloadSeasonDayLinesUpFromWeb(String seasonDayLinesUpURL) {
@@ -58,12 +58,12 @@ public class SeasonDayAnalyzer {
 	}
 
 	
-	public SeasonDayResultBean calculateSingleSeasonDay(SeasonDayFromWebBean seasonDayFromWeb, Integer serieASeasonDay, RulesBean rules, Map<String, List<PlayerVoteComplete>> seasonDayVotesInput,  Map<Integer, List<PostponementBean>> postponementsMapInput, 	List<VoteMismatchBean> voteMismatches ) {
+	public SeasonDayResultBean calculateSingleSeasonDay(SeasonDayFromWebBean seasonDayFromWeb, Integer serieASeasonDay, RulesBean rules, Map<String, List<PlayerVoteComplete>> seasonDayVotesInput,	List<VoteMismatchBean> voteMismatches ) {
 		List<LineUp> linesUp = seasonDayFromWeb.getLinesUp();
 		this.seasonDayVotes = seasonDayVotesInput;
-		if (postponementsMap== null) {
-			this.postponementsMap = postponementsMapInput;
-		}
+//		if (postponementsMap== null) {
+//			this.postponementsMap = postponementsMapInput;
+//		}
 
 		this.rules = rules;
 		List<VoteMismatchBean> voteMismatchesApp = new ArrayList<VoteMismatchBean>();
@@ -169,15 +169,15 @@ public class SeasonDayAnalyzer {
 
 		 
 		// Controllo se lo devo forzare a 6
-		if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.ALL_6)) {
-			List<PostponementBean> postponedMatches = postponementsMap.get(serieASeasonDay);
+//		if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.ALL_6)) {
+			List<PostponementBean> postponedMatches = rules.getCompetitionRules().getPostponementMap().get(serieASeasonDay);
 			if (postponedMatches != null) {
-				 if (isPostponedMatch(postponedMatches, team)) {
+				 if (isOffice6(postponedMatches, team)) {
 					 pvcVote = new PlayerVoteComplete(name, team, role, 6.0, false, false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false);
 					 pvcVote.setIsOfficeVote(true);
 				 }
 			}
-		}
+//		}
 	
 		
 		//Se non ha giocato non proseguo con i calcoli successivi
@@ -229,10 +229,12 @@ public class SeasonDayAnalyzer {
 	}
 
 
-	private boolean isPostponedMatch(List<PostponementBean> postponedMatches, String team) {
+	private boolean isOffice6(List<PostponementBean> postponedMatches, String team) {
 		for (PostponementBean post : postponedMatches) {
 			if (post.getAwayTeam().equals(team) || post.getHomeTeam().equals(team))
-				return true;
+				if (!post.getWait()) 		// Controllo se il recupero è da aspettare wait = true, in tal caso la giornata non va calcolata
+											// Se invece il recupero no è da aspettare wait = false allora si deve forzare il voto a 6
+					return true;
 		}
 		return false;
 	}
@@ -736,43 +738,7 @@ public class SeasonDayAnalyzer {
 		name = name.replace(" *", "");
 		String team = playerElem.getElementsByClass("pt").get(0).text().toUpperCase();
 		PlayerVote pvcVote = null;
-//		Double vote = null;
-//		Double fantaVote = null;
-//		
-//	
-//		pvcVote = getVoteFromMap(team, name, seasonDayVotes.get(team));
-//
-//		 
-//		// Controllo se lo devo forzare a 6
-//		if (pvcVote == null){
-//			if (rules.getCompetitionRules().getPostponementBehaviour().equals(PostponementBehaviourEnum.ALL_6)) {
-//				List<PostponementBean> forcedTeams = postponementsMap.get(serieASeasonDay);
-//				if (forcedTeams != null)
-//					 if (forcedTeams.contains(team))
-//						 pvcVote = new PlayerVoteComplete(name, team, role, 6.0, false, false, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, false, false, false, false);
-//				
-//			}
-//		}
-//	
-//		
-//		//Se non ha giocato non proseguo con i calcoli successivi
-//		if (pvcVote == null){		
-//			return new PlayerVote(role, name, team, null, null);
-//		}	
-//		
-//		vote = pvcVote.getVote();
-//		fantaVote = getFantaVote(pvcVote);
-//		
-//		Double voteFromWeb = getVote(playerElem.getElementsByClass("pt").get(1).text());
-//		if (vote != null && !vote.equals(voteFromWeb)){
-//			System.out.println("VOTO DIVERSO: " + team + " " + name + " " + "voti ufficiali: " + vote + " - Voti da nostra lega: " + voteFromWeb);
-//		}
-//		
-//		
-//		Double fantaVoteFromWeb = getVote(playerElem.getElementsByClass("pt").get(2).text());
-//		if (fantaVote != null && !fantaVote.equals(fantaVoteFromWeb)){
-//			System.out.println("FANTAVOTO DIVERSO: " + team + " " + name + " " + "voti ufficiali: " + fantaVote + " - Voti da nostra lega: " + fantaVoteFromWeb);
-//		}
+
 		
 		Double fantaVoteFromWeb = getVote(playerElem.getElementsByClass("pt").get(2).text());
 		Double voteFromWeb = getVote(playerElem.getElementsByClass("pt").get(1).text());
@@ -783,21 +749,7 @@ public class SeasonDayAnalyzer {
 		pvcVote.setFantaVoteFromWeb(fantaVoteFromWeb);
 		pvcVote.setRole(role);
 		
-//		PlayerVote p = new PlayerVote(role, name, team, vote, fantaVote);
-//		
-//		
-//		if (role.equals(RoleEnum.P)){
-//			if (rules.getModifiers().isGoalkeeperModifierActive()){
-//				Double goalkeeperModifier = calculateGoalkeeperModifier(pvcVote); 
-//				p.setGoalkeerModifier(goalkeeperModifier);
-//			}
-//		} 
-//		else if (role.equals(RoleEnum.A)){
-//			if (rules.getModifiers().isStrikerModifierActive()){ 
-//				Double strikerModifier = calculateStrikerModifier(pvcVote);
-//				p.setStrikerModifier(strikerModifier);
-//			}
-//		}
+
 		
 		return pvcVote;
 	}

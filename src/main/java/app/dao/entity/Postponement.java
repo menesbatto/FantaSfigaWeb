@@ -25,6 +25,8 @@ public class Postponement {
 	private String awayTeam;
 	
 	private Boolean played;
+	
+	private Boolean wait;
 
 	public Postponement() {
 	}
@@ -73,6 +75,14 @@ public class Postponement {
 	public String toString() {
 		return "Postponement [id=" + id + ", seasonDay=" + seasonDay + ", homeTeam=" + homeTeam + ", awayTeam="
 				+ awayTeam + ", played=" + played + "]";
+	}
+
+	public Boolean getWait() {
+		return wait;
+	}
+
+	public void setWait(Boolean wait) {
+		this.wait = wait;
 	}
 	
 

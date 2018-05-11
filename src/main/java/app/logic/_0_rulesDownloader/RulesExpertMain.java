@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -16,6 +17,7 @@ import app.RulesType;
 import app.dao.LeagueDao;
 import app.dao.RulesDao;
 import app.dao.UserDao;
+import app.dao.UtilsDao;
 import app.dao.entity.Competition;
 import app.logic._0_credentialsSaver.model.Credentials;
 import app.logic._0_credentialsSaver.model.LeagueBean;
@@ -33,6 +35,7 @@ import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._0_votesDownloader.model.VotesSourceEnum;
 import app.logic.model.CompetitionBean;
 import app.logic.model.IntegrateRulesReq;
+import app.logic.model.PostponementBean;
 import app.utils.AppConstants;
 import app.utils.HttpUtils;
 import app.utils.IOUtils;
@@ -51,6 +54,9 @@ public class RulesExpertMain {
 	
 	@Autowired
 	private LeagueDao leagueDao; 
+	
+	@Autowired
+	private UtilsDao utilsDao; 
 	
 	
 	public RulesBean retrieveRules(CompetitionBean competition, RulesType type) {
@@ -104,13 +110,19 @@ public class RulesExpertMain {
 	}
 
 	private void calculateCompetitionsRules(String leagueShortName, RulesBean rules, List<CompetitionBean> competitions) {
-
+		Map<Integer, List<PostponementBean>> postponementMap = utilsDao.findGeneralPostponementMap();
+		for ( Entry<Integer, List<PostponementBean>> entry : postponementMap.entrySet())
+			for (PostponementBean post : entry.getValue()) 
+				post.setWait(false);
+			
+	
 		for (CompetitionBean competition : competitions) {
 			//http://leghe.fantagazzetta.com/accaniti-division/visualizza-competizioni
 			//http://leghe.fantagazzetta.com/accaniti-division/visualizza-competizione-calendario/247720
 			//http://leghe.fantagazzetta.com/accaniti-division/visualizza-competizione-formula1/247741
 			//http://leghe.fantagazzetta.com/accaniti-division/visualizza-competizione-gironi/288971
 			CompetitionRules rulesComp = analyzeRulesForCompetition(competition);
+			rulesComp.setPostponementMap(postponementMap);
 			
 			rules.setCompetitionRules(rulesComp);
 			rules.setType(RulesType.REAL);
@@ -688,6 +700,7 @@ public class RulesExpertMain {
 		
 		return rules;
 	}
+
 
 
 	

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,6 +20,7 @@ import app.dao.entity.Competition;
 import app.dao.entity.League;
 import app.dao.entity.LineUpLight;
 import app.dao.entity.Matcho;
+import app.dao.entity.Postponement;
 import app.dao.entity.Rules;
 import app.dao.entity.Season;
 import app.dao.entity.SeasonDay;
@@ -40,6 +42,7 @@ import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic.model.IntegrateRulesReq;
+import app.logic.model.PostponementBean;
 
 @Service
 @EnableCaching
@@ -53,6 +56,9 @@ public class RulesDao {
 
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private UtilsDao utilsDao;
 
 	
 	private Vote populateVote(PlayerVoteComplete voteBean, Integer serieASeasonDay, VotesSourceEnum voteSource) {
@@ -319,7 +325,26 @@ public class RulesDao {
 		e.setBinding(b.getCompetitionRules().getBinding());
 		if (b.getCompetitionRules().getPostponementBehaviour()!= null)
 			e.setPostponementBehaviour(b.getCompetitionRules().getPostponementBehaviour().name());
+
+//		List<Postponement> postponementEnts = new ArrayList<Postponement>();
+//		Postponement postEnt;
+//		for (PostponementBean postBean: b.getCompetitionRules().getPostponements()) {
+//			postEnt = utilsDao.createPostponementEnt(postBean);
+//			postponementEnts.add(postEnt);
+//		}
 		
+		List<Postponement> postponementEnts = new ArrayList<Postponement>();
+		Postponement postEnt;
+		for (Entry<Integer, List<PostponementBean>> entry: b.getCompetitionRules().getPostponementMap().entrySet()) {
+			for (PostponementBean post : entry.getValue()) {
+				postEnt = utilsDao.createPostponementEnt(post);
+				postponementEnts.add(postEnt);
+			}
+		}
+		
+		
+		
+		e.setPostponements(postponementEnts);
 		return e;
 	}
 
@@ -352,6 +377,9 @@ public class RulesDao {
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		Rules e = rulesRepo.findByCompetitionAndType(competition, type.name());
 		
+		if(e==null) {
+			return new RulesBean();
+		}
 		RulesBean bean = new RulesBean();
 		
 		BonusMalus bonusMalus = new BonusMalus();
@@ -566,13 +594,56 @@ public class RulesDao {
 		if (e.getPostponementBehaviour() != null)
 			competitionRules.setPostponementBehaviour(PostponementBehaviourEnum.valueOf(e.getPostponementBehaviour()));
 		
+//		List<PostponementBean> postponementBeans = new ArrayList<PostponementBean>();
+//		PostponementBean postBean;
+//		for (Postponement postEnt:e.getPostponements()) {
+//			postBean = utilsDao.createPostponementBean(postEnt);
+//			postponementBeans.add(postBean);
+//		}
+//		competitionRules.setPostponements(postponementBeans);
+		
+		Map<Integer, List<PostponementBean>> postponementMap = createPostponementMap(e.getPostponements());
+		competitionRules.setPostponementMap(postponementMap);
+		
 		bean.setCompetitionRules(competitionRules);
 		
 		bean.setType(RulesType.valueOf(e.getType()));
 		
+		
 		return bean;
 	}
 	
+	
+	private Map<Integer, List<PostponementBean>> createPostponementMap(List<Postponement> ents) {
+		
+		Map<Integer, List<PostponementBean>> map = new HashMap<Integer, List<PostponementBean>>();
+		
+		for (Postponement ent : ents) {
+			
+			PostponementBean bean = createPostponementBean(ent);
+			Integer seasonDay = ent.getSeasonDay();
+			List<PostponementBean> beans =  map.get(seasonDay);
+			if (beans == null) {
+				beans = new ArrayList<PostponementBean>();
+				map.put(seasonDay, beans);
+			}
+			beans.add(bean);
+			
+		}
+		return map;
+		
+	}
+
+	public PostponementBean createPostponementBean(Postponement ent) {
+		PostponementBean bean = new PostponementBean();
+		bean.setAwayTeam(ent.getAwayTeam());
+		bean.setHomeTeam(ent.getHomeTeam());
+		bean.setSeasonDay(ent.getSeasonDay());
+		bean.setPlayed(ent.getPlayed());
+		bean.setWait(ent.getWait());
+		return bean;
+	}
+
 	
 	//@Transactional
 	public RulesBean saveRulesForCompetition(RulesBean rulesBean, String competitionShortName, String leagueShortName, String username) {
@@ -583,7 +654,7 @@ public class RulesDao {
 			return null;
 		
 		Rules rules = populateRules(rulesBean, leagueShortName, username);
-
+		
 		League league = leagueDao.findByShortNameEnt(leagueShortName, username);
 		rules.setLeague(league);
 		
@@ -673,12 +744,13 @@ public class RulesDao {
 	}
 
 	public void integrateRules(IntegrateRulesReq req, String username) {
+		RulesBean rulesClient = req.getRules();
 		String competitionShortName = req.getCompetitionShortName();
 		String leagueShortName = req.getLeagueShortName();
-		String postponementBehaviour = req.getPostponementBehaviour();
-		Boolean autogolActive = req.getAutogolActive();
-		Double autogol = req.getAutogol();
-		String maxOfficeVoteBehaviour = req.getMaxOfficeVoteBehaviour();
+		String postponementBehaviour = rulesClient.getCompetitionRules().getPostponementBehaviour().name();
+		Double autogol = rulesClient.getPoints().getAutogol();
+		Boolean autogolActive = rulesClient.getPoints().getAutogolActive();
+		String maxOfficeVoteBehaviour = rulesClient.getSubstitutions().getMaxOfficeVotes().name();
 		
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		Rules ent = rulesRepo.findByCompetitionAndType(competition, RulesType.REAL.name());
@@ -687,8 +759,18 @@ public class RulesDao {
 		ent.setAutogolActive(autogolActive);
 		ent.setMaxOfficeVotes(maxOfficeVoteBehaviour);
 		
-		rulesRepo.save(ent);
+		List<Postponement> postponementEnts = new ArrayList<Postponement>();
+		Postponement postEnt;
 		
+		for ( List<PostponementBean> list: rulesClient.getCompetitionRules().getPostponementMap().values()) {
+			for (PostponementBean postBean: list) {
+				postEnt = utilsDao.createPostponementEnt(postBean);
+				postponementEnts.add(postEnt);
+			}
+		}
+		
+		ent.setPostponements(postponementEnts);
+		rulesRepo.save(ent);
 		createCustomRules(ent);
 	}
 
@@ -696,11 +778,24 @@ public class RulesDao {
 	private EntityManager entityManager;
 	
 	private void createCustomRules(Rules ent) {
-		//Crea copia delle regole custom
+		//Crea copia delle regole custom Rules 
 		Rules customRulesEnt = rulesRepo.findByCompetitionAndType(ent.getCompetition(), RulesType.CUSTOM.name());
 		if (customRulesEnt != null)
 			rulesRepo.delete(customRulesEnt);
+		List<Postponement> postNews = new ArrayList<Postponement>();
+		Postponement postNew;
+		for (Postponement postEnt : ent.getPostponements()) {
+			postNew = new Postponement();
+			postNew.setAwayTeam(postEnt.getAwayTeam());
+			postNew.setHomeTeam(postEnt.getHomeTeam());
+			postNew.setSeasonDay(postEnt.getSeasonDay());
+			postNew.setPlayed(postEnt.getPlayed());
+			postNew.setWait(postEnt.getWait());
+			postNews.add(postNew);
+		}
+		
 		entityManager.detach(ent);
+		ent.setPostponements(postNews);
 		ent.setId(0);
 		ent.setType(RulesType.CUSTOM.name());
 		rulesRepo.save(ent);
@@ -713,6 +808,7 @@ public class RulesDao {
 			
 		return customRules;
 	}
+
 	
 	
 	

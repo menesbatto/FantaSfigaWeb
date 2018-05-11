@@ -453,7 +453,7 @@ export class CompetitionComponent implements OnInit {
 
     isAlreadyCalculated(){
         if (this.rulesType=="REAL"){
-            let isStatslreadyCalculated = localStorage.getItem('statsAlreadyCalculated');
+            let isStatslreadyCalculated = localStorage.getItem(this.competitionShortName + '-statsAlreadyCalculated');
             if (isStatslreadyCalculated == "true"){
                 return true;
             }
@@ -465,7 +465,7 @@ export class CompetitionComponent implements OnInit {
 
 
     isAlreadyDownloaded(){
-        let alreadyDownloaded = localStorage.getItem('alreadyDownloadInfo');
+        let alreadyDownloaded = localStorage.getItem(this.competitionShortName + '-alreadyDownloadInfo');
         if (alreadyDownloaded == "true")
             return true;
         else 
@@ -489,7 +489,7 @@ export class CompetitionComponent implements OnInit {
                                     this.successMessage = "Il ricalcolo dei risultati della stagione è stato eseguito";
                                     this.errorMessage = null;
                                     this.loading = false;
-                                    localStorage.setItem('alreadyDownloadInfo', "true");
+                                    localStorage.setItem(this.competitionShortName + '-alreadyDownloadInfo', "true");
                                 },
                 
                                 error => {
@@ -653,7 +653,7 @@ export class CompetitionComponent implements OnInit {
                     this.errorMessage = null;
                     this.loading = false;
                     if (this.rulesType == "REAL")
-                        localStorage.setItem('statsAlreadyCalculated', "true");
+                        localStorage.setItem(this.competitionShortName + '-statsAlreadyCalculated', "true");
                     this.retrieveAllRankings();
                 },
 

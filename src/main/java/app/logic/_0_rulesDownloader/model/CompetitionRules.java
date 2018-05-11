@@ -1,8 +1,11 @@
 package app.logic._0_rulesDownloader.model;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
+import app.logic.model.PostponementBean;
 
 public class CompetitionRules  implements Serializable {
 
@@ -12,6 +15,7 @@ public class CompetitionRules  implements Serializable {
 	private Double homeBonus;
 	private String binding;
 	private PostponementBehaviourEnum postponementBehaviour;
+	private Map<Integer, List<PostponementBean>> postponementMap;
 
 	
 	
@@ -48,6 +52,14 @@ public class CompetitionRules  implements Serializable {
 
 	public void setPostponementBehaviour(PostponementBehaviourEnum postponementBehaviour) {
 		this.postponementBehaviour = postponementBehaviour;
+	}
+
+	public Map<Integer, List<PostponementBean>> getPostponementMap() {
+		return postponementMap;
+	}
+
+	public void setPostponementMap(Map<Integer, List<PostponementBean>> postponementsMap) {
+		this.postponementMap = postponementsMap;
 	}
 	
 	
