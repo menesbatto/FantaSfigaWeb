@@ -1246,77 +1246,126 @@ import { Location } from '@angular/common';
             <br>
             <br>
             <br>
-            <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
-                    <span class= "spanxxl"> Altre Regole </span>
-                </div>
-                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right ">
-                    <a (click) = "showCompetitionRules = !showCompetitionRules" class="btn btn-sm btn-info">
-                        <span *ngIf="showCompetitionRules" class="glyphicon glyphicon-chevron-up"> </span>
-                        <span *ngIf="!showCompetitionRules" class="glyphicon glyphicon-chevron-down"> </span>
-                    </a>
-                </div>
-            </div>
+           
 
-                      
-
-            <div id="form-step6" class="input-group" *ngIf="competitionRules && showCompetitionRules">
-                <div class="col-lg-12 rowb">
-
-                    <div id="sosmoduloclassic" class="row">
-                        <label [ngClass]="{ 'diff': competitionRules.postponementBehaviour != realRules.competitionRules.postponementBehaviour }"
-                           class="  col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="priorità">Rinvio o sospensione delle partite</label>
-                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 ">
-                            <select name="ctl00$main$postponementBehaviour"  [(ngModel)]="competitionRules.postponementBehaviour" class="form-control chk">
-                                <option value="ALL_6"> Tutti 6 </option>
-                                <option value="WAIT_MATCHES"> Attesa dei recuperi </option>
-                            </select>
-                        </div>
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Seleziona se attendere i recuperi o mettere tutti 6"></i></div>
-                    </div>
-
-
-                    <div class="row">
-                        <label [ngClass]="{ 'diff': competitionRules.homeBonusActive != realRules.competitionRules.homeBonusActive }"
-                            class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="dautogol">Bonus Casalingo Attivo:</label>
-                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                            <div class="radio" >
-                                <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="competitionRules.homeBonusActive" name="homeBonusActive1" [value]="true" ></span>Sì </label>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                            <div class="radio">
-                                <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="competitionRules.homeBonusActive" name="homeBonusActive2" [value]="false" ></span>No </label>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" rel="tooltip" title="" data-original-title="La squadra che gioca in casa riceve un bonus"></i></div>
-                    </div>
-                    <div class="row inner nobor" *ngIf="competitionRules.homeBonusActive">
-                        <label [ngClass]="{ 'diff': competitionRules.homeBonus != realRules.competitionRules.homeBonus }"
-                            class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="dautogol">Bonus Casalingo:</label>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
-                            <input name="ctl00$main$vriservap" [(ngModel)]="competitionRules.homeBonus" class="form-control textinner" type="number" step="0.5">
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore del bonus per la squadra che gioca in casa"></i></div>
-                    </div>
-                </div>
-            </div>
-
+          
             
+
 
 
         </form>
 
-        <br>
-        <br>
-        <div class="alert alert-success" *ngIf="successMessage">
-            <strong>{{successMessage}}</strong>
+        <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                <span class= "spanxxl"> Altre Regole </span>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right ">
+                <a (click) = "showCompetitionRules = !showCompetitionRules" class="btn btn-sm btn-info">
+                    <span *ngIf="showCompetitionRules" class="glyphicon glyphicon-chevron-up"> </span>
+                    <span *ngIf="!showCompetitionRules" class="glyphicon glyphicon-chevron-down"> </span>
+                </a>
+            </div>
         </div>
 
-        <div class="alert alert-danger" *ngIf="errorMessage">
+                
+
+        <div id="form-step6" class="input-group" *ngIf="competitionRules && showCompetitionRules">
+            <div class="col-lg-12 rowb">
+                <div class="row">
+                    <label [ngClass]="{ 'diff': competitionRules.homeBonusActive != realRules.competitionRules.homeBonusActive }"
+                        class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="dautogol">Bonus Casalingo Attivo:</label>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div class="radio" >
+                            <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="competitionRules.homeBonusActive" name="homeBonusActive1" [value]="true" ></span>Sì </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div class="radio">
+                            <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="competitionRules.homeBonusActive" name="homeBonusActive2" [value]="false" ></span>No </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" rel="tooltip" title="" data-original-title="La squadra che gioca in casa riceve un bonus"></i></div>
+                </div>
+                <div class="row inner nobor" *ngIf="competitionRules.homeBonusActive">
+                    <label [ngClass]="{ 'diff': competitionRules.homeBonus != realRules.competitionRules.homeBonus }"
+                        class="col-lg-6 col-md-4 col-sm-4 col-xs-4 control-label" for="dautogol">Bonus Casalingo:</label>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-2">
+                        <input name="ctl00$main$vriservap" [(ngModel)]="competitionRules.homeBonus" class="form-control textinner" type="number" step="0.5">
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Impostare il valore del bonus per la squadra che gioca in casa"></i></div>
+                </div>
+                <div id="sosmoduloclassic" class="row">
+                    <label [ngClass]="{ 'diff': competitionRules.postponementBehaviour != realRules.competitionRules.postponementBehaviour }"
+                    class="  col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="priorità">Rinvio o sospensione delle partite</label>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 ">
+                        <select (change)="behaviourChanged(competitionRules.postponementBehaviour)" name="ctl00$main$postponementBehaviour"  [(ngModel)]="competitionRules.postponementBehaviour" class="form-control chk">
+                            <option value="ALL_6"> Tutti 6 </option>
+                            <option value="WAIT_MATCHES"> Attesa dei recuperi </option>
+                            <option value = "MIXED" hidden> Misto </option>
+                        </select>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" rel="tooltip" title="" data-original-title="Seleziona se attendere i recuperi o mettere tutti 6"></i></div>
+                </div>
+                <br>
+                <br>
+
+                <div class="row nobor col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div> <strong> Giornata</strong> </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div> <strong>Casa </strong></div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div> <strong>Fuori</strong> </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div><strong>Giocata</strong> </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div> <strong>Voti</strong> </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+                </div>
+                <div *ngFor="let key of getKeys(map)">
+                    <div class="row nobor col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1 col-sm-offset-0 col-xs-offset-0"  
+                    *ngFor = "let postponement of getList(key)">
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <div>{{postponement.seasonDay}}</div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <div>{{postponement.homeTeam}}</div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <div>{{postponement.awayTeam}}</div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <div>{{postponement.played ? 'SI' : 'NO'}}</div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <div>{{postponement.wait ? 'ATTESA' : 'TUTTI 6'}}</div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <div><button  class="btn btn-primary" (click)="invertWait(postponement)"> Cambia </button></div>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+
+        
+
+        <br>
+        <br>
+        
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-success" *ngIf="successMessage">
+            <strong>{{successMessage}}</strong>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-danger" *ngIf="errorMessage">
             <strong>{{errorMessage}}</strong>
         </div>
-    
         <br>
         <br>
 
@@ -1337,10 +1386,8 @@ import { Location } from '@angular/common';
         <br>
         <br>
         <br>
-        
-        <!--<button class="btn btn-primary btn-block" (click) = "goToCompetition('CUSTOM')"> Vai alle statistiche con le regole personalizzate</button>-->
 
-        <!--<button class="btn btn-primary btn-block" (click) = "goToCompetition('REAL')"> Torna alle statistiche reali</button>-->
+
 
       
 
@@ -1398,9 +1445,6 @@ export class CustomRulesComponent implements OnInit {
         this.retrieveCustomRules();
     }
 
-   objEquals(obj1, obj2){
-    return obj1!= null && obj2 != null && JSON.stringify(obj1) == JSON.stringify(obj2);
-   }
 
     retrieveCustomRules() {
         let retrieveRulesReq = {
@@ -1424,6 +1468,8 @@ export class CustomRulesComponent implements OnInit {
                     this.substitutions = data.customRules.substitutions;
                     this.modifiers = data.customRules.modifiers;
                     this.competitionRules = data.customRules.competitionRules;
+
+                    this.handlePostponements();
 
                 },
 
@@ -1460,6 +1506,7 @@ export class CustomRulesComponent implements OnInit {
                 this.substitutions = data.substitutions;
                 this.modifiers = data.modifiers;
                 this.competitionRules = data.competitionRules;
+                this.handlePostponements();
 
                 this.successMessage = "Le regole custom sono state resettate";
                 this.errorMessage = null;
@@ -1472,7 +1519,6 @@ export class CustomRulesComponent implements OnInit {
     }
 
     saveCustomRules() {
-        console.log(this.competitionBean);
         this.competitionBean.leagueShortName = this.leagueShortName;
         this.competitionBean.competitionShortName = this.competitionShortName;
         
@@ -1505,6 +1551,64 @@ export class CustomRulesComponent implements OnInit {
 
         this.errorMessage = null;
     }
+
+
+    handlePostponements(){
+        let mapPost = this.competitionRules.postponementMap;
+        for (var property in mapPost) {
+            if (mapPost.hasOwnProperty(property)) {
+                this.map.set(property, mapPost[property]);
+            }
+        };
+                   
+    }
+
+    behaviourChanged(behaviour){
+      
+        this.map.forEach((value: string, key: string) => {
+            for (var i = 0; i< value.length; i++){
+                if (behaviour == "ALL_6")
+                    value[i]["wait"]= false;
+                else if (behaviour == "WAIT_MATCHES")
+                    value[i]["wait"]= true;
+            }
+             
+        });
+    }
+    
+    invertWait(postponement){
+        postponement.wait = !postponement.wait;
+        let isAll6 = false;
+        let isWait = false;
+        this.map.forEach((value: string, key: string) => {
+           for (var i = 0; i< value.length; i++){
+                if (value[i]["wait"])    
+                    isWait = true;
+                else 
+                    isAll6 = true;
+           }
+            
+        });
+        if (isWait && !isAll6)
+            this.competitionRules.postponementBehaviour = "WAIT_MATCHES";
+        else if (!isWait && isAll6)
+            this.competitionRules.postponementBehaviour = "ALL_6";
+        else if (isWait && isAll6)
+            this.competitionRules.postponementBehaviour = "MIXED";
+
+    }
+
+    getList(key){
+        return this.map.get(key);
+    }
+
+    map = new Map<String, String>();
+
+    getKeys(map){
+        return Array.from(map.keys());
+    }
+
+
 
     goToCompetition(statsType){
         this. router.navigate(['/competition', {league : this.leagueShortName, competition : this.competitionShortName, type:statsType}])

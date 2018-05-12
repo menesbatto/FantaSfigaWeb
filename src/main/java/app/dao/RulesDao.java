@@ -747,14 +747,13 @@ public class RulesDao {
 		RulesBean rulesClient = req.getRules();
 		String competitionShortName = req.getCompetitionShortName();
 		String leagueShortName = req.getLeagueShortName();
-		String postponementBehaviour = rulesClient.getCompetitionRules().getPostponementBehaviour().name();
+	
 		Double autogol = rulesClient.getPoints().getAutogol();
 		Boolean autogolActive = rulesClient.getPoints().getAutogolActive();
 		String maxOfficeVoteBehaviour = rulesClient.getSubstitutions().getMaxOfficeVotes().name();
 		
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		Rules ent = rulesRepo.findByCompetitionAndType(competition, RulesType.REAL.name());
-		ent.setPostponementBehaviour(postponementBehaviour);
 		ent.setAutogol(autogol);
 		ent.setAutogolActive(autogolActive);
 		ent.setMaxOfficeVotes(maxOfficeVoteBehaviour);
@@ -762,14 +761,28 @@ public class RulesDao {
 		List<Postponement> postponementEnts = new ArrayList<Postponement>();
 		Postponement postEnt;
 		
+		boolean existAll6 = false;
+		boolean existWait = false;
 		for ( List<PostponementBean> list: rulesClient.getCompetitionRules().getPostponementMap().values()) {
 			for (PostponementBean postBean: list) {
+				if (postBean.getWait())
+					existWait = true;
+				else
+					existAll6 = true;
+					
 				postEnt = utilsDao.createPostponementEnt(postBean);
 				postponementEnts.add(postEnt);
 			}
 		}
 		
 		ent.setPostponements(postponementEnts);
+		
+		PostponementBehaviourEnum postponementBehaviour = null;
+		if (existWait && existAll6)			postponementBehaviour =  PostponementBehaviourEnum.MIXED;
+		else if (existWait  && !existAll6)	postponementBehaviour =  PostponementBehaviourEnum.WAIT_MATCHES;
+		else if (!existWait && existAll6)	postponementBehaviour =  PostponementBehaviourEnum.ALL_6;;
+		ent.setPostponementBehaviour(postponementBehaviour.name());
+
 		rulesRepo.save(ent);
 		createCustomRules(ent);
 	}

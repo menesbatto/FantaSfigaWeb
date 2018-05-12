@@ -39,8 +39,6 @@ import { HeaderService } from '../header.service';
       <strong>{{errorMessage}}</strong>
     </div>
 
-    <button class="btn btn-primary"(click) = "backToLeagues()"> Torna alle leghe </button>
-
   </div>
 
  
@@ -182,10 +180,7 @@ export class CompetitionsComponent implements OnInit {
     this. router.navigate(['/competitionRules', {league : this.leagueShortName, competition : competition.competitionShortName}])
   }
 
-  backToLeagues(){
-    this. router.navigate(['/leagues'])
 
-  }
   
 
 }

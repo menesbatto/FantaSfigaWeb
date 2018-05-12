@@ -9,62 +9,51 @@ import { Location } from '@angular/common';
   
     <div *ngIf="rules" >
         <!-- <h2>Regole della Competizione {{competitionShortName}} </h2>-->
-        <h5>Indica queste regole che non siamo riusciti a scaricare da FantaGazzetta</h5>
+        <h4>Inserisci queste regole che non siamo riusciti a scaricare da FantaGazzetta</h4>
 
-        <form name="form" (ngSubmit)="saveCustomRules()" #f="ngForm" novalidate>
-
+       
             
-            <div class="form-group" >
-                <label for="sel1"> Numero massimo di sostituzioni d'ufficio </label>
-                <select class="form-control" id="sel1" name="maxOfficeVoteBehaviour" [(ngModel)]="rules.substitutions.maxOfficeVotes" #maxOfficeVoteBehaviour="ngModel">
-                    <option value = "TILL_SUBSTITUTIONS"> Fino al numero di sostituzioni impostato </option>
-                    <option value = "TILL_ALL"> Fino a 11 </option>
-                </select>
-            </div> 
-
-            <div class="form-group" >
-                <label for="sel1"> In casi di rinvio o sospensione delle partite </label>
-                <select class="form-control" id="sel1" name="postponementBehaviour" [(ngModel)]="rules.competitionRules.postponementBehaviour" #postponementBehaviour="ngModel">
-                    <option value = "ALL_6"> Tutti 6 </option>
-                    <option value = "WAIT_MATCHES"> Attesa dei recuperi </option>
-                </select>
-            </div> 
-
-            <div class="form-group" >
-                <label for="sel1"> Autogol </label>
-                <select class="form-control" id="sel1" name="autogolActive" [(ngModel)]="rules.points.autogolActive" #autogolActive="ngModel">
-                    <option value = false> No </option>
-                    <option value = true> Si </option>
-                </select>
-            </div>
+        <div class="form-group" >
+            <label for="sel1"> Numero massimo di sostituzioni d'ufficio </label>
+            <select class="form-control" id="sel1" name="maxOfficeVoteBehaviour" [(ngModel)]="rules.substitutions.maxOfficeVotes" #maxOfficeVoteBehaviour="ngModel">
+                <option value = "TILL_SUBSTITUTIONS"> Fino al numero di sostituzioni impostato </option>
+                <option value = "TILL_ALL"> Fino a 11 </option>
+            </select>
+        </div> 
 
 
-            <!--<div class="form-group" *ngIf = "model.autogolActive=='true'" [ngClass]="{ 'has-error': f.submitted && !autogol.valid }">-->
-            <div class="form-group" *ngIf = "isAutogolActive()" [ngClass]="{ 'has-error': f.submitted && !autogol.valid }">
+
+        <div class="form-group" >
+            <label for="sel1"> Autogol </label>
+            <select class="form-control" id="sel1" name="autogolActive" [(ngModel)]="rules.points.autogolActive" #autogolActive="ngModel">
+                <option value = false> No </option>
+                <option value = true> Si </option>
+            </select>
+        </div>
+
+
+        <div class="form-group" *ngIf = "this.rules.points.autogolActive==true || this.rules.points.autogolActive=='true'">
             <label for="autogol"> Soglia Autogol </label>
             <input type="number" class="form-control" name="autogol" [(ngModel)]="rules.points.autogol" #autogol="ngModel" required />
-            <div *ngIf="f.submitted && !autogol.valid" class="help-block">Devi inserire lo Username di Fantagazzetta</div>
-            </div>
+            <div *ngIf="false" class="help-block">Devi inserire lo Username di Fantagazzetta</div>
+        </div>
 
 
             
             
-            <div class="form-group">
-                <button class="btn btn-primary">Salva</button>
-            </div>
+           
 
-        </form>
+       
 
 
-
-        <div class="alert alert-danger" *ngIf="errorMessage">
-            <strong>{{errorMessage}}</strong>
-        </div>
-
-        <div class="alert alert-success" *ngIf="successMessage">
-            <strong>{{successMessage}}</strong>
-        </div>
-
+        <div class="form-group" >
+            <label for="sel1"> In casi di rinvio o sospensione delle partite </label>
+            <select (change)="behaviourChanged(rules.competitionRules.postponementBehaviour)" class="form-control" id="sel1" name="postponementBehaviour" [(ngModel)]="rules.competitionRules.postponementBehaviour" #postponementBehaviour="ngModel">
+                <option value = "ALL_6"> Tutti 6 </option>
+                <option value = "WAIT_MATCHES"> Attesa dei recuperi </option>
+                <option value = "MIXED" hidden> Misto </option>
+            </select>
+        </div> 
 
         <div class="row nobor col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
@@ -98,74 +87,32 @@ import { Location } from '@angular/common';
                     <div>{{postponement.awayTeam}}</div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <div>{{postponement.played}}</div>
+                    <div>{{postponement.played ? 'SI' : 'NO'}}</div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                     <div>{{postponement.wait ? 'ATTESA' : 'TUTTI 6'}}</div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <div><button  class="btn btn-primary" (click)="postponement.wait = !postponement.wait"> Cambia </button></div>
+                    <div><button  class="btn btn-primary" (click)="invertWait(postponement)"> Cambia </button></div>
                 </div>
             </div>
         </div>
 
-     
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-danger" *ngIf="errorMessage">
+            <strong>{{errorMessage}}</strong>
+        </div>
 
-
-   <!-- <div class="table-responsive nobor" *ngIf="rules">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th> Giornata </th>
-                    <th> Recuperi </th>
-                <tr>
-            </thead>
-            <tbody>
-
-                <tr *ngFor="let key of getKeys(map)">
-                    <td> {{key}} </td>
-                    <td> 
-                        <div class="table-responsive nobor" *ngIf="rules">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                      
-                                        <th> In casa </th>
-                                        <th> Fuori casa </th>
-                                        <th> Giocata </th>
-                                        <td> Voti attesi </td>
-                                        <td> </td>
-                                    <tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor = "let postponement of getList(key)" >
-                                      
-                                        <td> {{postponement.homeTeam}} </td>
-                                        <td> {{postponement.awayTeam}} </td>
-                                        <td> {{postponement.played}} </td>
-                                        <td> {{postponement.wait ? 'ATTESA' : 'TUTTI 6'}} </td>
-                                        <td> <button  class="btn btn-primary" (click)="postponement.wait = !postponement.wait"> Cambia </button>  </td>
-                                    <tr>
-                                </tbody>
-                           </table>
-                        </div>
-                        
-                    </td>
-                 <tr>
-            </tbody>
-        </table>
-    </div>-->
-
-
-     
-
-
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  alert alert-success" *ngIf="successMessage">
+            <strong>{{successMessage}}</strong>
+        </div>
 
 
     </div>
-  
-  
-      
+    
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <button (click) = "saveCustomRules()" class="btn btn-primary">Salva</button>
+    </div>
+        
   
 
   `,
@@ -187,10 +134,44 @@ export class CompetitionRulesComponent implements OnInit {
 
     ) { }
 
+    behaviourChanged(behaviour){
+      
+        this.map.forEach((value: string, key: string) => {
+            for (var i = 0; i< value.length; i++){
+                if (behaviour == "ALL_6")
+                    value[i]["wait"]= false;
+                else if (behaviour == "WAIT_MATCHES")
+                    value[i]["wait"]= true;
+            }
+             
+        });
+    }
     
+    invertWait(postponement){
+        postponement.wait = !postponement.wait;
+        let isAll6 = false;
+        let isWait = false;
+        this.map.forEach((value: string, key: string) => {
+           for (var i = 0; i< value.length; i++){
+                if (value[i]["wait"])    
+                    isWait = true;
+                else 
+                    isAll6 = true;
+                
+           }
+            
+        });
+        if (isWait && !isAll6)
+            this.rules.competitionRules.postponementBehaviour = "WAIT_MATCHES";
+        else if (!isWait && isAll6)
+            this.rules.competitionRules.postponementBehaviour = "ALL_6";
+        else if (isWait && isAll6)
+            this.rules.competitionRules.postponementBehaviour = "MIXED";
+
+    }
+
     getList(key){
-        console.log(this.map)
-        console.log(this.map.get(key));
+        //console.log(this.map.get(key));
         return this.map.get(key);
     }
 
@@ -233,9 +214,9 @@ export class CompetitionRulesComponent implements OnInit {
                         }
                     };
                    
-                    this.map.forEach((value: string, key: string) => {
-                      console.log(key, value);
-                    });
+                    // this.map.forEach((value: string, key: string) => {
+                    //   console.log(key, value);
+                    // });
                 
                     this.rules = data.realRules;
                 },
@@ -258,7 +239,11 @@ export class CompetitionRulesComponent implements OnInit {
     }
 
     saveCustomRules() {
-        
+        if (this.rules.competitionRules.postponementBehaviour== null){
+            this.successMessage = null;
+            this.errorMessage = "Devi scegliere la politica di assegnazione voto in caso di rinvi o sospensioni delle partite";
+            return;
+        }
         let req = {
             leagueShortName : this.leagueShortName,
             competitionShortName : this.competitionShortName,

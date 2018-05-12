@@ -24,81 +24,81 @@ import { HeaderService } from '../header.service';
                 </div>
             </div>
                 
-            <div class="row nobor" >
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
-                    <label>Report Errori</label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToReport()"> Vai </button>
-                </div>
-            </div>
+           
 
 
-            <!--<div class="row nobor">
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
-                    <label>Scarica i risultati online delle partite giocate (dopo ogni giornata)</label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "saveOnlineSeasonAndTeams()"> OK </button>
-                </div>
-            </div>
-            <div class="row nobor">
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                    <label> Scarica le formazioni inserite (dopo ogni giornata)</label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> OK  </button>
-                </div>
-            </div>
-            <div class="row nobor">
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                    <label> Ricalcola i risultati sulla base di quanto scaricato (dopo ogni giornata)</label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> OK  </button>
-                </div>
-            </div>-->
+                                                                            <!--<div class="row nobor">
+                                                                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
+                                                                                    <label>Scarica i risultati online delle partite giocate (dopo ogni giornata)</label>
+                                                                                </div>
+                                                                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                                                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "saveOnlineSeasonAndTeams()"> OK </button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row nobor">
+                                                                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                                                                                    <label> Scarica le formazioni inserite (dopo ogni giornata)</label>
+                                                                                </div>
+                                                                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                                                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> OK  </button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row nobor">
+                                                                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                                                                                    <label> Ricalcola i risultati sulla base di quanto scaricato (dopo ogni giornata)</label>
+                                                                                </div>
+                                                                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                                                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> OK  </button>
+                                                                                </div>
+                                                                            </div>-->
             
-            
-            <!--<div align = center> - - - - - </div>-->
             
 
-            <!--<div class="row nobor">
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                    <label> Calcola statistiche leggere </label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> OK </button>
-                </div>
-            </div>-->
+                                                                            <!--<div class="row nobor">
+                                                                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                                                                                    <label> Calcola statistiche leggere </label>
+                                                                                </div>
+                                                                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                                                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> OK </button>
+                                                                                </div>
+                                                                            </div>-->
              <div class="row nobor">
                 <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                    <label> Calcola statistiche pesanti (qualche secondo)</label>
+                    <label> Calcola statistiche (qualche secondo)</label>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                     <button [disabled]="loading || isAlreadyCalculated() && false" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
                 </div>
             </div>
-            <!--<div class="row nobor">
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                    <label> Recupera le statistiche appena calcolate</label>
+                                                                                <!--<div class="row nobor">
+                                                                                    <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                                                                                        <label> Recupera le statistiche appena calcolate</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                                                        <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> OK </button>
+                                                                                    </div>
+                                                                                </div>-->
+
+            <div class="row nobor" >
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
+                    <label>Vai al Report Errori</label>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> OK </button>
+                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToReport()"> OK </button>
                 </div>
-            </div>-->
-
-            
-            <!--<div align = center> - - - - - </div>-->
+            </div>
+         
             
             <div class="row nobor" *ngIf="rulesType=='REAL'">
                 <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                    <label> Regole</label>
+                    <label> Integra Regole </label>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                     <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCompetitionRules()"> OK </button>
                 </div>
             </div>
+
+            
 
             <div class="row nobor" *ngIf="rulesType=='CUSTOM'">
                 <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
