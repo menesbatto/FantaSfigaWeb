@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { LeaguesService } from '../leagues.service';
 import { Router } from '@angular/router';
+import { Observable, Subscription} from 'rxjs';
+import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
+
 
 @Component({
     selector: 'app-leagues',
@@ -24,7 +27,7 @@ import { Router } from '@angular/router';
       </div>
 
       <div class="alert alert-success" *ngIf="loadingMessage" >
-        <strong>{{loadingMessage}}</strong>
+        <strong [innerHTML]= "loadingMessage"></strong>
       </div>
 
       <div class="alert alert-danger" *ngIf="errorMessage">
@@ -52,12 +55,45 @@ export class LeaguesComponent implements OnInit {
     loadingMessage = null;
     successMessage = null;
 
-
+    sub:Subscription;
 
     ngOnInit() {
         this.retrieveLeagues();
+       
     }
+    i = 0;
+    messages = [
+        "<p>Scaricate regole Bonus/Malus</p>",
+        "<p>Scaricate regole Fonte dati</p>",
+        "<p>Scaricate regole Sostituzioni</p>",
+        "<p>Scaricate regole Punteggi</p>",
+        "<p>Scaricate regole Modificatori</p>",
+        "<p>Scaricate regole Competizione</p>",
+        "<p>Salvataggio...</p>"
+    ];
 
+    startFakeServerUpdater(){
+       
+
+
+        this.sub = Observable.interval(3600)
+            .subscribe(
+                data => {
+                    if (this.loadingMessage == null)
+                        this.loadingMessage="";
+                    if (this.i < this.messages.length ){
+                        this.loadingMessage += this.messages[this.i];
+                        this.i++;
+                    }
+                },
+                error => {
+                    console.log(error);
+                }) ;
+    }
+    
+    stopFakeServerUpdater(){
+        this.sub.unsubscribe();
+    }
 
     goToCompetitions(league) {
         this.router.navigate(['/competitions', league.shortName])
@@ -113,9 +149,9 @@ export class LeaguesComponent implements OnInit {
     downloadCompetitionsCallback(league) {
         this.loading = true;
         league.competitionsDownloaded = true;
-        this.loadingMessage = "Download delle regole in corso (impiega quale secondo)...";
+        this.loadingMessage = "<p>Download delle regole in corso (impiega quale secondo)...</p>";
         this.errorMessage = null;
-
+        this.startFakeServerUpdater();
 
         this.leagueService.downloadRules(league.shortName)
             .subscribe(
@@ -125,6 +161,7 @@ export class LeaguesComponent implements OnInit {
                     this.errorMessage = null;
                     this.successMessage = "Le regole della Lega '" + league.name + "' sono state scaricate."
                     league.rulesDownloaded = true;
+                    this.stopFakeServerUpdater();
                 },
                 error => {
                     this.loading = false;

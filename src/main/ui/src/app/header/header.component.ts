@@ -112,6 +112,7 @@ export class HeaderComponent implements OnInit {
         "customRules" : "Regole",
         "season" : "Stagione",
         "admin" : "Admin",
+        "report" : "Report"
      }
 
     getParams(){
