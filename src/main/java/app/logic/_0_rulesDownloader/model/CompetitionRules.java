@@ -16,6 +16,7 @@ public class CompetitionRules  implements Serializable {
 	private String binding;
 	private PostponementBehaviourEnum postponementBehaviour;
 	private Map<Integer, List<PostponementBean>> postponementMap;
+	private List<Integer> seasonDaysToJump;
 
 	
 	
@@ -61,6 +62,16 @@ public class CompetitionRules  implements Serializable {
 	public void setPostponementMap(Map<Integer, List<PostponementBean>> postponementsMap) {
 		this.postponementMap = postponementsMap;
 	}
+
+	public List<Integer> getSeasonDaysToJump() {
+		return seasonDaysToJump;
+	}
+
+	public void setSeasonDaysToJump(List<Integer> seasonDaysToJump) {
+		this.seasonDaysToJump = seasonDaysToJump;
+	}
+
+	
 	
 	
 

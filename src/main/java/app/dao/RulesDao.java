@@ -341,10 +341,18 @@ public class RulesDao {
 				postponementEnts.add(postEnt);
 			}
 		}
-		
-		
-		
 		e.setPostponements(postponementEnts);
+		
+		
+		String seasonDaysToJump = "";
+		if (b.getCompetitionRules().getSeasonDaysToJump()!= null) {
+			for (Integer i : b.getCompetitionRules().getSeasonDaysToJump()) {
+				seasonDaysToJump += i + "-";
+			}
+		}
+		
+		e.setSeasonDaysToJump(seasonDaysToJump);
+		
 		return e;
 	}
 
@@ -610,6 +618,17 @@ public class RulesDao {
 		bean.setType(RulesType.valueOf(e.getType()));
 		
 		
+		List<Integer> seasonDaysToJump = new ArrayList<Integer>();
+		String seasonDaysToJumpString = e.getSeasonDaysToJump();
+		if (seasonDaysToJumpString != null) { 
+			String[] seasonDaysToJumpSplit = seasonDaysToJumpString.split("-");
+			for (int i = 0; i< seasonDaysToJumpSplit.length; i++)
+				seasonDaysToJump.add(Integer.valueOf(seasonDaysToJumpSplit[i]));
+			
+		}
+		bean.getCompetitionRules().setSeasonDaysToJump(seasonDaysToJump);
+		
+		
 		return bean;
 	}
 	
@@ -783,6 +802,15 @@ public class RulesDao {
 		else if (!existWait && existAll6)	postponementBehaviour =  PostponementBehaviourEnum.ALL_6;;
 		ent.setPostponementBehaviour(postponementBehaviour.name());
 
+		
+		String seasonDaysToJump = "";
+		if (rulesClient.getCompetitionRules().getSeasonDaysToJump()!= null) {
+			for (Integer i : rulesClient.getCompetitionRules().getSeasonDaysToJump()) {
+				seasonDaysToJump += i + "-";
+			}
+		}
+		ent.setSeasonDaysToJump(seasonDaysToJump);
+		
 		rulesRepo.save(ent);
 		createCustomRules(ent);
 	}

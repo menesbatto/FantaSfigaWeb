@@ -70,10 +70,12 @@ public class SeasonDayAnalyzer {
 		for (LineUp lineUp : linesUp) {
 			
 			calculateTeamsFantaVote(lineUp, serieASeasonDay, voteMismatchesApp);
-			for (VoteMismatchBean miss: voteMismatchesApp)	
-				miss.setPlayer(lineUp.getTeamName());
-			voteMismatches.addAll(voteMismatchesApp);
-			voteMismatchesApp.clear();
+			if (!rules.getCompetitionRules().getSeasonDaysToJump().contains(serieASeasonDay)) {
+				for (VoteMismatchBean miss: voteMismatchesApp)	
+					miss.setPlayer(lineUp.getTeamName());
+				voteMismatches.addAll(voteMismatchesApp);
+				voteMismatchesApp.clear();
+			}
 		}
 		
 		// Calcola la formazione scesa in campo

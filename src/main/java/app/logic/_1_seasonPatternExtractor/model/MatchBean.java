@@ -77,7 +77,7 @@ public class MatchBean  implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return "" + getHomeTeam().substring(0,7) + "\t " + getAwayTeam().substring(0,7) + "\t "
+		return "" + getHomeTeam() + "\t " + getAwayTeam() + "\t "
 				+ getHomeTeamResult().getGoals() + "\t " + getAwayTeamResult().getGoals() + "\n";
 //		return "Match [getHomeTeam()=" + getHomeTeam() + "\n getAwayTeam()=" + getAwayTeam() + "\n getHomeTeamEnum()="
 //		+ getHomeTeamEnum() + "\n getAwayTeamEnum()=" + getAwayTeamEnum() + "\n getHomeTeamResult()="

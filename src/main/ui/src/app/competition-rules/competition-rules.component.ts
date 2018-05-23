@@ -98,6 +98,45 @@ import { Location } from '@angular/common';
             </div>
         </div>
 
+
+
+
+
+
+        <br>
+        <br>
+
+
+
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4><strong>Giornate di Serie A da saltare</strong></h4>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="seasonDayToJumpText"> Aggiungi giornata di Serie A da saltare </label>
+            <input type="number" name="seasonDayToJumpText" [(ngModel)]="seasonDayToJump" #seasonDayToJumpText="ngModel"/>
+            <button class="btn btn-primary"  (click) = "addSeasonDayToJump()"> Aggiungi </button>
+        </div>
+        
+        <div *ngIf="rules.competitionRules.seasonDaysToJump.length > 0">
+            <div class="row nobor col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div> <strong> Giornata di Serie A</strong> </div>
+                </div>
+            </div>
+
+            <div *ngFor="let seasonDay of rules.competitionRules.seasonDaysToJump" class="row nobor col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">   
+                    <div>{{seasonDay}}</div>
+                </div>   
+            </div>
+
+            <button class="btn btn-primary nobor"  (click) = "resetSeasonDaysToJump()"> Reset Giornate da Saltare </button>
+        </div>
+        
+
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-danger" *ngIf="errorMessage">
             <strong>{{errorMessage}}</strong>
         </div>
@@ -124,7 +163,7 @@ export class CompetitionRulesComponent implements OnInit {
     errorMessage = null;
     successMessage = null;
     rules = null;
-   
+    seasonDayToJump = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -133,6 +172,24 @@ export class CompetitionRulesComponent implements OnInit {
         private _location: Location,
 
     ) { }
+
+
+    addSeasonDayToJump(){
+        if (this.rules.competitionRules.seasonDaysToJump.indexOf(this.seasonDayToJump) < 0
+                && this.seasonDayToJump>0 
+                && this.seasonDayToJump<38) {
+            this.rules.competitionRules.seasonDaysToJump.push(this.seasonDayToJump);
+            this.errorMessage = null;
+        }
+        else {
+            this.successMessage= null;
+            this.errorMessage = "Inserisci una giornata di Serie A corretta";
+        }
+    }
+
+    resetSeasonDaysToJump(){
+        this.rules.competitionRules.seasonDaysToJump = [];
+    }
 
     behaviourChanged(behaviour){
       

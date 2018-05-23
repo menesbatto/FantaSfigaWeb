@@ -49,12 +49,8 @@ public class MainSeasonsExecutor {
 	public List<RankingBean> execute(List<SeasonBean> allSeasons, String leagueShortName, String competitionShortName, RulesBean rules, SeasonResultBean seasonResultBeanInput ){
 
 		SeasonResultBean seasonResultBean;
-//		if (seasonResultBeanInput == null) {
-//			seasonResultBean = leagueDao.findCalculatedSeasonResult(leagueShortName, competitionShortName, userBean.getUsername());
-//		}
-//		else {
-			seasonResultBean = seasonResultBeanInput;
-//		}
+		seasonResultBean = seasonResultBeanInput;
+
 		
 		long startTime = System.nanoTime();
 		System.out.println("Inizio esecuzione di tutti i calendari");
@@ -140,25 +136,27 @@ public class MainSeasonsExecutor {
 					LineUpLightBean awayTeamFromApp = getTeamFromApp(seasonDayFromApp.getLinesUpLight(), matchFromWeb.getAwayTeam());
 					
 					if (homeTeamFromApp != null) {
-						if (
-								!homeTeamFromApp.getSumTotalPoints().equals(homeTeamResultFromWeb.getSumTotalPoints())
-																	||
-								!awayTeamFromApp.getSumTotalPoints().equals(awayTeamResultFromWeb.getSumTotalPoints())
+						if (homeTeamFromApp.getSumTotalPoints()!= null) { // Questo controllo è utile per evitare di calcolare differenze su partite non giocate per una giornata saltata
+							if (
+									!homeTeamFromApp.getSumTotalPoints().equals(homeTeamResultFromWeb.getSumTotalPoints())
+																		||
+									!awayTeamFromApp.getSumTotalPoints().equals(awayTeamResultFromWeb.getSumTotalPoints())
+									
+								){
+								MatchMismatchBean mismatch = new MatchMismatchBean();
+								mismatch.setHomeLulApp(homeTeamFromApp);
+								mismatch.setAwayLulApp(awayTeamFromApp);
 								
-							){
-							MatchMismatchBean mismatch = new MatchMismatchBean();
-							mismatch.setHomeLulApp(homeTeamFromApp);
-							mismatch.setAwayLulApp(awayTeamFromApp);
-							
-							mismatch.setHomeLulWeb(homeTeamResultFromWeb);
-							mismatch.setAwayLulWeb(awayTeamResultFromWeb);
-							
-							mismatch.setCompetitonSeasonDay((Integer)(Integer.valueOf(j)+1) );
-							
-							mismatches.add(mismatch);
-							System.out.println("ERRORE \t Giornata della Competizione:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getHomeTeam() + "\tPunteggio da web:\t" + homeTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  homeTeamFromApp.getSumTotalPoints());
-							System.out.println("ERRORE \t Giornata della Competizione:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getAwayTeam() + "\tPunteggio da web:\t" + awayTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  awayTeamFromApp.getSumTotalPoints());
-		
+								mismatch.setHomeLulWeb(homeTeamResultFromWeb);
+								mismatch.setAwayLulWeb(awayTeamResultFromWeb);
+								
+								mismatch.setCompetitonSeasonDay((Integer)(Integer.valueOf(j)+1) );
+								
+								mismatches.add(mismatch);
+								System.out.println("ERRORE \t Giornata della Competizione:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getHomeTeam() + "\tPunteggio da web:\t" + homeTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  homeTeamFromApp.getSumTotalPoints());
+								System.out.println("ERRORE \t Giornata della Competizione:\t" + (Integer)(Integer.valueOf(j)+1) + "\tPartita:\t" +  matchFromWeb.getHomeTeam() + " - " + matchFromWeb.getAwayTeam() + "\tSquadra\t" +  matchFromWeb.getAwayTeam() + "\tPunteggio da web:\t" + awayTeamResultFromWeb.getSumTotalPoints() + "\tPunteggio da app:\t" +  awayTeamFromApp.getSumTotalPoints());
+			
+							}
 						}
 					}
 				}

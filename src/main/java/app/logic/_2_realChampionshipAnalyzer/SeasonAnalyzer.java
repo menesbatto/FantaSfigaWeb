@@ -115,8 +115,9 @@ public class SeasonAnalyzer {
 		
 		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = new HashMap<Integer, SeasonDayFromWebBean>();
 
-		Integer lastCalculatedWebSeasonDay = seasonPatternExtractor.lastCalculatedWebSeasonDay(leagueShortName, competitionShortName);
-
+//		Integer lastCalculatedWebSeasonDay = seasonPatternExtractor.lastCalculatedWebSeasonDay(leagueShortName, competitionShortName);
+		List<Integer> calculatedWebSeasonDays = seasonPatternExtractor.calculatedWebSeasonDay(leagueShortName, competitionShortName);
+		Integer lastCalculatedWebSeasonDay = calculatedWebSeasonDays.get(calculatedWebSeasonDays.size()-1);
 		
 		for (Entry<Integer, Integer> entry : seasonDayBind.entrySet()) {
 			
@@ -129,15 +130,18 @@ public class SeasonAnalyzer {
 			}
 			
 
-			
-			if (calculatedSeason.getSeasonDaysFromWeb().get(compSeasonDay) == null) {
-				List<LineUp> lineUpFromWeb = seasonDayAnalyzer.downloadSeasonDayLinesUpFromWeb(finalSeasonDayUrl + compSeasonDay);
-				SeasonDayFromWebBean seasonDayFromWeb = new SeasonDayFromWebBean();
-				seasonDayFromWeb.setLinesUp(lineUpFromWeb);
-				
-				seasonDaysFromWeb.put(compSeasonDay, seasonDayFromWeb);
-			}
-			
+//			if (calculatedWebSeasonDays.contains(compSeasonDay)){
+				if (calculatedSeason.getSeasonDaysFromWeb().get(compSeasonDay) == null) {
+					List<LineUp> lineUpFromWeb = seasonDayAnalyzer.downloadSeasonDayLinesUpFromWeb(finalSeasonDayUrl + compSeasonDay);
+					SeasonDayFromWebBean seasonDayFromWeb = new SeasonDayFromWebBean();
+					seasonDayFromWeb.setLinesUp(lineUpFromWeb);
+					
+					seasonDaysFromWeb.put(compSeasonDay, seasonDayFromWeb);
+				}
+//			}
+//			else {
+//				System.out.println("no calcolata");
+//			}
 			
 			
 		}
@@ -214,11 +218,11 @@ public class SeasonAnalyzer {
 			}
 
 			SeasonDayFromWebBean currentSeasonDayFromWeb = seasonDaysFromWeb.get(compSeasonDay);
-			
-			seasonDayResult = seasonDayAnalyzer.calculateSingleSeasonDay(currentSeasonDayFromWeb, serieASeasonDay , rules, map.get(serieASeasonDay+""), voteMismatches );
-			
-			seasonDayResults.add(seasonDayResult);
-			
+			if (currentSeasonDayFromWeb!= null) {
+				seasonDayResult = seasonDayAnalyzer.calculateSingleSeasonDay(currentSeasonDayFromWeb, serieASeasonDay , rules, map.get(serieASeasonDay+""), voteMismatches );
+				
+				seasonDayResults.add(seasonDayResult);
+			}
 			
 		}
 		

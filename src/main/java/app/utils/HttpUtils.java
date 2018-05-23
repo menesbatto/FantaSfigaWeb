@@ -229,7 +229,7 @@ public class HttpUtils {
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--allow-file-access-from-files");
 		options.addArguments("--verbose");
-		options.addArguments("load-extension=C:\\Users\\Menesbatto-PC\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cfhdojbkjhnklbpkdaibdccddilifddb\\3.0.3_0");
+		options.addArguments("load-extension=C:\\Users\\Menesbatto-PC\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cfhdojbkjhnklbpkdaibdccddilifddb\\3.1_0");
 		capabilities.setVersion("");
 		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 		

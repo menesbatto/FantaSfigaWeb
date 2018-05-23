@@ -44,15 +44,20 @@ public class SeasonExecutor {
 		
 		ranking.setPattern(season.getName());
 		for (int i = 0; i < realChampionshipResults.size(); i++) {
-			seasonDay = seasonDays.get(i);
-			seasonDayResult = realChampionshipResults.get(i);
-			if (seasonDayResult.getLinesUpLight().size() > 0) {	//Controllo per gestire le giornate in cui ci sono i rinvii
-				seasonDayResult = seasonDayExecutor.execute(seasonDay, seasonDayResult, rules, teams);
-				updateRanking(seasonDayResult, ranking);	
-//				updateFormulaUnoRanking(seasonDayResult, rules, formulaUnoRanking);
+			seasonDay = seasonDays.get(i);		seasonDays.size();		// le giornate della competizione i vari match A-B C-D ecc sono ottenute dalla pagine web sono 36 in questo caso
+			seasonDayResult = realChampionshipResults.get(i);			// le formazioni delle giornate sovra indicate sono 34
+			if (!rules.getCompetitionRules().getSeasonDaysToJump().contains(seasonDay.getSerieANumber())) {
+				if (seasonDayResult.getLinesUpLight().size() > 0) {	//Controllo per gestire le giornate in cui ci sono i rinvii
+					seasonDayResult = seasonDayExecutor.execute(seasonDay, seasonDayResult, rules, teams);
+					updateRanking(seasonDayResult, ranking);	
+	//				updateFormulaUnoRanking(seasonDayResult, rules, formulaUnoRanking);
+				}
+				else {
+					System.out.println( (i + 1) + "-" + seasonDay.getSerieANumber() + " Giornata da recuperare");
+				}
 			}
 			else {
-				System.out.println( (i + 1) + " Giornata da recuperare");
+				System.out.println( (i + 1) + "-" + seasonDay.getSerieANumber() + " Giornata saltata");
 			}
 		}
 		

@@ -194,6 +194,8 @@ public class Rules {
 	@OneToMany(cascade = {CascadeType.ALL})
 	private List<Postponement> postponements;
 	
+	private String seasonDaysToJump;
+	
 	public Rules() {
 	}
 
@@ -1317,6 +1319,14 @@ public class Rules {
 
 	public void setPostponements(List<Postponement> postponements) {
 		this.postponements = postponements;
+	}
+
+	public String getSeasonDaysToJump() {
+		return seasonDaysToJump;
+	}
+
+	public void setSeasonDaysToJump(String seasonDaysToJump) {
+		this.seasonDaysToJump = seasonDaysToJump;
 	}
 	
 	

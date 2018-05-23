@@ -234,7 +234,7 @@ public class LeagueDao {
 
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		SeasonResult seasonResult = seasonResultRepo.findByCompetition(competition);
-		
+		//seasonResultRepo.delete(206L);
 		if (seasonResult != null)
 			seasonResultRepo.delete(seasonResult);
 		

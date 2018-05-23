@@ -10,7 +10,7 @@ import { HeaderService } from '../header.service';
     <div>
     <!--<h3 align = "center">Le tue leghe </h3>-->
   
-    <div class="table-responsive">
+    <div class="table-responsive" *ngIf="report.voteMismatches">
         <table class="table">
             <thead>
                 <tr>
@@ -41,10 +41,10 @@ import { HeaderService } from '../header.service';
                 <tr>
             </tbody>
         </table>
-  </div> 
+    </div> 
 
 
-  <div class="table-responsive">
+    <div class="table-responsive" *ngIf="report.matchMismatches">
         <table class="table">
             <thead>
                 <tr>

@@ -118,12 +118,25 @@ public class SeasonPatternExtractor {
 		Elements seasonDayElements = downloadSeasonDayHtmlElements(leagueShortName, competitionShortName);
 	
 		for (int i = 0; i < seasonDayElements.size(); i++) {
+			int f = seasonDayElements.size()-i-1;
+			Element lineUpElem = seasonDayElements.get(f);
+			Elements results = lineUpElem.getElementsByClass("result");
+			if (!results.isEmpty())
+				return f+1;
+		}
+		return 0;
+	}
+	
+	public List<Integer> calculatedWebSeasonDay(String leagueShortName, String competitionShortName) {
+		Elements seasonDayElements = downloadSeasonDayHtmlElements(leagueShortName, competitionShortName);
+		List<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < seasonDayElements.size(); i++) {
 			Element lineUpElem = seasonDayElements.get(i);
 			Elements results = lineUpElem.getElementsByClass("result");
-			if (results.isEmpty())
-				return i;
+			if (!results.isEmpty())
+				list.add(i+1);
 		}
-		return seasonDayElements.size();
+		return list;
 	}
 
 
