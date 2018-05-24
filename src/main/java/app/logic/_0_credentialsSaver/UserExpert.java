@@ -272,6 +272,12 @@ public class UserExpert {
 		return true;
 	}
 
+	public LeagueBean resetLeague(String leagueShortName) {
+		LeagueBean league = leagueDao.resetLeague(leagueShortName, userBean.getUsername());
+		
+		return league;
+	}
+
 	
 	
 }

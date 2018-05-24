@@ -1079,4 +1079,20 @@ public class LeagueDao {
 	}
 
 
+	public LeagueBean resetLeague(String leagueShortName, String username) {
+		User user = userDao.retrieveByUsername(username);
+		League league = leagueRepo.findByUserAndShortName(user, leagueShortName);
+
+		List<Competition> ents = competitionRepo.findByLeague(league);
+		competitionRepo.delete(ents);
+		
+		LeagueBean leagueBean = new LeagueBean();
+		leagueBean.setName(league.getName());
+		leagueBean.setShortName(league.getShortName());
+		leagueBean.setUrl(league.getUrl());
+		
+		return leagueBean;
+	}
+
+
 }

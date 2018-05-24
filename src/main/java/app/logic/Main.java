@@ -155,6 +155,15 @@ public class Main {
 		SeasonBean seasonPattern = leagueDao.findSeason(leagueShortName, competitionShortName, userBean.getUsername(), "Pattern");
 		List<String> teams = leagueDao.findTeams(leagueShortName, userBean.getUsername());
 		Integer fantacalcioActualSeasonDay = bindings.get(serieAActualSeasonDay);
+		if (fantacalcioActualSeasonDay == null) {
+			fantacalcioActualSeasonDay = bindings.get(serieAActualSeasonDay-1);
+		}
+		if (fantacalcioActualSeasonDay == null) {
+			fantacalcioActualSeasonDay = bindings.get(serieAActualSeasonDay-2);
+		}
+		if (fantacalcioActualSeasonDay == null) {
+			fantacalcioActualSeasonDay = bindings.get(bindings.get(bindings.size()-1));
+		}
 		SeasonBean s = seasonGenerator.generateSingleSeason(pattern, 0, fantacalcioActualSeasonDay, seasonPattern, teams);
 
 		List<SeasonBean> allSeasons = new ArrayList<SeasonBean>();

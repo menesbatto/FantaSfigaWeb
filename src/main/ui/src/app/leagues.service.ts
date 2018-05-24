@@ -83,5 +83,11 @@ export class LeaguesService {
   retrieveReport(req){
     return this.http.post<any>('/app/api/retrieveReport/', req);
   }
+  resetLeague(leagueShortName) {
+    return this.http.get<any>('/app/api/resetLeague/' + leagueShortName);
+        
+  }
+  
 
+  
 }

@@ -61,7 +61,10 @@ public class AllSeasonsGenerator {
 		Integer fantacalcioActualSeasonDay = bindings.get(serieAActualSeasonDay);
 		if (fantacalcioActualSeasonDay == null)
 			fantacalcioActualSeasonDay = bindings.get(serieAActualSeasonDay-1);
-		
+		if (fantacalcioActualSeasonDay == null)
+			fantacalcioActualSeasonDay = bindings.get(serieAActualSeasonDay-2);
+		if (fantacalcioActualSeasonDay == null)
+			fantacalcioActualSeasonDay = bindings.get(bindings.size()-1);
 
 		
 		SeasonBean seasonPattern = leagueDao.findSeason(leagueShortName, competitionShortName, userBean.getUsername(), "Pattern");

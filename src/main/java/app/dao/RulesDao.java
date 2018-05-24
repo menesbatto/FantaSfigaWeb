@@ -384,7 +384,7 @@ public class RulesDao {
 		
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		Rules e = rulesRepo.findByCompetitionAndType(competition, type.name());
-		
+		//rulesRepo.delete(284L);
 		if(e==null) {
 			return new RulesBean();
 		}
@@ -620,7 +620,7 @@ public class RulesDao {
 		
 		List<Integer> seasonDaysToJump = new ArrayList<Integer>();
 		String seasonDaysToJumpString = e.getSeasonDaysToJump();
-		if (seasonDaysToJumpString != null) { 
+		if (seasonDaysToJumpString != null && !seasonDaysToJumpString.equals("")) { 
 			String[] seasonDaysToJumpSplit = seasonDaysToJumpString.split("-");
 			for (int i = 0; i< seasonDaysToJumpSplit.length; i++)
 				seasonDaysToJump.add(Integer.valueOf(seasonDaysToJumpSplit[i]));

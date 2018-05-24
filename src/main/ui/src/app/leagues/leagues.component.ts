@@ -18,6 +18,7 @@ import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
                 <td> {{league.name}} </td>
                 <td> <button  class="btn btn-primary" [disabled]="loading || league.competitionsDownloaded"  (click)="downloadCompetitions(league)"> Scarica </button>  </td>
                 <td> <button  class="btn btn-primary" [disabled]="loading || !league.competitionsDownloaded || !league.rulesDownloaded"  (click) = "goToCompetitions(league)"> Vai </button> </td>
+                <td> <button  class="btn btn-primary" [disabled]="loading"  (click) = "resetLeague(league)"> Reset </button> </td>
             <tr>
             </table>
         </div> 
@@ -99,7 +100,24 @@ export class LeaguesComponent implements OnInit {
         this.router.navigate(['/competitions', league.shortName])
     }
 
+    resetLeague(league){
+        this.leagueService.resetLeague(league.shortName)
+            .subscribe(
+                data => {
+                    this.loading = false;
+                    this.successMessage = "La lega è stata resettata ";
+                    league.competitionsDownloaded = false;
+                    league.rulesDownloaded = false;
+                },
+                error => {
+                    this.loading = false;
+                    this.loadingMessage = null;
+                    this.successMessage = null;
+                    this.errorMessage = "Errore del server";
+                })
 
+    }
+    
 
 
 

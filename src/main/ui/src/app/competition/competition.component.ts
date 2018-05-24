@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { LeaguesService } from '../leagues.service';
 import { HeaderService } from '../header.service';
 
+
 @Component({
     selector: 'app-competition',
     template: `
@@ -281,6 +282,43 @@ import { HeaderService } from '../header.service';
             </div>
             
             
+
+
+            <h2 align="center"> Inverti Calendario </h2>
+            <div class="row">
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fontevoti">Squadra 1:</label>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                    <select name="ctl00$main$team1" [(ngModel)]="team1"  class="form-control chk">
+                        <option *ngFor="let team of teams"  [value]="team">{{team}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" rel="tooltip" title="" data-original-title="Seleziona la fonte voti da cui attingere per il calcolo."></i></div>
+            </div>
+
+            
+            <div class="row">
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fontevoti">Squadra 2:</label>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                    <select name="ctl00$main$team2" [(ngModel)]="team2"  class="form-control chk">
+                        <option *ngFor="let team of teams"  [value]="team">{{team}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" rel="tooltip" title="" data-original-title="Seleziona la fonte voti da cui attingere per il calcolo."></i></div>
+            </div>
+
+            <div class="row nobor" >
+                <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6" >
+                    <label>Inverti Calendario</label>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <button [disabled]="!team1 || !team2" class="btn btn-primary btn-block" (click) = "invertSeason()"> OK </button>
+                </div>
+            </div>
+            
+
+
+
+
             <div class="row">
                 <div class="col-lg-12">
                     <h3> Classifica delle Posizioni Percentuali </h3>
@@ -289,6 +327,7 @@ import { HeaderService } from '../header.service';
                 </div>
             </div>
 
+            
             <div class="row">
                 <div class="col-lg-6">
                     <h3> Classifica Posizione Media </h3>
@@ -302,7 +341,9 @@ import { HeaderService } from '../header.service';
                 </div>
             </div>
         
-          
+
+
+
         
             <BR>
             <BR>
@@ -395,6 +436,10 @@ export class CompetitionComponent implements OnInit {
     successMessage = null;
 
     stats = null;
+
+    teams = [];
+    team1 = null;
+    team2 = null;
 
     model = {
         leagueShortName: null,
@@ -558,6 +603,12 @@ export class CompetitionComponent implements OnInit {
         
             this.headerService.changeTitleParam(this.competitionName);
 
+            
+            for (let i = 0; i<this.ctxRealRanking.ranking.rows.length; i++){
+                this.teams.push(this.ctxRealRanking.ranking.rows[i].name);
+            }
+            this.teams.sort();
+
         },
 
             error => {
@@ -671,6 +722,26 @@ export class CompetitionComponent implements OnInit {
 
     goToCompetitionRules(competition){
         this. router.navigate(['/competitionRules', {league : this.leagueShortName, competition : this.competitionShortName}])
+    }
+
+
+    invertSeason(){
+
+
+        let index1 = this.teams.indexOf(this.team1);
+        let index2 = this.teams.indexOf(this.team2);
+
+        let patternInit = "ABCDEFGHIKJLMNOP";
+        let pattern = patternInit.substr(0, this.teams.length);
+        
+        let letter1 = pattern[index1];
+        let letter2 = pattern[index2];
+        
+        pattern = pattern.slice(0,index1) + letter2 + pattern.slice(index1+1, pattern.length);
+        pattern = pattern.slice(0,index2) + letter1 + pattern.slice(index2+1, pattern.length);
+        
+        this.goToSeason(pattern, "Invertita " + this.team1 + " - " + this.team2);
+
     }
 
     goToSeason(pattern, teamIn) {

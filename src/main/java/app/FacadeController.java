@@ -1,16 +1,13 @@
 package app;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
-import app.dao.entity.Mismatch;
 import app.logic.Main;
 import app.logic._0_credentialsSaver.UserExpert;
 import app.logic._0_credentialsSaver.model.ConfirmUser;
@@ -32,17 +28,12 @@ import app.logic._0_rulesDownloader.RulesExpertMain;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._0_votesDownloader.MainSeasonVotesDowloader;
 import app.logic._1_seasonPatternExtractor.SeasonPatternExtractor;
-import app.logic._1_seasonPatternExtractor.model.MatchBean;
-import app.logic._1_seasonPatternExtractor.model.SeasonBean;
-import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._2_realChampionshipAnalyzer.ReportBean;
 import app.logic._2_realChampionshipAnalyzer.SeasonAnalyzer;
-import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
 import app.logic._3_seasonsGenerator.AllSeasonsGenerator;
 import app.logic._5_rankingAnalizer.RankingAnalyzer;
 import app.logic.model.CalculateStatsReq;
 import app.logic.model.CompetitionBean;
-import app.logic.model.CustomRulesReq;
 import app.logic.model.PostponementBean;
 import app.logic.model.RetrieveAllRankingsReq;
 import app.logic.model.RetrieveReportRes;
@@ -360,6 +351,25 @@ public class FacadeController {
 			body = "Downloading Competitions COMPLETED";
 		
 		ResponseEntity<List<CompetitionBean>> response = new ResponseEntity<List<CompetitionBean>>(competitionsInserted, HttpStatus.OK);
+		return response;
+	}
+	
+	//###################################################################
+	
+	// Per la lega inviata vengono scaricate le competizioni contenute
+	// RICHIAMATO DA USER 1 volta all'inizio
+
+	@RequestMapping(value = "/resetLeague/{leagueShortName}", method = RequestMethod.GET)
+	public ResponseEntity<LeagueBean> resetLeague(@PathVariable String leagueShortName) {
+		LeagueBean league = userExpert.resetLeague(leagueShortName);
+		
+		String body;
+		if (league == null)
+			body = "Downloading Competitions FAILED";
+		else
+			body = "Downloading Competitions COMPLETED";
+		
+		ResponseEntity<LeagueBean> response = new ResponseEntity<LeagueBean>(league, HttpStatus.OK);
 		return response;
 	}
 	
@@ -699,7 +709,7 @@ public class FacadeController {
 	
 	// Recupera la stagione dato il pattern
 	@RequestMapping(value = "/retrieveSeason", method = RequestMethod.POST)
-	public ResponseEntity<SeasonAndRankingRes> calculateRealStats(@RequestBody RetrieveSeasonReq req) {
+	public ResponseEntity<SeasonAndRankingRes> retrieveSeason(@RequestBody RetrieveSeasonReq req) {
 		CompetitionBean competition = req.getCompetition();
 		String competitionShortName = competition.getCompetitionShortName();
 		String leagueShortName = competition.getLeagueShortName();
@@ -734,6 +744,9 @@ public class FacadeController {
 		ResponseEntity<RetrieveReportRes> response = new ResponseEntity<RetrieveReportRes>(res, HttpStatus.OK);
 		return response;
 	}
+	
+	
+	
 	
 		
 }
