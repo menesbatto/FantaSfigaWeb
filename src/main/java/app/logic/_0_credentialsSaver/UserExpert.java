@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import app.RulesType;
 import app.dao.LeagueDao;
@@ -272,10 +273,15 @@ public class UserExpert {
 		return true;
 	}
 
+	@Transactional
 	public LeagueBean resetLeague(String leagueShortName) {
-		LeagueBean league = leagueDao.resetLeague(leagueShortName, userBean.getUsername());
+		List<CompetitionBean> competitions = leagueDao.findCompetitionsByLeague(leagueShortName, userBean.getUsername());
+		for (CompetitionBean comp : competitions) {
+			leagueDao.deleteCompetition(comp, userBean.getUsername());
+			rulesDao.deleteByCompetition(comp, userBean.getUsername());
+		}
 		
-		return league;
+		return null;
 	}
 
 	

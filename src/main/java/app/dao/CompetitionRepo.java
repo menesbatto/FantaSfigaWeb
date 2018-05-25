@@ -14,6 +14,8 @@ public interface CompetitionRepo extends JpaRepository<Competition, Long> {
 	Competition findByLeagueAndShortName(League league, String shortName);
 
 	List<Competition> findByLeague(League league);
+	
+	void deleteByLeague(League league);
 
 	
 	

@@ -11,4 +11,6 @@ public interface SeasonResultRepo extends JpaRepository<SeasonResult, Long> {
 
 	SeasonResult findByCompetition(Competition competition);
 
+	void deleteByCompetition(Competition comp);
+
 }

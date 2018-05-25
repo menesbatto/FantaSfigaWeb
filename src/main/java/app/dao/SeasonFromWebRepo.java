@@ -11,6 +11,8 @@ public interface SeasonFromWebRepo extends JpaRepository<SeasonFromWeb, Long> {
 
 	SeasonFromWeb findByCompetition(Competition competition);
 
+	void deleteByCompetition(Competition competition);
+
 //	League findByUserAndShortName(User user, String name);
 
 	

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import app.RulesType;
 import app.dao.entity.Competition;
@@ -196,7 +197,6 @@ public class LeagueDao {
 	public List<CompetitionBean> findCompetitionsByLeague(String leagueShortName, String username) {
 		User user = userDao.retrieveByUsername(username);
 		League league = leagueRepo.findByUserAndShortName(user, leagueShortName);
-
 		List<Competition> ents = competitionRepo.findByLeague(league);
 
 		List<CompetitionBean> beans = new ArrayList<CompetitionBean>();
@@ -1078,20 +1078,16 @@ public class LeagueDao {
 		return bean;
 	}
 
-
-	public LeagueBean resetLeague(String leagueShortName, String username) {
-		User user = userDao.retrieveByUsername(username);
-		League league = leagueRepo.findByUserAndShortName(user, leagueShortName);
-
-		List<Competition> ents = competitionRepo.findByLeague(league);
-		competitionRepo.delete(ents);
+	@Transactional
+	public void deleteCompetition(CompetitionBean comp, String username) {
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(comp.getCompetitionShortName(), comp.getLeagueName(), username);
+		seasonRepo.deleteByCompetition(competition);
+		mismatchRepo.deleteByCompetition(competition);
+		rankingRepo.deleteByCompetition(competition);
+		seasonResultRepo.deleteByCompetition(competition);
+		seasonFromWebRepo.deleteByCompetition(competition);
 		
-		LeagueBean leagueBean = new LeagueBean();
-		leagueBean.setName(league.getName());
-		leagueBean.setShortName(league.getShortName());
-		leagueBean.setUrl(league.getUrl());
 		
-		return leagueBean;
 	}
 
 

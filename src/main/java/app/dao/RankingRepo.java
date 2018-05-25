@@ -11,4 +11,6 @@ public interface RankingRepo extends JpaRepository<Ranking, Long> {
 
 	Ranking findByCompetitionAndNameAndRulesType(Competition competition, String name, String rulesType);
 
+	void deleteByCompetition(Competition competition);
+
 }

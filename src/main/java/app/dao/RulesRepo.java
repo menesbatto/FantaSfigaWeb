@@ -14,5 +14,6 @@ public interface RulesRepo extends JpaRepository<Rules, Long> {
 
 	List<Rules> findByLeague(League league);
 	Rules findByCompetitionAndType(Competition competition, String type);
+	void deleteByCompetition(Competition competition);
 
 }

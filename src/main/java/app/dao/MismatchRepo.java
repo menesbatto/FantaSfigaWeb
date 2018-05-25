@@ -14,6 +14,8 @@ import app.dao.entity.User;
 public interface MismatchRepo extends JpaRepository<Mismatch, Long> {
 
 	Mismatch findByCompetition(Competition competition);
+
+	void deleteByCompetition(Competition competition);
 	
 	
 

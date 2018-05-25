@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import app.RulesType;
 import app.dao.entity.Competition;
@@ -41,6 +42,7 @@ import app.logic._1_seasonPatternExtractor.model.SeasonBean;
 import app.logic._1_seasonPatternExtractor.model.SeasonDayBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
 import app.logic._2_realChampionshipAnalyzer.model.PostponementBehaviourEnum;
+import app.logic.model.CompetitionBean;
 import app.logic.model.IntegrateRulesReq;
 import app.logic.model.PostponementBean;
 
@@ -848,6 +850,13 @@ public class RulesDao {
 		RulesBean customRules = saveRulesForCompetition(realRules, competitionShortName, leagueShortName, username);
 			
 		return customRules;
+	}
+
+	@Transactional
+	public void deleteByCompetition(CompetitionBean comp, String username) {
+		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(comp.getCompetitionShortName(), comp.getLeagueShortName(), username);
+		rulesRepo.deleteByCompetition(competition);
+		
 	}
 
 	

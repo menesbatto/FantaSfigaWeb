@@ -11,4 +11,6 @@ public interface SeasonRepo extends JpaRepository<Season, Long> {
 
 	Season findByNameAndCompetition(String name, Competition competition);
 
+	void deleteByCompetition(Competition compEnt);
+
 }
