@@ -1,5 +1,8 @@
 package app.logic._2_realChampionshipAnalyzer.model;
 
+import java.util.List;
+
+import app.logic._0_votesDownloader.model.MantraRoleEnum;
 import app.logic._0_votesDownloader.model.RoleEnum;
 
 public class PlayerVote {
@@ -17,7 +20,9 @@ public class PlayerVote {
 	private Double fantaVoteFromWeb;
 	
 	private Boolean cards;
+	private boolean hasPlayed;
 	
+	private List<MantraRoleEnum> mantraRoles; 
 	
 	
 	public PlayerVote() {
@@ -102,20 +107,38 @@ public class PlayerVote {
 		this.fantaVoteFromWeb = fantaVoteFromWeb;
 	}
 
-	@Override
-	public String toString() {
-		return "PlayerVote [role=" + role + ", name=" + name + ", team=" + team + ", vote=" + vote + ", fantaVote="
-				+ fantaVote + ", alreadyUsed=" + alreadyUsed + ", goalkeerModifier=" + goalkeerModifier
-				+ ", strikerModifier=" + strikerModifier + ", voteFromWeb=" + voteFromWeb + ", fantaVoteFromWeb="
-				+ fantaVoteFromWeb + ", cards=" + cards + " ]";
-	}
-
 	public Boolean getCards() {
 		return cards;
 	}
 
 	public void setCards(Boolean cards) {
 		this.cards = cards;
+	}
+
+	public boolean isHasPlayed() {
+		return hasPlayed;
+	}
+
+	public void setHasPlayed(boolean hasPlayed) {
+		this.hasPlayed = hasPlayed;
+	}
+
+
+	public List<MantraRoleEnum> getMantraRoles() {
+		return mantraRoles;
+	}
+
+	public void setMantraRoles(List<MantraRoleEnum> mantraRoles) {
+		this.mantraRoles = mantraRoles;
+	}
+
+	@Override
+	public String toString() {
+		return "PlayerVote [role=" + role + ", name=" + name + ", team=" + team + ", vote=" + vote + ", fantaVote="
+				+ fantaVote + ", alreadyUsed=" + alreadyUsed + ", goalkeerModifier=" + goalkeerModifier
+				+ ", strikerModifier=" + strikerModifier + ", voteFromWeb=" + voteFromWeb + ", fantaVoteFromWeb="
+				+ fantaVoteFromWeb + ", cards=" + cards + ", hasPlayed=" + hasPlayed + ", mantraRoles=" + mantraRoles
+				+ "]";
 	}
 
 	

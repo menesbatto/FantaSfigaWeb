@@ -13,6 +13,7 @@ import app.logic._0_rulesDownloader.model.BonusMalus;
 import app.logic._0_rulesDownloader.model.MaxOfficeVotesEnum;
 import app.logic._0_rulesDownloader.model.Modifiers;
 import app.logic._0_rulesDownloader.model.RulesBean;
+import app.logic._0_votesDownloader.model.MantraRoleEnum;
 import app.logic._0_votesDownloader.model.PlayerVoteComplete;
 import app.logic._0_votesDownloader.model.RoleEnum;
 import app.logic._2_realChampionshipAnalyzer.model.LineUp;
@@ -68,13 +69,28 @@ public class SeasonDayAnalyzer {
 		this.rules = rules;
 		List<VoteMismatchBean> voteMismatchesApp = new ArrayList<VoteMismatchBean>();
 		for (LineUp lineUp : linesUp) {
-			
-			calculateTeamsFantaVote(lineUp, serieASeasonDay, voteMismatchesApp);
-			if (!rules.getCompetitionRules().getSeasonDaysToJump().contains(serieASeasonDay)) {
-				for (VoteMismatchBean miss: voteMismatchesApp)	
-					miss.setPlayer(lineUp.getTeamName());
-				voteMismatches.addAll(voteMismatchesApp);
-				voteMismatchesApp.clear();
+			if (lineUp.getFinalLineUp().size() > 0) {											// mantra
+				
+//				ho scritto a db anche i finalLineUp è l'ho recuperata, devi controllare quando non da la formazione
+//				ora invoco checkTeamsFantaVote che controlla solo se ci sono discrepanze tra voto ufficiale e voto in lega
+//				
+//				AAA devi salvare quando si becca il malus
+//				
+//				nel calculate realLineUp devi aggiungere i 4 e 0 d'ufficio.
+//				i 6 d'ufficio li becca gia da internet (non si possono cambiare per il mantra i recuperi)
+				
+				
+				
+				checkTeamsFantaVote(lineUp, serieASeasonDay, voteMismatchesApp);
+			}
+			else if (lineUp.getFinalLineUp().size() == 0 && lineUp.getReserves().size() > 0) {	// non mantra
+				calculateTeamsFantaVote(lineUp, serieASeasonDay, voteMismatchesApp);
+				if (!rules.getCompetitionRules().getSeasonDaysToJump().contains(serieASeasonDay)) {
+					for (VoteMismatchBean miss: voteMismatchesApp)	
+						miss.setPlayer(lineUp.getTeamName());
+					voteMismatches.addAll(voteMismatchesApp);
+					voteMismatchesApp.clear();
+				}
 			}
 		}
 		
@@ -136,7 +152,9 @@ public class SeasonDayAnalyzer {
 //
 
 
-
+	private void checkTeamsFantaVote(LineUp lineUp, Integer serieASeasonDay, List<VoteMismatchBean> voteMismatches) {
+		updatePlayers(serieASeasonDay, lineUp.getFinalLineUp(), voteMismatches);
+	}
 
 	private void calculateTeamsFantaVote(LineUp lineUp, Integer serieASeasonDay, List<VoteMismatchBean> voteMismatches) {
 		updatePlayers(serieASeasonDay, lineUp.getGoalKeeper(), voteMismatches);
@@ -649,43 +667,66 @@ public class SeasonDayAnalyzer {
 		PlayerVote playerVote;
 		
 		boolean reserveSection = false;
-
+		boolean isMantra = false;
+		
 		for (int i = 0; i < playersElem.size(); i++) {
 			Element playerElem = playersElem.get(i);
 			playerVote = getPlayer(playerElem);
+			
 			if ( i > 10 )
 				reserveSection = true;
-		
-			switch (playerVote.getRole()) {
-			case P:
-				if (!reserveSection)
-					lineUp.getGoalKeeper().add(playerVote);
-				else
-					lineUp.getReserves().add(playerVote);
-				break;
-			case D:
-				if (!reserveSection)
-					lineUp.getDefenders().add(playerVote);
-				else
-					lineUp.getReserves().add(playerVote);
-				break;
-			case C:
-				if (!reserveSection)
-					lineUp.getMidfielders().add(playerVote);
-				else
-					lineUp.getReserves().add(playerVote);
-				break;
-			case A:
-				if (!reserveSection)
-					lineUp.getStrikers().add(playerVote);
-				else
-					lineUp.getReserves().add(playerVote);
-				break;
-
-			default:
-				break;
+			
+			
+			
+			
+			if (!playerVote.getMantraRoles().isEmpty()) // se il primo giocatore che ha messo è un mantra ovvero ha Por nella lista	
+				isMantra = true;						// allora capisco che tutta la squadra è mantra.
+			if (isMantra && !playerVote.getRole().equals(RoleEnum.P)) {
+				playerVote.setRole(RoleEnum.M);
+			}
+			if (isMantra) {
+				if (playerVote.isHasPlayed()) {
+					lineUp.getFinalLineUp().add(playerVote);
+				}
+			}
+			else {
+				switch (playerVote.getRole()) {
+				case P:
+					if (!reserveSection) 
+						lineUp.getGoalKeeper().add(playerVote);
+					else
+						lineUp.getReserves().add(playerVote);
+					break;
+				case D:
+					if (!reserveSection)
+						lineUp.getDefenders().add(playerVote);
+					else
+						lineUp.getReserves().add(playerVote);
+					break;
+				case C:
+					if (!reserveSection)
+						lineUp.getMidfielders().add(playerVote);
+					else
+						lineUp.getReserves().add(playerVote);
+					break;
+				case A:
+					if (!reserveSection)
+						lineUp.getStrikers().add(playerVote);
+					else
+						lineUp.getReserves().add(playerVote);
+					break;
+	//			case M:
+	//				if (playerVote.isHasPlayed())
+	//					lineUp.getFinalLineUp().add(playerVote);
+	//				else
+	//					lineUp.getReserves().add(playerVote);
+	//				break;
+				default:
+					break;
+				}
 			}
 		} 
+		System.out.println(lineUp.getFinalLineUp().size());
 		// Middlefield Modifier non � calcolabile qui' ma solo a match in corso
 				Elements middlefieldModifierDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore centrocampo:");
 				Double middlefieldModifierFromWeb = middlefieldModifierDomElement.isEmpty() ? 0 : getVote(middlefieldModifierDomElement.get(0).siblingNodes().get(0).childNode(0).toString());
@@ -735,7 +776,28 @@ public class SeasonDayAnalyzer {
 
 	private PlayerVote getPlayer(Element playerElem) {
 		
-		RoleEnum role = RoleEnum.valueOf(playerElem.getElementsByClass("myhidden-xs").get(0).text());
+		Elements rolesString = playerElem.getElementsByClass("myhidden-xs").get(0).getElementsByTag("span");
+		
+		RoleEnum role = null;
+		try {
+			String roleString = rolesString.text();
+			if (roleString.equals("Por"))
+				role = RoleEnum.P;
+			else 
+				role = RoleEnum.valueOf(roleString);
+		} catch (Exception e) {
+			role = RoleEnum.M;
+		}
+		
+		MantraRoleEnum mantraRole = null;
+		List<MantraRoleEnum> mantraRoles = new ArrayList<MantraRoleEnum>();
+		try {
+			for (Element elem : rolesString) {
+				mantraRole = MantraRoleEnum.valueOf(elem.text());
+				mantraRoles.add(mantraRole);
+			}
+		}catch (Exception e) {}
+	
 		String name = playerElem.getElementsByClass("sh").get(0).text().toUpperCase();
 		name = name.replace(" *", "");
 		String team = playerElem.getElementsByClass("pt").get(0).text().toUpperCase();
@@ -750,8 +812,9 @@ public class SeasonDayAnalyzer {
 		pvcVote.setVoteFromWeb(voteFromWeb);
 		pvcVote.setFantaVoteFromWeb(fantaVoteFromWeb);
 		pvcVote.setRole(role);
-		
-
+		Boolean hasPlayed = !playerElem.hasClass("bnc");
+		pvcVote.setHasPlayed(hasPlayed);
+		pvcVote.setMantraRoles(mantraRoles);
 		
 		return pvcVote;
 	}
@@ -796,7 +859,7 @@ public class SeasonDayAnalyzer {
 							(p.getTakenGoals() * 		bonusMalus.getTakenGoal().get(p.getRole())) + 
 							(p.getEvenGoal() ?  		bonusMalus.getEvenGoal().get(p.getRole()) 			: 0) + 
 							(p.getWinGoal() ? 	 		bonusMalus.getWinGoal().get(p.getRole()) 			: 0);
-		
+		System.out.println(p);
 		if (rules.getPoints().isPortiereImbattutoActive()){
 			if (p.getRole().equals(RoleEnum.P)){
 				if (!p.getIsOfficeVote()) { //Avrò ugualmente diritto al bonus portiere imbattuto se schiero un portiere che, nei casi in cui è previsto, riceve un 6 politico?					No, in queste situazioni il bonus non viene assegnato. 

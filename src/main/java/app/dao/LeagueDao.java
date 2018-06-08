@@ -715,13 +715,16 @@ public class LeagueDao {
 		
 		LineUpFromWeb ent = new LineUpFromWeb();
 		String info = "";
-		
-		info += "#" + RoleEnum.P.name() + "@" + getPlayerVotesString(lineUp.getGoalKeeper());
-		info += "#" + RoleEnum.D.name() + "@" + getPlayerVotesString(lineUp.getDefenders());
-		info += "#" + RoleEnum.C.name() + "@" + getPlayerVotesString(lineUp.getMidfielders());
-		info += "#" + RoleEnum.A.name() + "@" + getPlayerVotesString(lineUp.getStrikers());
-		info += "#" + "R" 				+ "@" + getPlayerVotesString(lineUp.getReserves());
-		
+		if (lineUp.getFinalLineUp().size() > 0) {
+			info += "#" + "M"				+ "@" + getPlayerVotesString(lineUp.getFinalLineUp());
+		}
+		else {
+			info += "#" + RoleEnum.P.name() + "@" + getPlayerVotesString(lineUp.getGoalKeeper());
+			info += "#" + RoleEnum.D.name() + "@" + getPlayerVotesString(lineUp.getDefenders());
+			info += "#" + RoleEnum.C.name() + "@" + getPlayerVotesString(lineUp.getMidfielders());
+			info += "#" + RoleEnum.A.name() + "@" + getPlayerVotesString(lineUp.getStrikers());
+			info += "#" + "R" 				+ "@" + getPlayerVotesString(lineUp.getReserves());
+		}
 		ent.setName(lineUp.getTeamName());
 		ent.setInfo(info);
 		
@@ -847,6 +850,8 @@ public class LeagueDao {
 				bean.setStrikers(players);
 			}  else if (role.equals("R")) {
 				bean.setReserves(players);
+			}  else if (role.equals("M")) {
+				bean.setFinalLineUp(players);
 			} 
 		}
 	}
@@ -1080,11 +1085,11 @@ public class LeagueDao {
 
 	@Transactional
 	public void deleteCompetition(CompetitionBean comp, String username) {
-		Competition competition = findCompetitionByShortNameAndLeagueEnt(comp.getCompetitionShortName(), comp.getLeagueName(), username);
-		seasonRepo.deleteByCompetition(competition);
-		mismatchRepo.deleteByCompetition(competition);
-		rankingRepo.deleteByCompetition(competition);
-		seasonResultRepo.deleteByCompetition(competition);
+		Competition competition = findCompetitionByShortNameAndLeagueEnt(comp.getCompetitionShortName(), comp.getLeagueShortName(), username);
+//		seasonRepo.deleteByCompetition(competition);
+//		mismatchRepo.deleteByCompetition(competition);
+//		rankingRepo.deleteByCompetition(competition);
+//		seasonResultRepo.deleteByCompetition(competition);
 		seasonFromWebRepo.deleteByCompetition(competition);
 		
 		

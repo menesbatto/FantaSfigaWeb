@@ -276,6 +276,8 @@ export class CompetitionRulesComponent implements OnInit {
                     // });
                 
                     this.rules = data.realRules;
+                    if (!this.rules.competitionRules.postponementBehaviour)
+                        this.rules.competitionRules.postponementBehaviour = "ALL_6";
                 },
 
                 error => {

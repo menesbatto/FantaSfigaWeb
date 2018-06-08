@@ -166,15 +166,18 @@ public class RulesExpertMain {
 		
 		Modifiers m = new Modifiers();
 		
-		
-		m = getGoalKeeperModifiers(m, doc);
-		
-		m = getDefenderModifiers(m, doc);
-		
-		m = getMiddlefielderModifiers(m, doc);
-		
-		m = getStrickerModifiers(m, doc);
-		
+		// Controllo per mantra
+		Boolean isMantra = doc.getElementsMatchingOwnText("Modificatore portiere:").isEmpty();
+		if (!isMantra) {
+			m = getGoalKeeperModifiers(m, doc);
+			
+			m = getDefenderModifiers(m, doc);
+			
+			m = getMiddlefielderModifiers(m, doc);
+			
+			m = getStrickerModifiers(m, doc);
+			
+		}
 		m = getPerformanceModifiers(m, doc);
 		
 		m = getFairPlayMoodifiers(m, doc);
@@ -438,14 +441,16 @@ public class RulesExpertMain {
 		Integer numeroSostituzioni = Integer.valueOf(numeroSostituzioniString);
 		s.setSubstitutionNumber(numeroSostituzioni);
 		
-		String effettuaSostituzioni = doc.getElementsMatchingOwnText("Effettua sostituzioni:").parents().get(0).getElementsByAttribute("selected").text();
-		if (effettuaSostituzioni.equals("Con applicazione immediata del cambio modulo"))
-			s.setSubstitutionMode(SubstitutionsModeEnum.CHANGE_MODULE);
-		else if (effettuaSostituzioni.equals("Con cambio ruolo prioritario sul cambio modulo"))
-			s.setSubstitutionMode(SubstitutionsModeEnum.CHANGE_ROLE_THEN_CHANGE_MODULE);
-		else// if (effettuaSostituzioni.equals("Solo con cambio ruolo (senza cambio modulo)"))
-			s.setSubstitutionMode(SubstitutionsModeEnum.CHANGE_ROLE);
-			
+		Elements substitutionBehaviourElements = doc.getElementsMatchingOwnText("Effettua sostituzioni:");
+		if (substitutionBehaviourElements.size()>0) {	// Controllo per mantra
+			String effettuaSostituzioni = substitutionBehaviourElements.parents().get(0).getElementsByAttribute("selected").text();
+			if (effettuaSostituzioni.equals("Con applicazione immediata del cambio modulo"))
+				s.setSubstitutionMode(SubstitutionsModeEnum.CHANGE_MODULE);
+			else if (effettuaSostituzioni.equals("Con cambio ruolo prioritario sul cambio modulo"))
+				s.setSubstitutionMode(SubstitutionsModeEnum.CHANGE_ROLE_THEN_CHANGE_MODULE);
+			else// if (effettuaSostituzioni.equals("Solo con cambio ruolo (senza cambio modulo)"))
+				s.setSubstitutionMode(SubstitutionsModeEnum.CHANGE_ROLE);
+		}
 		String isAssegnaVotoAdAmmonitoSvActiveString = doc.getElementsByAttributeValue("id", "ammonitosv1").attr("checked");
 		Boolean isAssegnaVotoAdAmmonitoSvActive = isAssegnaVotoAdAmmonitoSvActiveString.equals("checked");
 		s.setYellowCardSvOfficeVoteActive(isAssegnaVotoAdAmmonitoSvActive);
@@ -665,14 +670,21 @@ public class RulesExpertMain {
 		val = Double.valueOf(valString); 
 		map.put(RoleEnum.D, val);
 		
-		valString = elements.get(2).val();
-		val = Double.valueOf(valString); 
-		map.put(RoleEnum.C, val);
-		
-		valString = elements.get(3).val();
-		val = Double.valueOf(valString); 
-		map.put(RoleEnum.A, val);
-		
+		if (elements.size()>2) {	//Competizione con regole normali
+			valString = elements.get(2).val();
+			val = Double.valueOf(valString); 
+			map.put(RoleEnum.C, val);
+			
+			valString = elements.get(3).val();
+			val = Double.valueOf(valString); 
+			map.put(RoleEnum.A, val);
+		}
+		//Competizione con regole mantra
+		else {
+			map.put(RoleEnum.C, val);
+			
+			map.put(RoleEnum.A, val);
+		}
 		return map;
 	}
 
