@@ -1,0 +1,264 @@
+<div  [ngClass]="{ 'customStats': rulesType && rulesType == 'CUSTOM'} ">
+
+    <div>
+        <div class="row nobor" >
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
+                <label>Scarica i dati</label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <button [disabled]="loading || isAlreadyDownloaded() && false" class="btn btn-primary btn-block" (click) = "downloadInfo()"> OK </button>
+            </div>
+        </div>
+            
+       
+
+
+                                                                        <!--<div class="row nobor">
+                                                                            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
+                                                                                <label>Scarica i risultati online delle partite giocate (dopo ogni giornata)</label>
+                                                                            </div>
+                                                                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                                                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "saveOnlineSeasonAndTeams()"> OK </button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row nobor">
+                                                                            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                                                                                <label> Scarica le formazioni inserite (dopo ogni giornata)</label>
+                                                                            </div>
+                                                                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                                                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> OK  </button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row nobor">
+                                                                            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                                                                                <label> Ricalcola i risultati sulla base di quanto scaricato (dopo ogni giornata)</label>
+                                                                            </div>
+                                                                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                                                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> OK  </button>
+                                                                            </div>
+                                                                        </div>-->
+        
+        
+
+                                                                        <!--<div class="row nobor">
+                                                                            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                                                                                <label> Calcola statistiche leggere </label>
+                                                                            </div>
+                                                                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                                                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> OK </button>
+                                                                            </div>
+                                                                        </div>-->
+        <div class="row nobor">
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                <label> Calcola statistiche (qualche secondo)</label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <button [disabled]="loading || isAlreadyCalculated() && false" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
+            </div>
+        </div>
+                                                                            <!--<div class="row nobor">
+                                                                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                                                                                    <label> Recupera le statistiche appena calcolate</label>
+                                                                                </div>
+                                                                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                                                                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> OK </button>
+                                                                                </div>
+                                                                            </div>-->
+
+        <div class="row nobor" >
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
+                <label>Vai al Report Errori</label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToReport()"> OK </button>
+            </div>
+        </div>
+     
+        
+        <div class="row nobor" *ngIf="rulesType=='REAL'">
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                <label> Integra Regole </label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCompetitionRules()"> OK </button>
+            </div>
+        </div>
+
+        
+
+        <div class="row nobor" *ngIf="rulesType=='CUSTOM'">
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
+                <label> Personalizza le regole</label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> OK </button>
+            </div>
+        </div>
+       
+
+
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+        <strong>{{errorMessage}}</strong>
+    </div>
+
+    <div class="alert alert-success" *ngIf="loadingMessage">
+        <strong>{{loadingMessage}}</strong>
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage">
+        <strong>{{successMessage}}</strong>
+    </div>
+
+
+
+
+    <div class="container" *ngIf="ctxFairRanking">
+        <h1 align="center"> FINALE </h1>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3> Classifica Finale </h3>
+                <app-table [rankingIn]="ctxRealRanking" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+            </div>
+        </div>
+    
+    
+        <div class="row">
+            <div class="col-lg-12">
+                <h3> Classifica con fattore casa invertito </h3>
+                <app-table [rankingIn]="ctxInvertHomeAwayRanking" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+            </div>
+        </div>
+
+
+        
+        <h1 align="center"> PUNTI </h1>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <h3> Classifica Reale </h3>
+                <app-table [rankingIn]="ctxRealLightRanking" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+            </div>
+            <div class="col-lg-4">
+                <h3> Classifica Giusta </h3>
+                <app-table [rankingIn]="ctxFairRanking" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+            </div>
+            <div class="col-lg-4">
+                <h3> Differenza dai Punti giusti </h3>
+                <app-table [rankingIn]="ctxDeltaFairRanking" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+            </div>
+        </div>
+    
+
+        <BR>
+        <BR>
+        <BR>
+        <BR>
+
+        <h1 align="center"> POSIZIONI </h1>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3> Classifica Posizioni </h3>
+                <app-table [rankingIn]="ctxPositionsRanking" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+            </div>
+        </div>
+        
+        
+
+
+        <h2 align="center"> Inverti Calendario </h2>
+        <div class="row">
+            <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fontevoti">Squadra 1:</label>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                <select name="ctl00$main$team1" [(ngModel)]="team1"  class="form-control chk">
+                    <option *ngFor="let team of teams"  [value]="team">{{team}}</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" rel="tooltip" title="" data-original-title="Seleziona la fonte voti da cui attingere per il calcolo."></i></div>
+        </div>
+
+        
+        <div class="row">
+            <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fontevoti">Squadra 2:</label>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                <select name="ctl00$main$team2" [(ngModel)]="team2"  class="form-control chk">
+                    <option *ngFor="let team of teams"  [value]="team">{{team}}</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" rel="tooltip" title="" data-original-title="Seleziona la fonte voti da cui attingere per il calcolo."></i></div>
+        </div>
+
+        <div class="row nobor" >
+            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6" >
+                <label>Inverti Calendario</label>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <button [disabled]="!team1 || !team2" class="btn btn-primary btn-block" (click) = "invertSeason()"> OK </button>
+            </div>
+        </div>
+        
+
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3> Classifica delle Posizioni Percentuali </h3>
+                <app-table [rankingIn]="ctxPositionsPercentaleRanking" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+            </div>
+        </div>
+
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <h3> Classifica Posizione Media </h3>
+                <app-table [rankingIn]="ctxAveragePositionRanking" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+            </div>
+            <div class="col-lg-6">
+                <h3> Classifica Differenza dalla Posizione Media </h3>
+                <app-table [rankingIn]="ctxDeltaPositionRankings" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+            </div>
+        </div>
+    
+
+
+
+    
+        <BR>
+        <BR>
+        <BR>
+        <BR>
+        <h1 align="center"> DETTAGLI </h1>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3> Classifica punti fatti o persi per mezzo punto </h3>
+                <app-table [rankingIn]="ctxLuckyEdgeRanking05" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+            </div>
+        </div>
+    
+        <BR>
+        <BR>
+        <BR>
+        <BR>
+
+        <div class="row">
+        <div class="col-lg-12">
+            <h3> Classifica punti fatti o persi per un punto </h3>
+            <app-table [rankingIn]="ctxLuckyEdgeRanking1" (goToSeasonClicked)=goToSeasonNew($event)></app-table>
+        </div>
+    </div>
+
+    <BR>
+    <BR>
+    <BR>
+    <BR>
+    
+    </div>
+ 
+
+</div>

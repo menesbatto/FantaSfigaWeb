@@ -6,400 +6,7 @@ import { HeaderService } from '../header.service';
 
 @Component({
     selector: 'app-competition',
-    template: `
-    <!-- prova su come si richiamanto components fratelli -->
-    <!-- <span>message: {{message}}</span>
-    <button class ="button" (click)="newMessage()"> prova a cambiare</button>
-  -->
-    <div  [ngClass]="{ 'customStats': rulesType && rulesType == 'CUSTOM'} ">
-        <!--<h3 align="center">Competitione </h3>-->
-        <!--<h3 align="center"><strong>{{competitionName | uppercase}}</strong></h3>-->
-
-        <div>
-            <div class="row nobor" >
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
-                    <label>Scarica i dati</label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading || isAlreadyDownloaded() && false" class="btn btn-primary btn-block" (click) = "downloadInfo()"> OK </button>
-                </div>
-            </div>
-                
-           
-
-
-                                                                            <!--<div class="row nobor">
-                                                                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
-                                                                                    <label>Scarica i risultati online delle partite giocate (dopo ogni giornata)</label>
-                                                                                </div>
-                                                                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                                                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "saveOnlineSeasonAndTeams()"> OK </button>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row nobor">
-                                                                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                                                                                    <label> Scarica le formazioni inserite (dopo ogni giornata)</label>
-                                                                                </div>
-                                                                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                                                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> OK  </button>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row nobor">
-                                                                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                                                                                    <label> Ricalcola i risultati sulla base di quanto scaricato (dopo ogni giornata)</label>
-                                                                                </div>
-                                                                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                                                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> OK  </button>
-                                                                                </div>
-                                                                            </div>-->
-            
-            
-
-                                                                            <!--<div class="row nobor">
-                                                                                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                                                                                    <label> Calcola statistiche leggere </label>
-                                                                                </div>
-                                                                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                                                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> OK </button>
-                                                                                </div>
-                                                                            </div>-->
-             <div class="row nobor">
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                    <label> Calcola statistiche (qualche secondo)</label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading || isAlreadyCalculated() && false" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
-                </div>
-            </div>
-                                                                                <!--<div class="row nobor">
-                                                                                    <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                                                                                        <label> Recupera le statistiche appena calcolate</label>
-                                                                                    </div>
-                                                                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                                                        <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> OK </button>
-                                                                                    </div>
-                                                                                </div>-->
-
-            <div class="row nobor" >
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8" >
-                    <label>Vai al Report Errori</label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToReport()"> OK </button>
-                </div>
-            </div>
-         
-            
-            <div class="row nobor" *ngIf="rulesType=='REAL'">
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                    <label> Integra Regole </label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCompetitionRules()"> OK </button>
-                </div>
-            </div>
-
-            
-
-            <div class="row nobor" *ngIf="rulesType=='CUSTOM'">
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8">
-                    <label> Personalizza le regole</label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> OK </button>
-                </div>
-            </div>
-           
-
-
-        </div>
-
-        <div class="alert alert-danger" *ngIf="errorMessage">
-            <strong>{{errorMessage}}</strong>
-        </div>
- 
-        <div class="alert alert-success" *ngIf="loadingMessage">
-            <strong>{{loadingMessage}}</strong>
-        </div>
-
-        <div class="alert alert-success" *ngIf="successMessage">
-            <strong>{{successMessage}}</strong>
-        </div>
-
-        
-        <ng-template #rankingTable let-rankingIn="ranking">
-        <div class="table-responsive" *ngIf= "rankingIn" >
-            <table class="table table-striped">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Pos</th>
-                        <th>Squadra</th>
-                        <th *ngIf= "rankingIn.rows[0].points">Punti</th>
-                        <th *ngIf= "rankingIn.rows[0].scoredGoals">Gol Fatti</th>
-                        <th *ngIf= "rankingIn.rows[0].takenGoals">Gol Subiti</th>
-                        <th *ngIf= "rankingIn.rows[0].sumAllVotes">Somma punteggio</th>
-                        <th *ngIf= "rankingIn.rows[0].positions && rankingIn.rows[0].positions[0] != undefined">1</th>
-                        <th *ngIf= "rankingIn.rows[0].positions && rankingIn.rows[0].positions[1] != undefined">2</th>
-                        <th *ngIf= "rankingIn.rows[0].positions && rankingIn.rows[0].positions[2] != undefined">3</th>
-                        <th *ngIf= "rankingIn.rows[0].positions && rankingIn.rows[0].positions[3] != undefined">4</th>
-                        <th *ngIf= "rankingIn.rows[0].positions && rankingIn.rows[0].positions[4] != undefined">5</th>
-                        <th *ngIf= "rankingIn.rows[0].positions && rankingIn.rows[0].positions[5] != undefined">6</th>
-                        <th *ngIf= "rankingIn.rows[0].positions && rankingIn.rows[0].positions[6] != undefined">7</th>
-                        <th *ngIf= "rankingIn.rows[0].positions && rankingIn.rows[0].positions[7] != undefined">8</th>
-                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Sculate</th>
-                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Punti Sculate</th>
-                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Sfighe</th>
-                        <th *ngIf= "rankingIn.rows[0].luckyEdge">Punti persi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor = "let team of rankingIn.rows; index as i; ">
-                        <td>{{i+1}}</td>
-                        <td>{{team.name}}</td>
-                        <td *ngIf= "team.points">{{team.points | number:'0.0-3'}}</td>
-                        <td *ngIf= "team.scoredGoals">{{team.scoredGoals}}</td>
-                        <td *ngIf= "team.takenGoals">{{team.takenGoals}}</td>
-                        <td *ngIf= "team.sumAllVotes">{{team.sumAllVotes}}</td>
-                        
-                        <td *ngIf= "team.positions && team.positions[0] != undefined">
-                            <button *ngIf="team.bestPosition== 1" class="btn btn-primary btn-block" (click) = "goToSeason(team.bestPattern, team.name)">{{team.positions[0]}}</button>
-                            <button *ngIf="team.worstPosition== 1" class="btn btn-primary btn-block"(click) = "goToSeason(team.worstPattern, team.name)">{{team.positions[0]}}</button>
-                            <span *ngIf="team.bestPosition!=1 && team.worstPosition!=1">{{team.positions[0]}}</span>
-                        </td>
-                        
-                        <td *ngIf= "team.positions && team.positions[1] != undefined">
-                            <button *ngIf="team.bestPosition== 2" class="btn btn-primary btn-block"(click) = "goToSeason(team.bestPattern, team.name)">{{team.positions[1]}}</button>
-                            <button *ngIf="team.worstPosition== 2" class="btn btn-primary btn-block"(click) = "goToSeason(team.worstPattern, team.name)">{{team.positions[1]}}</button>
-                            <span *ngIf="team.bestPosition!=2 && team.worstPosition!=2">{{team.positions[1]}}</span>
-                        </td>
-                       
-                        <td *ngIf= "team.positions && team.positions[2] != undefined">
-                            <button *ngIf="team.bestPosition==3" class="btn btn-primary btn-block"(click) = "goToSeason(team.bestPattern, team.name)">{{team.positions[2]}}</button>
-                            <button *ngIf="team.worstPosition== 3" class="btn btn-primary btn-block"(click) = "goToSeason(team.worstPattern, team.name)">{{team.positions[2]}}</button>
-                            <span *ngIf="team.bestPosition!=3 && team.worstPosition!=3">{{team.positions[2]}}</span>
-                        </td>
-
-                        <td *ngIf= "team.positions && team.positions[3] != undefined">
-                            <button *ngIf="team.bestPosition== 4" class="btn btn-primary btn-block"(click) = "goToSeason(team.bestPattern, team.name)">{{team.positions[3]}}</button>
-                            <button *ngIf="team.worstPosition== 4" class="btn btn-primary btn-block"(click) = "goToSeason(team.worstPattern, team.name)">{{team.positions[3]}}</button>
-                            <span *ngIf="team.bestPosition!=4 && team.worstPosition!=4">{{team.positions[3]}}</span>
-                        </td>
-
-                        <td *ngIf= "team.positions && team.positions[4] != undefined">
-                            <button *ngIf="team.bestPosition== 5" class="btn btn-primary btn-block"(click) = "goToSeason(team.bestPattern, team.name)">{{team.positions[4]}}</button>
-                            <button *ngIf="team.worstPosition== 5" class="btn btn-primary btn-block"(click) = "goToSeason(team.worstPattern, team.name)">{{team.positions[4]}}</button>
-                            <span *ngIf="team.bestPosition!=5 && team.worstPosition!=5">{{team.positions[4]}}</span>
-                        </td>
-
-                        <td *ngIf= "team.positions && team.positions[5] != undefined">
-                            <button *ngIf="team.bestPosition== 6" class="btn btn-primary btn-block"(click) = "goToSeason(team.bestPattern, team.name)">{{team.positions[5]}}</button>
-                            <button *ngIf="team.worstPosition== 6" class="btn btn-primary btn-block"(click) = "goToSeason(team.worstPattern, team.name)">{{team.positions[5]}}</button>
-                            <span *ngIf="team.bestPosition!=6 && team.worstPosition!=6">{{team.positions[5]}}</span>
-                        </td>
-
-                        <td *ngIf= "team.positions && team.positions[6] != undefined">
-                            <button *ngIf="team.bestPosition== 7" class="btn btn-primary btn-block"(click) = "goToSeason(team.bestPattern, team.name)">{{team.positions[6]}}</button>
-                            <button *ngIf="team.worstPosition== 7" class="btn btn-primary btn-block"(click) = "goToSeason(team.worstPattern, team.name)">{{team.positions[6]}}</button>
-                            <span *ngIf="team.bestPosition!=7 && team.worstPosition!=7">{{team.positions[6]}}</span>
-                        </td>
-
-                        <td *ngIf= "team.positions && team.positions[7] != undefined">
-                            <button *ngIf="team.bestPosition== 8" class="btn btn-primary btn-block"(click) = "goToSeason(team.bestPattern, team.name)">{{team.positions[7]}}</button>
-                            <button *ngIf="team.worstPosition== 8" class="btn btn-primary btn-block"(click) = "goToSeason(team.worstPattern, team.name)">{{team.positions[7]}}</button>
-                            <span *ngIf="team.bestPosition!=8 && team.worstPosition!=8">{{team.positions[7]}}</span>
-                        </td>
-                        
-                       
-                        <td *ngIf= "team.luckyEdge">{{team.luckyEdge.luckyEdgeNumber}}</td>
-                        <td *ngIf= "team.luckyEdge">{{team.luckyEdge.luckyEdgeGain}}</td>
-                        <td *ngIf= "team.luckyEdge">{{team.luckyEdge.unluckyEdgeNumber}}</td>
-                        <td *ngIf= "team.luckyEdge">{{team.luckyEdge.unluckyEdgeLose}}</td>
-                     </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        </ng-template>
-
-
-
-        <div class="container" *ngIf="ctxFairRanking.ranking">
-            <h1 align="center"> FINALE </h1>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3> Classifica Finale </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxRealRanking">
-                    </ng-container>
-                </div>
-            </div>
-        
-        
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3> Classifica con fattore casa invertito </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxInvertHomeAwayRanking">
-                    </ng-container>
-                </div>
-            </div>
-
-
-            
-            <h1 align="center"> PUNTI </h1>
-
-            <div class="row">
-                <div class="col-lg-4">
-                    <h3> Classifica Reale </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxRealLightRanking">
-                    </ng-container>
-                </div>
-                <div class="col-lg-4">
-                    <h3> Classifica Giusta </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxFairRanking">
-                    </ng-container>       
-                </div>
-                <div class="col-lg-4">
-                    <h3> Differenza dai Punti giusti </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxDeltaFairRanking">
-                    </ng-container>
-                </div>
-            </div>
-        
-
-            <BR>
-            <BR>
-            <BR>
-            <BR>
-
-            <h1 align="center"> POSIZIONI </h1>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3> Classifica Posizioni </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxPositionsRanking">
-                    </ng-container>       
-                </div>
-            </div>
-            
-            
-
-
-            <h2 align="center"> Inverti Calendario </h2>
-            <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fontevoti">Squadra 1:</label>
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                    <select name="ctl00$main$team1" [(ngModel)]="team1"  class="form-control chk">
-                        <option *ngFor="let team of teams"  [value]="team">{{team}}</option>
-                    </select>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" rel="tooltip" title="" data-original-title="Seleziona la fonte voti da cui attingere per il calcolo."></i></div>
-            </div>
-
-            
-            <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fontevoti">Squadra 2:</label>
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                    <select name="ctl00$main$team2" [(ngModel)]="team2"  class="form-control chk">
-                        <option *ngFor="let team of teams"  [value]="team">{{team}}</option>
-                    </select>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" rel="tooltip" title="" data-original-title="Seleziona la fonte voti da cui attingere per il calcolo."></i></div>
-            </div>
-
-            <div class="row nobor" >
-                <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6" >
-                    <label>Inverti Calendario</label>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <button [disabled]="!team1 || !team2" class="btn btn-primary btn-block" (click) = "invertSeason()"> OK </button>
-                </div>
-            </div>
-            
-
-
-
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3> Classifica delle Posizioni Percentuali </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxPositionsPercentaleRanking">
-                    </ng-container>
-                </div>
-            </div>
-
-            
-            <div class="row">
-                <div class="col-lg-6">
-                    <h3> Classifica Posizione Media </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxAveragePositionRanking">
-                    </ng-container>
-                </div>
-                <div class="col-lg-6">
-                    <h3> Classifica Differenza dalla Posizione Media </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxDeltaPositionRankings">
-                    </ng-container>
-                </div>
-            </div>
-        
-
-
-
-        
-            <BR>
-            <BR>
-            <BR>
-            <BR>
-            <h1 align="center"> DETTAGLI </h1>
-
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <h3> Classifica punti fatti o persi per mezzo punto </h3>
-                    <ng-container *ngTemplateOutlet="rankingTable;context:ctxLuckyEdgeRanking05">
-                    </ng-container>
-                </div>
-            </div>
-        
-            <BR>
-            <BR>
-            <BR>
-            <BR>
-
-            <div class="row">
-            <div class="col-lg-12">
-                <h3> Classifica punti fatti o persi per un punto </h3>
-                <ng-container *ngTemplateOutlet="rankingTable;context:ctxLuckyEdgeRanking1">
-                </ng-container>
-            </div>
-        </div>
-    
-        <BR>
-        <BR>
-        <BR>
-        <BR>
-        
-        </div>
-     
-
-        <!--<ng-template #estimateTemplate let-lessonsCounter="estimate">
-            <div> Approximately {{lessonsCounter}} lessons ...</div>
-        </ng-template>
-        
-        
-        <ng-container *ngTemplateOutlet="estimateTemplate;context:ctx">
-        </ng-container>
-
-        <ng-container *ngTemplateOutlet="estimateTemplate;context:ctx2">
-        </ng-container>
-
-        -->
-
-
-        <!--<button class="btn btn-primary"(click) = "backToCompetitions()"> Torna alle competizioni </button>-->
-       
-    </div>
-
-    `,
+    templateUrl: 'competition.component.html',
     styles: []
 })
 export class CompetitionComponent implements OnInit {
@@ -408,22 +15,22 @@ export class CompetitionComponent implements OnInit {
     ctx = { estimate: this.totalEstimate };
     ctx2 = { estimate: 20 };
 
-    ctxRealRanking = { ranking: null };
-    ctxRealLightRanking = { ranking: null };
+    ctxRealRanking:any;
+    ctxRealLightRanking:any;
     
 
-    ctxFairRanking = { ranking: null };
-    ctxDeltaFairRanking = { ranking: null };
+    ctxFairRanking:any;
+    ctxDeltaFairRanking:any;
     
     
-    ctxPositionsRanking = { ranking: null };
-    ctxPositionsPercentaleRanking = { ranking: null };
-    ctxAveragePositionRanking = { ranking: null };
-    ctxDeltaPositionRankings = { ranking: null };
+    ctxPositionsRanking:any;
+    ctxPositionsPercentaleRanking:any;
+    ctxAveragePositionRanking:any;
+    ctxDeltaPositionRankings:any;
 
-    ctxInvertHomeAwayRanking = { ranking: null };
-    ctxLuckyEdgeRanking05 = { ranking: null };
-    ctxLuckyEdgeRanking1 = { ranking: null };
+    ctxInvertHomeAwayRanking:any;
+    ctxLuckyEdgeRanking05:any;
+    ctxLuckyEdgeRanking1:any;
 
     rulesType = null;
 
@@ -582,30 +189,29 @@ export class CompetitionComponent implements OnInit {
             this.stats = data;
             this.competitionName = data.competition.name;
             
-            this.ctxRealRanking.ranking = this.stats.realRanking;
-            this.ctxRealLightRanking.ranking = this.stats.realLightRanking;
+            this.ctxRealRanking = this.stats.realRanking;
+            this.ctxRealLightRanking = this.stats.realLightRanking;
             
 
-            this.ctxFairRanking.ranking = this.stats.fairRanking;
-            this.ctxDeltaFairRanking.ranking = this.stats.deltaFairRanking;
+            this.ctxFairRanking = this.stats.fairRanking;
+            this.ctxDeltaFairRanking = this.stats.deltaFairRanking;
             
             
-            this.ctxPositionsRanking.ranking = this.stats.positionsRanking;
-            console.log(this.stats.positionsRanking);
-            this.ctxDeltaPositionRankings.ranking = this.stats.deltaPositionRankings;
-            this.ctxAveragePositionRanking.ranking = this.stats.averagePositionRanking;
-            this.ctxPositionsPercentaleRanking.ranking = this.stats.positionsPercentaleRanking;
+            this.ctxPositionsRanking = this.stats.positionsRanking;
+            this.ctxDeltaPositionRankings = this.stats.deltaPositionRankings;
+            this.ctxAveragePositionRanking = this.stats.averagePositionRanking;
+            this.ctxPositionsPercentaleRanking = this.stats.positionsPercentaleRanking;
 
             
-            this.ctxInvertHomeAwayRanking.ranking =  this.stats.invertHomeAwayRanking;
-            this.ctxLuckyEdgeRanking05.ranking =  this.stats.luckyEdgeRanking05;
-            this.ctxLuckyEdgeRanking1.ranking =  this.stats.luckyEdgeRanking1;
+            this.ctxInvertHomeAwayRanking =  this.stats.invertHomeAwayRanking;
+            this.ctxLuckyEdgeRanking05 =  this.stats.luckyEdgeRanking05;
+            this.ctxLuckyEdgeRanking1 =  this.stats.luckyEdgeRanking1;
         
             this.headerService.changeTitleParam(this.competitionName);
 
             
-            for (let i = 0; i<this.ctxRealRanking.ranking.rows.length; i++){
-                this.teams.push(this.ctxRealRanking.ranking.rows[i].name);
+            for (let i = 0; i<this.ctxRealRanking.rows.length; i++){
+                this.teams.push(this.ctxRealRanking.rows[i].name);
             }
             this.teams.sort();
 
@@ -745,6 +351,12 @@ export class CompetitionComponent implements OnInit {
     }
 
     goToSeason(pattern, teamIn) {
+        this. router.navigate(['/season', {league : this.leagueShortName, competition : this.competitionShortName, season: pattern, team:teamIn, rulesType: this.rulesType}])
+    }
+
+    goToSeasonNew(req) {
+        let pattern = req.pattern;
+        let teamIn = req.team;
         this. router.navigate(['/season', {league : this.leagueShortName, competition : this.competitionShortName, season: pattern, team:teamIn, rulesType: this.rulesType}])
     }
 

@@ -27,6 +27,8 @@ import { SeasonComponent } from './season/season.component';
 import { HeaderComponent } from './header/header.component';
 import { HeaderService } from './header.service';
 import { ReportComponent } from './report/report.component';
+import { TableComponent } from './table/table.component';
+import { PostponementsComponent } from './postponements/postponements.component';
 
 
 
@@ -49,7 +51,9 @@ import { ReportComponent } from './report/report.component';
     AdminComponent,
     SeasonComponent,
     HeaderComponent,
-    ReportComponent
+    ReportComponent,
+    TableComponent,
+    PostponementsComponent
     ],
   imports: [
     BrowserModule,
