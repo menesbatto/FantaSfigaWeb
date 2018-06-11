@@ -10,6 +10,8 @@ import { Location } from '@angular/common';
 })
 export class CustomRulesComponent implements OnInit {
 
+modalText:string = ''; 
+
     errorMessage = null;
     successMessage = null;
 
@@ -24,11 +26,17 @@ export class CustomRulesComponent implements OnInit {
     realRules = null;
    
     bonusMalus: any = null;
+    showBonusMalus:boolean = false;
     dataSource: any = null;
+    showDataSource:boolean = false;
     points: any = null;
+    showPoints:boolean = false;
     substitutions: any = null;
+    showSubstitutions:boolean = false;
     modifiers: any = null;
+    showModifiers:boolean = false;
     competitionRules: any = null;
+    showCompetitionRules:boolean = false;
 
 
 
@@ -56,6 +64,9 @@ export class CustomRulesComponent implements OnInit {
         this.retrieveCustomRules();
     }
 
+    updateModalText(text:string){
+        this.modalText = text;
+    }
 
     retrieveCustomRules() {
         let retrieveRulesReq = {
@@ -80,7 +91,7 @@ export class CustomRulesComponent implements OnInit {
                     this.modifiers = data.customRules.modifiers;
                     this.competitionRules = data.customRules.competitionRules;
 
-                    this.handlePostponements();
+                    // this.handlePostponements();
 
                 },
 
@@ -117,7 +128,7 @@ export class CustomRulesComponent implements OnInit {
                 this.substitutions = data.substitutions;
                 this.modifiers = data.modifiers;
                 this.competitionRules = data.competitionRules;
-                this.handlePostponements();
+
 
                 this.successMessage = "Le regole custom sono state resettate";
                 this.errorMessage = null;
@@ -161,62 +172,6 @@ export class CustomRulesComponent implements OnInit {
                 });
 
         this.errorMessage = null;
-    }
-
-
-    handlePostponements(){
-        let mapPost = this.competitionRules.postponementMap;
-        for (var property in mapPost) {
-            if (mapPost.hasOwnProperty(property)) {
-                this.map.set(property, mapPost[property]);
-            }
-        };
-                   
-    }
-
-    behaviourChanged(behaviour){
-      
-        this.map.forEach((value: string, key: string) => {
-            for (var i = 0; i< value.length; i++){
-                if (behaviour == "ALL_6")
-                    value[i]["wait"]= false;
-                else if (behaviour == "WAIT_MATCHES")
-                    value[i]["wait"]= true;
-            }
-             
-        });
-    }
-    
-    invertWait(postponement){
-        postponement.wait = !postponement.wait;
-        let isAll6 = false;
-        let isWait = false;
-        this.map.forEach((value: string, key: string) => {
-           for (var i = 0; i< value.length; i++){
-                if (value[i]["wait"])    
-                    isWait = true;
-                else 
-                    isAll6 = true;
-           }
-            
-        });
-        if (isWait && !isAll6)
-            this.competitionRules.postponementBehaviour = "WAIT_MATCHES";
-        else if (!isWait && isAll6)
-            this.competitionRules.postponementBehaviour = "ALL_6";
-        else if (isWait && isAll6)
-            this.competitionRules.postponementBehaviour = "MIXED";
-
-    }
-
-    getList(key){
-        return this.map.get(key);
-    }
-
-    map = new Map<String, String>();
-
-    getKeys(map){
-        return Array.from(map.keys());
     }
 
 

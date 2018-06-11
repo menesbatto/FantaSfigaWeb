@@ -6,7 +6,6 @@ import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-login',
   template:   `
-
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <!--<h2 align = "center">Login</h2>-->
         <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>

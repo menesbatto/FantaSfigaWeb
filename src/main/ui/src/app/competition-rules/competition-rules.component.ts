@@ -5,7 +5,7 @@ import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-competition-rules',
-    templateUrl: 'competition-rules.html',
+    templateUrl: 'competition-rules.component.html',
     styles: []
 })
 export class CompetitionRulesComponent implements OnInit {
@@ -42,53 +42,7 @@ export class CompetitionRulesComponent implements OnInit {
         this.rules.competitionRules.seasonDaysToJump = [];
     }
 
-    behaviourChanged(behaviour){
-      
-        this.map.forEach((value: string, key: string) => {
-            for (var i = 0; i< value.length; i++){
-                if (behaviour == "ALL_6")
-                    value[i]["wait"]= false;
-                else if (behaviour == "WAIT_MATCHES")
-                    value[i]["wait"]= true;
-            }
-             
-        });
-    }
-    
-    invertWait(postponement){
-        postponement.wait = !postponement.wait;
-        let isAll6 = false;
-        let isWait = false;
-        this.map.forEach((value: string, key: string) => {
-           for (var i = 0; i< value.length; i++){
-                if (value[i]["wait"])    
-                    isWait = true;
-                else 
-                    isAll6 = true;
-                
-           }
-            
-        });
-        if (isWait && !isAll6)
-            this.rules.competitionRules.postponementBehaviour = "WAIT_MATCHES";
-        else if (!isWait && isAll6)
-            this.rules.competitionRules.postponementBehaviour = "ALL_6";
-        else if (isWait && isAll6)
-            this.rules.competitionRules.postponementBehaviour = "MIXED";
-
-    }
-
-    getList(key){
-        //console.log(this.map.get(key));
-        return this.map.get(key);
-    }
-
-    map = new Map<String, String>();
-
-    getKeys(map){
-        return Array.from(map.keys());
-    }
-
+  
     ngOnInit() {
         this.route.paramMap.subscribe((params: ParamMap) => {
             let url1 = params.get('competition');
@@ -115,18 +69,13 @@ export class CompetitionRulesComponent implements OnInit {
                 data => {
                     this.successMessage = "Le regole sono state recuperate";
                     this.errorMessage = null;
-                    let mapPost = data.realRules.competitionRules.postponementMap;
-                    for (var property in mapPost) {
-                        if (mapPost.hasOwnProperty(property)) {
-                            this.map.set(property, mapPost[property]);
-                        }
-                    };
                    
-                    // this.map.forEach((value: string, key: string) => {
-                    //   console.log(key, value);
-                    // });
-                
                     this.rules = data.realRules;
+                    if (this.rules.competitionRules.postponementBehaviour == null){
+                        this.rules.competitionRules.postponementBehaviour = "ALL_6";
+
+                    }
+
                 },
 
                 error => {

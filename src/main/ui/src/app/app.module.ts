@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule, routingComponents } from './app-routing.module';
-
+import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { DepartmentDetailComponent } from './department-detail/department-detail.component';
@@ -29,6 +29,11 @@ import { HeaderService } from './header.service';
 import { ReportComponent } from './report/report.component';
 import { TableComponent } from './table/table.component';
 import { PostponementsComponent } from './postponements/postponements.component';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ModalBasicComponent } from './modal/modal.basic';
+import { ModalComponent } from './modal2/modal.component';
 
 
 
@@ -53,13 +58,18 @@ import { PostponementsComponent } from './postponements/postponements.component'
     HeaderComponent,
     ReportComponent,
     TableComponent,
-    PostponementsComponent
+    PostponementsComponent,
+    ModalBasicComponent,
+    ModalComponent
     ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    BsDropdownModule.forRoot(),
+    TooltipModule.forRoot(),
+    ModalModule.forRoot()
 
   ],
   providers: [UserService, 
