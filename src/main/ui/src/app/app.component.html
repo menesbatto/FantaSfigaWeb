@@ -1,28 +1,13 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-   
-  </h1>
+<div class="spinner" *ngIf="spinnerService.isLoading | async">
+        <div class="cube1"></div>
+        <div class="cube2"></div>
 </div>
 
+<div class="app col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+   
 
-  <!-- <a href="/employees" routerLinkActive = "strong"> Employees </a> -->
-  <!-- <a href="/departments" routerLinkActive = "strong"> Departments </a> -->
- 
- 
- <!-- <nav>   
-  <div>
-        <div class="col-lg-11 col-md-11 col-sm-9 col-xs-9">
-            <span> Ciao {{user.username}}</span>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-3 col-xs-3">
-            
-            <button class="btn btn-primary " [routerLink]="['../']" routerLinkActive = "strong"> Logout </button>
-        </div>
-  </div>
+    
+    <app-header style="padding:100px;"></app-header>
+    <router-outlet></router-outlet>
 
-</nav>-->
-
-<app-header></app-header>
-<router-outlet ></router-outlet>
-<!-- Routed view go here -->
+</div>

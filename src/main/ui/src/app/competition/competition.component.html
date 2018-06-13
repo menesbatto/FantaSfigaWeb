@@ -70,7 +70,7 @@
                 <label>Vai al Report Errori</label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToReport()"> OK </button>
+                <button [disabled]="loading && false" class="btn btn-primary btn-block" (click) = "goToReport()"> OK </button>
             </div>
         </div>
      
@@ -80,7 +80,7 @@
                 <label> Integra Regole </label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCompetitionRules()"> OK </button>
+                <button [disabled]="loading && false" class="btn btn-primary btn-block" (click) = "goToCompetitionRules()"> OK </button>
             </div>
         </div>
 

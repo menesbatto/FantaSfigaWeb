@@ -1,48 +1,54 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpInterceptor,
-  HttpRequest,
-  HttpResponse,
-  HttpErrorResponse,
-  HttpHandler,
-  HttpEvent
-} from '@angular/common/http';
-
+import { HttpInterceptor, HttpRequest, HttpResponse, HttpErrorResponse, HttpHandler, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
+import { SpinnerService } from './spinner.service';
+
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-import { Router } from '@angular/router';
+import 'rxjs/add/operator/finally';
 
 @Injectable()
-export class MyHttpLogInterceptor implements HttpInterceptor {
+export class MyLoaderInterceptor implements HttpInterceptor {
+    private requests: HttpRequest<any>[] = [];
 
-  constructor(private router: Router) { }
+    constructor(private spinnerService: SpinnerService) { }
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log('processing request', request);
+    removeRequest(req: HttpRequest<any>) {
+        const i = this.requests.indexOf(req);
+        this.requests.splice(i, 1);
+        
+        let areThereHangedRequests = this.requests.length > 0;
+        this.spinnerService.setLoading(areThereHangedRequests);
+    }
 
-    const customReq = request.clone({
-      headers: request.headers.set('app-language', 'it'),
-      
-    });
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        this.requests.push(req);
+        this.spinnerService.setLoading(true);
 
-    return next
-      .handle(customReq)
-      .do((ev: HttpEvent<any>) => {
-        if (ev instanceof HttpResponse) {
-          console.log('processing response', ev);
-        }
-      })
-      .catch(response => {
-        if (response instanceof HttpErrorResponse) {
-          if (response.status === 401){
-            this.router.navigate(['/login']);
-          }
-          console.log('Processing http error', response);
-        }
-
-        return Observable.throw(response);
-      });
-  }
+        return Observable.create(observer => {
+            const subscription = next.handle(req)
+                .subscribe(
+                    event => {
+                        if (event instanceof HttpResponse) {
+                            this.removeRequest(req);
+                            observer.next(event);
+                        }
+                    },
+                    err => { 
+                        this.removeRequest(req); 
+                        observer.error(err); 
+                    },
+                    () => { 
+                        this.removeRequest(req); 
+                        observer.complete(); 
+                    });
+            // teardown logic in case of cancelled requests
+            return () => {
+                this.removeRequest(req);
+                subscription.unsubscribe();
+            };
+        });
+    }
 }

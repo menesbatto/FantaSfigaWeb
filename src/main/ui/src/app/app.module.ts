@@ -16,7 +16,7 @@ import { LeaguesComponent } from './leagues/leagues.component';
 import { LeaguesService } from './leagues.service';
 import { AuthGuard } from './_guards/auth.guards';
 import { CompetitionsComponent } from './competitions/competitions.component';
-import { MyHttpLogInterceptor } from './http.interceptor';
+import { MyLoaderInterceptor } from './http.interceptor';
 import { CompetitionRulesComponent } from './competition-rules/competition-rules.component';
 import { CompetitionComponent } from './competition/competition.component';
 import { CustomRulesComponent } from './custom-rules/custom-rules.component';
@@ -29,11 +29,8 @@ import { HeaderService } from './header.service';
 import { ReportComponent } from './report/report.component';
 import { TableComponent } from './table/table.component';
 import { PostponementsComponent } from './postponements/postponements.component';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { ModalBasicComponent } from './modal/modal.basic';
 import { ModalComponent } from './modal2/modal.component';
+import { SpinnerService } from './spinner.service';
 
 
 
@@ -59,17 +56,13 @@ import { ModalComponent } from './modal2/modal.component';
     ReportComponent,
     TableComponent,
     PostponementsComponent,
-    ModalBasicComponent,
     ModalComponent
     ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule,
-    BsDropdownModule.forRoot(),
-    TooltipModule.forRoot(),
-    ModalModule.forRoot()
+    FormsModule
 
   ],
   providers: [UserService, 
@@ -78,7 +71,10 @@ import { ModalComponent } from './modal2/modal.component';
               AdminService,
               AuthenticationService,
               HeaderService,
-              { provide: HTTP_INTERCEPTORS, useClass: MyHttpLogInterceptor, multi: true }],
+              SpinnerService,
+              { provide: HTTP_INTERCEPTORS, useClass: MyLoaderInterceptor, multi: true
+              }],
+              
   bootstrap: [AppComponent]
 })
 export class AppModule { }
