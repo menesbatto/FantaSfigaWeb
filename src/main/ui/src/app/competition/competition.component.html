@@ -6,7 +6,7 @@
                 <label>Scarica i dati</label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loading || isAlreadyDownloaded() && false" class="btn btn-primary btn-block" (click) = "downloadInfo()"> OK </button>
+                <button [disabled]="loadingMessage || isAlreadyDownloaded() && false" class="btn btn-primary btn-block" (click) = "downloadInfo()"> OK </button>
             </div>
         </div>
             
@@ -18,7 +18,7 @@
                                                                                 <label>Scarica i risultati online delle partite giocate (dopo ogni giornata)</label>
                                                                             </div>
                                                                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                                                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "saveOnlineSeasonAndTeams()"> OK </button>
+                                                                                <button [disabled]="loadingMessage" class="btn btn-primary btn-block" (click) = "saveOnlineSeasonAndTeams()"> OK </button>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row nobor">
@@ -26,7 +26,7 @@
                                                                                 <label> Scarica le formazioni inserite (dopo ogni giornata)</label>
                                                                             </div>
                                                                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                                                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> OK  </button>
+                                                                                <button [disabled]="loadingMessage" class="btn btn-primary btn-block" (click) = "downloadSeasonFromWeb()"> OK  </button>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row nobor">
@@ -34,7 +34,7 @@
                                                                                 <label> Ricalcola i risultati sulla base di quanto scaricato (dopo ogni giornata)</label>
                                                                             </div>
                                                                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                                                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> OK  </button>
+                                                                                <button [disabled]="loadingMessage" class="btn btn-primary btn-block" (click) = "calculateSeasonResult()"> OK  </button>
                                                                             </div>
                                                                         </div>-->
         
@@ -45,7 +45,7 @@
                                                                                 <label> Calcola statistiche leggere </label>
                                                                             </div>
                                                                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                                                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> OK </button>
+                                                                                <button [disabled]="loadingMessage" class="btn btn-primary btn-block" (click) = "calculateRealStats(true)"> OK </button>
                                                                             </div>
                                                                         </div>-->
         <div class="row nobor">
@@ -53,7 +53,7 @@
                 <label> Calcola statistiche (qualche secondo)</label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loading || isAlreadyCalculated() && false" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
+                <button [disabled]="loadingMessage || isAlreadyCalculated() && false" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
             </div>
         </div>
                                                                             <!--<div class="row nobor">
@@ -61,7 +61,7 @@
                                                                                     <label> Recupera le statistiche appena calcolate</label>
                                                                                 </div>
                                                                                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                                                                    <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> OK </button>
+                                                                                    <button [disabled]="loadingMessage" class="btn btn-primary btn-block" (click) = "retrieveAllRankings()"> OK </button>
                                                                                 </div>
                                                                             </div>-->
 
@@ -70,7 +70,7 @@
                 <label>Vai al Report Errori</label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loading && false" class="btn btn-primary btn-block" (click) = "goToReport()"> OK </button>
+                <button [disabled]="loadingMessage && false" class="btn btn-primary btn-block" (click) = "goToReport()"> OK </button>
             </div>
         </div>
      
@@ -80,7 +80,7 @@
                 <label> Integra Regole </label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loading && false" class="btn btn-primary btn-block" (click) = "goToCompetitionRules()"> OK </button>
+                <button [disabled]="loadingMessage && false" class="btn btn-primary btn-block" (click) = "goToCompetitionRules()"> OK </button>
             </div>
         </div>
 
@@ -91,7 +91,7 @@
                 <label> Personalizza le regole</label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loading" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> OK </button>
+                <button [disabled]="loadingMessage" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> OK </button>
             </div>
         </div>
        
@@ -103,15 +103,15 @@
         <strong>{{errorMessage}}</strong>
     </div>
 
-    <div class="alert alert-success" *ngIf="loadingMessage">
-        <strong>{{loadingMessage}}</strong>
-    </div>
+   
 
-    <div class="alert alert-success" *ngIf="successMessage">
+    <div id ="success-alert" class="alert alert-success" *ngIf="successMessage">
         <strong>{{successMessage}}</strong>
     </div>
 
-
+    <div id ="loading-alert" class="alert alert-warning" *ngIf="loadingMessage">
+            <strong>{{loadingMessage}}</strong>
+        </div>
 
 
     <div class="container" *ngIf="ctxFairRanking">

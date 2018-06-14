@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
 
     title = 'app';
     isLoading: boolean = false;
-   
+
 
 
 
@@ -22,17 +22,17 @@ export class AppComponent implements OnInit {
     constructor(
         private authenticationService: AuthenticationService,
         private router: Router,
-        private headerService: HeaderService,
+        public headerService: HeaderService,
         public spinnerService: SpinnerService,
-        public cdRef:ChangeDetectorRef
+        public cdRef: ChangeDetectorRef
 
     ) {
 
-        
+
 
         this.router.events.pairwise().subscribe((event) => {
             headerService.changeTitleParam(null);
-            console.log(event);
+            // console.log(event);
         });
 
 
@@ -52,32 +52,40 @@ export class AppComponent implements OnInit {
         //         });
 
 
-       
 
-       
+
+
     }
 
     ngAfterContentChecked() {
-
-        
-    
         this.cdRef.detectChanges();
-        
-            }
+    }
+
+
+
+
+    closeSplashScreen() {
+        this.spinnerService.setLoading(false);
+        this.headerService.changeErrorMessage(null);
+    }
 
     ngOnInit() {
+        this.headerService.currentErrorMessage.subscribe(
+            errorMessageInput => {
+                this.errorMessage = errorMessageInput;
+            });
+
 
 
         // this.spinnerService.onLoadingChanged.subscribe(
         //     loadingFromService => {
-               
+
         //         this.isLoading = loadingFromService;
         //         // this.cdref.detectChanges();
         //     }
         // );
- 
-      
     }
-   
+
+    errorMessage: string = null;
 
 }

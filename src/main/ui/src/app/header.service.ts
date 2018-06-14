@@ -6,20 +6,23 @@ export class HeaderService {
 
   constructor() { }
 
-    private messageSource = new BehaviorSubject<string>("Default message");
-    currentMessage = this.messageSource.asObservable();
-
-    changeMessage(message){
-        this.messageSource.next(message);
-    }
-
+   
 
     private titleParamSource = new BehaviorSubject<string>("");
     currentTitleParam = this.titleParamSource.asObservable();
 
-    changeTitleParam(titleParam){
-        this.titleParamSource.next(titleParam);
+    changeTitleParam(titleParamInput){
+        this.titleParamSource.next(titleParamInput);
     }
 
 
+    private  errorMessageSource = new BehaviorSubject<string>("");
+    currentErrorMessage = this.errorMessageSource.asObservable();
+
+    changeErrorMessage(errorMessageInput){
+        this.errorMessageSource.next(errorMessageInput);
+    }
+
+
+  
 }

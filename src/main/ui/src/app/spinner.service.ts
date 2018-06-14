@@ -12,4 +12,7 @@ export class SpinnerService {
     setLoading(value){
         this.isLoading.next(value);
     }
+
+
+  
 }
