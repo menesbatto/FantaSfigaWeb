@@ -1,8 +1,8 @@
-<div>
+<div *ngIf="report">
     <!--<h3 align = "center">Le tue leghe </h3>-->
   
     <div class="table-responsive" *ngIf="report.voteMismatches">
-        <table class="table">
+        <table class="table  table-striped">
             <thead>
                 <tr>
                     <th>Giornata Serie A</th>
@@ -35,8 +35,8 @@
     </div> 
 
 
-    <div class="table-responsive" *ngIf="report.matchMismatches">
-        <table class="table">
+    <div class="table-responsive " *ngIf="report.matchMismatches">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <!--<th>Giornata Serie A</th>-->

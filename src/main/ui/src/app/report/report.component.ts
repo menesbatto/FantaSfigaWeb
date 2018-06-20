@@ -49,11 +49,16 @@ export class ReportComponent implements OnInit {
 
             let url2 = params.get('league');
             this.leagueShortName = url2;
+            
+            let url3 = params.get('type');
+            let rulesType = url3;
 
             this.model = {
                 leagueShortName: this.leagueShortName,
                 competitionShortName: this.competitionShortName
             }
+
+            this.headerService.changeCustomPage( rulesType);
 
             this.retrieveReport();
             

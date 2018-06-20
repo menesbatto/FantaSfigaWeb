@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { LeaguesService } from '../leagues.service';
 import { Location } from '@angular/common';
+import { HeaderService } from '../header.service';
 
 @Component({
     selector: 'app-competition-rules',
@@ -21,6 +22,7 @@ export class CompetitionRulesComponent implements OnInit {
         private router: Router,
         private leagueService: LeaguesService,
         private _location: Location,
+        private headerService: HeaderService
 
     ) { }
 
@@ -111,8 +113,10 @@ export class CompetitionRulesComponent implements OnInit {
                 data => {
                     this.successMessage = "Le regole sono state salvate";
                     this.errorMessage = null;
-                    localStorage.setItem(this.competitionShortName + '-statsAlreadyCalculated', "false");
-                    localStorage.setItem(this.competitionShortName + '-alreadyDownloadInfo', "false");
+                    this.headerService.removeCompetitionCalculated(this.competitionShortName);
+                    this.headerService.removeCompetitionDownloaded(this.competitionShortName);
+                    // localStorage.setItem(this.competitionShortName + '-statsAlreadyCalculated', "false");
+                    // localStorage.setItem(this.competitionShortName + '-alreadyDownloadInfo', "false");
 
                     this._location.back();
                 },

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { LoginComponent } from './login/login.component';
 import { AuthenticationService } from './authentication.service';
-import { Router, NavigationStart, NavigationEnd } from '@angular/router';
+import { Router, NavigationStart, NavigationEnd, ParamMap } from '@angular/router';
 import { HeaderService } from './header.service';
 import { SpinnerService } from './spinner.service';
 
@@ -14,10 +14,7 @@ export class AppComponent implements OnInit {
 
     title = 'app';
     isLoading: boolean = false;
-
-
-
-
+    customPage:string;
 
     constructor(
         private authenticationService: AuthenticationService,
@@ -25,13 +22,17 @@ export class AppComponent implements OnInit {
         public headerService: HeaderService,
         public spinnerService: SpinnerService,
         public cdRef: ChangeDetectorRef
+        
+        
 
     ) {
 
-
+        this.headerService.customPageParam.subscribe(customPageParam => this.customPage = customPageParam);
+      
 
         this.router.events.pairwise().subscribe((event) => {
-            headerService.changeTitleParam(null);
+            this.headerService.changeTitleParam(null);
+            this.headerService.changeCustomPage(null);
             // console.log(event);
         });
 
@@ -52,13 +53,13 @@ export class AppComponent implements OnInit {
         //         });
 
 
-
-
+      
 
     }
 
     ngAfterContentChecked() {
         this.cdRef.detectChanges();
+      
     }
 
 

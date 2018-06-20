@@ -58,6 +58,9 @@ export class SeasonComponent implements OnInit {
                 leagueShortName: this.leagueShortName,
                 competitionShortName: this.competitionShortName
             }
+
+            
+            this.headerService.changeCustomPage(this.rulesType);
             
             this.retrieveSeason(this.seasonPattern);
             

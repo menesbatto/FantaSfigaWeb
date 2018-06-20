@@ -1,12 +1,11 @@
 
-   <div>
-        
+<div  class = "customPage">
     
     
         
-    <div class="row">
+    <div class="row" >
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-10 ">
+            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl"> Bonus/Malus Calciatori </span>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 pull-right">
@@ -14,6 +13,9 @@
                     <span *ngIf="showBonusMalus" class="glyphicon glyphicon-chevron-up"> </span>
                     <span *ngIf="!showBonusMalus" class="glyphicon glyphicon-chevron-down"> </span>
                 </a>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right">
+                <i *ngIf="isDifferent(realRules.bonusMalus, bonusMalus)" class="error-ico" type="button" (click)="updateModalText('Una o più regole in questa sezione sono state cambiate', 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
             </div>
         </div>
     </div>
@@ -25,7 +27,8 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             
                 <div class="row">
-                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="golsegnato">Gol segnato:</label>
+                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="golsegnato">Gol segnato: </label>
+                    
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                             <div class="p "><span class="role">P</span> </div>
@@ -46,10 +49,8 @@
                     </div>
                         
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <!-- <i class="info-ico" type="button" tooltip="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."></i> -->
-                       <!-- <modal-basic></modal-basic> -->
-                       <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol segnato')" data-toggle="modal" data-target="#myModal1"></i>
-                       <!-- <button type="button" class="btn btn-primary" tooltip="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">Button with tooltip</button> -->
+                       <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol segnato', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                       <i *ngIf="isDifferent(realRules.bonusMalus.scoredGoal, bonusMalus.scoredGoal)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.scoredGoal, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
@@ -73,7 +74,8 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol subito')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol subito', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.takenGoal, bonusMalus.takenGoal)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.takenGoal, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
@@ -97,7 +99,8 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del rigore segnato')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del rigore segnato', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.scoredPenalty, bonusMalus.scoredPenalty)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.scoredPenalty, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
@@ -121,11 +124,12 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del rigore sbagliato')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del rigore sbagliato', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.missedPenalty, bonusMalus.missedPenalty)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.missedPenalty, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="rigoreparato">Rigore parato:</label>
+                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="rigoreparato" >Rigore parato:</label>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                             <div class="p "><span class="role">P</span> </div>
@@ -145,7 +149,8 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del rigore parato')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del rigore parato', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.savedPenalty, bonusMalus.savedPenalty)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.savedPenalty, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
@@ -169,11 +174,12 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore dell\'ammonizione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore dell\'ammonizione', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.yellowCard, bonusMalus.yellowCard)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.yellowCard, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="esplusione">Espulsione:</label>
+                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="esplusione" >Espulsione:</label>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                             <div class="p "><span class="role">P</span> </div>
@@ -193,11 +199,12 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore dell\'espulsione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore dell\'espulsione', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.redCard, bonusMalus.redCard)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.redCard, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="assist">Assist:</label>
+                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="assist" >Assist:</label>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                             <div class="p "><span class="role">P</span> </div>
@@ -217,7 +224,8 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore dell\'assist')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore dell\'assist', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.movementAssist, bonusMalus.movementAssist)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.movementAssist, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
@@ -241,7 +249,8 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore dell\'assist da fermo (solo redazioni napoli e italia)')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore dell\'assist da fermo (solo redazioni napoli e italia)', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.stationaryAssist, bonusMalus.stationaryAssist)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.stationaryAssist, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
@@ -265,7 +274,8 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore dell\'autogol')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore dell\'autogol', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.autogoal, bonusMalus.autogoal)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.autogoal, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
@@ -289,7 +299,8 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol decisivo pareggio')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol decisivo pareggio', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.evenGoal, bonusMalus.evenGoal)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.evenGoal, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
                 <div class="row">
@@ -313,7 +324,8 @@
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol decisivo vittoria')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i class="info-ico" type="button" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol decisivo vittoria', 'Spiegazione')" data-toggle="modal" data-target="#myModal1"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.winGoal, bonusMalus.winGoal)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.winGoal, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
         </div>
@@ -367,7 +379,7 @@
 
     <div class="row">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-10 ">
+            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl"> Fonte Voti e Cartellini </span>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2  pull-right">
@@ -375,6 +387,9 @@
                     <span *ngIf="showDataSource" class="glyphicon glyphicon-chevron-up"> </span>
                     <span *ngIf="!showDataSource" class="glyphicon glyphicon-chevron-down"> </span>
                 </a>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right">
+                <i *ngIf="isDifferent(realRules.dataSource, dataSource)" class="error-ico" type="button" (click)="updateModalTextDifferentRule('', 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
             </div>
         </div>
     </div>
@@ -392,7 +407,11 @@
                     </select>
                     
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Seleziona la fonte voti da cui attingere per il calcolo.')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Seleziona la fonte voti da cui attingere per il calcolo.', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.dataSource.votesSource, dataSource.votesSource)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.dataSource.votesSource, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                    
+                </div>
             </div>
             <div class="row">
                 <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fontemb">Fonte bonus/malus:</label>
@@ -401,17 +420,25 @@
                         <option selected="selected" value="1">Fantagazzetta (Ex Napoli)</option>
                     </select>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Fonte bonus/malus Fantagazzetta')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Fonte bonus/malus Fantagazzetta', 'Spiegazione')"></i>
+                    <!-- <i *ngIf="isDifferent(realRules.dataSource.votesSource, dataSource.votesSource)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.dataSource.votesSource, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i> -->
+                </div>
             </div>
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fonteae">Fonte ammonizioni / esplusioni:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fonteae" >Fonte ammonizioni / esplusioni:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <select name="ctl00$main$ddlfonteae" id="ddlfonteae" class="form-control chk" disabled="disabled">
                         <option value="1">Comunicato ufficiale del Giudice Sportivo</option>
                         <option selected="selected" value="2">Fantagazzetta (Ex Napoli)</option>
                     </select>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Seleziona la fonte per le ammonizioni e le espulsioni')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Seleziona la fonte per le ammonizioni e le espulsioni', 'Spiegazione')"></i>
+                    <!-- <i *ngIf="isDifferent(realRules.dataSource.votesSource, dataSource.votesSource)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.dataSource.votesSource, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i> -->
+                </div>
+                    
+                    
             </div>
         </div>
     </div>
@@ -462,7 +489,7 @@
 
     <div class="row">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-10 ">
+            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl"> Sostituzioni </span>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 pull-right ">
@@ -471,6 +498,9 @@
                     <span *ngIf="!showSubstitutions" class="glyphicon glyphicon-chevron-down"> </span>
                 </a>
             </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right">
+                <i *ngIf="isDifferent(realRules.substitutions, substitutions)" class="error-ico" type="button" (click)="updateModalTextDifferentRule('', 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+            </div>
         </div>
     </div>
 
@@ -478,15 +508,18 @@
     <div id="form-step3" class="row" *ngIf="substitutions && showSubstitutions">
          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="nsostituzioni">Numero sostituzioni:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="nsostituzioni" >Numero sostituzioni:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$nsostituzioni"  [(ngModel)]="substitutions.substitutionNumber" id="nsostituzioni" class="form-control" type="text"  pattern="[0-9]+([\.,][0-9]+)?">
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserisci il numero di sostituzioni da effettuare. Il valore deve essere un intero compreso tra 1 e 11')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserisci il numero di sostituzioni da effettuare. Il valore deve essere un intero compreso tra 1 e 11', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.substitutions.substitutionNumber, substitutions.substitutionNumber)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.substitutions.substitutionNumber, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             
             <div id="sosmoduloclassic" class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="priorità">Modalità sostituzioni:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="priorità" >Modalità sostituzioni:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <select name="ctl00$main$ddlsostituzioni"  [(ngModel)]="substitutions.substitutionMode" class="form-control chk"  disabled="disabled">
                         <option value="CHANGE_MODULE">Applicazione immediata del cambio modulo</option>
@@ -494,7 +527,10 @@
                         <option value="CHANGE_ROLE">Solo con cambio ruolo (nessun cambio modulo)</option>
                     </select>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Seleziona la modalità delle sostituzioni')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Seleziona la modalità delle sostituzioni', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.substitutions.substitutionMode, substitutions.substitutionMode)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.substitutions.substitutionMode, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
@@ -510,21 +546,27 @@
                         <label><span class="outer2"><input class="form-check-input" type="radio" [(ngModel)]="substitutions.yellowCardSvOfficeVoteActive" name="yellowCardSvOfficeVoteActive2" [value]="false"></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Scegliere se impostare un valore di default per il calciatore ammonito con sv')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Scegliere se impostare un valore di default per il calciatore ammonito con sv', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.substitutions.yellowCardSvOfficeVoteActive, substitutions.yellowCardSvOfficeVoteActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.substitutions.yellowCardSvOfficeVoteActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
             <div class="row ammonitosv inner nobor" *ngIf="substitutions.yellowCardSvOfficeVoteActive">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vammonitosv">Valore ammonito sv:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vammonitosv" >Valore ammonito sv:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$vammonitosv" value="0" [(ngModel)]="substitutions.yellowCardSvOfficeVote" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
-                <div class="col-lg-2 col-md-1 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserire il valore da attribuire all\'ammonito con sv')"></i></div>
+                <div class="col-lg-2 col-md-1 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserire il valore da attribuire all\'ammonito con sv', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.substitutions.yellowCardSvOfficeVote, substitutions.yellowCardSvOfficeVote)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.substitutions.yellowCardSvOfficeVote, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="riservaufficiop">Riserva d'ufficio portieri:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="riservaufficiop" >Riserva d'ufficio portieri:</label>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <div class="radio">
                         <label><span class="outer1 double"><input class="form-check-input" type="radio" [(ngModel)]="substitutions.goalkeeperPlayerOfficeVoteActive" name="goalkeeperPlayerOfficeVoteActive1" [value]="true" ></span>Sì </label>
@@ -535,20 +577,26 @@
                         <label><span class="outer2 double"><input class="form-check-input" type="radio" [(ngModel)]="substitutions.goalkeeperPlayerOfficeVoteActive" name="goalkeeperPlayerOfficeVoteActive2" [value]="false"></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Scegliere se utilizzare la riserva d\'ufficio per i portieri')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Scegliere se utilizzare la riserva d\'ufficio per i portieri', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.substitutions.goalkeeperPlayerOfficeVoteActive, substitutions.goalkeeperPlayerOfficeVoteActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.substitutions.goalkeeperPlayerOfficeVoteActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
             <div class="row riservaufficiop inner nobor" *ngIf="substitutions.goalkeeperPlayerOfficeVoteActive">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vriservap">Valore riserva d'ufficio portieri:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vriservap" >Valore riserva d'ufficio portieri:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$vriservap" value="3"  [(ngModel)]="substitutions.goalkeeperPlayerOfficeVote" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserire il valore della riserva d\'ufficio per i portieri')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserire il valore della riserva d\'ufficio per i portieri', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.substitutions.goalkeeperPlayerOfficeVote, substitutions.goalkeeperPlayerOfficeVote)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.substitutions.goalkeeperPlayerOfficeVote, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="riservaufficiogm">Riserva d'ufficio giocatori di movimento:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="riservaufficiogm" >Riserva d'ufficio giocatori di movimento:</label>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <div class="radio">
                         <label><span class="outer1  double"><input class="form-check-input" type="radio" [(ngModel)]="substitutions.movementsPlayerOfficeVoteActive" name="movementsPlayerOfficeVote1" [value]="true"></span>Si </label>
@@ -559,7 +607,10 @@
                         <label><span class="outer2 double"><input class="form-check-input" type="radio" [(ngModel)]="substitutions.movementsPlayerOfficeVoteActive" name="movementsPlayerOfficeVote2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Scegliere se utilizzare la riserva d\'ufficio per i giocatori di movimento')"></i></div>
+                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Scegliere se utilizzare la riserva d\'ufficio per i giocatori di movimento', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.substitutions.movementsPlayerOfficeVoteActive, substitutions.movementsPlayerOfficeVoteActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.substitutions.movementsPlayerOfficeVoteActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
@@ -568,7 +619,10 @@
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$vriservagm" value="4" [(ngModel)]="substitutions.movementsPlayerOfficeVote" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserire il valore della riserva d\'ufficio per i calciatori di movimento')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserire il valore della riserva d\'ufficio per i calciatori di movimento', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.substitutions.movementsPlayerOfficeVote, substitutions.movementsPlayerOfficeVote)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.substitutions.movementsPlayerOfficeVote, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
@@ -577,12 +631,14 @@
                 <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="appriserva">Applica riserva d'ufficio fino al:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <select name="ctl00$main$ddlappriserva" [(ngModel)]="substitutions.maxOfficeVotes" class="form-control select">
-                        <option value="">Seleziona</option>
                         <option value="TILL_SUBSTITUTIONS">Numero di sostituzioni impostate</option>
                         <option value="TILL_ALL">Raggiungimento degli 11 calciatori</option>
                     </select>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Scegliere se applicare la riserva d\'ufficio fino al raggiungimento delle sostituzioni impostate oppure fino a raggiungere il numero di 11 calciatori titolari')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Scegliere se applicare la riserva d\'ufficio fino al raggiungimento delle sostituzioni impostate oppure fino a raggiungere il numero di 11 calciatori titolari', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.substitutions.maxOfficeVotes, substitutions.maxOfficeVotes)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.substitutions.maxOfficeVotes, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
         </div>
     </div>
@@ -635,7 +691,7 @@
 
     <div class="row">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-10 ">
+            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl"> Punteggi </span>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 pull-right ">
@@ -644,6 +700,9 @@
                     <span *ngIf="!showPoints" class="glyphicon glyphicon-chevron-down"> </span>
                 </a>
             </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right">
+                <i *ngIf="isDifferent(realRules.points, points)" class="error-ico" type="button" (click)="updateModalTextDifferentRule('', 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+            </div>
         </div>
     </div>
 
@@ -651,8 +710,11 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="autogol">Soglie Gol:</label>
-                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol decisivo pareggio')"></i></div>
+                <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="autogol" >Soglie Gol:</label>
+                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol decisivo pareggio', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.goalPoints, points.goalPoints)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.goalPoints, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div class="row" >
                 <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="s1">Gol 1:</label>
@@ -732,7 +794,7 @@
 
             <!-- <div class="row">
                 <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="autogol">Punti Formula 1:</label>
-                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol decisivo pareggio')"></i></div>
+                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserisci per ogni ruolo il valore del gol decisivo pareggio', 'Spiegazione')"></i></div>
             </div>
             <div class="row" *ngIf = "points.formulaUnoPoints[0]">
                 <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="fu1">Punti 1 classificato:</label>
@@ -836,7 +898,7 @@
 
 
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fasciaintorno">Fascia con intorno:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fasciaintorno" >Fascia con intorno:</label>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <div class="radio">
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="points.fasciaConIntornoActive" name="fasciaConIntornoActive1" [value]="true" ></span>Sì </label>
@@ -847,14 +909,20 @@
                         <label><span class="outer2"><input class="form-check-input" type="radio" [(ngModel)]="points.fasciaConIntornoActive" name="fasciaConIntornoActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Se due squadre totalizzano un punteggio all\'interno della stessa fascia, si aggiunge un gol alla squadra che avra\' distaccato l\'avversario del valore specificato.')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Se due squadre totalizzano un punteggio all\'interno della stessa fascia, si aggiunge un gol alla squadra che avra\' distaccato l\'avversario del valore specificato.', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.fasciaConIntornoActive, points.fasciaConIntornoActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.fasciaConIntornoActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div class="row inner nobor" *ngIf="points.fasciaConIntornoActive">
                 <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="valintorno">Valore per fascia con intorno:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$valintorno" [(ngModel)]="points.fasciaConIntorno" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore della fascia con intorno')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore della fascia con intorno', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.fasciaConIntorno, points.fasciaConIntorno)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.fasciaConIntorno, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
             
@@ -863,7 +931,7 @@
 
 
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="intorno">Intorno:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="intorno"  >Intorno:</label>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <div class="radio">
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="points.intornoActive" name="intornoActive1" [value]="true" ></span>Sì </label>
@@ -874,20 +942,26 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="points.intornoActive" name="intornoActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Se i punteggi delle due squadre cadono in fasce differenti, vince chi distacca l\'avversario di almeno del valore specificato')"></i></div>
+                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Se i punteggi delle due squadre cadono in fasce differenti, vince chi distacca l\'avversario di almeno del valore specificato', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.intornoActive, points.intornoActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.intornoActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div class="row inner nobor" *ngIf="points.intornoActive">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vintorno">Valore per intorno:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vintorno" >Valore per intorno:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$vintorno" [(ngModel)]="points.intorno" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore dell\'intorno')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore dell\'intorno', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.intorno, points.intorno)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.intorno, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
 
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="cpareggio">Controlla pareggio:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="cpareggio" >Controlla pareggio:</label>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <div class="radio">
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="points.controllaPareggioActive" name="controllaPareggioActive1" [value]="true" ></span>Sì </label>
@@ -898,14 +972,20 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="points.controllaPareggioActive" name="controllaPareggioActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Se due squadre ottengono un punteggio inferiore a Soglia gol specificare lo scarto per far scattare il gol alla squadra con punteggio maggiore')"></i></div>
+                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Se due squadre ottengono un punteggio inferiore a Soglia gol specificare lo scarto per far scattare il gol alla squadra con punteggio maggiore', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.controllaPareggioActive, points.controllaPareggioActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.controllaPareggioActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div class="row inner nobor" *ngIf="points.controllaPareggioActive">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vcpareggio">Valore per controlla pareggio:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vcpareggio"  >Valore per controlla pareggio:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$vcpareggio" [(ngModel)]="points.controllaPareggio" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore del controlla pareggio')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore del controlla pareggio', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.controllaPareggio, points.controllaPareggio)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.controllaPareggio, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
@@ -922,20 +1002,26 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="points.differenzaPuntiActive" name="differenzaPuntiActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Se la differenza dei punti-squadra è uguale o superiore al valore impostato, si attribuisce un altro gol alla squadra con piu\' punti')"></i></div>
+                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Se la differenza dei punti-squadra è uguale o superiore al valore impostato, si attribuisce un altro gol alla squadra con piu\' punti', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.differenzaPuntiActive, points.differenzaPuntiActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.differenzaPuntiActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div class="row inner nobor" *ngIf="points.differenzaPuntiActive">
                 <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vdpunti">Valore per differenza punti:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$vdpunti" [(ngModel)]="points.differenzaPunti" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore della differenza punti')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore della differenza punti', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.differenzaPunti, points.differenzaPunti)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.differenzaPunti, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
 
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="dautogol">Autogol:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="dautogol" >Autogol:</label>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <div class="radio">
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="points.autogolActive" name="autogolActive1" [value]="true" ></span>Sì </label>
@@ -946,20 +1032,26 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="points.autogolActive" name="autogolActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Se una delle due squadre ottiene un punteggio inferiore al valore impostato, si attribuisce un altro gol alla squadra avversaria')"></i></div>
+                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Se una delle due squadre ottiene un punteggio inferiore al valore impostato, si attribuisce un altro gol alla squadra avversaria', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.autogolActive, points.autogolActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.autogolActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div class="row inner nobor" *ngIf="points.autogolActive">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="dautogol">Valore autogol:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="dautogol" >Valore autogol:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$dautogol" [(ngModel)]="points.autogol" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?">
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore dell\'autogol')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore dell\'autogol', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.autogol, points.autogol)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.autogol, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
 
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="pimbattuto">Bonus portiere imbattuto:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="pimbattuto" >Bonus portiere imbattuto:</label>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <div class="radio">
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="points.portiereImbattutoActive" name="portiereImbattutoActive1" [value]="true" ></span>Sì </label>
@@ -970,14 +1062,20 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="points.portiereImbattutoActive" name="portiereImbattutoActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per attribuire un bonus al portiere che non subisce gol. Il portiere deve aver giocato almeno 25 minuti')"></i></div>
+                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per attribuire un bonus al portiere che non subisce gol. Il portiere deve aver giocato almeno 25 minuti', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.portiereImbattutoActive, points.portiereImbattutoActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.portiereImbattutoActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div class="row inner nobor" *ngIf="points.portiereImbattutoActive">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vpimbattuto">Valore per bonus portiere imbattuto:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vpimbattuto" >Valore per bonus portiere imbattuto:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$vpimbattuto" [(ngModel)]="points.portiereImbattuto" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore del bonus da assegnare al portiere imbattuto')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore del bonus da assegnare al portiere imbattuto', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.points.portiereImbattuto, points.portiereImbattuto)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.portiereImbattuto, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
@@ -1031,7 +1129,7 @@
 
     <div class="row">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-10 ">
+            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl" >Modificatori </span>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 pull-right ">
@@ -1039,6 +1137,9 @@
                     <span *ngIf="showModifiers" class="glyphicon glyphicon-chevron-up"> </span>
                     <span *ngIf="!showModifiers" class="glyphicon glyphicon-chevron-down"> </span>
                 </a>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right">
+                <i *ngIf="isDifferent(realRules.modifiers, modifiers)" class="error-ico" type="button" (click)="updateModalTextDifferentRule('', 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
             </div>
         </div>
     </div>
@@ -1050,7 +1151,7 @@
 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="row">
-                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="mportiere">Modificatore portiere:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="mportiere" >Modificatore portiere:</label>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <div class="radio">
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="modifiers.goalkeeperModifierActive" name="goalkeeperModifierActive1" [value]="true" ></span>Sì </label>
@@ -1061,14 +1162,17 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="modifiers.goalkeeperModifierActive" name="goalkeeperModifierActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il calcolo del modificatore portiere')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il calcolo del modificatore portiere', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.modifiers.goalkeeperModifierActive, modifiers.goalkeeperModifierActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.modifiers.goalkeeperModifierActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div id="vmpor" class="row nobor modificatorerow inner disappear"  *ngIf="modifiers.goalkeeperModifierActive">
                 <div class="nobor">
                     <em>Il modificatore del portiere è dato dal voto del portiere schierato in campo, calcolato sulla base dei voti ottenuti in pagella senza considerare bonus e malus.</em>
                 </div>
                 <strong>Punteggio</strong>
-                <div class="row nobor">
+                <div class="row nobor center">
                     <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se il portiere ha un <strong>voto &lt;=3</strong>, si aggiunge</div>
                     <div class="col-lg-2 col-md-4 col-sm-4 col-xs-4">
                         <input name="ctl00$main$p1" [(ngModel)]="modifiers.goalkeeperVote3" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
@@ -1179,7 +1283,10 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="modifiers.defenderModifierActive" name="defenderModifierActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il calcolo del modificatore difesa')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il calcolo del modificatore difesa', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.modifiers.defenderModifierActive, modifiers.defenderModifierActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.modifiers.defenderModifierActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div id="vmdif" class="row nobor modificatorerow inner disappear" *ngIf="modifiers.defenderModifierActive">
                 <div class="nobor">
@@ -1224,7 +1331,10 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="modifiers.middlefielderModifierActive" name="middlefielderModifierActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il calcolo del modificatore centrocampo')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il calcolo del modificatore centrocampo', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.modifiers.middlefielderModifierActive, modifiers.middlefielderModifierActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.modifiers.middlefielderModifierActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div id="vmcen" class="row nobor modificatorerow inner  disappear" *ngIf = "modifiers.middlefielderModifierActive">
                 <div class="nobor">
@@ -1303,7 +1413,10 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="modifiers.strikerModifierActive" name="strikerModifierActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il calcolo del modificatore attacco')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il calcolo del modificatore attacco', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.modifiers.strikerModifierActive, modifiers.strikerModifierActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.modifiers.strikerModifierActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div id="vmatt" class="row nobor modificatorerow inner disappear" *ngIf="modifiers.strikerModifierActive">
                 <div class="nobor">
@@ -1374,7 +1487,10 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="modifiers.fairPlayModifierActive" name="fairPlayModifierActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il calcolo del modificatore fairplay')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il calcolo del modificatore fairplay', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.modifiers.fairPlayModifierActive, modifiers.fairPlayModifierActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.modifiers.fairPlayModifierActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div class="row inner nobor disappear" *ngIf="modifiers.fairPlayModifierActive">
                     <div class="nobor">
@@ -1384,7 +1500,10 @@
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                     <input name="ctl00$main$f" [(ngModel)]="modifiers.fairPlay" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
-                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore del modificatore FairPlay')"></i></div>
+                <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore del modificatore FairPlay', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.modifiers.fairPlay, modifiers.fairPlay)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.modifiers.fairPlay, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
             <br>
@@ -1403,7 +1522,10 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="modifiers.performanceModifierActive" name="performanceModifierActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il modificatore di rendimento.')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per abilitare il modificatore di rendimento.', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.modifiers.performanceModifierActive, modifiers.performanceModifierActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.modifiers.performanceModifierActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div class="row nobor modificatorerow inner disappear" *ngIf="modifiers.performanceModifierActive">
                 <div class="nobor">
@@ -1470,7 +1592,7 @@
 
     <div class="row">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-10 ">
+            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl"> Altre Regole </span>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 pull-right ">
@@ -1478,6 +1600,9 @@
                     <span *ngIf="showCompetitionRules" class="glyphicon glyphicon-chevron-up"> </span>
                     <span *ngIf="!showCompetitionRules" class="glyphicon glyphicon-chevron-down"> </span>
                 </a>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 pull-right">
+                <i *ngIf="isDifferent(realRules.competitionRules, competitionRules)" class="error-ico" type="button" (click)="updateModalTextDifferentRule('', 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
             </div>
         </div>
     </div>
@@ -1499,7 +1624,10 @@
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="competitionRules.homeBonusActive" name="homeBonusActive2" [value]="false" ></span>No </label>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('La squadra che gioca in casa riceve un bonus')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('La squadra che gioca in casa riceve un bonus', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.competitionRules.homeBonusActive, competitionRules.homeBonusActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.competitionRules.homeBonusActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
             <div class="row inner nobor" *ngIf="competitionRules.homeBonusActive">
                 <label [ngClass]="{ 'diff': competitionRules.homeBonus != realRules.competitionRules.homeBonus }"
@@ -1507,7 +1635,10 @@
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$vriservap" [(ngModel)]="competitionRules.homeBonus" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore del bonus per la squadra che gioca in casa')"></i></div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore del bonus per la squadra che gioca in casa', 'Spiegazione')"></i>
+                    <i *ngIf="isDifferent(realRules.competitionRules.homeBonus, competitionRules.homeBonus)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.competitionRules.homeBonus, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                </div>
             </div>
 
 
@@ -1557,6 +1688,7 @@
 </div>
 
 
-<app-modal modalId="myModal1">
-    {{modalText}}
+<app-modal modalId="myModal1" title="{{modalTitle}}" text="{{modalText}}" >
+        <div [innerHTML]="modalText"></div>
+        <!-- {{modalText}} -->
 </app-modal>

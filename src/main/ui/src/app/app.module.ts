@@ -31,6 +31,7 @@ import { TableComponent } from './table/table.component';
 import { PostponementsComponent } from './postponements/postponements.component';
 import { ModalComponent } from './modal2/modal.component';
 import { SpinnerService } from './spinner.service';
+import { MessageboxComponent } from './messagebox/messagebox.component';
 
 
 
@@ -56,7 +57,8 @@ import { SpinnerService } from './spinner.service';
     ReportComponent,
     TableComponent,
     PostponementsComponent,
-    ModalComponent
+    ModalComponent,
+    MessageboxComponent
     ],
   imports: [
     BrowserModule,

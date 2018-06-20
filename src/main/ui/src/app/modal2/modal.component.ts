@@ -11,6 +11,9 @@ export class ModalComponent implements OnInit {
   public text:string;
 
   @Input()
+  public title:string;
+
+  @Input()
   public modalId:string;
 
  

@@ -4,10 +4,12 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
 
 import { Subject, BehaviorSubject } from "rxjs/Rx";
+import { HeaderService } from './header.service';
 
 @Injectable()
 export class AuthenticationService {
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, 
+    private headerService:HeaderService) { }
 
 
 
@@ -58,8 +60,9 @@ export class AuthenticationService {
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
-        localStorage.removeItem("alreadyDownloadInfo")
-        localStorage.removeItem("statsAlreadyCalculated")
+        this.headerService.reset();
+        // localStorage.removeItem("alreadyDownloadInfo")
+        // localStorage.removeItem("statsAlreadyCalculated")
         
     }
 

@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { LeaguesService } from '../leagues.service';
 import { HeaderService } from '../header.service';
+import { MessageboxComponent } from '../messagebox/messagebox.component';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 declare const $: any;
 
 
@@ -14,10 +16,8 @@ declare const $: any;
 
 export class CompetitionComponent implements OnInit {
 
+    @ViewChild(MessageboxComponent) messagesBox: MessageboxComponent;
 
-    totalEstimate = 10;
-    ctx = { estimate: this.totalEstimate };
-    ctx2 = { estimate: 20 };
 
     ctxRealRanking: any;
     ctxRealLightRanking: any;
@@ -41,9 +41,6 @@ export class CompetitionComponent implements OnInit {
     leagueShortName = null;
     competitionShortName = null;
     competitionName = null;
-    loadingMessage = null;
-    errorMessage = null;
-    successMessage = null;
 
     stats = null;
 
@@ -58,10 +55,6 @@ export class CompetitionComponent implements OnInit {
 
 
 
-    // VIA 
-    // message:string ="";
-    titleParam: string = "";
-
 
     constructor(
         private route: ActivatedRoute,
@@ -71,9 +64,9 @@ export class CompetitionComponent implements OnInit {
 
     ) { }
 
-   
+
     ngOnInit() {
-       
+
         this.route.paramMap.subscribe((params: ParamMap) => {
             let url1 = params.get('competition');
             this.competitionShortName = url1;
@@ -84,6 +77,8 @@ export class CompetitionComponent implements OnInit {
             let url3 = params.get('type');
             this.rulesType = url3;
 
+            this.headerService.changeCustomPage( this.rulesType);
+
             this.model = {
                 leagueShortName: this.leagueShortName,
                 competitionShortName: this.competitionShortName
@@ -91,48 +86,22 @@ export class CompetitionComponent implements OnInit {
 
             this.retrieveAllRankings();
 
-
-
         });
 
     }
 
-    setSuccessMessage(text) {
-        this.successMessage = text;
-        $("#loading-alert").fadeTo(1000, 0).slideUp(1000);
-        setTimeout(() => {
-            $("#success-alert").fadeTo(1000, 0).slideUp(1000);
 
-        }, 3000);
-    }
-
-    setLoadingMessage(text) {
-        this.loadingMessage = text;
-        $("#success-alert").fadeTo(1000, 0).slideUp(1000);
-        setTimeout(() => {
-            // $("#loading-alert").fadeTo(1000, 0).slideUp(1000);
-
-        }, 3000);
-    }
-
-    setErrorMessage(text) {
-        this.headerService.changeErrorMessage(text)
-        // this.loadingMessage = text;
-        // $("#success-alert").fadeTo(1000, 0).slideUp(1000);
-        // setTimeout(() => {
-        //     // $("#loading-alert").fadeTo(1000, 0).slideUp(1000);
-
-        // }, 3000);
-    }
 
 
 
     isAlreadyCalculated() {
         if (this.rulesType == "REAL") {
-            let isStatslreadyCalculated = localStorage.getItem(this.competitionShortName + '-statsAlreadyCalculated');
-            if (isStatslreadyCalculated == "true") {
-                return true;
-            }
+            let isStatslreadyCalculated = this.headerService.isCompetitionAlreadyCalculated(this.competitionShortName);
+            return isStatslreadyCalculated;
+            // let isStatslreadyCalculated = localStorage.getItem(this.competitionShortName + '-statsAlreadyCalculated');
+            // if (isStatslreadyCalculated == "true") {
+            //     return true;
+            // }
         }
         else {
             return false;
@@ -141,17 +110,18 @@ export class CompetitionComponent implements OnInit {
 
 
     isAlreadyDownloaded() {
-        let alreadyDownloaded = localStorage.getItem(this.competitionShortName + '-alreadyDownloadInfo');
-        if (alreadyDownloaded == "true")
-            return true;
-        else
-            return false;
+        let alreadyDownloaded = this.headerService.isCompetitionAlreadyDownloaded(this.competitionShortName);
+        return alreadyDownloaded;
+        // let alreadyDownloaded = localStorage.getItem(this.competitionShortName + '-alreadyDownloadInfo');
+        // if (alreadyDownloaded == "true")
+        //     return true;
+        // else
+        //     return false;
     }
 
     downloadInfo() {
-        this.setSuccessMessage(null);
-        this.setErrorMessage(null);
-        this.setLoadingMessage("Download dei risultati delle giornate mancanti e delle formazioni in corso...");
+        this.messagesBox.setMessage('success', null);
+        this.messagesBox.setMessage('loading', "Download dei risultati delle giornate mancanti e delle formazioni in corso...");
         this.leagueService.saveOnlineSeasonAndTeams(this.model).subscribe(
             data => {
                 this.leagueService.downloadSeasonFromWeb(this.model)
@@ -160,38 +130,39 @@ export class CompetitionComponent implements OnInit {
                             this.leagueService.calculateSeasonResult(this.model)
                                 .subscribe(
                                     data => {
-                                        this.setLoadingMessage(null);
-                                        this.setSuccessMessage("Il ricalcolo dei risultati della stagione è stato eseguito");
-                                        this.setErrorMessage(null);
-                                        localStorage.setItem(this.competitionShortName + '-alreadyDownloadInfo', "true");
+                                        this.messagesBox.setMessage('loading', null);
+                                        this.messagesBox.setMessage('success', "Il ricalcolo dei risultati della stagione è stato eseguito");
+                                        // this.setErrorMessage(null);
+                                        this.headerService.addCompetitionDownloaded(this.competitionShortName);
+                                        // localStorage.setItem(this.competitionShortName + '-alreadyDownloadInfo', "true");
                                     },
 
                                     error => {
-                                        this.setLoadingMessage(null);
-                                        this.setSuccessMessage(null);
-                                        this.setErrorMessage("Errore di comunicazione col server 2");
+                                        this.messagesBox.setMessage('loading', null);
+                                        this.messagesBox.setMessage('success', null);
+                                        // this.setErrorMessage("Errore di comunicazione col server 2");
                                     });
                         },
 
                         error => {
-                            this.setLoadingMessage(null);
-                            this.setSuccessMessage(null);
-                            this.setErrorMessage("Errore di comunicazione col server 1");
+                            this.messagesBox.setMessage('loading', null);
+                            this.messagesBox.setMessage('success', null);
+                            // this.setErrorMessage("Errore di comunicazione col server 1");
                         });
             },
             error => {
-                this.setLoadingMessage(null);
-                this.setSuccessMessage(null);
-                this.setErrorMessage("Errore di comunicazione col server 3");
+                this.messagesBox.setMessage('loading', null);
+                this.messagesBox.setMessage('success', null);
+                // this.setErrorMessage("Errore di comunicazione col server 3");
 
             });
 
     }
 
     retrieveAllRankings() {
-        this.setSuccessMessage(null);
-        this.setErrorMessage(null);
-        this.setLoadingMessage("Recupero Statistiche in corso...");
+        this.messagesBox.setMessage('success', null);
+        // this.setErrorMessage(null);
+        this.messagesBox.setMessage('loading', "Recupero Statistiche in corso...");
 
 
         let req = {
@@ -201,9 +172,9 @@ export class CompetitionComponent implements OnInit {
         }
 
         this.leagueService.retrieveAllRankings(req).subscribe(data => {
-            this.setLoadingMessage(null);
-            this.setSuccessMessage("Statistiche recuperate");
-            this.setErrorMessage(null);
+            this.messagesBox.setMessage('loading', null);
+            this.messagesBox.setMessage('success', "Statistiche recuperate");
+            // this.setErrorMessage(null);
             this.stats = data;
             this.competitionName = data.competition.name;
 
@@ -236,79 +207,79 @@ export class CompetitionComponent implements OnInit {
         },
 
             error => {
-                this.setLoadingMessage(null);
-                this.setSuccessMessage(null);
-                this.setErrorMessage("Devi ancora calcolare le statistiche");
+                this.messagesBox.setMessage('loading', null);
+                this.messagesBox.setMessage('success', null);
+                // this.setErrorMessage("Devi ancora calcolare le statistiche");
             });
     }
 
     saveOnlineSeasonAndTeams() {
-        this.setLoadingMessage("Download dei risultati delle giornate mancanti in corso...");
+        this.messagesBox.setMessage('loading', "Download dei risultati delle giornate mancanti in corso...");
 
         this.leagueService.saveOnlineSeasonAndTeams(this.model).subscribe(
             data => {
-                this.setLoadingMessage(null);
-                this.setSuccessMessage("I risultati delle giornate mancanti sono stati scaricati");
-                this.setErrorMessage(null);
+                this.messagesBox.setMessage('loading', null);
+                this.messagesBox.setMessage('success', "I risultati delle giornate mancanti sono stati scaricati");
+                // this.setErrorMessage(null);
             },
             error => {
-                this.setLoadingMessage(null);
-                this.setSuccessMessage(null);
-                this.setErrorMessage("Errore di comunicazione col server 3");
+                this.messagesBox.setMessage('loading', null);
+                this.messagesBox.setMessage('success', null);
+                // this.setErrorMessage("Errore di comunicazione col server 3");
 
             });
 
     }
 
     downloadSeasonFromWeb() {
-        this.setSuccessMessage(null);
-        this.setErrorMessage(null);
-        this.setLoadingMessage("Download delle formazioni delle giornate mancanti in corso...");
+        this.messagesBox.setMessage('success', null);
+        // this.setErrorMessage(null);
+        this.messagesBox.setMessage('loading', "Download delle formazioni delle giornate mancanti in corso...");
 
         this.leagueService.downloadSeasonFromWeb(this.model)
             .subscribe(
                 data => {
-                    this.setLoadingMessage(null);
-                    this.setSuccessMessage("Le formazioni delle giornate mancanti sono stati scaricati");
-                    this.setErrorMessage(null);
+                    this.messagesBox.setMessage('loading', null);
+                    this.messagesBox.setMessage('success', "Le formazioni delle giornate mancanti sono stati scaricati");
+                    // this.setErrorMessage(null);
                 },
 
                 error => {
-                    this.setLoadingMessage(null);
-                    this.setSuccessMessage(null);
-                    this.setErrorMessage("Errore di comunicazione col server 1");
+                    this.messagesBox.setMessage('loading', null);
+                    this.messagesBox.setMessage('success', null);
+                    // this.setErrorMessage("Errore di comunicazione col server 1");
                 });
 
-        this.setErrorMessage(null);
+        // this.setErrorMessage(null);
     }
 
 
     calculateSeasonResult() {
-        this.setSuccessMessage(null);
-        this.setErrorMessage(null);
-        this.setLoadingMessage("Ricalcolo dei risultati della stagione in corso...");
+        this.messagesBox.setMessage('success', null);
+        // this.setErrorMessage(null);
+        this.messagesBox.setMessage('loading', "Ricalcolo dei risultati della stagione in corso...");
 
         this.leagueService.calculateSeasonResult(this.model)
             .subscribe(
                 data => {
-                    this.setLoadingMessage(null);
-                    this.setSuccessMessage("Il ricalcolo dei risultati della stagione è stato eseguito");
-                    this.setErrorMessage(null);
+                    this.messagesBox.setMessage('loading', null);
+                    this.messagesBox.setMessage('success', "Il ricalcolo dei risultati della stagione è stato eseguito");
+                    // this.setErrorMessage(null);
                 },
 
                 error => {
-                    this.setLoadingMessage(null);
-                    this.setSuccessMessage(null);
-                    this.setErrorMessage("Errore di comunicazione col server 2");
+                    this.messagesBox.setMessage('loading', null);
+                    this.messagesBox.setMessage('success', null);
+                    // this.setErrorMessage("Errore di comunicazione col server 2");
                 });
 
-        this.setErrorMessage(null);
+        // this.setErrorMessage(null);
     }
 
     calculateRealStats(light) {
-        this.setSuccessMessage(null);
-        this.setErrorMessage(null);
-        this.setLoadingMessage("Calcolo delle statistiche in corso...");
+        this.messagesBox.setMessage('success', null);
+        // this.setErrorMessage(null);
+        this.messagesBox.setMessage('loading', "Calcolo delle statistiche in corso...");
         let req = {
             light: light,
             rulesType: this.rulesType,
@@ -317,21 +288,22 @@ export class CompetitionComponent implements OnInit {
         this.leagueService.calculateRealStats(req)
             .subscribe(
                 data => {
-                    this.setLoadingMessage(null);
-                    this.setSuccessMessage("Calcolo delle statistiche terminato. Dati pronti");
-                    this.setErrorMessage(null);
+                    this.messagesBox.setMessage('loading', null);
+                    this.messagesBox.setMessage('success', "Calcolo delle statistiche terminato. Dati pronti");
+                    // this.setErrorMessage(null);
                     if (this.rulesType == "REAL")
-                        localStorage.setItem(this.competitionShortName + '-statsAlreadyCalculated', "true");
+                        this.headerService.addCompetitionCalculated(this.competitionShortName);
+                        // localStorage.setItem(this.competitionShortName + '-statsAlreadyCalculated', "true");
                     this.retrieveAllRankings();
                 },
 
                 error => {
-                    this.setLoadingMessage(null);
-                    this.setSuccessMessage(null);
-                    this.setErrorMessage("Errore di comunicazione col server 3");
+                    this.messagesBox.setMessage('loading', null);
+                    this.messagesBox.setMessage('success', null);
+                    // this.setErrorMessage("Errore di comunicazione col server 3");
                 });
 
-        this.setErrorMessage(null);
+        // this.setErrorMessage(null);
     }
 
     goToCompetitionRules(competition) {
@@ -380,7 +352,7 @@ export class CompetitionComponent implements OnInit {
 
 
     goToReport() {
-        this.router.navigate(['/report', { league: this.leagueShortName, competition: this.competitionShortName }])
+        this.router.navigate(['/report', { league: this.leagueShortName, competition: this.competitionShortName, type:this.rulesType }])
     }
 
 

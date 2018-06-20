@@ -2,15 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { LeaguesService } from '../leagues.service';
 import { Location } from '@angular/common';
+import * as _ from 'lodash';
+import { HeaderService } from '../header.service';
 
 @Component({
     selector: 'app-custom-rules',
     templateUrl: 'custom-rules.component.html',
-    styles: []
+    styleUrls: ['custom-rules.component.css']
 })
 export class CustomRulesComponent implements OnInit {
 
 modalText:string = ''; 
+modalTitle:string='';
 
     errorMessage = null;
     successMessage = null;
@@ -48,6 +51,7 @@ modalText:string = '';
         private router: Router,
         private leagueService: LeaguesService,
         private _location: Location,
+        private headerService: HeaderService
 
     ) { }
 
@@ -62,11 +66,69 @@ modalText:string = '';
         });
 
         this.retrieveCustomRules();
+
+        this.headerService.changeCustomPage('CUSTOM');
+      
     }
 
-    updateModalText(text:string){
-        this.modalText = text;
+    updateModalTextDifferentRule(text:any, title:string){
+        let message= '';
+        if (typeof text === 'object'){
+            for(let key in text) {
+                message += key + ': ' + text[key] + ';<br>';
+               
+            }
+        }
+        else if (typeof text === 'boolean')
+            if (text===true) message = 'SI';
+            else message = 'NO';
+        else {
+            message = text;
+        }
+        this.modalText = '<p>' + 'Il valore originale è:' + '</p>' +  '<p>' + message + '</p>'
+        this.modalTitle = title;
     }
+
+    updateModalText(text:string, title:string){
+        this.modalText = text;
+        this.modalTitle = title;
+    }
+
+    isDifferent(o1:any, o2:any):boolean{
+        // console.log("o1 " + JSON.stringify(o1));
+        // console.log("o2" + JSON.stringify(o2));
+        // return JSON.stringify(o1) != JSON.stringify(o2);
+
+
+        let same:boolean = true;
+        if (typeof o1 === 'object'){
+            for(let key in o1) {
+                for(let key2 in o2) {
+                    if (key == key2){
+                        let el1 = o1[key];
+                        let el2 = o2[key2];
+                        if ( typeof el1 == 'object'){
+                            same = same && !this.isDifferent(el1, el2);
+                        }
+                        else 
+                            same = same && o1[key] == o2[key2];
+                    }
+                    if (!same){
+                        console.log(key + ":" + o1[key] + "-" + key2 + ":" + o2[key2]);
+                    }
+                }
+            }
+        }
+        else 
+            same= o1==o2;
+           
+        
+
+        // let eq =  _.isEqualWith(o1, o2, this.customizer);
+        return !same;
+    }
+
+   
 
     retrieveCustomRules() {
         let retrieveRulesReq = {

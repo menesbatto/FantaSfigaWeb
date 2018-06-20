@@ -15,8 +15,17 @@ li.selected {
     width: 20px;
     height: 16px;
     display: inline-block;
-    background: url(http://d2lsqxmpmoo5k8.cloudfront.net/web/css/images/sorting_sprite.png) 0 -483px no-repeat;
+    background: url(../../ui/src/assets/icons.png) 0 0px no-repeat;
 }
+
+
+.error-ico{
+    width: 20px;
+    height: 16px;
+    display: inline-block;
+    background: url(../../ui/src/assets/icons.png) 0 -24px no-repeat;
+}
+
 .p {
     background: 0 0;
         background-color: rgba(0, 0, 0, 0);
@@ -111,7 +120,8 @@ body {
 }
 
 .customStats{
-    background: linear-gradient(to bottom right, white , rgb(253, 97, 97), white );
+    /*background: linear-gradient(to bottom right, white , rgb(253, 97, 97), white );*/
+    background-color: rgb(250, 206, 199) ;
 }
 
 .right {

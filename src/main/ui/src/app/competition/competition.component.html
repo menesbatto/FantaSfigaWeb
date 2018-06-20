@@ -1,4 +1,4 @@
-<div  [ngClass]="{ 'customStats': rulesType && rulesType == 'CUSTOM'} ">
+<div>
 
     <div>
         <div class="row nobor" >
@@ -6,7 +6,7 @@
                 <label>Scarica i dati</label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loadingMessage || isAlreadyDownloaded() && false" class="btn btn-primary btn-block" (click) = "downloadInfo()"> OK </button>
+                <button [disabled]="isAlreadyDownloaded()" class="btn btn-primary btn-block" (click) = "downloadInfo()"> OK </button>
             </div>
         </div>
             
@@ -53,7 +53,7 @@
                 <label> Calcola statistiche (qualche secondo)</label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loadingMessage || isAlreadyCalculated() && false" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
+                <button [disabled]="isAlreadyCalculated()" class="btn btn-primary btn-block" (click) = "calculateRealStats(false)"> OK </button>
             </div>
         </div>
                                                                             <!--<div class="row nobor">
@@ -70,7 +70,7 @@
                 <label>Vai al Report Errori</label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loadingMessage && false" class="btn btn-primary btn-block" (click) = "goToReport()"> OK </button>
+                <button [disabled]="" class="btn btn-primary btn-block" (click) = "goToReport()"> OK </button>
             </div>
         </div>
      
@@ -80,7 +80,7 @@
                 <label> Integra Regole </label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loadingMessage && false" class="btn btn-primary btn-block" (click) = "goToCompetitionRules()"> OK </button>
+                <button [disabled]="" class="btn btn-primary btn-block" (click) = "goToCompetitionRules()"> OK </button>
             </div>
         </div>
 
@@ -91,7 +91,7 @@
                 <label> Personalizza le regole</label>
             </div>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                <button [disabled]="loadingMessage" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> OK </button>
+                <button [disabled]="" class="btn btn-primary btn-block" (click) = "goToCustomRules()"> OK </button>
             </div>
         </div>
        
@@ -99,19 +99,22 @@
 
     </div>
 
-    <div class="alert alert-danger" *ngIf="errorMessage">
+    <!-- <div class="alert alert-danger" *ngIf="errorMessage">
         <strong>{{errorMessage}}</strong>
-    </div>
+    </div> -->
 
    
 
-    <div id ="success-alert" class="alert alert-success" *ngIf="successMessage">
+    <!-- <div id ="success-alert" class="alert alert-success" *ngIf="successMessage">
         <strong>{{successMessage}}</strong>
     </div>
 
     <div id ="loading-alert" class="alert alert-warning" *ngIf="loadingMessage">
             <strong>{{loadingMessage}}</strong>
-        </div>
+        </div> -->
+
+    <app-messagebox></app-messagebox>
+
 
 
     <div class="container" *ngIf="ctxFairRanking">

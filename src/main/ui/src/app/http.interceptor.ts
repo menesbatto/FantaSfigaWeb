@@ -8,12 +8,16 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/finally';
+import { HeaderService } from './header.service';
 
 @Injectable()
 export class MyLoaderInterceptor implements HttpInterceptor {
     private requests: HttpRequest<any>[] = [];
 
-    constructor(private spinnerService: SpinnerService) { }
+    constructor(
+        private spinnerService: SpinnerService,
+        private headerService: HeaderService
+    ) { }
 
     removeRequest(req: HttpRequest<any>) {
         const i = this.requests.indexOf(req);
@@ -39,6 +43,7 @@ export class MyLoaderInterceptor implements HttpInterceptor {
                     err => { 
                         this.removeRequest(req); 
                         observer.error(err); 
+                        this.headerService.changeErrorMessage(err.status + " - " + err.statusText);
                     },
                     () => { 
                         this.removeRequest(req); 
