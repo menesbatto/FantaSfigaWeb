@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { LeaguesService } from '../leagues.service';
 import { HeaderService } from '../header.service';
+import { MessageboxComponent } from '../messagebox/messagebox.component';
 
 @Component({
   selector: 'app-report',
@@ -9,6 +10,9 @@ import { HeaderService } from '../header.service';
   styles: []
 })
 export class ReportComponent implements OnInit {
+
+
+    @ViewChild(MessageboxComponent) messagesBox: MessageboxComponent;
 
     leagueShortName = null;
     competitionShortName = null;
@@ -18,10 +22,6 @@ export class ReportComponent implements OnInit {
         competitionShortName: null
     };
 
-    loading = null;
-    successMessage = null;
-    errorMessage = null;
-    loadingMessage = null;
     competitionName = null;
     report = null;
 
@@ -58,11 +58,11 @@ export class ReportComponent implements OnInit {
                 competitionShortName: this.competitionShortName
             }
 
-            this.headerService.changeCustomPage( rulesType);
-
+            
             this.retrieveReport();
             
-
+            this.headerService.changeCustomPage(rulesType);
+            
 
         });
 
@@ -70,21 +70,17 @@ export class ReportComponent implements OnInit {
 
     
     retrieveReport() {
-        this.loading = true;
-        this.successMessage = null;
-        this.errorMessage = null;
-        this.loadingMessage = "Recupero Statistiche in corso...";
-
+        this.messagesBox.setMessage('loading', 'Recupero Statistiche in corso...');
+        this.messagesBox.setMessage('success', null);
+                  
 
         let competition = this.model;
           
 
         this.leagueService.retrieveReport(competition)
         .subscribe(data => {
-            this.loadingMessage = null;
-            this.successMessage = "Report recuperato";
-            this.errorMessage = null;
-            this.loading = false;
+            this.messagesBox.setMessage('loading', null);
+            this.messagesBox.setMessage('success', 'Report recuperato');
             this.report = data.report;
 
             this.competitionName = data.report.competition.name;
@@ -92,10 +88,6 @@ export class ReportComponent implements OnInit {
          },
 
             error => {
-                this.loadingMessage = null;
-                this.successMessage = null;
-                this.errorMessage = "Errore comunicazione col server";
-                this.loading = false;
             });
     }
 }

@@ -1,6 +1,8 @@
+
+<app-messagebox></app-messagebox>
 <div *ngIf="report">
     <!--<h3 align = "center">Le tue leghe </h3>-->
-  
+
     <div class="table-responsive" *ngIf="report.voteMismatches">
         <table class="table  table-striped">
             <thead>
@@ -18,21 +20,25 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor = "let miss of report.voteMismatches" >
+                <tr *ngFor="let miss of report.voteMismatches">
                     <td> {{miss.serieASeasonDay}} </td>
                     <td> {{miss.pvcVote.team}} </td>
                     <td> {{miss.pvcVote.name}} </td>
                     <td> {{miss.pvcVote.vote}} </td>
-                    <td><span class="glyphicon glyphicon-arrow-right"></span></td>
+                    <td>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                    </td>
                     <td> {{miss.pvcVote.voteFromWeb}} </td>
                     <td> {{miss.pvcVote.fantavote}} </td>
-                    <td><span class="glyphicon glyphicon-arrow-right"></span></td>
+                    <td>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                    </td>
                     <td> {{miss.pvcVote.fantaVoteFromWeb}} </td>
                     <td> {{miss.player}} </td>
-                <tr>
+                    <tr>
             </tbody>
         </table>
-    </div> 
+    </div>
 
 
     <div class="table-responsive " *ngIf="report.matchMismatches">
@@ -40,21 +46,21 @@
             <thead>
                 <tr>
                     <!--<th>Giornata Serie A</th>-->
-                    <th></th>    
+                    <th></th>
                     <th class="bord"></th>
                     <th></th>
                     <th>App </th>
                     <th></th>
                     <th>Web</th>
                     <th></th>
-                    
-                    
+
+
                     <th class="bord"></th>
                     <th>App</th>
                     <th></th>
                     <th></th>
                     <th>Web</th>
-               
+
 
                 </tr>
             </thead>
@@ -68,8 +74,8 @@
                     <th></th>
                     <th>Goal</th>
                     <th>Punti</th>
-                    
-                    <th class="bord" >Fuori </th>
+
+                    <th class="bord">Fuori </th>
                     <th>Goal</th>
                     <th>Punti</th>
                     <th></th>
@@ -79,42 +85,31 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor = "let miss of report.matchMismatches" >
+                <tr *ngFor="let miss of report.matchMismatches">
                     <!--<td> {{miss.serieASeasonDay}} </td>-->
                     <td> {{miss.competitonSeasonDay}} </td>
-                    
+
                     <td class="bord"> {{miss.homeLulApp.teamName}} </td>
                     <td> {{miss.homeLulApp.goals}} </td>
                     <td> {{miss.homeLulApp.sumTotalPoints}} </td>
-                    <td><span class="glyphicon glyphicon-arrow-right"></span></td>
+                    <td>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                    </td>
                     <td> {{miss.homeLulWeb.goals}} </td>
                     <td> {{miss.homeLulWeb.sumTotalPoints}} </td>
-                    
 
-                    <td  class="bord"> {{miss.awayLulApp.teamName}} </td>
+
+                    <td class="bord"> {{miss.awayLulApp.teamName}} </td>
                     <td> {{miss.awayLulApp.goals}} </td>
                     <td> {{miss.awayLulApp.sumTotalPoints}} </td>
-                    <td><span class="glyphicon glyphicon-arrow-right"></span></td>
+                    <td>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                    </td>
                     <td> {{miss.awayLulWeb.goals}} </td>
                     <td> {{miss.awayLulWeb.sumTotalPoints}} </td>
-                <tr>
+                    <tr>
             </tbody>
         </table>
-  </div> 
+    </div>
 
-
-
-<div class="alert alert-success" *ngIf="successMessage">
-    <strong>{{successMessage}}</strong>
 </div>
-
-<div class="alert alert-success" *ngIf="loadingMessage" >
-  <strong>{{loadingMessage}}</strong>
-</div>
-
-<div class="alert alert-danger" *ngIf="errorMessage">
-  <strong>{{errorMessage}}</strong>
-</div>
-</div>
-
-  

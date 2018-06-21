@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { MessageboxComponent } from '../messagebox/messagebox.component';
 
 @Component({
     selector: 'app-postponements',
@@ -6,6 +7,8 @@ import { Component, OnInit, Input } from '@angular/core';
     styles: []
 })
 export class PostponementsComponent implements OnInit {
+
+    @ViewChild(MessageboxComponent) messagesBox: MessageboxComponent;
 
     constructor() { 
       
@@ -26,9 +29,6 @@ export class PostponementsComponent implements OnInit {
 
     map = new Map<String, String>();
     seasonDayToJump = null;
-
-    errorMessage = null;
-    successMessage = null;
 
 
     modalText:string;
@@ -93,11 +93,11 @@ export class PostponementsComponent implements OnInit {
                 && this.seasonDayToJump>0 
                 && this.seasonDayToJump<38) {
             this.competitionRules.seasonDaysToJump.push(this.seasonDayToJump);
-            this.errorMessage = null;
+            this.messagesBox.setMessage('error', null);
         }
         else {
-            this.successMessage= null;
-            this.errorMessage = "Inserisci una giornata di Serie A corretta";
+            this.messagesBox.setMessage('success', null);
+            this.messagesBox.setMessage('error', 'Inserisci una giornata di Serie A corretta');
         }
     }
 

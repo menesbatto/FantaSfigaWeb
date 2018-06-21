@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { LeaguesService } from '../leagues.service';
 import { Location } from '@angular/common';
 import * as _ from 'lodash';
 import { HeaderService } from '../header.service';
+import { MessageboxComponent } from '../messagebox/messagebox.component';
 
 @Component({
     selector: 'app-custom-rules',
@@ -12,21 +13,16 @@ import { HeaderService } from '../header.service';
 })
 export class CustomRulesComponent implements OnInit {
 
-modalText:string = ''; 
-modalTitle:string='';
+    modalText:string = ''; 
+    modalTitle:string='';
 
-    errorMessage = null;
-    successMessage = null;
+    @ViewChild(MessageboxComponent) messagesBox: MessageboxComponent;
 
 
     leagueShortName = null;
     competitionShortName = null;
-    competitionBean = {
-        leagueShortName: null,
-        competitionShortName: null
-    };
    
-    realRules = null;
+    realRules:any = null;
    
     bonusMalus: any = null;
     showBonusMalus:boolean = false;
@@ -76,7 +72,6 @@ modalTitle:string='';
         if (typeof text === 'object'){
             for(let key in text) {
                 message += key + ': ' + text[key] + ';<br>';
-               
             }
         }
         else if (typeof text === 'boolean')
@@ -95,11 +90,6 @@ modalTitle:string='';
     }
 
     isDifferent(o1:any, o2:any):boolean{
-        // console.log("o1 " + JSON.stringify(o1));
-        // console.log("o2" + JSON.stringify(o2));
-        // return JSON.stringify(o1) != JSON.stringify(o2);
-
-
         let same:boolean = true;
         if (typeof o1 === 'object'){
             for(let key in o1) {
@@ -112,6 +102,8 @@ modalTitle:string='';
                         }
                         else 
                             same = same && o1[key] == o2[key2];
+                        if (!same)
+                            return !same;
                     }
                     if (!same){
                         console.log(key + ":" + o1[key] + "-" + key2 + ":" + o2[key2]);
@@ -141,8 +133,8 @@ modalTitle:string='';
         this.leagueService.retrieveRules(retrieveRulesReq)
             .subscribe(
                 data => {
-                    this.successMessage = "Le regole sono state recuperate";
-                    this.errorMessage = null;
+                    this.messagesBox.setMessage('success', 'Le regole sono state recuperate');
+                  
                     
                     this.realRules= data.realRules;
 
@@ -158,8 +150,7 @@ modalTitle:string='';
                 },
 
                 error => {
-                    this.successMessage = null;
-                    this.errorMessage = "Errore di comunicazione col server"
+               
                 }
 
             )
@@ -181,30 +172,26 @@ modalTitle:string='';
                 type : "CUSTOM"
             }    
         }
+        this.messagesBox.setMessage('success', null);
+
         this.leagueService.saveCustomRules(req)
         .subscribe(
             data => {
+                this.messagesBox.setMessage('success', 'Le regole custom sono state resettate');
                 this.bonusMalus = data.bonusMalus;
                 this.dataSource = data.dataSource;
                 this.points = data.points;
                 this.substitutions = data.substitutions;
                 this.modifiers = data.modifiers;
                 this.competitionRules = data.competitionRules;
-
-
-                this.successMessage = "Le regole custom sono state resettate";
-                this.errorMessage = null;
             },
 
             error => {
-                this.successMessage = null;
-                this.errorMessage = "Errore di comunicazione col server"
+        
             });
     }
 
     saveCustomRules() {
-        this.competitionBean.leagueShortName = this.leagueShortName;
-        this.competitionBean.competitionShortName = this.competitionShortName;
         
         let req = {
             leagueShortName : this.leagueShortName,
@@ -219,21 +206,18 @@ modalTitle:string='';
                 type : "CUSTOM"
             }    
         }
-
+        this.messagesBox.setMessage('success', null);
         this.leagueService.saveCustomRules(req)
             .subscribe(
                 data => {
-                    this.successMessage = "Le regole sono state salvate";
-                    this.errorMessage = null;
+                    this.messagesBox.setMessage('success', 'Le regole sono state salvate');
                     this._location.back();
                 },
 
                 error => {
-                    this.successMessage = null;
-                    this.errorMessage = "Errore di comunicazione col server"
+               
                 });
 
-        this.errorMessage = null;
     }
 
 

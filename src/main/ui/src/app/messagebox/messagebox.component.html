@@ -1,7 +1,11 @@
-<div id ="messagebox-success" class="alert alert-success" *ngIf="successMessage">
-    <strong>{{successMessage}}</strong>
+<div id ="messagebox-success" class="alert alert-success" *ngIf="successMessage" [innerHTML]="successMessage">
+  
 </div>
 
-<div id ="messagebox-loading" class="alert alert-warning" *ngIf="loadingMessage">
-    <strong>{{loadingMessage}}</strong>
+<div id ="messagebox-loading" class="alert alert-warning" *ngIf="loadingMessage" [innerHTML]="loadingMessage">
+    
+</div>
+
+<div id ="messagebox-error" class="alert alert-danger" *ngIf="errorMessage" [innerHTML]="errorMessage">
+
 </div>

@@ -1,9 +1,9 @@
-
+<app-messagebox></app-messagebox>
 <div  class = "customPage">
     
     
         
-    <div class="row" >
+    <div class="row" *ngIf="bonusMalus">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl"> Bonus/Malus Calciatori </span>
@@ -377,7 +377,7 @@
 
 
 
-    <div class="row">
+    <div class="row"  *ngIf="dataSource">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl"> Fonte Voti e Cartellini </span>
@@ -487,7 +487,7 @@
 
 
 
-    <div class="row">
+    <div class="row"  *ngIf="substitutions">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl"> Sostituzioni </span>
@@ -689,7 +689,7 @@
 
 
 
-    <div class="row">
+    <div class="row" *ngIf="points">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl"> Punteggi </span>
@@ -1127,7 +1127,7 @@
 
 
 
-    <div class="row">
+    <div class="row" *ngIf="modifiers">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl" >Modificatori </span>
@@ -1590,7 +1590,7 @@
 
 
 
-    <div class="row">
+    <div class="row" *ngIf="competitionRules">
         <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 ">
                 <span class= "spanxxl"> Altre Regole </span>
@@ -1612,8 +1612,9 @@
     <div id="form-step6" class="row" *ngIf="competitionRules && showCompetitionRules">
         <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="row">
-                <label [ngClass]="{ 'diff': competitionRules.homeBonusActive != realRules.competitionRules.homeBonusActive }"
-                    class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="dautogol">Bonus Casalingo Attivo:</label>
+                <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="dautogol">Bonus Casalingo Attivo:</label>
+                <!-- <label [ngClass]="{ 'diff': competitionRules.homeBonusActive != realRules.competitionRules.homeBonusActive }"
+                    class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label" for="dautogol">Bonus Casalingo Attivo:</label> -->
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                     <div class="radio" >
                         <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="competitionRules.homeBonusActive" name="homeBonusActive1" [value]="true" ></span>Sì </label>
@@ -1630,8 +1631,7 @@
                 </div>
             </div>
             <div class="row inner nobor" *ngIf="competitionRules.homeBonusActive">
-                <label [ngClass]="{ 'diff': competitionRules.homeBonus != realRules.competitionRules.homeBonus }"
-                    class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="dautogol">Bonus Casalingo:</label>
+                <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="dautogol">Bonus Casalingo:</label>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <input name="ctl00$main$vriservap" [(ngModel)]="competitionRules.homeBonus" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                 </div>
@@ -1652,12 +1652,7 @@
     <br>
     <br>
     
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-success" *ngIf="successMessage">
-        <strong>{{successMessage}}</strong>
-    </div>
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 alert alert-danger" *ngIf="errorMessage">
-        <strong>{{errorMessage}}</strong>
-    </div>
+   
     <br>
     <br>
 

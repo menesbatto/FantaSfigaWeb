@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { LeaguesService } from '../leagues.service';
 import { Location } from '@angular/common';
 import { HeaderService } from '../header.service';
+import { MessageboxComponent } from '../messagebox/messagebox.component';
 
 @Component({
     selector: 'app-competition-rules',
@@ -10,12 +11,29 @@ import { HeaderService } from '../header.service';
     styles: []
 })
 export class CompetitionRulesComponent implements OnInit {
+
+
+    modalText:string = ''; 
+    modalTitle:string='';
+
+    updateModalText(text:string, title:string){
+        this.modalText = text;
+        this.modalTitle = title;
+    }
+
+
+
+
+    @ViewChild(MessageboxComponent) messagesBox: MessageboxComponent;
+
     leagueShortName = null;
     competitionShortName = null;
-    errorMessage = null;
-    successMessage = null;
     rules = null;
     seasonDayToJump = null;
+
+   
+
+
 
     constructor(
         private route: ActivatedRoute,
@@ -27,22 +45,21 @@ export class CompetitionRulesComponent implements OnInit {
     ) { }
 
 
-    addSeasonDayToJump(){
-        if (this.rules.competitionRules.seasonDaysToJump.indexOf(this.seasonDayToJump) < 0
-                && this.seasonDayToJump>0 
-                && this.seasonDayToJump<38) {
-            this.rules.competitionRules.seasonDaysToJump.push(this.seasonDayToJump);
-            this.errorMessage = null;
-        }
-        else {
-            this.successMessage= null;
-            this.errorMessage = "Inserisci una giornata di Serie A corretta";
-        }
-    }
+    // addSeasonDayToJump(){
+    //     if (this.rules.competitionRules.seasonDaysToJump.indexOf(this.seasonDayToJump) < 0
+    //             && this.seasonDayToJump>0 
+    //             && this.seasonDayToJump<38) {
+    //         this.rules.competitionRules.seasonDaysToJump.push(this.seasonDayToJump);
+    //     }
+    //     else {
+    //         this.messagesBox.setMessage('success', null);
+    //         this.messagesBox.setMessage('error', 'Inserisci una giornata di Serie A corretta');
+    //     }
+    // }
 
-    resetSeasonDaysToJump(){
-        this.rules.competitionRules.seasonDaysToJump = [];
-    }
+    // resetSeasonDaysToJump(){
+    //     this.rules.competitionRules.seasonDaysToJump = [];
+    // }
 
   
     ngOnInit() {
@@ -69,8 +86,7 @@ export class CompetitionRulesComponent implements OnInit {
         this.leagueService.retrieveRules(retrieveRulesReq)
             .subscribe(
                 data => {
-                    this.successMessage = "Le regole sono state recuperate";
-                    this.errorMessage = null;
+                    this.messagesBox.setMessage('success', 'Le regole sono state recuperate');
                    
                     this.rules = data.realRules;
                     if (this.rules.competitionRules.postponementBehaviour == null){
@@ -81,8 +97,7 @@ export class CompetitionRulesComponent implements OnInit {
                 },
 
                 error => {
-                    this.successMessage = null;
-                    this.errorMessage = "Errore di comunicazione col server"
+                   
                 }
 
             )
@@ -97,10 +112,12 @@ export class CompetitionRulesComponent implements OnInit {
         return false;
     }
 
+ 
+
     saveCustomRules() {
         if (this.rules.competitionRules.postponementBehaviour== null){
-            this.successMessage = null;
-            this.errorMessage = "Devi scegliere la politica di assegnazione voto in caso di rinvi o sospensioni delle partite";
+            this.messagesBox.setMessage('success', null);
+            this.messagesBox.setMessage('error', 'Devi scegliere la politica di assegnazione voto in caso di rinvi o sospensioni delle partite');
             return;
         }
         let req = {
@@ -111,8 +128,7 @@ export class CompetitionRulesComponent implements OnInit {
         this.leagueService.integrateRules(req)
             .subscribe(
                 data => {
-                    this.successMessage = "Le regole sono state salvate";
-                    this.errorMessage = null;
+                    this.messagesBox.setMessage('success', 'Le regole sono state salvate');
                     this.headerService.removeCompetitionCalculated(this.competitionShortName);
                     this.headerService.removeCompetitionDownloaded(this.competitionShortName);
                     // localStorage.setItem(this.competitionShortName + '-statsAlreadyCalculated', "false");
@@ -122,12 +138,9 @@ export class CompetitionRulesComponent implements OnInit {
                 },
 
                 error => {
-                    this.successMessage = null;
-                    this.errorMessage = "Errore di comunicazione col server"
                 });
 
-        this.errorMessage = null;
-    }
+        }
 
     
 }
