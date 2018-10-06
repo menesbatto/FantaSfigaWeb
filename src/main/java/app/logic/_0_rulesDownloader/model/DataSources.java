@@ -9,7 +9,6 @@ public class DataSources  implements Serializable{
 	private static final long serialVersionUID = 2886189272962700751L;
 
 	private VotesSourceEnum votesSource;
-	private VotesSourceEnum bonusMalusSource;
 	private String yellowRedCardSource;
 	
 	
@@ -19,15 +18,9 @@ public class DataSources  implements Serializable{
 	public void setVotesSource(VotesSourceEnum votesSource) {
 		this.votesSource = votesSource;
 	}
-	public VotesSourceEnum getBonusMalusSource() {
-		return bonusMalusSource;
-	}
-	public void setBonusMalusSource(VotesSourceEnum bonusMalusSource) {
-		this.bonusMalusSource = bonusMalusSource;
-	}
 	@Override
 	public String toString() {
-		return "DataSources [votesSource=" + votesSource + "\n bonusMalusSource=" + bonusMalusSource + "]";
+		return "DataSources [votesSource=" + votesSource + "\n yellowRedCardSource=" + yellowRedCardSource + "]";
 	}
 	public String getYellowRedCardSource() {
 		return yellowRedCardSource;

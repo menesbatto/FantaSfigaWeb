@@ -94,29 +94,36 @@ public class HttpUtils {
 		//		champDriver.navigate().refresh();
 		//		WebElement navBar   = driver.findElement(By.id("myNav"));
 				
-				WebElement loginBtnPage = driver.findElement(By.className("bbtnblu"));
+				WebElement loginBtnPage = driver.findElement(By.className("hidden-logged")); 
 				WebDriverWait wait = new WebDriverWait(driver,5);
-			    wait.until(ExpectedConditions.presenceOfElementLocated(By.className("iubenda-cs-close-btn")));
+			    wait.until(ExpectedConditions.presenceOfElementLocated(By.className("qc-cmp-button")));
 
-				WebElement cookieInfoCloseButton = driver.findElement(By.className("iubenda-cs-close-btn"));
+				WebElement cookieInfoCloseButton = driver.findElement(By.className("qc-cmp-button"));
 				WebDriverWait wait2 = new WebDriverWait(driver,2);
 				wait2.until(ExpectedConditions.elementToBeClickable(cookieInfoCloseButton));
 				cookieInfoCloseButton.click();
 			    
 						 
-			    WebElement id = driver.findElement(By.id("username"));
-			    WebElement pass = driver.findElement(By.id("password"));
-			    WebElement loginButtonModal = driver.findElement(By.id("accedi"));
-		
+			    WebElement id = driver.findElement(By.name("username"));
+			    WebElement pass = driver.findElement(By.name("password"));
+			   try {
+			    	loginBtnPage.click();
+			    }
+			    catch(org.openqa.selenium.StaleElementReferenceException ex)
+			    {
+			    	loginBtnPage = driver.findElement(By.className("hidden-logged")); 
+			    	loginBtnPage.click();
+			    }
 			    
-			    loginBtnPage.click();
+			   WebElement loginButtonModal = driver.findElement(By.id("buttonLogin"));
 			    wait = new WebDriverWait(driver,5);
 			    wait.until(ExpectedConditions.elementToBeClickable(loginButtonModal));
 			    
 			    
 			    id.sendKeys(username);
 			    pass.sendKeys(password);
-			    loginButtonModal.click();
+			    
+				loginButtonModal.click();
 			   
 			    // 3 - Setta il Web Driver nel field della classe
 			    setLoggedWebDriver(driver);
@@ -229,7 +236,8 @@ public class HttpUtils {
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--allow-file-access-from-files");
 		options.addArguments("--verbose");
-		options.addArguments("load-extension=C:\\Users\\Menesbatto-PC\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cfhdojbkjhnklbpkdaibdccddilifddb\\3.1_0");
+		options.addArguments("load-extension=C:\\Users\\Menesbatto-PC\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cfhdojbkjhnklbpkdaibdccddilifddb\\3.3.2_1");
+		//C:\Users\Menesbatto-PC\AppData\Local\Google\Chrome\User Data\Default\Extensions\cfhdojbkjhnklbpkdaibdccddilifddb\3.3.2_1
 		capabilities.setVersion("");
 		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 		

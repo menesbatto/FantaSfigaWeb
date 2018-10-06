@@ -3,12 +3,14 @@ package app.logic._0_rulesDownloader;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_rulesDownloader.model.BonusMalus;
 import app.logic._0_rulesDownloader.model.CompetitionRules;
 import app.logic._0_rulesDownloader.model.DataSources;
+import app.logic._0_rulesDownloader.model.DefenderModeEnum;
 import app.logic._0_rulesDownloader.model.MaxOfficeVotesEnum;
 import app.logic._0_rulesDownloader.model.Modifiers;
 import app.logic._0_rulesDownloader.model.Points;
@@ -138,31 +141,41 @@ public class RulesExpertMain {
 		Document doc = getLoggedPage(url, "");
 		
 		CompetitionRules cr = new CompetitionRules();
+		Boolean homeBonusActive = false;
+				
+		Elements fattoreCampoCurr = null;
+		Elements fattoreCampoElements = doc.getElementsByAttributeValue("data-field-key","fattore_campo");
+		for (Element fattoreCampo : fattoreCampoElements) {
+			fattoreCampoCurr = fattoreCampo.getElementsByAttributeValue("data-h","false");
+			if (fattoreCampoCurr.size()>0) {
+				homeBonusActive = true; 
+				break;
+			}
+		}
 		
-		Elements fattoreCampoElems = doc.getElementsMatchingOwnText("Fattore campo:");
-		if (!fattoreCampoElems.isEmpty()) {
-//			String homeBonusActiveString = fattoreCampoElems.parents().get(0).getElementsByAttribute("checked").val();
-//			Boolean isHomeBonusActive = homeBonusActiveString.equals("1");
-//			cr.setHomeBonusActive(isHomeBonusActive);
+		cr.setHomeBonusActive(homeBonusActive);
+		
+		if (homeBonusActive) {
+			Elements elems = fattoreCampoCurr.get(0).getElementsByClass("value-type-message");
+			if (elems.size()>0) {	//questo il è per le coppe a gironi...vanno aggiunte bene le regole per tali coppe
+				String homeBonusString = elems.get(0).text();
+				homeBonusString = homeBonusString.replace(" punti", "");
+				Double homeBonus = Double.valueOf(homeBonusString);
 			
-			String homeBonusString = doc.getElementById("valore_fattore").val();
-			Double homeBonus = Double.valueOf(homeBonusString.replace(",", "."));
-			cr.setHomeBonus(homeBonus);
-			
-			
-			boolean homeBonusActive = homeBonus!= null && homeBonus > 0.0;
-			cr.setHomeBonusActive(homeBonusActive);
-		}
-		else {
-			cr.setHomeBonusActive(false);
+				cr.setHomeBonus(homeBonus);
+			}
+			else 
+				cr.setHomeBonusActive(false);
 
-			
 		}
+		
 		return cr;
 	}
 
 	private Modifiers analyzeRulesPageModifiers(String leagueName) {
-		Document doc = getLoggedPage(AppConstants.RULES_5_MODIFIERS_URL, leagueName);
+//		Document doc = getLoggedPage(AppConstants.RULES_5_MODIFIERS_URL, leagueName);
+		Document doc = getLoggedPage(AppConstants.RULES_CONFIG_PLUS_URL, leagueName);
+
 		
 		Modifiers m = new Modifiers();
 		
@@ -177,7 +190,9 @@ public class RulesExpertMain {
 		
 		m = getPerformanceModifiers(m, doc);
 		
-		m = getFairPlayMoodifiers(m, doc);
+		m = getFairPlayModifiers(m, doc);
+		
+		m = getCaptainModifiers(m, doc);
 		
 		System.out.println(m);
 		
@@ -185,88 +200,204 @@ public class RulesExpertMain {
 	}
 
 	private Document getLoggedPage(String url, String leagueName) {
-		url = url.replace("[LEAGUE_NAME]", leagueName);
+		url = url.replace("[LEAGUE_NAME]", leagueName);//url = "http://leghe.fantagazzetta.com/accaniti-division/gestione-lega/opzioni-rose";
 		Credentials c = userDao.retrieveGazzettaCredentials(userBean.getUsername());
 		Document doc = HttpUtils.getHtmlPageLogged(url, c.getUsername(), c.getPassword());
 		return doc;
 	}
 
 	private Modifiers getPerformanceModifiers(Modifiers m, Document doc) {
-//		String isPerformanceActiveString = doc.getElementsMatchingOwnText("Modificatore di rendimento:").parents().get(0).getElementsByAttribute("checked").val();
-//		Boolean isPerformancerActive = isPerformanceActiveString.equals("1");
-		String performanceDisplayedString = doc.getElementsMatchingOwnText("Il modificatore di rendimento").parents().get(1).attr("style");
-		Boolean isPerformancerActive; 
-		if( performanceDisplayedString.contains("none"))
-			isPerformancerActive= false;
-		else 
-			isPerformancerActive= true;
+		String performanceString = doc.getElementsByAttributeValue("data-field-key","modificatori.rendimento_attivo").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isPerformanceActive =  performanceString.equals("sì");
 		
-		if (!isPerformancerActive)
+		if (!isPerformanceActive)
 			return m;
 		
-		m.setPerformanceModifierActive(isPerformancerActive);
+		m.setStrikerModifierActive(isPerformanceActive);
 		
-		m.setPerformance0(-5.0);
-		m.setPerformance1(-3.0);
-		m.setPerformance2(-2.0);
-		m.setPerformance3(-1.0);
-		m.setPerformance4(0.0);
-		m.setPerformance5(0.0);
-		m.setPerformance6(0.0);
-		m.setPerformance7(0.0);
-		m.setPerformance8(1.0);
-		m.setPerformance9(2.0);
-		m.setPerformance10(3.0);
-		m.setPerformance11(5.0);
+		String performanceVotesString = doc.getElementById("modificatori.rendimento").getElementsByClass("range-col-type-input").get(0).getElementsByClass("range-label").text();
+		String[] performanceVotesSplit = performanceVotesString.split(" ");
+		
+		List<Double> performanceVotes = new ArrayList<Double>();
+		
+		int i = 0;
+		for (i = 0; i < performanceVotesSplit.length; i++) {
+			performanceVotes.add(new Double(performanceVotesSplit[i]));
+		}	
+		
+		Double tot11 = Double.valueOf(performanceVotes.get(0));
+		m.setPerformance11(tot11);
+		
+		Double tot10 = Double.valueOf(performanceVotes.get(1));
+		m.setPerformance10(tot10);
+		
+		Double tot9 = Double.valueOf(performanceVotes.get(2));
+		m.setPerformance9(tot9);
+		
+		Double tot8 = Double.valueOf(performanceVotes.get(3));
+		m.setPerformance8(tot8);
+		
+		Double tot7 = Double.valueOf(performanceVotes.get(4));
+		m.setPerformance7(tot7);
+		
+		Double tot6 = Double.valueOf(performanceVotes.get(5));
+		m.setPerformance6(tot6);
+		
+		Double tot5 = Double.valueOf(performanceVotes.get(6));
+		m.setPerformance5(tot5);
+		
+		Double tot4 = Double.valueOf(performanceVotes.get(7));
+		m.setPerformance4(tot4);
+		
+		Double tot3 = Double.valueOf(performanceVotes.get(8));
+		m.setPerformance3(tot3);
+		
+		Double tot2 = Double.valueOf(performanceVotes.get(9));
+		m.setPerformance2(tot2);
+		
+		Double tot1 = Double.valueOf(performanceVotes.get(10));
+		m.setPerformance1(tot1);
+		
+//		m.setPerformance0(-5.0);
+//		m.setPerformance1(-3.0);
+//		m.setPerformance2(-2.0);
+//		m.setPerformance3(-1.0);
+//		m.setPerformance4(0.0);
+//		m.setPerformance5(0.0);
+//		m.setPerformance6(0.0);
+//		m.setPerformance7(0.0);
+//		m.setPerformance8(1.0);
+//		m.setPerformance9(2.0);
+//		m.setPerformance10(3.0);
+//		m.setPerformance11(5.0);
 		
 		return m;
 		
 	}
 	
+
+	private Modifiers getCaptainModifiers(Modifiers m, Document doc) {
+		String isCaptainActiveString = doc.getElementsByAttributeValue("data-field-key","modificatori.capitano_attivo").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isCaptainActive =  isCaptainActiveString.equals("sì");
+		
+		if (!isCaptainActive)
+			return m;
+		
+		m.setCaptainModifierActive(isCaptainActive);
+		
+		String isCaptainDuplicateBonusString = doc.getElementsByAttributeValue("data-field-key","modificatori.capitano_bonus_doppio").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isCaptainDuplicateBonus=  isCaptainDuplicateBonusString.equals("sì");
+		m.setCaptainDuplicateBonus(isCaptainDuplicateBonus);
+
+		
+		String isCaptainDuplicateMalusString = doc.getElementsByAttributeValue("data-field-key","modificatori.capitano_malus_doppio").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isCaptainDuplicateMalus =  isCaptainDuplicateMalusString.equals("sì");
+		m.setCaptainDuplicateMalus(isCaptainDuplicateMalus);
+		
+		
+		String captainVotesString = doc.getElementById("modificatori.capitano_valori_fasce").getElementsByClass("range-col-type-input").get(0).getElementsByClass("range-label").text();
+		String[] captainVotesSplit = captainVotesString.split(" ");
+		
+		List<Double> captainVotes = new ArrayList<Double>();
+		
+		int i = 0;
+		for (i = 0; i < captainVotesSplit.length; i++) {
+			captainVotes.add(new Double(captainVotesSplit[i]));
+		}	
+		
+		Double vote3 = captainVotes.get(0);
+		m.setCaptainVote3(vote3);
+		
+		Double vote3half = captainVotes.get(1);
+		m.setCaptainVote3half(vote3half);
+		
+		Double vote4 = captainVotes.get(2);
+		m.setCaptainVote4(vote4);
+		
+		Double vote4half = captainVotes.get(3);
+		m.setCaptainVote4half(vote4half);
+		
+		Double vote5 = captainVotes.get(4);
+		m.setCaptainVote5(vote5);
+		
+		Double vote5half = captainVotes.get(5);
+		m.setCaptainVote5half(vote5half);
+		
+		Double vote6 = captainVotes.get(6);
+		m.setCaptainVote6(vote6);
+		
+		Double vote6half = captainVotes.get(7);
+		m.setCaptainVote6half(vote6half);
+		
+		Double vote7 = captainVotes.get(8);
+		m.setCaptainVote7(vote7);
+		
+		Double vote7half = captainVotes.get(9);
+		m.setCaptainVote7half(vote7half);
+		
+		Double vote8 = captainVotes.get(10);
+		m.setCaptainVote8(vote8);
+		
+		Double vote8half = captainVotes.get(11);
+		m.setCaptainVote8half(vote8half);
+		
+		Double vote9 = captainVotes.get(12);
+		m.setCaptainVote9(vote9);
+		
+		return m;
+	}
 	
-	private Modifiers getFairPlayMoodifiers(Modifiers m, Document doc) {
-		String isFairPlayString = doc.getElementsMatchingOwnText("Modificatore FairPlay:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isFairPlayActive = isFairPlayString.equals("1");
+	
+	private Modifiers getFairPlayModifiers(Modifiers m, Document doc) {
+		String isFairPlayActiveString = doc.getElementsByAttributeValue("data-field-key","modificatori.fairplay_attivo").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isFairPlayActive =  isFairPlayActiveString.equals("sì");
 		
 		if (!isFairPlayActive)
 			return m;
 		
-		m.setFairPlayModifierActive(true);
+		m.setFairPlayModifierActive(isFairPlayActive);
 		
-		String fairPlayString = doc.getElementsByAttributeValue("id", "vdfairplay").val();
-		Double fairPlay = Double.valueOf(fairPlayString);
+		String fairPlayString = doc.getElementsByAttributeValue("data-field-key", "modificatori.fairplay").get(0).getElementsByClass("value-type-number").get(0).text();
+		fairPlayString = fairPlayString.replaceAll(" punti", "");
+		Double fairPlay =  Double.valueOf(fairPlayString);
+		
 		m.setFairPlay(fairPlay);
 		
 		return m;
 	}
 	
 	private Modifiers getStrickerModifiers(Modifiers m, Document doc) {
-		String isStrikerActiveString = doc.getElementsMatchingOwnText("Modificatore attacco:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isStrikerActive = isStrikerActiveString.equals("1");
+		String isStrikerActiveString = doc.getElementsByAttributeValue("data-field-key","modificatori.attacco_attivo").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isStrikerActive =  isStrikerActiveString.equals("sì");
 		
 		if (!isStrikerActive)
 			return m;
 		
-		m.setStrikerModifierActive(true);
+		m.setStrikerModifierActive(isStrikerActive);
 		
-		String vote6String = doc.getElementsByAttributeValue("id", "moda1").val();
-		Double vote6 = Double.valueOf(vote6String);
+		String stickerVotesString = doc.getElementById("modificatori.attacco").getElementsByClass("range-col-type-input").get(0).getElementsByClass("range-label").text();
+		String[] strickerVotesSplit = stickerVotesString.split(" ");
+		
+		List<Double> strickerVotes = new ArrayList<Double>();
+		
+		int i = 0;
+		for (i = 0; i < strickerVotesSplit.length; i++) {
+			strickerVotes.add(new Double(strickerVotesSplit[i]));
+		}	
+		
+		Double vote6 = Double.valueOf(strickerVotes.get(0));
 		m.setStrikerVote6(vote6);
 	
-		String vote6halfString = doc.getElementsByAttributeValue("id", "moda2").val();
-		Double vote6half = Double.valueOf(vote6halfString);
+		Double vote6half = Double.valueOf(strickerVotes.get(1));
 		m.setStrikerVote6half(vote6half);
 		
-		String vote7String = doc.getElementsByAttributeValue("id", "moda3").val();
-		Double vote7 = Double.valueOf(vote7String);
+		Double vote7 = Double.valueOf(strickerVotes.get(2));
 		m.setStrikerVote7(vote7);
 		
-		String vote7halfString = doc.getElementsByAttributeValue("id", "moda4").val();
-		Double vote7half = Double.valueOf(vote7halfString);
+		Double vote7half = Double.valueOf(strickerVotes.get(3));
 		m.setStrikerVote7half(vote7half);
 		
-		String vote8String = doc.getElementsByAttributeValue("id", "moda5").val();
-		Double vote8 = Double.valueOf(vote8String);
+		Double vote8 = Double.valueOf(strickerVotes.get(4));
 		m.setStrikerVote8(vote8);
 		
 		return m;
@@ -274,54 +405,108 @@ public class RulesExpertMain {
 	}
 
 	private Modifiers getMiddlefielderModifiers(Modifiers m, Document doc) {
-		String isMidActiveString = doc.getElementsMatchingOwnText("Modificatore centrocampo:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isMidActive = isMidActiveString.equals("1");
+		String isMidActiveString = doc.getElementsByAttributeValue("data-field-key","modificatori.centrocampo_attivo").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isMidActive =  !isMidActiveString.equals("no");
 		
 		if (!isMidActive)
 			return m;
 		
-		m.setMiddlefielderModifierActive(true);
-
+		m.setMiddlefielderModifierActive(isMidActive);
 		
-		String near0String = doc.getElementsByAttributeValue("id", "modc1").val();
-		Double near0 = Double.valueOf(near0String);
-		m.setMiddlefielderNear0(near0);
+		String midVotesString = doc.getElementById("modificatori.centrocampo").getElementsByClass("range-col-type-input").get(0).getElementsByClass("range-label").text();
+		String[] midVotesSplit = midVotesString.split(" ");
 		
-		String over2String = doc.getElementsByAttributeValue("id", "modc2").val();
-		Double over2 = Double.valueOf(over2String);
-		m.setMiddlefielderOver2(over2);
+		List<Double> midVotes = new ArrayList<Double>();
 		
-		String underMinus2String = doc.getElementsByAttributeValue("id", "modc3").val();
-		Double underMinus2 = Double.valueOf(underMinus2String);
-		m.setMiddlefielderUnderMinus2(underMinus2);
+		int i = 0;
+		for (i = 0; i < midVotesSplit.length; i++) {
+			midVotes.add(new Double(midVotesSplit[i]));
+		}	
+		
+		Double diff2 =  midVotes.get(0);
+		m.setMiddlefielder2(diff2);
+		Double diffMinus2 =  midVotes.get(1);
+		m.setMiddlefielderMinus2(diffMinus2);
+		Double diff2half =  midVotes.get(2);
+		m.setMiddlefielder2half(diff2half);
+		Double diffMinus2half =  midVotes.get(3);
+		m.setMiddlefielderMinus2half(diffMinus2half);
+		
+		Double diff3 =  midVotes.get(4);
+		m.setMiddlefielder3(diff3);
+		Double diffMinus3 =  midVotes.get(5);
+		m.setMiddlefielderMinus3(diffMinus3);
+		Double diff3half =  midVotes.get(6);
+		m.setMiddlefielder3half(diff3half);
+		Double diffMinus3half =  midVotes.get(7);
+		m.setMiddlefielderMinus3half(diffMinus3half);
+		
+		Double diff4 =  midVotes.get(8);
+		m.setMiddlefielder4(diff4);
+		Double diffMinus4 =  midVotes.get(9);
+		m.setMiddlefielderMinus4(diffMinus4);
+		Double diff4half =  midVotes.get(10);
+		m.setMiddlefielder4half(diff4half);
+		Double diffMinus4half =  midVotes.get(11);
+		m.setMiddlefielderMinus4half(diffMinus4half);
+		
+		Double diff5 =  midVotes.get(12);
+		m.setMiddlefielder5(diff5);
+		Double diffMinus5 =  midVotes.get(13);
+		m.setMiddlefielderMinus5(diffMinus5);
+		Double diff5half =  midVotes.get(14);
+		m.setMiddlefielder5half(diff5half);
+		Double diffMinus5half =  midVotes.get(15);
+		m.setMiddlefielderMinus5half(diffMinus5half);
+		
+		Double diff6 =  midVotes.get(16);
+		m.setMiddlefielder6(diff6);
+		Double diffMinus6 =  midVotes.get(17);
+		m.setMiddlefielderMinus6(diffMinus6);
+		Double diff6half =  midVotes.get(18);
+		m.setMiddlefielder6half(diff6half);
+		Double diffMinus6half =  midVotes.get(19);
+		m.setMiddlefielderMinus6half(diffMinus6half);
+		
+		Double diff7 =  midVotes.get(20);
+		m.setMiddlefielder7(diff7);
+		Double diffMinus7 =  midVotes.get(21);
+		m.setMiddlefielderMinus7(diffMinus7);
+		Double diff7half =  midVotes.get(22);
+		m.setMiddlefielder7half(diff7half);
+		Double diffMinus7half =  midVotes.get(23);
+		m.setMiddlefielderMinus7half(diffMinus7half);
+		
+		Double diff8 =  midVotes.get(24);
+		m.setMiddlefielder8(diff8);
+		Double diffMinus8 =  midVotes.get(25);
+		m.setMiddlefielderMinus8(diffMinus8);
 		
 		
-		String over4String = doc.getElementsByAttributeValue("id", "modc4").val();
-		Double over4 = Double.valueOf(over4String);
-		m.setMiddlefielderOver4(over4);
 		
-		String underMinus4String = doc.getElementsByAttributeValue("id", "modc5").val();
-		Double underMinus4 = Double.valueOf(underMinus4String);
-		m.setMiddlefielderUnderMinus4(underMinus4);
-		
-		
-		String over6String = doc.getElementsByAttributeValue("id", "modc6").val();
-		Double over6 = Double.valueOf(over6String);
-		m.setMiddlefielderOver6(over6);
-		
-		String underMinus6String = doc.getElementsByAttributeValue("id", "modc7").val();
-		Double underMinus6 = Double.valueOf(underMinus6String);
-		m.setMiddlefielderUnderMinus6(underMinus6);
-		
-		
-		String over8String = doc.getElementsByAttributeValue("id", "modc8").val();
-		Double over8 = Double.valueOf(over8String);
-		m.setMiddlefielderOver8(over8);
-		
-		String underMinus8String = doc.getElementsByAttributeValue("id", "modc9").val();
-		Double underMinus8 = Double.valueOf(underMinus8String);
-		m.setMiddlefielderUnderMinus8(underMinus8);
-		
+//		Double over2 =  midVotes.get(0);
+//		m.setMiddlefielderOver2(over2);
+//		
+//		Double underMinus2 = Double.valueOf(underMinus2String);
+//		m.setMiddlefielderUnderMinus2(underMinus2);
+//		
+//		Double over4 = Double.valueOf(over4String);
+//		m.setMiddlefielderOver4(over4);
+//		
+//		Double underMinus4 = Double.valueOf(underMinus4String);
+//		m.setMiddlefielderUnderMinus4(underMinus4);
+//		
+//		Double over6 = Double.valueOf(over6String);
+//		m.setMiddlefielderOver6(over6);
+//		
+//		Double underMinus6 = Double.valueOf(underMinus6String);
+//		m.setMiddlefielderUnderMinus6(underMinus6);
+//		
+//		Double over8 = Double.valueOf(over8String);
+//		m.setMiddlefielderOver8(over8);
+//		
+//		Double underMinus8 = Double.valueOf(underMinus8String);
+//		m.setMiddlefielderUnderMinus8(underMinus8);
 		
 		return m;
 		
@@ -330,94 +515,165 @@ public class RulesExpertMain {
 	}
 
 	private Modifiers getDefenderModifiers(Modifiers m, Document doc) {
-		String isDefenderActiveString = doc.getElementsMatchingOwnText("Modificatore difesa:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isDefenderActive = isDefenderActiveString.equals("1");
+		String isDefenderActiveString = doc.getElementsByAttributeValue("data-field-key","modificatori.difesa_attivo").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isDefenderActive =  !isDefenderActiveString.equals("no");
 		
 		if (!isDefenderActive)
 			return m;
 		
-		m.setDefenderModifierActive(true);
-
-		
-		String pointTo7String = doc.getElementsByAttributeValue("id", "modd1").val();
-		Double pointTo7 =  Double.valueOf(pointTo7String);
-		m.setDefenderAvgVote7(pointTo7);
+		m.setDefenderModifierActive(isDefenderActive);
 		
 		
-		String pointTo6halfString = doc.getElementsByAttributeValue("id", "modd2").val();
-		Double pointTo6half =  Double.valueOf(pointTo6halfString);
-		m.setDefenderAvgVote6half(pointTo6half);
+		String isGoalkeeperIncludedString = doc.getElementsByAttributeValue("data-field-key","modificatori.difesa_includi_portiere").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isGoalkeeperIncluded =  isGoalkeeperIncludedString.equals("sì");
+		m.setDefenderGoalkeeperIncluded(isGoalkeeperIncluded);
+		
+		String modeString = doc.getElementsByAttributeValue("data-field-key","modificatori.difesa_modalita").get(0).getElementsByClass("value-type-select").get(0).text();
+		if (modeString.equals("Assegna bonus/malus all'avversario"))
+			m.setDefenderMode(DefenderModeEnum.TO_OTHER);
+		else if (modeString.equals("Assegna bonus/malus alla squadra"))
+			m.setDefenderMode(DefenderModeEnum.TO_HIMSELF);
+		
+        
 		
 		
-		String pointTo6String = doc.getElementsByAttributeValue("id", "modd3").val();
-		Double pointTo6 = Double.valueOf(pointTo6String);
+		
+		String firstLowEdgeString = doc.getElementById("modificatori.difesa").getElementsByClass("range-col-type-labels").get(0).getElementsByClass("min-val").get(0).text();
+		
+		Double firstLowEdge = Double.valueOf(firstLowEdgeString);
+		
+		Double indexToStartDouble = (firstLowEdge - 5.0) / 0.25;
+		Integer indexToStart = indexToStartDouble.intValue() ;
+		
+		
+		
+		Integer rangesNumber = doc.getElementById("modificatori.difesa").getElementsByClass("range-col-type-labels").get(0).getElementsByClass("min-val").size() + 1;
+		
+		String rangeModifiersString = doc.getElementById("modificatori.difesa").getElementsByClass("range-col-type-input").get(0).getElementsByClass("range-label").text();
+		
+		String[] rangeModifiersSplit = rangeModifiersString.split(" ");
+				
+		List<Double> rangeModifiers = new ArrayList<Double>();
+		
+		
+		
+		int i = 0;
+		int elementsBefore = 0;
+		for (i = 0; i < 14; i++) {
+			if (i<indexToStart) {
+				rangeModifiers.add(new Double(rangeModifiersSplit[0]));
+				elementsBefore++;
+			}
+			else if (i >= indexToStart + rangesNumber)
+				rangeModifiers.add(new Double(rangeModifiersSplit[rangesNumber-1]));
+			else 
+				rangeModifiers.add(new Double(rangeModifiersSplit[i - elementsBefore]));
+		}	
+		
+		
+		
+		
+		
+		
+		Double pointUnder5 =  rangeModifiers.get(0);
+		m.setDefenderAvgVoteUnder5(pointUnder5);
+		
+		Double pointTo5 =  rangeModifiers.get(1);
+		m.setDefenderAvgVote5(pointTo5);
+		Double pointTo5quart =  rangeModifiers.get(2);
+		m.setDefenderAvgVote5quart(pointTo5quart);
+		Double pointTo5half =  rangeModifiers.get(3);
+		m.setDefenderAvgVote5half(pointTo5half);
+		Double pointTo5sept =  rangeModifiers.get(4);
+		m.setDefenderAvgVote5sept(pointTo5sept);
+		Double pointTo6 =  rangeModifiers.get(5);
 		m.setDefenderAvgVote6(pointTo6);
+		Double pointTo6quart =  rangeModifiers.get(6);
+		m.setDefenderAvgVote6quart(pointTo6quart);
+		Double pointTo6half =  rangeModifiers.get(7);
+		m.setDefenderAvgVote6half(pointTo6half);
+		Double pointTo6sept =  rangeModifiers.get(8);
+		m.setDefenderAvgVote6sept(pointTo6sept);
+		Double pointTo7 =  rangeModifiers.get(9);
+		m.setDefenderAvgVote7(pointTo7);
+		Double pointTo7quart =  rangeModifiers.get(10);
+		m.setDefenderAvgVote7quart(pointTo7quart);
+		Double pointTo7half =  rangeModifiers.get(11);
+		m.setDefenderAvgVote7half(pointTo7half);
+		Double pointTo7sept =  rangeModifiers.get(12);
+		m.setDefenderAvgVote7sept(pointTo7sept);
+		Double pointTo8 =  rangeModifiers.get(13);
+		m.setDefenderAvgVote8(pointTo8);
 		
 		return m;
 		
 	}
 
 	private Modifiers getGoalKeeperModifiers(Modifiers m, Document doc) {
-		String isGoalKeeperActiveString = doc.getElementsMatchingOwnText("Modificatore portiere:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isGoalKeeperActive = isGoalKeeperActiveString.equals("1");
+		String isGoalKeeperActiveString = doc.getElementsByAttributeValue("data-field-key","modificatori.portiere_attivo").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isGoalKeeperActive =  !isGoalKeeperActiveString.equals("no");
 		
 		if (!isGoalKeeperActive)
 			return m;
 		
-		m.setGoalkeeperModifierActive(true);
+		m.setGoalkeeperModifierActive(isGoalKeeperActive);
+
 		
-		String vote3String = doc.getElementsByAttributeValue("id", "modp1").val();
-		Double vote3 = Double.valueOf(vote3String);
+		String isGoalkeeperModifierPenaltySavedActiveString = doc.getElementsByAttributeValue("data-field-key","modificatori.portiere_rigori").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isGoalkeeperModifierPenaltySavedActive =  isGoalkeeperModifierPenaltySavedActiveString.equals("sì");
+		m.setGoalkeeperModifierPenaltySavedActive(isGoalkeeperModifierPenaltySavedActive);
+		
+		
+		
+		String goalKeeperVotesString = doc.getElementById("modificatori.portiere").getElementsByClass("range-col-type-input").get(0).getElementsByClass("range-label").text();
+		String[] goalVotesSplit = goalKeeperVotesString.split(" ");
+		
+		List<Double> goalKeeperVotes = new ArrayList<Double>();
+		
+		int i = 0;
+		for (i = 0; i < goalVotesSplit.length; i++) {
+			goalKeeperVotes.add(new Double(goalVotesSplit[i]));
+		}	
+		
+		
+		Double vote3 = goalKeeperVotes.get(0);
 		m.setGoalkeeperVote3(vote3);
 		
-		String vote3halfString = doc.getElementsByAttributeValue("id", "modp2").val();
-		Double vote3half = Double.valueOf(vote3halfString);
+		Double vote3half = goalKeeperVotes.get(1);
 		m.setGoalkeeperVote3half(vote3half);
 		
-		String vote4String = doc.getElementsByAttributeValue("id", "modp3").val();
-		Double vote4 = Double.valueOf(vote4String);
+		Double vote4 = goalKeeperVotes.get(2);
 		m.setGoalkeeperVote4(vote4);
 		
-		String vote4halfString = doc.getElementsByAttributeValue("id", "modp4").val();
-		Double vote4half = Double.valueOf(vote4halfString);
+		Double vote4half = goalKeeperVotes.get(3);
 		m.setGoalkeeperVote4half(vote4half);
 		
-		String vote5String = doc.getElementsByAttributeValue("id", "modp5").val();
-		Double vote5 = Double.valueOf(vote5String);
+		Double vote5 = goalKeeperVotes.get(4);
 		m.setGoalkeeperVote5(vote5);
 		
-		String vote5halfString = doc.getElementsByAttributeValue("id", "modp6").val();
-		Double vote5half = Double.valueOf(vote5halfString);
+		Double vote5half = goalKeeperVotes.get(5);
 		m.setGoalkeeperVote5half(vote5half);
 		
-		String vote6String = doc.getElementsByAttributeValue("id", "modp7").val();
-		Double vote6 = Double.valueOf(vote6String);
+		Double vote6 = goalKeeperVotes.get(6);
 		m.setGoalkeeperVote6(vote6);
 		
-		String vote6halfString = doc.getElementsByAttributeValue("id", "modp8").val();
-		Double vote6half = Double.valueOf(vote6halfString);
+		Double vote6half = goalKeeperVotes.get(7);
 		m.setGoalkeeperVote6half(vote6half);
 		
-		String vote7String = doc.getElementsByAttributeValue("id", "modp9").val();
-		Double vote7 = Double.valueOf(vote7String);
+		Double vote7 = goalKeeperVotes.get(8);
 		m.setGoalkeeperVote7(vote7);
 		
-		String vote7halfString = doc.getElementsByAttributeValue("id", "modp10").val();
-		Double vote7half = Double.valueOf(vote7halfString);
+		Double vote7half = goalKeeperVotes.get(9);
 		m.setGoalkeeperVote7half(vote7half);
 		
-		String vote8String = doc.getElementsByAttributeValue("id", "modp11").val();
-		Double vote8 = Double.valueOf(vote8String);
+		Double vote8 = goalKeeperVotes.get(10);
 		m.setGoalkeeperVote8(vote8);
 		
-		String vote8halfString = doc.getElementsByAttributeValue("id", "modp12").val();
-		Double vote8half = Double.valueOf(vote8halfString);
+		Double vote8half = goalKeeperVotes.get(11);
 		m.setGoalkeeperVote8half(vote8half);
 		
-		String vote9String = doc.getElementsByAttributeValue("id", "modp13").val();
-		Double vote9 = Double.valueOf(vote9String);
+		Double vote9 = goalKeeperVotes.get(12);
 		m.setGoalkeeperVote9(vote9);
-		
 		
 		
 		return m;
@@ -425,7 +681,9 @@ public class RulesExpertMain {
 	}
 
 	private Substitutions analyzeRulesPageSubstitutions(String leagueName) {
-		Document doc = getLoggedPage(AppConstants.RULES_3_SUBSTITUTIONS_URL, leagueName);
+//		Document doc = getLoggedPage(AppConstants.RULES_3_SUBSTITUTIONS_URL, leagueName);
+		Document doc = getLoggedPage(AppConstants.RULES_CONFIG_URL, leagueName);
+
 //		String isFasciaConIntornoActiveString = doc.getElementsMatchingOwnText("Fascia con intorno:").parents().get(0).getElementsByAttribute("checked").val();
 //		Boolean isFasciaConIntornoActive = isFasciaConIntornoActiveString.equals("0");
 //		p.setFasciaConIntornoActive(isFasciaConIntornoActive);
@@ -434,46 +692,81 @@ public class RulesExpertMain {
 //		p.setFasciaConIntorno(fasciaConIntorno);
 		Substitutions s = new Substitutions();
 		
-		String numeroSostituzioniString = doc.getElementsByAttributeValue("id", "nsostituzioni").val();
+		
+		Element substitutionsPanel = doc.getElementById("panel_3");
+		
+		String numeroSostituzioniString = substitutionsPanel.getElementsByAttributeValue("data-field-key","sostituzioni.numero").get(0).getElementsByClass("value-type-number").get(0).text();
 		Integer numeroSostituzioni = Integer.valueOf(numeroSostituzioniString);
 		s.setSubstitutionNumber(numeroSostituzioni);
 		
-		String effettuaSostituzioni = doc.getElementsMatchingOwnText("Effettua sostituzioni:").parents().get(0).getElementsByAttribute("selected").text();
-		if (effettuaSostituzioni.equals("Con applicazione immediata del cambio modulo"))
+		String effettuaSostituzioni = substitutionsPanel.getElementsByAttributeValue("data-field-key","sostituzioni.modalita_sostituzioni").get(0).getElementsByClass("value-type-select").get(0).text();
+		if (effettuaSostituzioni.equals("Cambio modulo, se il ruolo è incompatibile"))
 			s.setSubstitutionMode(SubstitutionsModeEnum.CHANGE_MODULE);
-		else if (effettuaSostituzioni.equals("Con cambio ruolo prioritario sul cambio modulo"))
+		else if (effettuaSostituzioni.equals("Ruolo per ruolo, prioritario su cambio modulo"))
 			s.setSubstitutionMode(SubstitutionsModeEnum.CHANGE_ROLE_THEN_CHANGE_MODULE);
-		else// if (effettuaSostituzioni.equals("Solo con cambio ruolo (senza cambio modulo)"))
+		else// if (effettuaSostituzioni.equals("Solo con cambio ruolo (nessun cambio modulo)")
 			s.setSubstitutionMode(SubstitutionsModeEnum.CHANGE_ROLE);
-			
-		String isAssegnaVotoAdAmmonitoSvActiveString = doc.getElementsByAttributeValue("id", "ammonitosv1").attr("checked");
-		Boolean isAssegnaVotoAdAmmonitoSvActive = isAssegnaVotoAdAmmonitoSvActiveString.equals("checked");
-		s.setYellowCardSvOfficeVoteActive(isAssegnaVotoAdAmmonitoSvActive);
-		String votoAdAmmonitoSvString = doc.getElementsByAttributeValue("id", "vammonitosv").val();
-		Double votoAdAmmonitoSv = Double.valueOf(votoAdAmmonitoSvString.replace(",", "."));
-		s.setYellowCardSvOfficeVote(votoAdAmmonitoSv);
 		
-		String goalkeeperPlayerOfficeVoteActiveString = doc.getElementsByAttributeValue("id", "riservaufficiop1").attr("checked");
-		Boolean goalkeeperPlayerOfficeVoteActive = goalkeeperPlayerOfficeVoteActiveString.equals("checked");
+		
+		
+//		String isAssegnaVotoAdAmmonitoSvActiveString = doc.getElementsByAttributeValue("id", "ammonitosv1").attr("checked");
+//		Boolean isAssegnaVotoAdAmmonitoSvActive = isAssegnaVotoAdAmmonitoSvActiveString.equals("checked");
+//		s.setYellowCardSvOfficeVoteActive(isAssegnaVotoAdAmmonitoSvActive);
+//		
+//		String votoAdAmmonitoSvString = doc.getElementsByAttributeValue("id", "vammonitosv").val();
+//		Double votoAdAmmonitoSv = Double.valueOf(votoAdAmmonitoSvString.replace(",", "."));
+//		s.setYellowCardSvOfficeVote(votoAdAmmonitoSv);
+		
+		
+		
+		
+		
+		String goalkeeperPlayerOfficeVoteActiveString = substitutionsPanel.getElementsByAttributeValue("data-field-key","sostituzioni.riserva").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean goalkeeperPlayerOfficeVoteActive =  goalkeeperPlayerOfficeVoteActiveString.equals("sì");
 		s.setGoalkeeperPlayerOfficeVoteActive(goalkeeperPlayerOfficeVoteActive);
-		String goalkeeperPlayerOfficeVoteString = doc.getElementsByAttributeValue("id", "vriservap").val();
-		Double goalkeeperPlayerOfficeVote = Double.valueOf(goalkeeperPlayerOfficeVoteString.replace(",", "."));
+		
+		String goalkeeperPlayerOfficeVoteString = substitutionsPanel.getElementsByAttributeValue("data-field-key","sostituzioni.riserva_portiere").get(0).getElementsByClass("value-type-input").get(0).text();
+		Double goalkeeperPlayerOfficeVote = Double.valueOf(goalkeeperPlayerOfficeVoteString.substring(0, 1).replace(",", "."));
 		s.setGoalkeeperPlayerOfficeVote(goalkeeperPlayerOfficeVote);
 		
 		
-		String movementsPlayerOfficeVoteActiveString =  doc.getElementsByAttributeValue("id", "riservaufficiogm1").attr("checked");
-		Boolean movementsPlayerOfficeVoteActive = movementsPlayerOfficeVoteActiveString.equals("checked");
+		
+		
+		String movementsPlayerOfficeVoteActiveString =  substitutionsPanel.getElementsByAttributeValue("data-field-key","sostituzioni.riserva").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean movementsPlayerOfficeVoteActive = movementsPlayerOfficeVoteActiveString.equals("sì");
 		s.setMovementsPlayerOfficeVoteActive(movementsPlayerOfficeVoteActive);
-		String movementsPlayerOfficeVoteString = doc.getElementsByAttributeValue("id", "vriservagm").val();
-		Double movementsPlayerOfficeVote = Double.valueOf(movementsPlayerOfficeVoteString.replace(",", "."));
+		
+		String movementsPlayerOfficeVoteString = substitutionsPanel.getElementsByAttributeValue("data-field-key","ru_scalar").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Double movementsPlayerOfficeVote = Double.valueOf(movementsPlayerOfficeVoteString.substring(0, 1).replace(",", "."));
 		s.setMovementsPlayerOfficeVote(movementsPlayerOfficeVote);;
 		
 		
-		String maxOfficeVotes = doc.getElementsMatchingOwnText("Applica riserva d'ufficio fino al:").parents().get(0).getElementsByAttribute("selected").text();
+		
+		
+		
+		Boolean playerOfficeVoteDecreaseString = !substitutionsPanel.getElementsByAttributeValue("data-field-key","sostituzioni.riserva_a_scalare").get(0).hasClass("hidden");
+		s.setPlayerOfficeDecreasingVotesActive(playerOfficeVoteDecreaseString);
+		if (playerOfficeVoteDecreaseString) {
+			List<Double> playerOfficeVoteDecreasingList = new ArrayList<Double>();
+			
+			
+			Elements playerOfficeVoteDecreasingElements = substitutionsPanel.getElementsByAttributeValue("data-field-key","sostituzioni.riserva_a_scalare").get(0).getElementsByClass("range-col-type-input").get(0).getElementsByClass("range-cell");
+			for (Element elem : playerOfficeVoteDecreasingElements) {
+				String voteString = elem.getElementsByTag("span").get(0).text();
+				Double voteDouble = Double.valueOf(voteString);
+				playerOfficeVoteDecreasingList.add(voteDouble);
+			}
+			
+			s.setPlayerOfficeDecreasingVotes(playerOfficeVoteDecreasingList);
+		}
+		
+		String maxOfficeVotes = substitutionsPanel.getElementsByAttributeValue("data-field-key","sostituzioni.riserva_ufficio").get(0).getElementsByClass("value-type-select").get(0).text();
 		if ( maxOfficeVotes != null ) {
-			if (maxOfficeVotes.equals("Numero di sostituzioni impostate"))
+			if (maxOfficeVotes.equals("fino al raggiungimento del numero di sostituzioni impostate"))
 				s.setMaxOfficeVotes(MaxOfficeVotesEnum.TILL_SUBSTITUTIONS);
-			else// if (maxOfficeVotes.equals("Raggiungimento degli 11 calciatori"))
+			if (maxOfficeVotes.equals("ad una sola riserva senza voto"))
+				s.setMaxOfficeVotes(MaxOfficeVotesEnum.ONLY_ONE);
+			else// if (maxOfficeVotes.equals("fino al raggiungimento degli 11 calciatori "))
 				s.setMaxOfficeVotes(MaxOfficeVotesEnum.TILL_ALL);
 		}
 		
@@ -482,31 +775,55 @@ public class RulesExpertMain {
 	}
 
 	private Points analyzeRulesPagePoints(String leagueName) {
-		Document doc = getLoggedPage(AppConstants.RULES_4_POINTS_URL, leagueName);
+//		Document doc = getLoggedPage(AppConstants.RULES_4_POINTS_URL, leagueName);
+		Document doc = getLoggedPage(AppConstants.RULES_CONFIG_URL, leagueName);
+
 				
 		Points p = new Points();
 		
-		String firstGoalPointsString = doc.getElementsMatchingOwnText("Soglia gol:").parents().get(0).select("input").val();
-		Double firstGoalPoints = Double.valueOf(firstGoalPointsString);
+
+		Element pointsPanel = doc.getElementById("panel_2");
 		
-		String goalsRangesString = doc.getElementsMatchingOwnText("Numero delle fasce gol:").parents().get(0).select("input").val();
-		String[] goalsRangesSplit = goalsRangesString.split(";");
+//		String firstGoalPointsString = pointsPanel.getElementsByAttributeValue("data-field-key","goal_ranges.0.punti_tot").get(0).getElementsByClass("val-points").get(0).text();
+//		Double firstGoalPoints = Double.valueOf(firstGoalPointsString.replace(" punti", ""));
+		
+		String goalsRangesString = pointsPanel.getElementsByAttributeValue("data-key","puntiTot").get(0).getElementsByClass("range-cell").text();
+		goalsRangesString = goalsRangesString.replaceAll(" punti", "");
+		String[] goalsRangesSplit = goalsRangesString.split(" ");
 		
 		
 		List<Double> goalPoints = new ArrayList<Double>();
-		goalPoints.add(firstGoalPoints);
+		
+		
 		int i = 0;
-		for (i = 0; i < goalsRangesSplit.length; i++)
-			goalPoints.add(goalPoints.get(i) + new Double(goalsRangesSplit[i]));
-		Double lastRange = goalPoints.get(i) - goalPoints.get(i-1);
-		for (; i < 15; i++){
-			goalPoints.add(goalPoints.get(i) + lastRange);
+		for (i = 0; i < goalsRangesSplit.length; i++) {
+			goalPoints.add(new Double(goalsRangesSplit[i]));
 		}
+		
+		String lastRangeEndString = pointsPanel.getElementsByAttributeValue("data-key","punti").get(0).getElementsByClass("range-cell").last().text();
+		lastRangeEndString = lastRangeEndString.replaceAll(" punti", "");
+		Double lastRangeEnd = Double.valueOf(lastRangeEndString);
+		lastRangeEnd = Math.ceil(lastRangeEnd);
+		
+		Double lastRange =  lastRangeEnd - goalPoints.get(goalPoints.size()-1);
+		for (; i< 15; i++) {
+			goalPoints.add(goalPoints.get(i-1) + lastRange);
+		}
+		
+		
+//		goalPoints.add(firstGoalPoints);
+//		for (i = 0; i < goalsRangesSplit.length; i++)
+//			goalPoints.add(goalPoints.get(i) + new Double(goalsRangesSplit[i]));
+//		Double lastRange = goalPoints.get(i) - goalPoints.get(i-1);
+//		for (; i < 15; i++){
+//			goalPoints.add(goalPoints.get(i) + lastRange);
+//		}
 //		List<Double> GOAL_POINTS = Arrays.asList(66.0, 72.0, 78.0, 84.0, 90.0, 96.0, 102.0, 108.0, 114.0);
 		p.setGoalPoints(goalPoints);
 		
-		String formulaUnoPointsString = doc.getElementsMatchingOwnText("Numero posizioni Formula 1:").parents().get(0).select("input").val();
-		String[] formulaUnoSplit = formulaUnoPointsString.split(";");
+		
+		String formulaUnoPointsString = pointsPanel.getElementById("soglie.formula_uno").getElementsByClass("range-col-type-input").get(0).getElementsByClass("range-cell").text();
+		String[] formulaUnoSplit = formulaUnoPointsString.split(" ");
 
 		List<Double> formulaUnoPoints = new ArrayList<Double>();
 		for (i = 0; i < formulaUnoSplit.length; i++)
@@ -514,54 +831,87 @@ public class RulesExpertMain {
 		p.setFormulaUnoPoints(formulaUnoPoints);
 		//p.setFormulaUnoPoints(Arrays.asList(8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0));
 		
-		String isFasciaConIntornoActiveString = doc.getElementsMatchingOwnText("Fascia con intorno:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isFasciaConIntornoActive = isFasciaConIntornoActiveString.equals("1");
+		
+		
+		String fasciaConIntornoString = pointsPanel.getElementsByAttributeValue("data-field-key","soglie.intorno_interno").get(0).getElementsByClass("value-type-input").get(0).text();
+		Boolean isFasciaConIntornoActive = !fasciaConIntornoString.equals("NO");
 		p.setFasciaConIntornoActive(isFasciaConIntornoActive);
-		String fasciaConIntornoString = doc.getElementsByAttributeValue("id", "valintorno").val();
-		Double fasciaConIntorno = Double.valueOf(fasciaConIntornoString);
-		p.setFasciaConIntorno(fasciaConIntorno);
-		
-		String isIntornoActiveString = doc.getElementsMatchingOwnText("Intorno:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isIntornoActive = isIntornoActiveString.equals("1");
-		p.setIntornoActive(isIntornoActive);
-		String intornoString = doc.getElementsByAttributeValue("id", "vintorno").val();
-		Double intorno = Double.valueOf(intornoString);
-		p.setIntorno(intorno);
-		
-		String isControllaPareggioActiveString = doc.getElementsMatchingOwnText("Controlla pareggio:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isControllaPareggioActive = isControllaPareggioActiveString.equals("1");
-		p.setControllaPareggioActive(isControllaPareggioActive);
-		String controllaPareggioString = doc.getElementsByAttributeValue("id", "vcpareggio").val();
-		Double controllaPareggio = Double.valueOf(controllaPareggioString);
-		p.setControllaPareggio(controllaPareggio);
-		
-		String isDifferenzaPuntiActiveString = doc.getElementsMatchingOwnText("Differenza punti:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isDifferenzaPuntiActive = isDifferenzaPuntiActiveString.equals("1");
-		p.setDifferenzaPuntiActive(isDifferenzaPuntiActive);
-		String differenzaPuntiString = doc.getElementsByAttributeValue("id", "vdpunti").val();
-		Double differenzaPunti = Double.valueOf(differenzaPuntiString);
-		p.setDifferenzaPunti(differenzaPunti);
-		
-		Elements autogolElems = doc.getElementsMatchingOwnText("Autogol:");
-		if (autogolElems.isEmpty()) {
-			p.setAutogolActive(false);
-			p.setAutogol(0.0);
+		if (isFasciaConIntornoActive) {
+			fasciaConIntornoString = fasciaConIntornoString.replace(" punti", "");
+			Double fasciaConIntorno = Double.valueOf(fasciaConIntornoString);
+			p.setFasciaConIntorno(fasciaConIntorno);
 		}
-		else {
-			String isAutogolActiveString = autogolElems.parents().get(0).getElementsByAttribute("checked").val();
-			Boolean isAutogolActive = isAutogolActiveString.equals("1");
-			p.setAutogolActive(isAutogolActive);
-			String autogolString = doc.getElementsByAttributeValue("id", "vdautogol").val();
+		
+		
+		String intornoString = pointsPanel.getElementsByAttributeValue("data-field-key","soglie.intorno").get(0).getElementsByClass("value-type-input").get(0).text();
+		Boolean isIntornoActive = !intornoString.equals("NO");
+		p.setIntornoActive(isIntornoActive);
+		if (isIntornoActive) {
+			intornoString = intornoString.replace(" punti", "");
+			Double intorno = Double.valueOf(intornoString);
+			p.setIntorno(intorno);
+		}
+		System.out.println();
+		
+		String intorno01String = pointsPanel.getElementsByAttributeValue("data-field-key","soglie.intorno_zerouno").get(0).getElementsByClass("value-type-bool").get(0).text();
+		Boolean isIntorno01Active = intorno01String.equals("sì");
+		p.setIntorno01Active(isIntorno01Active);
+		// da impostare
+		
+		
+		String controllaPareggioString = pointsPanel.getElementsByAttributeValue("data-field-key","soglie.controlla_pareggio").get(0).getElementsByClass("value-type-input").get(0).text();
+		Boolean isControllaPareggioActive = !controllaPareggioString.equals("NO");
+		p.setControllaPareggioActive(isControllaPareggioActive);
+		if (isControllaPareggioActive) {
+			controllaPareggioString = controllaPareggioString.replace(" punti", "");
+			Double controllaPareggio = Double.valueOf(controllaPareggioString);
+			p.setControllaPareggio(controllaPareggio);
+		}
+		
+		
+		String differenzaPuntiString = pointsPanel.getElementsByAttributeValue("data-field-key","soglie.gol_extra").get(0).getElementsByClass("value-type-input").get(0).text();
+		Boolean isDifferenzaPuntiActive = !differenzaPuntiString.equals("NO");
+		p.setDifferenzaPuntiActive(isDifferenzaPuntiActive);
+		if (isDifferenzaPuntiActive) {
+			differenzaPuntiString = differenzaPuntiString.replace(" punti", "");
+			Double differenzaPunti = Double.valueOf(differenzaPuntiString);
+			p.setDifferenzaPunti(differenzaPunti);
+		}
+		
+		
+		String autogolString = pointsPanel.getElementsByAttributeValue("data-field-key","soglie.autogol").get(0).getElementsByClass("value-type-input").get(0).text();
+		Boolean isAutogolActive = !autogolString.equals("NO");
+		p.setAutogolActive(isAutogolActive);
+		if (isAutogolActive) {
+			autogolString = autogolString.replace(" punti", "");
 			Double autogol = Double.valueOf(autogolString);
 			p.setAutogol(autogol);
 		}
 		
-		String isPortiereImbattutoActiveString = doc.getElementsMatchingOwnText("Bonus portiere imbattuto:").parents().get(0).getElementsByAttribute("checked").val();
-		Boolean isPortiereImbattutoActive = isPortiereImbattutoActiveString.equals("1");
-		p.setPortiereImbattutoActive(isPortiereImbattutoActive);
-		String portiereImbattutoString = doc.getElementsByAttributeValue("id", "vpimbattuto").val();
-		Double portiereImbattuto = Double.valueOf(portiereImbattutoString);
-		p.setPortiereImbattuto(portiereImbattuto);
+//		Elements autogolElems = doc.getElementsMatchingOwnText("Autogol:");
+//		if (autogolElems.isEmpty()) {
+//			p.setAutogolActive(false);
+//			p.setAutogol(0.0);
+//		}
+//		else {
+//			String isAutogolActiveString = autogolElems.parents().get(0).getElementsByAttribute("checked").val();
+//			Boolean isAutogolActive = isAutogolActiveString.equals("1");
+//			p.setAutogolActive(isAutogolActive);
+//			String autogolString = doc.getElementsByAttributeValue("id", "vdautogol").val();
+//			Double autogol = Double.valueOf(autogolString);
+//			p.setAutogol(autogol);
+//		}
+//		
+		
+		
+		
+		
+//		String isPortiereImbattutoActiveString = doc.getElementsMatchingOwnText("Bonus portiere imbattuto:").parents().get(0).getElementsByAttribute("checked").val();
+//		Boolean isPortiereImbattutoActive = isPortiereImbattutoActiveString.equals("1");
+//		p.setPortiereImbattutoActive(isPortiereImbattutoActive);
+//		String portiereImbattutoString = doc.getElementsByAttributeValue("id", "vpimbattuto").val();
+//		Double portiereImbattuto = Double.valueOf(portiereImbattutoString);
+//		p.setPortiereImbattuto(portiereImbattuto);
 		
 		System.out.println(p);
 		
@@ -573,21 +923,23 @@ public class RulesExpertMain {
 
 
 	private DataSources analyzeRulesPageDataSources(String leagueName) {
-		Document doc = getLoggedPage(AppConstants.RULES_2_SOURCE_URL, leagueName);
+//		Document doc = getLoggedPage(AppConstants.RULES_2_SOURCE_URL, leagueName);
+		Document doc = getLoggedPage(AppConstants.RULES_CONFIG_URL, leagueName);
+
 		
 		DataSources ds = new DataSources();
+		Element dataSourcePanel = doc.getElementById("panel_1");
 		
-		
-		String votesSourceString = doc.getElementsMatchingOwnText("Fonte voti:").parents().get(0).getElementsByAttribute("selected").text();
+		String votesSourceString = dataSourcePanel.getElementsByAttributeValue("data-field-key","fonte.fonte_voti").get(0).getElementsByClass("value-type-select").get(0).text();
 		VotesSourceEnum voteSource = getVoteSource(votesSourceString);
 		ds.setVotesSource(voteSource);
 		
-		String bonusMalusSourceString = doc.getElementsMatchingOwnText("Fonte bonus/malus:").parents().get(0).getElementsByAttribute("selected").text();
-		VotesSourceEnum bonusMalusSource = getVoteSource(bonusMalusSourceString);
-		ds.setBonusMalusSource(bonusMalusSource);
+//		String bonusMalusSourceString = doc.getElementsMatchingOwnText("Fonte bonus/malus:").parents().get(0).getElementsByAttribute("selected").text();
+//		VotesSourceEnum bonusMalusSource = getVoteSource(bonusMalusSourceString);
+//		ds.setBonusMalusSource(bonusMalusSource);
 		
 		
-		String cardsSourceString = doc.getElementsMatchingOwnText("Fonte ammonizioni/esplusioni:").parents().get(0).getElementsByAttribute("selected").text();
+		String cardsSourceString = dataSourcePanel.getElementsByAttributeValue("data-field-key","fonte.fonte_ammo_espu").get(0).getElementsByClass("value-type-select").get(0).text();
 		ds.setYellowRedCardSource(cardsSourceString.substring(0, 1));
 		
 		
@@ -610,46 +962,52 @@ public class RulesExpertMain {
 	}
 	
 	private BonusMalus analyzeRulesPageBonusMalus(String leagueName) {
-		Document doc = getLoggedPage(AppConstants.RULES_1_BONUS_MALUS_URL, leagueName);
+//		Document doc = getLoggedPage(AppConstants.RULES_1_BONUS_MALUS_URL, leagueName);
+		Document doc = getLoggedPage(AppConstants.RULES_CONFIG_URL, leagueName);
 		
 		BonusMalus bm = new BonusMalus();
 		
-		Elements scoredGoalElements = doc.getElementsMatchingOwnText("Gol segnato:").parents().get(0).select("input");
+//		Elements scoredGoalElements = doc.getElementsMatchingOwnText("Gol segnato:").parents().get(0).select("input");
+		Element bonusMalusPanel = doc.getElementById("panel_0");
+		Elements scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","gol_segnato").get(0).getElementsByTag("td");
 		bm.setScoredGoal(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Gol subito:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","gol_subito").get(0).getElementsByTag("td");
 		bm.setTakenGoal(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Rigore segnato:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","rigore_segnato").get(0).getElementsByTag("td");
 		bm.setScoredPenalty(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Rigore sbagliato:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","rigore_sbagliato").get(0).getElementsByTag("td");
 		bm.setMissedPenalty(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Rigore parato:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","rigore_parato").get(0).getElementsByTag("td");
 		bm.setSavedPenalty(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Ammonizione:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","ammonizione").get(0).getElementsByTag("td");
 		bm.setYellowCard(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Espulsione:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","espulsione").get(0).getElementsByTag("td");
 		bm.setRedCard(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Assist:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","assist").get(0).getElementsByTag("td");
 		bm.setMovementAssist(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Assist da fermo:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","assist_fermo").get(0).getElementsByTag("td");
 		bm.setStationaryAssist(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Autogol:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","autogol").get(0).getElementsByTag("td");
 		bm.setAutogoal(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Gol decisivo pareggio:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","gol_decisivo_pareggio").get(0).getElementsByTag("td");
 		bm.setEvenGoal(getRolesMap(scoredGoalElements));
 		
-		scoredGoalElements = doc.getElementsMatchingOwnText("Gol decisivo vittoria:").parents().get(0).select("input");
+		scoredGoalElements = bonusMalusPanel.getElementsByAttributeValue("data-key","gol_decisivo_vittoria").get(0).getElementsByTag("td");
 		bm.setWinGoal(getRolesMap(scoredGoalElements));
 		
+		//portiere imbattuto
+		
+		//ammonito sv
 		
 		System.out.println(bm);
 		return bm;
@@ -657,19 +1015,19 @@ public class RulesExpertMain {
 
 	private Map<RoleEnum, Double> getRolesMap(Elements elements) {
 		Map<RoleEnum, Double> map = new HashMap<RoleEnum, Double>();
-		String valString = elements.get(0).val();
+		String valString = elements.get(1).text();
 		Double val = Double.valueOf(valString); 
 		map.put(RoleEnum.P, val);
 		
-		valString = elements.get(1).val();
+		valString = elements.get(2).text();
 		val = Double.valueOf(valString); 
 		map.put(RoleEnum.D, val);
 		
-		valString = elements.get(2).val();
+		valString = elements.get(3).text();
 		val = Double.valueOf(valString); 
 		map.put(RoleEnum.C, val);
 		
-		valString = elements.get(3).val();
+		valString = elements.get(4).text();
 		val = Double.valueOf(valString); 
 		map.put(RoleEnum.A, val);
 		

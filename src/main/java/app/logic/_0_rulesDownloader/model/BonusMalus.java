@@ -23,8 +23,12 @@ public class BonusMalus implements Serializable{
 	public Map<RoleEnum, Double> yellowCard;
 	public Map<RoleEnum, Double> winGoal;
 	
+	//Impostare su Si per attribuire un bonus al portiere che non subisce gol. Il portiere deve eaver giocato almeno 25 minuti
+	private Boolean portiereImbattutoActive;
+	private Double portiereImbattuto;
 	
-	
+	private Boolean yellowCardSvOfficeVoteActive;
+	private Double yellowCardOfficeVote;
 	
 	public BonusMalus() {
 		redCard = new HashMap<RoleEnum, Double>();
@@ -118,9 +122,37 @@ public class BonusMalus implements Serializable{
 		return "BonusMalus [redCard=" + redCard + "\n yellowCard=" + yellowCard + "\n scoredGoal=" + scoredGoal
 				+ "\n scoredPenalty=" + scoredPenalty + "\n movementAssist=" + movementAssist + "\n stationaryAssist="
 				+ stationaryAssist + "\n autogoal=" + autogoal + "\n missedPenalty=" + missedPenalty + "\n savedPenalty="
-				+ savedPenalty + "\n takenGoal=" + takenGoal + "\n evenGoal=" + evenGoal + "\n winGoal=" + winGoal + "]";
+				+ savedPenalty + "\n takenGoal=" + takenGoal + "\n evenGoal=" + evenGoal + "\n winGoal=" + winGoal + 
+				"\n yellowCardSvOfficeVoteActive=" + yellowCardSvOfficeVoteActive + "\n yellowCardOfficeVote="
+				+ yellowCardOfficeVote + 
+				"\n portiereImbattutoActive=" + portiereImbattutoActive + "\n portiereImbattuto="
+				+ portiereImbattuto +
+				"]";
 	}
-	
+	public Boolean isPortiereImbattutoActive() {
+		return portiereImbattutoActive;
+	}
+	public void setPortiereImbattutoActive(Boolean portiereImbattutoActive) {
+		this.portiereImbattutoActive = portiereImbattutoActive;
+	}
+	public Double getPortiereImbattuto() {
+		return portiereImbattuto;
+	}
+	public void setPortiereImbattuto(Double portiereImbattuto) {
+		this.portiereImbattuto = portiereImbattuto;
+	}
+	public Double getYellowCardSvOfficeVote() {
+		return yellowCardOfficeVote;
+	}
+	public void setYellowCardSvOfficeVote(Double yellowCardvOfficeVote) {
+		this.yellowCardOfficeVote = yellowCardvOfficeVote;
+	}
+	public Boolean isYellowCardSvOfficeVoteActive() {
+		return yellowCardSvOfficeVoteActive;
+	}
+	public void setYellowCardSvOfficeVoteActive(Boolean yellowCardSvOfficeVoteActive) {
+		this.yellowCardSvOfficeVoteActive = yellowCardSvOfficeVoteActive;
+	}
 	
 	
 	

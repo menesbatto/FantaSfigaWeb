@@ -65,7 +65,7 @@ public class UserExpert {
 		Document doc = HttpUtils.getHtmlPageLogged(AppConstants.LOGIN_PAGE_URL, c.getUsername(), c.getPassword());
 		Elements elements = null;
 		try {
-			elements = doc.getElementsByClass("llist").get(0).getElementsByTag("a");
+			elements = doc.getElementsByClass("smart-scrollbar").get(0).getElementsByTag("a");
 		}
 		catch(Exception e) {
 			HttpUtils.getLoggedWebDriver().close();
@@ -78,11 +78,14 @@ public class UserExpert {
 		List<LeagueBean> leagues = new ArrayList<LeagueBean>();
 
 		for (Element elem : elements) {
+			if (elem.hasClass("no-league")) {
+				continue;
+			}
 			leagueUrl = elem.attr("href");
 			
 			leagueShortName = leagueUrl.substring(leagueUrl.lastIndexOf("/") + 1, leagueUrl.length());	//accaniti-division
-			if (leagueShortName.equals("iscrizione"))
-				continue;
+//			if (leagueShortName.equals("iscrizione"))
+//				continue;
 			
 			leagueName = elem.text();	//accaniti division
 			
@@ -130,16 +133,19 @@ public class UserExpert {
 		
 		LeagueBean league = leagueDao.findLeagueByShortName(leagueShortName, userBean.getUsername());
 		
-		String leagueUrl = AppConstants.GAZZETTA_URL + league.getShortName() + "/visualizza-competizioni";
+		//String leagueUrl = AppConstants.GAZZETTA_URL + league.getShortName() + "/visualizza-competizioni";
+		String leagueUrl = AppConstants.GAZZETTA_URL + league.getShortName() + "/lista-competizioni";
 		System.out.println();
 		Document doc = HttpUtils.getHtmlPageLogged(leagueUrl , c.getUsername(), c.getPassword());
 		
 		List<CompetitionBean> competitions = new ArrayList<CompetitionBean>();
 
-		Element elementsOfGestioneCompetizionePage = doc.getElementById("tbcompattive");
+		//Element elementsOfGestioneCompetizionePage = doc.getElementById("tbcompattive");
+		Element elementsOfGestioneCompetizionePage = doc.getElementsByClass("competition-list").get(0);
 		createCompetitions(doc, elementsOfGestioneCompetizionePage, competitions);
 		
-		elementsOfGestioneCompetizionePage = doc.getElementById("tbcompterminate");
+		//elementsOfGestioneCompetizionePage = doc.getElementById("tbcompterminate");
+		elementsOfGestioneCompetizionePage = doc.getElementsByClass("competition-list").get(1);
 		createCompetitions(doc, elementsOfGestioneCompetizionePage, competitions);
 		
 		leagueDao.saveCompetitions(competitions, league.getShortName(), userBean.getUsername());
@@ -154,9 +160,9 @@ public class UserExpert {
 		String competitionName;
 		String competitionRulesUrl;
 		String type;
-		
-		
-		if ( elementsOfGestioneCompetizionePage == null) {	//NON AMMINISTRATORE
+		boolean isAdmin = doc.getElementsByClass("visible-admin").size() > 0;
+		//if ( elementsOfGestioneCompetizionePage == null) {	//NON AMMINISTRATORE
+		if ( !isAdmin ) {	//NON AMMINISTRATORE
 			elements = doc.getElementById("dropCompetizione").getElementsByTag("option");
 			
 			for (Element elem : elements) {
@@ -175,30 +181,45 @@ public class UserExpert {
 			}
 		}
 		
-		else if ( elementsOfGestioneCompetizionePage!= null) {	//AMMINISTRATORE
+		//else if ( elementsOfGestioneCompetizionePage!= null) {	//AMMINISTRATORE
+		else if ( isAdmin) {	//AMMINISTRATORE
 		
-			elements = elementsOfGestioneCompetizionePage.getElementsByTag("tbody").get(0).getElementsByTag("tr");
+			//elements = elementsOfGestioneCompetizionePage.getElementsByTag("tbody").get(0).getElementsByTag("tr");
+			elements = elementsOfGestioneCompetizionePage.getElementsByClass("competition-card");
 			
 			for (Element elem : elements) {
 				if (elem.getElementsByTag("a").isEmpty())
 					continue;
 				competitionRulesUrl = elem.getElementsByTag("a").get(0).attr("href");		//http://leghe.fantagazzetta.com/accaniti-division/modifica-competizione-gironi/288971
 																							//http://leghe.fantagazzetta.com/accaniti-division/home/247720
+				System.out.println();
+				type = elem.getElementsByTag("small").get(0).getElementsByClass("competition-type").get(0).text();
 				
-				type = elem.getElementsByTag("img").get(0).attr("data-original-title");
-				if (type.equals("Competizione a gruppi stile champions league")) 
+				if (type.equals("A Gruppi")) 
 					type = "CL";
-				else if  (type.equals("Competizione in stile formula 1"))
+				else if  (type.equals("Formula 1"))
 					type = "F1";
-				else if  (type.equals("Competizione a calendario"))
+				else if  (type.equals("A Calendario"))
 					type = "CA";
 				else if  (type.equals("Competizione a calendario"))
 					type = "CA";
+				
+//				if (type.equals("Competizione a gruppi stile champions league")) 
+//					type = "CL";
+//				else if  (type.equals("Competizione in stile formula 1"))
+//					type = "F1";
+//				else if  (type.equals("Competizione a calendario"))
+//					type = "CA";
+//				else if  (type.equals("Competizione a calendario"))
+//					type = "CA";
 				
 				
 				competitionShortName = competitionRulesUrl.substring(competitionRulesUrl.lastIndexOf("/") + 1, competitionRulesUrl.length());	//247720
 	
-				competitionName = elem.getElementsByTag("span").get(0).text();		//CAMPIONATO SERIE A-CCANITA
+				//competitionName = elem.getElementsByTag("span").get(0).text();		//CAMPIONATO SERIE A-CCANITA
+				competitionName = elem.getElementsByTag("a").get(0).text();		//CAMPIONATO SERIE A-CCANITA
+				
+				
 				
 				CompetitionBean com = new CompetitionBean(competitionName, competitionShortName, competitionRulesUrl, null, type);
 

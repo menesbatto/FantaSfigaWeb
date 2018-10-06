@@ -19,6 +19,10 @@ public class Points  implements Serializable{
 	private Boolean intornoActive;
 	private Double intorno;
 	
+	//Se l'intorno vale anche tra 0 e 1
+	private Boolean intorno01Active;
+	
+	
 	//Se due squadre ottengono un punteggio inferiore a Soglia gol specificare lo scarto per far scattare il gol alla squadra con punteggio maggiore
 	private Boolean controllaPareggioActive;
 	private Double controllaPareggio;
@@ -30,11 +34,6 @@ public class Points  implements Serializable{
 	//Se una delle due squadre ottiene un punteggio inferiore al valore impostato, si attribuisce un altro gol alla squadra avversaria
 	private Boolean autogolActive;
 	private Double autogol;
-	
-	//Impostare su Si per attribuire un bonus al portiere che non subisce gol. Il portiere deve eaver giocato almeno 25 minuti
-	private Boolean portiereImbattutoActive;
-	private Double portiereImbattuto;
-	
 	
 	public List<Double> getGoalPoints() {
 		return goalPoints;
@@ -96,26 +95,16 @@ public class Points  implements Serializable{
 	public void setDifferenzaPunti(Double differenzaPunti) {
 		this.differenzaPunti = differenzaPunti;
 	}
-	public Boolean isPortiereImbattutoActive() {
-		return portiereImbattutoActive;
-	}
-	public void setPortiereImbattutoActive(Boolean portiereImbattutoActive) {
-		this.portiereImbattutoActive = portiereImbattutoActive;
-	}
-	public Double getPortiereImbattuto() {
-		return portiereImbattuto;
-	}
-	public void setPortiereImbattuto(Double portiereImbattuto) {
-		this.portiereImbattuto = portiereImbattuto;
-	}
+
+	
 	@Override
 	public String toString() {
 		return "Points [goalPoints=" + goalPoints + "\n formulaUnoPoints=" + formulaUnoPoints
 				+ "\n isFasciaConIntornoActive=" + fasciaConIntornoActive + "\n fasciaConIntorno=" + fasciaConIntorno
-				+ "\n isIntornoActive=" + intornoActive + "\n intorno=" + intorno + "\n isControllaPareggioActive="
+				+ "\n isIntornoActive=" + intornoActive + "\n intorno=" + intorno + "\n "
+				+ "intorno01Active=" + intorno01Active + "\n " + "isControllaPareggioActive="
 				+ controllaPareggioActive + "\n controllaPareggio=" + controllaPareggio + "\n isDifferenzaPuntiActive="
-				+ differenzaPuntiActive + "\n differenzaPunti=" + differenzaPunti + "\n isPortiereImbattutoActive="
-				+ portiereImbattutoActive + "\n portiereImbattuto=" + portiereImbattuto + "]";
+				+ differenzaPuntiActive + "\n differenzaPunti=" + differenzaPunti + "]";
 	}
 	public Boolean getAutogolActive() {
 		return autogolActive;
@@ -128,6 +117,12 @@ public class Points  implements Serializable{
 	}
 	public void setAutogol(Double autogol) {
 		this.autogol = autogol;
+	}
+	public Boolean isIntorno01Active() {
+		return intorno01Active;
+	}
+	public void setIntorno01Active(Boolean intorno01Active) {
+		this.intorno01Active = intorno01Active;
 	}
 	
 

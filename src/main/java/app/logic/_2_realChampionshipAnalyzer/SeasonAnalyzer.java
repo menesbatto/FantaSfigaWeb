@@ -191,7 +191,7 @@ public class SeasonAnalyzer {
 		
 		
 		SeasonFromWebBean seasonFromWeb = leagueDao.findSeasonFromWeb(leagueShortName, competitionShortName, userBean.getUsername());
-		
+		System.out.println(seasonFromWeb);
 //		seasonFromWeb = input;
 		
 		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = seasonFromWeb.getSeasonDaysFromWeb();

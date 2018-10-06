@@ -2,6 +2,7 @@ package app.logic._0_rulesDownloader.model;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Substitutions  implements Serializable{
 
@@ -10,10 +11,10 @@ public class Substitutions  implements Serializable{
 	private Integer substitutionNumber;
 	private SubstitutionsModeEnum substitutionMode;
 	
-	private MaxOfficeVotesEnum maxOfficeVotes;
+	private Boolean playerOfficeDecreasingVotesActive;
+	private List<Double> playerOfficeDecreasingVotes;
 	
-	private Boolean yellowCardSvOfficeVoteActive;
-	private Double yellowCardOfficeVote;
+	private MaxOfficeVotesEnum maxOfficeVotes;
 	
 	private Boolean goalkeeperPlayerOfficeVoteActive;
 	private Double goalkeeperPlayerOfficeVote;
@@ -34,12 +35,6 @@ public class Substitutions  implements Serializable{
 	public void setSubstitutionMode(SubstitutionsModeEnum substitutionMode) {
 		this.substitutionMode = substitutionMode;
 	}
-	public Double getYellowCardSvOfficeVote() {
-		return yellowCardOfficeVote;
-	}
-	public void setYellowCardSvOfficeVote(Double yellowCardvOfficeVote) {
-		this.yellowCardOfficeVote = yellowCardvOfficeVote;
-	}
 	public Double getGoalkeeperPlayerOfficeVote() {
 		return goalkeeperPlayerOfficeVote;
 	}
@@ -51,12 +46,6 @@ public class Substitutions  implements Serializable{
 	}
 	public void setMovementsPlayerOfficeVote(Double movementsPlayerOfficeVote) {
 		this.movementsPlayerOfficeVote = movementsPlayerOfficeVote;
-	}
-	public Boolean isYellowCardSvOfficeVoteActive() {
-		return yellowCardSvOfficeVoteActive;
-	}
-	public void setYellowCardSvOfficeVoteActive(Boolean yellowCardSvOfficeVoteActive) {
-		this.yellowCardSvOfficeVoteActive = yellowCardSvOfficeVoteActive;
 	}
 	public Boolean isGoalkeeperPlayerOfficeVoteActive() {
 		return goalkeeperPlayerOfficeVoteActive;
@@ -73,16 +62,31 @@ public class Substitutions  implements Serializable{
 	@Override
 	public String toString() {
 		return "Substitutions [substitutionNumber=" + substitutionNumber + "\n substitutionMode=" + substitutionMode
-				+ "\n yellowCardSvOfficeVoteActive=" + yellowCardSvOfficeVoteActive + "\n yellowCardOfficeVote="
-				+ yellowCardOfficeVote + "\n goalkeeperPlayerOfficeVoteActive=" + goalkeeperPlayerOfficeVoteActive
+				+  "\n goalkeeperPlayerOfficeVoteActive=" + goalkeeperPlayerOfficeVoteActive
 				+ "\n goalkeeperPlayerOfficeVote=" + goalkeeperPlayerOfficeVote + "\n movementsPlayerOfficeVoteActive="
-				+ movementsPlayerOfficeVoteActive + "\n movementsPlayerOfficeVote=" + movementsPlayerOfficeVote + "]";
+				+ movementsPlayerOfficeVoteActive + "\n movementsPlayerOfficeVote=" + movementsPlayerOfficeVote
+				+ "\n maxOfficeVotes=" + maxOfficeVotes + "\n playerOfficeDecreasingVotesActive="
+				+ playerOfficeDecreasingVotesActive + "\n playerOfficeDecreasingVotes=" + playerOfficeDecreasingVotes + 
+				
+				"]";
 	}
 	public MaxOfficeVotesEnum getMaxOfficeVotes() {
 		return maxOfficeVotes;
 	}
 	public void setMaxOfficeVotes(MaxOfficeVotesEnum maxOfficeVotes) {
 		this.maxOfficeVotes = maxOfficeVotes;
+	}
+	public Boolean getPlayerOfficeDecreasingVotesActive() {
+		return playerOfficeDecreasingVotesActive;
+	}
+	public void setPlayerOfficeDecreasingVotesActive(Boolean playerOfficeDecreasingVotesActive) {
+		this.playerOfficeDecreasingVotesActive = playerOfficeDecreasingVotesActive;
+	}
+	public List<Double> getPlayerOfficeDecreasingVotes() {
+		return playerOfficeDecreasingVotes;
+	}
+	public void setPlayerOfficeDecreasingVotes(List<Double> playerOfficeDecreasingVotes) {
+		this.playerOfficeDecreasingVotes = playerOfficeDecreasingVotes;
 	}
 	
 	

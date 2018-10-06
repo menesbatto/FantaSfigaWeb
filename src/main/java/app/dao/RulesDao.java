@@ -29,6 +29,7 @@ import app.dao.entity.Vote;
 import app.logic._0_rulesDownloader.model.BonusMalus;
 import app.logic._0_rulesDownloader.model.CompetitionRules;
 import app.logic._0_rulesDownloader.model.DataSources;
+import app.logic._0_rulesDownloader.model.DefenderModeEnum;
 import app.logic._0_rulesDownloader.model.MaxOfficeVotesEnum;
 import app.logic._0_rulesDownloader.model.Modifiers;
 import app.logic._0_rulesDownloader.model.Points;
@@ -197,11 +198,17 @@ public class RulesDao {
 		e.setWinGoalA(bonusMalus.getWinGoal().get(RoleEnum.A));
 		e.setYellowCardA(bonusMalus.getYellowCard().get(RoleEnum.A));
 
+		
+		e.setPortiereImbattutoActive(bonusMalus.isPortiereImbattutoActive());
+		e.setPortiereImbattuto(bonusMalus.getPortiereImbattuto());
+		
+		e.setYellowCardSvOfficeVoteActive(bonusMalus.isYellowCardSvOfficeVoteActive());
+		e.setYellowCardSvOfficeVote(bonusMalus.getYellowCardSvOfficeVote());
+		
 		// #################################################################################
 		
 		DataSources dataSource = b.getDataSource();
 		
-		e.setBonusMalusSource(dataSource.getBonusMalusSource().name());
 		e.setVotesSource(dataSource.getVotesSource().name());
 		e.setYellowRedCardSource(dataSource.getYellowRedCardSource());
 		
@@ -224,22 +231,71 @@ public class RulesDao {
 		e.setGoalkeeperVote8(modifiers.getGoalkeeperVote8());
 		e.setGoalkeeperVote8half(modifiers.getGoalkeeperVote8half());
 		e.setGoalkeeperVote9(modifiers.getGoalkeeperVote9());
+		e.setGoalkeeperModifierPenaltySavedActive(modifiers.isGoalkeeperModifierPenaltySavedActive());
+		
+		
 		
 		e.setDefenderModifierActive(modifiers.isDefenderModifierActive());
-		e.setDefenderAvgVote6(modifiers.getDefenderAvgVote6());
-		e.setDefenderAvgVote6half(modifiers.getDefenderAvgVote6half());
-		e.setDefenderAvgVote7(modifiers.getDefenderAvgVote7());
+		modifiers.setDefenderAvgVoteUnder5(modifiers.getDefenderAvgVoteUnder5());
+		
+		modifiers.setDefenderAvgVote5(modifiers.getDefenderAvgVote5());
+		modifiers.setDefenderAvgVote5quart(modifiers.getDefenderAvgVote5quart());
+		modifiers.setDefenderAvgVote5half(modifiers.getDefenderAvgVote5half());
+		modifiers.setDefenderAvgVote5sept(modifiers.getDefenderAvgVote5sept());
+		
+		modifiers.setDefenderAvgVote6(modifiers.getDefenderAvgVote6());
+		modifiers.setDefenderAvgVote6quart(modifiers.getDefenderAvgVote6quart());
+		modifiers.setDefenderAvgVote6half(modifiers.getDefenderAvgVote6half());
+		modifiers.setDefenderAvgVote6sept(modifiers.getDefenderAvgVote6sept());
+
+		modifiers.setDefenderAvgVote7(modifiers.getDefenderAvgVote7());
+		modifiers.setDefenderAvgVote7quart(modifiers.getDefenderAvgVote7quart());
+		modifiers.setDefenderAvgVote7half(modifiers.getDefenderAvgVote7half());
+		modifiers.setDefenderAvgVote7sept(modifiers.getDefenderAvgVote7sept());
+
+		modifiers.setDefenderAvgVote8(modifiers.getDefenderAvgVote8());
+		
+		e.setDefenderGoalkeeperIncluded(modifiers.isDefenderGoalkeeperIncluded());
+		if (modifiers.getDefenderMode() != null)
+			e.setDefenderMode(modifiers.getDefenderMode().name());
+		
+		
 		
 		e.setMiddlefielderModifierActive(modifiers.isMiddlefielderModifierActive());
-		e.setMiddlefielderNear0(modifiers.getMiddlefielderNear0());
-		e.setMiddlefielderOver2(modifiers.getMiddlefielderOver2());
-		e.setMiddlefielderOver4(modifiers.getMiddlefielderOver4());
-		e.setMiddlefielderOver6(modifiers.getMiddlefielderOver6());
-		e.setMiddlefielderOver8(modifiers.getMiddlefielderOver8());
-		e.setMiddlefielderUnderMinus2(modifiers.getMiddlefielderUnderMinus2());					
-		e.setMiddlefielderUnderMinus4(modifiers.getMiddlefielderUnderMinus4());
-		e.setMiddlefielderUnderMinus6(modifiers.getMiddlefielderUnderMinus6());
-		e.setMiddlefielderUnderMinus8(modifiers.getMiddlefielderUnderMinus8());
+		
+		e.setMiddlefielder2(modifiers.getMiddlefielder2());
+		e.setMiddlefielder2half(modifiers.getMiddlefielder2half());
+		e.setMiddlefielderMinus2(modifiers.getMiddlefielderMinus2());
+		e.setMiddlefielderMinus2half(modifiers.getMiddlefielderMinus2half());
+		
+		e.setMiddlefielder3(modifiers.getMiddlefielder3());
+		e.setMiddlefielder3half(modifiers.getMiddlefielder3half());
+		e.setMiddlefielderMinus3(modifiers.getMiddlefielderMinus3());
+		e.setMiddlefielderMinus3half(modifiers.getMiddlefielderMinus3half());
+		
+		e.setMiddlefielder4(modifiers.getMiddlefielder4());
+		e.setMiddlefielder4half(modifiers.getMiddlefielder4half());
+		e.setMiddlefielderMinus4(modifiers.getMiddlefielderMinus4());
+		e.setMiddlefielderMinus4half(modifiers.getMiddlefielderMinus4half());
+		
+		e.setMiddlefielder5(modifiers.getMiddlefielder5());
+		e.setMiddlefielder5half(modifiers.getMiddlefielder5half());
+		e.setMiddlefielderMinus5(modifiers.getMiddlefielderMinus5());
+		e.setMiddlefielderMinus5half(modifiers.getMiddlefielderMinus5half());
+		
+		e.setMiddlefielder6(modifiers.getMiddlefielder6());
+		e.setMiddlefielder6half(modifiers.getMiddlefielder6half());
+		e.setMiddlefielderMinus6(modifiers.getMiddlefielderMinus6());
+		e.setMiddlefielderMinus6half(modifiers.getMiddlefielderMinus6half());
+		
+		e.setMiddlefielder7(modifiers.getMiddlefielder7());
+		e.setMiddlefielder7half(modifiers.getMiddlefielder7half());
+		e.setMiddlefielderMinus7(modifiers.getMiddlefielderMinus7());
+		e.setMiddlefielderMinus7half(modifiers.getMiddlefielderMinus7half());
+		
+		e.setMiddlefielder8(modifiers.getMiddlefielder8());
+		
+		
 		
 		e.setStrikerModifierActive(	modifiers.isStrikerModifierActive());
 		e.setStrikerVote6(modifiers.getStrikerVote6());
@@ -247,6 +303,8 @@ public class RulesDao {
 		e.setStrikerVote7(modifiers.getStrikerVote7());
 		e.setStrikerVote7half(modifiers.getStrikerVote7half());
 		e.setStrikerVote8(modifiers.getStrikerVote8());
+		
+		
 		
 		e.setPerformanceModifierActive(modifiers.isPerformanceModifierActive());
 		e.setPerformance0(modifiers.getPerformance0());
@@ -262,8 +320,30 @@ public class RulesDao {
 		e.setPerformance10(modifiers.getPerformance10());
 		e.setPerformance11(modifiers.getPerformance11());
 		
+		
+		
 		e.setFairPlayModifierActive(modifiers.isFairPlayModifierActive());
 		e.setFairPlay(modifiers.getFairPlay());
+		
+		
+		e.setCaptainModifierActive(modifiers.isCaptainModifierActive());
+		e.setCaptainDuplicateBonus(modifiers.isCaptainDuplicateBonus());
+		e.setCaptainDuplicateMalus(modifiers.isCaptainDuplicateMalus());
+		
+		e.setCaptainVote3(modifiers.getCaptainVote3());
+		e.setCaptainVote3half(modifiers.getCaptainVote3half());
+		e.setCaptainVote4(modifiers.getCaptainVote4());
+		e.setCaptainVote4half(modifiers.getCaptainVote4half());
+		e.setCaptainVote5(modifiers.getCaptainVote5());
+		e.setCaptainVote5half(modifiers.getCaptainVote5half());
+		e.setCaptainVote6(modifiers.getCaptainVote6());
+		e.setCaptainVote6half(modifiers.getCaptainVote6half());
+		e.setCaptainVote7(modifiers.getCaptainVote7());
+		e.setCaptainVote7half(modifiers.getCaptainVote7half());
+		e.setCaptainVote8(modifiers.getCaptainVote8());
+		e.setCaptainVote8half(modifiers.getCaptainVote8half());
+		e.setCaptainVote9(modifiers.getCaptainVote9());
+		
 		
 		
 		// #################################################################################
@@ -294,11 +374,10 @@ public class RulesDao {
 		e.setIntornoActive(points.isIntornoActive());
 		e.setIntorno(points.getIntorno());
 		
+		e.setIntorno01Active(points.isIntorno01Active());
+		
 		e.setAutogolActive(points.getAutogolActive());
 		e.setAutogol(points.getAutogol());
-		
-		e.setPortiereImbattutoActive(points.isPortiereImbattutoActive());
-		e.setPortiereImbattuto(points.getPortiereImbattuto());
 		
 		// #################################################################################
 
@@ -310,16 +389,31 @@ public class RulesDao {
 		String maxOfficeVotesString;
 		if (substitutions.getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_SUBSTITUTIONS))
 			maxOfficeVotesString = "TILL_SUBSTITUTIONS";
-		else //	if (substitutions.getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_ALL))
+		else if (substitutions.getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_ALL))
 			maxOfficeVotesString = "TILL_ALL";
+		else //if (substitutions.getMaxOfficeVotes().equals(MaxOfficeVotesEnum.ONLY_ONE))
+			maxOfficeVotesString = "ONLY_ONE";
+		
 		e.setMaxOfficeVotes(maxOfficeVotesString);
+		
+		Boolean playerOfficeDecreasingVotesActive = substitutions.getPlayerOfficeDecreasingVotesActive();
+		
+		e.setPlayerOfficeDecreasingVotesActive(playerOfficeDecreasingVotesActive);
+		
+		if (playerOfficeDecreasingVotesActive) {
+			List<Double> playerOfficeDecreasingVotes = substitutions.getPlayerOfficeDecreasingVotes();
+			String playerOfficeDecreasingVotesString = "";
+			for (Double vote : playerOfficeDecreasingVotes)
+				playerOfficeDecreasingVotesString += vote + "-";
+			e.setPlayerOfficeDecreasingVotes(playerOfficeDecreasingVotesString);
+		}
+		
 		
 		e.setGoalkeeperPlayerOfficeVoteActive(substitutions.isGoalkeeperPlayerOfficeVoteActive());
 		e.setGoalkeeperPlayerOfficeVote(substitutions.getGoalkeeperPlayerOfficeVote());
 		e.setMovementsPlayerOfficeVoteActive(substitutions.isMovementsPlayerOfficeVoteActive());
 		e.setMovementsPlayerOfficeVote(substitutions.getMovementsPlayerOfficeVote());
-		e.setYellowCardSvOfficeVoteActive(substitutions.isYellowCardSvOfficeVoteActive());
-		e.setYellowCardSvOfficeVote(substitutions.getYellowCardSvOfficeVote());
+		
 		
 		e.setType(b.getType().name());
 		e.setHomeBonusActive(b.getCompetitionRules().isHomeBonusActive());
@@ -456,13 +550,18 @@ public class RulesDao {
 		bonusMalus.getWinGoal().put(RoleEnum.A, e.getWinGoalA());
 		bonusMalus.getYellowCard().put(RoleEnum.A, e.getYellowCardA());
 		
+		bonusMalus.setPortiereImbattutoActive(e.getPortiereImbattutoActive());
+		bonusMalus.setPortiereImbattuto(e.getPortiereImbattuto());
+		
+		bonusMalus.setYellowCardSvOfficeVoteActive(e.getYellowCardSvOfficeVoteActive());
+		bonusMalus.setYellowCardSvOfficeVote(e.getYellowCardSvOfficeVote());
+		
 		
 		// #################################################################################
 
 		DataSources dataSource = new DataSources();
 		bean.setDataSource(dataSource);
 		
-		dataSource.setBonusMalusSource(VotesSourceEnum.valueOf(e.getBonusMalusSource()));
 		dataSource.setVotesSource(VotesSourceEnum.valueOf(e.getVotesSource()));
 		dataSource.setYellowRedCardSource(e.getYellowRedCardSource());
 		
@@ -485,22 +584,75 @@ public class RulesDao {
 		modifiers.setGoalkeeperVote8(e.getGoalkeeperVote8());
 		modifiers.setGoalkeeperVote8half(e.getGoalkeeperVote8half());
 		modifiers.setGoalkeeperVote9(e.getGoalkeeperVote9());
+		modifiers.setGoalkeeperModifierPenaltySavedActive(e.isGoalkeeperModifierPenaltySavedActive());
+		
 		
 		modifiers.setDefenderModifierActive(e.isDefenderModifierActive());
+		
+		modifiers.setDefenderAvgVoteUnder5(e.getDefenderAvgVoteUnder5());
+		
+		modifiers.setDefenderAvgVote5(e.getDefenderAvgVote5());
+		modifiers.setDefenderAvgVote5quart(e.getDefenderAvgVote5quart());
+		modifiers.setDefenderAvgVote5half(e.getDefenderAvgVote5half());
+		modifiers.setDefenderAvgVote5sept(e.getDefenderAvgVote5sept());
+		
 		modifiers.setDefenderAvgVote6(e.getDefenderAvgVote6());
+		modifiers.setDefenderAvgVote6quart(e.getDefenderAvgVote6quart());
 		modifiers.setDefenderAvgVote6half(e.getDefenderAvgVote6half());
+		modifiers.setDefenderAvgVote6sept(e.getDefenderAvgVote6sept());
+
 		modifiers.setDefenderAvgVote7(e.getDefenderAvgVote7());
+		modifiers.setDefenderAvgVote7quart(e.getDefenderAvgVote7quart());
+		modifiers.setDefenderAvgVote7half(e.getDefenderAvgVote7half());
+		modifiers.setDefenderAvgVote7sept(e.getDefenderAvgVote7sept());
+
+		modifiers.setDefenderAvgVote8(e.getDefenderAvgVote8());
+		
+		
+		modifiers.setDefenderGoalkeeperIncluded(e.isDefenderGoalkeeperIncluded());
+		DefenderModeEnum defenderMode;
+		if (e.getDefenderMode()!= null) {
+			if (e.getDefenderMode().equals("TO_HIMSELF"))
+				defenderMode = DefenderModeEnum.TO_HIMSELF;
+			else //if (e.getDefenderMode().equals("TO_OTHER"))
+				defenderMode = DefenderModeEnum.TO_OTHER;
+			
+			modifiers.setDefenderMode(defenderMode);
+		}
+		
 		
 		modifiers.setMiddlefielderModifierActive(e.isMiddlefielderModifierActive());
-		modifiers.setMiddlefielderNear0(e.getMiddlefielderNear0());
-		modifiers.setMiddlefielderOver2(e.getMiddlefielderOver2());
-		modifiers.setMiddlefielderOver4(e.getMiddlefielderOver4());
-		modifiers.setMiddlefielderOver6(e.getMiddlefielderOver6());
-		modifiers.setMiddlefielderOver8(e.getMiddlefielderOver8());
-		modifiers.setMiddlefielderUnderMinus2(e.getMiddlefielderUnderMinus2());					
-		modifiers.setMiddlefielderUnderMinus4(e.getMiddlefielderUnderMinus4());
-		modifiers.setMiddlefielderUnderMinus6(e.getMiddlefielderUnderMinus6());
-		modifiers.setMiddlefielderUnderMinus8(e.getMiddlefielderUnderMinus8());
+		modifiers.setMiddlefielder2(modifiers.getMiddlefielder2());
+		modifiers.setMiddlefielder2half(modifiers.getMiddlefielder2half());
+		modifiers.setMiddlefielderMinus2(modifiers.getMiddlefielderMinus2());
+		modifiers.setMiddlefielderMinus2half(modifiers.getMiddlefielderMinus2half());
+		
+		modifiers.setMiddlefielder3(modifiers.getMiddlefielder3());
+		modifiers.setMiddlefielder3half(modifiers.getMiddlefielder3half());
+		modifiers.setMiddlefielderMinus3(modifiers.getMiddlefielderMinus3());
+		modifiers.setMiddlefielderMinus3half(modifiers.getMiddlefielderMinus3half());
+		
+		modifiers.setMiddlefielder4(modifiers.getMiddlefielder4());
+		modifiers.setMiddlefielder4half(modifiers.getMiddlefielder4half());
+		modifiers.setMiddlefielderMinus4(modifiers.getMiddlefielderMinus4());
+		modifiers.setMiddlefielderMinus4half(modifiers.getMiddlefielderMinus4half());
+		
+		modifiers.setMiddlefielder5(modifiers.getMiddlefielder5());
+		modifiers.setMiddlefielder5half(modifiers.getMiddlefielder5half());
+		modifiers.setMiddlefielderMinus5(modifiers.getMiddlefielderMinus5());
+		modifiers.setMiddlefielderMinus5half(modifiers.getMiddlefielderMinus5half());
+		
+		modifiers.setMiddlefielder6(modifiers.getMiddlefielder6());
+		modifiers.setMiddlefielder6half(modifiers.getMiddlefielder6half());
+		modifiers.setMiddlefielderMinus6(modifiers.getMiddlefielderMinus6());
+		modifiers.setMiddlefielderMinus6half(modifiers.getMiddlefielderMinus6half());
+		
+		modifiers.setMiddlefielder7(modifiers.getMiddlefielder7());
+		modifiers.setMiddlefielder7half(modifiers.getMiddlefielder7half());
+		modifiers.setMiddlefielderMinus7(modifiers.getMiddlefielderMinus7());
+		modifiers.setMiddlefielderMinus7half(modifiers.getMiddlefielderMinus7half());
+		
+		e.setMiddlefielder8(modifiers.getMiddlefielder8());
 		
 		modifiers.setStrikerModifierActive(	e.isStrikerModifierActive());
 		modifiers.setStrikerVote6(e.getStrikerVote6());
@@ -525,6 +677,28 @@ public class RulesDao {
 		
 		modifiers.setFairPlayModifierActive(e.isFairPlayModifierActive());
 		modifiers.setFairPlay(e.getFairPlay());
+		
+		modifiers.setCaptainModifierActive(e.isCaptainModifierActive());
+		modifiers.setCaptainDuplicateBonus(e.isCaptainDuplicateBonus());
+		modifiers.setCaptainDuplicateMalus(e.isCaptainDuplicateMalus());
+		
+		modifiers.setCaptainVote3(e.getCaptainVote3());
+		modifiers.setCaptainVote3half(e.getCaptainVote3half());
+		modifiers.setCaptainVote4(e.getCaptainVote4());
+		modifiers.setCaptainVote4half(e.getCaptainVote4half());
+		modifiers.setCaptainVote5(e.getCaptainVote5());
+		modifiers.setCaptainVote5half(e.getCaptainVote5half());
+		modifiers.setCaptainVote6(e.getCaptainVote6());
+		modifiers.setCaptainVote6half(e.getCaptainVote6half());
+		modifiers.setCaptainVote7(e.getCaptainVote7());
+		modifiers.setCaptainVote7half(e.getCaptainVote7half());
+		modifiers.setCaptainVote8(e.getCaptainVote8());
+		modifiers.setCaptainVote8half(e.getCaptainVote8half());
+		modifiers.setCaptainVote9(e.getCaptainVote9());
+		
+		
+		
+		
 		
 		// #################################################################################
 
@@ -565,12 +739,11 @@ public class RulesDao {
 		points.setIntornoActive(e.getIntornoActive());
 		points.setIntorno(e.getIntorno());
 		
+		points.setIntorno01Active(e.getIntorno01Active());
+		
 		points.setAutogolActive(e.getAutogolActive());
 		points.setAutogol(e.getAutogol());
 		
-		points.setPortiereImbattutoActive(e.getPortiereImbattutoActive());
-		points.setPortiereImbattuto(e.getPortiereImbattuto());
-
 		// #################################################################################
 		
 		Substitutions substitution = new Substitutions();
@@ -583,17 +756,34 @@ public class RulesDao {
 		if (e.getMaxOfficeVotes()!= null) {
 			if (e.getMaxOfficeVotes().equals("TILL_SUBSTITUTIONS"))
 				maxOfficeVotesEnum = MaxOfficeVotesEnum.TILL_SUBSTITUTIONS;
-			else //	if (e.getMaxOfficeVotes().equals("TILL_ALL"))
+			else if (e.getMaxOfficeVotes().equals("TILL_ALL"))
 				maxOfficeVotesEnum = MaxOfficeVotesEnum.TILL_ALL;
+			else //if (e.getMaxOfficeVotes().equals("ONLY_ONE"))
+				maxOfficeVotesEnum = MaxOfficeVotesEnum.ONLY_ONE;
+			
 			substitution.setMaxOfficeVotes(maxOfficeVotesEnum);
 		}
+		
+		substitution.setPlayerOfficeDecreasingVotesActive(e.getPlayerOfficeDecreasingVotesActive());
+		List<Double> playerOfficeDecreasingVotes = new ArrayList<Double>();
+		String playerOfficeDecreasingVotesString = e.getPlayerOfficeDecreasingVotes();
+		String[] splitDecreasing = playerOfficeDecreasingVotesString.split("-");
+		
+		for (int i = 0; i < splitDecreasing.length; i++) {
+			String voteString = split[i];
+			Double vote = Double.valueOf(voteString);
+			playerOfficeDecreasingVotes.add(vote);
+		}
+		substitution.setPlayerOfficeDecreasingVotes(playerOfficeDecreasingVotes);
+		
+		
+		
+		
 		
 		substitution.setGoalkeeperPlayerOfficeVoteActive(e.getGoalkeeperPlayerOfficeVoteActive());
 		substitution.setGoalkeeperPlayerOfficeVote(e.getGoalkeeperPlayerOfficeVote());
 		substitution.setMovementsPlayerOfficeVoteActive(e.getMovementsPlayerOfficeVoteActive());
 		substitution.setMovementsPlayerOfficeVote(e.getMovementsPlayerOfficeVote());
-		substitution.setYellowCardSvOfficeVoteActive(e.getYellowCardSvOfficeVoteActive());
-		substitution.setYellowCardSvOfficeVote(e.getYellowCardSvOfficeVote());
 		
 		// #################################################################################
 		

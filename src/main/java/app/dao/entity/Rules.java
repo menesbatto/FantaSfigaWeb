@@ -87,7 +87,6 @@ public class Rules {
 	
 	// Datasource
 	private String votesSource;				//Fantagazzetta, Italia, Statistico
-	private String bonusMalusSource;		//FISSO A Fantagazzetta
 	private String yellowRedCardSource;		//Fantagazzetta o Giudice Sportivo
 	
 	// Points
@@ -99,6 +98,7 @@ public class Rules {
 	
 	private Boolean intornoActive;
 	private Double intorno;
+	private Boolean intorno01Active;
 	
 	private Boolean controllaPareggioActive;
 	private Double controllaPareggio;
@@ -118,6 +118,9 @@ public class Rules {
 	
 	private String maxOfficeVotes;
 	
+	private Boolean playerOfficeDecreasingVotesActive;
+	private String playerOfficeDecreasingVotes;
+		
 	private Boolean yellowCardSvOfficeVoteActive;
 	private Double yellowCardSvOfficeVote;
 	
@@ -143,23 +146,64 @@ public class Rules {
 	private Double goalkeeperVote8;
 	private Double goalkeeperVote8half;
 	private Double goalkeeperVote9;
+	private boolean goalkeeperModifierPenaltySavedActive;
+
 	
 	
 	private boolean defenderModifierActive;
+	private Double defenderAvgVoteUnder5;
+
+	private Double defenderAvgVote5;
+	private Double defenderAvgVote5quart;
+	private Double defenderAvgVote5half;
+	private Double defenderAvgVote5sept;
+	
 	private Double defenderAvgVote6;
+	private Double defenderAvgVote6quart;
 	private Double defenderAvgVote6half;
+	private Double defenderAvgVote6sept;
+	
 	private Double defenderAvgVote7;
+	private Double defenderAvgVote7quart;
+	private Double defenderAvgVote7half;
+	private Double defenderAvgVote7sept;
+	
+
+	private Double defenderAvgVote8;
+	
+	private boolean defenderGoalkeeperIncluded;
+	private String defenderMode;
+	
 	
 	private boolean middlefielderModifierActive;
-	private Double middlefielderUnderMinus8;
-	private Double middlefielderUnderMinus6;
-	private Double middlefielderUnderMinus4;
-	private Double middlefielderUnderMinus2;
-	private Double middlefielderNear0;
-	private Double middlefielderOver2;
-	private Double middlefielderOver4;
-	private Double middlefielderOver6;
-	private Double middlefielderOver8;
+	private Double middlefielder2;
+	
+	private Double middlefielder2half;
+	private Double middlefielder3;
+	private Double middlefielder3half;
+	private Double middlefielder4;
+	private Double middlefielder4half;
+	private Double middlefielder5;
+	private Double middlefielder5half;
+	private Double middlefielder6;
+	private Double middlefielder6half;
+	private Double middlefielder7;
+	private Double middlefielder7half;
+	private Double middlefielder8;
+	
+	private Double middlefielderMinus2;
+	private Double middlefielderMinus2half;
+	private Double middlefielderMinus3;
+	private Double middlefielderMinus3half;
+	private Double middlefielderMinus4;
+	private Double middlefielderMinus4half;
+	private Double middlefielderMinus5;
+	private Double middlefielderMinus5half;
+	private Double middlefielderMinus6;
+	private Double middlefielderMinus6half;
+	private Double middlefielderMinus7;
+	private Double middlefielderMinus7half;
+	private Double middlefielderMinus8;
 	
 	
 	private boolean strikerModifierActive;
@@ -185,6 +229,25 @@ public class Rules {
 	
 	private boolean fairPlayModifierActive;
 	private Double fairPlay;
+	
+	
+	private boolean captainModifierActive;
+	private boolean captainDuplicateBonus;
+	private boolean captainDuplicateMalus;
+	private Double captainVote3;
+	private Double captainVote3half;
+	private Double captainVote4;
+	private Double captainVote4half;
+	private Double captainVote5;
+	private Double captainVote5half;
+	private Double captainVote6;
+	private Double captainVote6half;
+	private Double captainVote7;
+	private Double captainVote7half;
+	private Double captainVote8;
+	private Double captainVote8half;
+	private Double captainVote9;
+	
 	
 	// CompetitionRules
 	private Boolean homeBonusActive;
@@ -912,77 +975,7 @@ public class Rules {
 		this.middlefielderModifierActive = middlefielderModifierActive;
 	}
 
-	public Double getMiddlefielderUnderMinus8() {
-		return middlefielderUnderMinus8;
-	}
-
-	public void setMiddlefielderUnderMinus8(Double middlefielderUnderMinus8) {
-		this.middlefielderUnderMinus8 = middlefielderUnderMinus8;
-	}
-
-	public Double getMiddlefielderUnderMinus6() {
-		return middlefielderUnderMinus6;
-	}
-
-	public void setMiddlefielderUnderMinus6(Double middlefielderUnderMinus6) {
-		this.middlefielderUnderMinus6 = middlefielderUnderMinus6;
-	}
-
-	public Double getMiddlefielderUnderMinus4() {
-		return middlefielderUnderMinus4;
-	}
-
-	public void setMiddlefielderUnderMinus4(Double middlefielderUnderMinus4) {
-		this.middlefielderUnderMinus4 = middlefielderUnderMinus4;
-	}
-
-	public Double getMiddlefielderUnderMinus2() {
-		return middlefielderUnderMinus2;
-	}
-
-	public void setMiddlefielderUnderMinus2(Double middlefielderUnderMinus2) {
-		this.middlefielderUnderMinus2 = middlefielderUnderMinus2;
-	}
-
-	public Double getMiddlefielderNear0() {
-		return middlefielderNear0;
-	}
-
-	public void setMiddlefielderNear0(Double middlefielderNear0) {
-		this.middlefielderNear0 = middlefielderNear0;
-	}
-
-	public Double getMiddlefielderOver2() {
-		return middlefielderOver2;
-	}
-
-	public void setMiddlefielderOver2(Double middlefielderOver2) {
-		this.middlefielderOver2 = middlefielderOver2;
-	}
-
-	public Double getMiddlefielderOver4() {
-		return middlefielderOver4;
-	}
-
-	public void setMiddlefielderOver4(Double middlefielderOver4) {
-		this.middlefielderOver4 = middlefielderOver4;
-	}
-
-	public Double getMiddlefielderOver6() {
-		return middlefielderOver6;
-	}
-
-	public void setMiddlefielderOver6(Double middlefielderOver6) {
-		this.middlefielderOver6 = middlefielderOver6;
-	}
-
-	public Double getMiddlefielderOver8() {
-		return middlefielderOver8;
-	}
-
-	public void setMiddlefielderOver8(Double middlefielderOver8) {
-		this.middlefielderOver8 = middlefielderOver8;
-	}
+	
 
 	public boolean isStrikerModifierActive() {
 		return strikerModifierActive;
@@ -1160,14 +1153,6 @@ public class Rules {
 		this.yellowRedCardSource = yellowRedCardSource;
 	}
 
-	public String getBonusMalusSource() {
-		return bonusMalusSource;
-	}
-
-	public void setBonusMalusSource(String bonusMalusSource) {
-		this.bonusMalusSource = bonusMalusSource;
-	}
-
 	public void setGoalPoints(List<Double> goalPoints2) {
 		// TODO Auto-generated method stub
 		
@@ -1265,7 +1250,7 @@ public class Rules {
 				+ scoredPenaltyA + ", movementAssistA=" + movementAssistA + ", stationaryAssistA=" + stationaryAssistA
 				+ ", autogoalA=" + autogoalA + ", missedPenaltyA=" + missedPenaltyA + ", savedPenaltyA=" + savedPenaltyA
 				+ ", takenGoalA=" + takenGoalA + ", evenGoalA=" + evenGoalA + ", winGoalA=" + winGoalA
-				+ ", votesSource=" + votesSource + ", bonusMalusSource=" + bonusMalusSource + ", yellowRedCardSource="
+				+ ", votesSource=" + votesSource + ", yellowRedCardSource="
 				+ yellowRedCardSource + ", goalPoints=" + goalPoints + ", formulaUnoPoints=" + formulaUnoPoints
 				+ ", fasciaConIntornoActive=" + fasciaConIntornoActive + ", fasciaConIntorno=" + fasciaConIntorno
 				+ ", intornoActive=" + intornoActive + ", intorno=" + intorno + ", controllaPareggioActive="
@@ -1287,12 +1272,13 @@ public class Rules {
 				+ ", goalkeeperVote8half=" + goalkeeperVote8half + ", goalkeeperVote9=" + goalkeeperVote9
 				+ ", defenderModifierActive=" + defenderModifierActive + ", defenderAvgVote6=" + defenderAvgVote6
 				+ ", defenderAvgVote6half=" + defenderAvgVote6half + ", defenderAvgVote7=" + defenderAvgVote7
-				+ ", middlefielderModifierActive=" + middlefielderModifierActive + ", middlefielderUnderMinus8="
-				+ middlefielderUnderMinus8 + ", middlefielderUnderMinus6=" + middlefielderUnderMinus6
-				+ ", middlefielderUnderMinus4=" + middlefielderUnderMinus4 + ", middlefielderUnderMinus2="
-				+ middlefielderUnderMinus2 + ", middlefielderNear0=" + middlefielderNear0 + ", middlefielderOver2="
-				+ middlefielderOver2 + ", middlefielderOver4=" + middlefielderOver4 + ", middlefielderOver6="
-				+ middlefielderOver6 + ", middlefielderOver8=" + middlefielderOver8 + ", strikerModifierActive="
+//				+ ", middlefielderModifierActive=" + middlefielderModifierActive + ", middlefielderUnderMinus8="
+//				+ middlefielderUnderMinus8 + ", middlefielderUnderMinus6=" + middlefielderUnderMinus6
+//				+ ", middlefielderUnderMinus4=" + middlefielderUnderMinus4 + ", middlefielderUnderMinus2="
+//				+ middlefielderUnderMinus2 + ", middlefielderNear0=" + middlefielderNear0 + ", middlefielderOver2="
+//				+ middlefielderOver2 + ", middlefielderOver4=" + middlefielderOver4 + ", middlefielderOver6="
+//				+ middlefielderOver6 + ", middlefielderOver8=" + middlefielderOver8 
+				+ ", strikerModifierActive="
 				+ strikerModifierActive + ", strikerVote6=" + strikerVote6 + ", strikerVote6half=" + strikerVote6half
 				+ ", strikerVote7=" + strikerVote7 + ", strikerVote7half=" + strikerVote7half + ", strikerVote8="
 				+ strikerVote8 + ", performanceModifierActive=" + performanceModifierActive + ", performance11="
@@ -1328,8 +1314,479 @@ public class Rules {
 	public void setSeasonDaysToJump(String seasonDaysToJump) {
 		this.seasonDaysToJump = seasonDaysToJump;
 	}
-	
-	
+
+	public Boolean getIntorno01Active() {
+		return intorno01Active;
+	}
+
+	public void setIntorno01Active(Boolean intorno01Active) {
+		this.intorno01Active = intorno01Active;
+	}
+
+	public Boolean getPlayerOfficeDecreasingVotesActive() {
+		return playerOfficeDecreasingVotesActive;
+	}
+
+	public void setPlayerOfficeDecreasingVotesActive(Boolean playerOfficeDecreasingVotesActive) {
+		this.playerOfficeDecreasingVotesActive = playerOfficeDecreasingVotesActive;
+	}
+
+	public String getPlayerOfficeDecreasingVotes() {
+		return playerOfficeDecreasingVotes;
+	}
+
+	public void setPlayerOfficeDecreasingVotes(String playerOfficeDecreasingVotes) {
+		this.playerOfficeDecreasingVotes = playerOfficeDecreasingVotes;
+	}
+
+	public boolean isGoalkeeperModifierPenaltySavedActive() {
+		return goalkeeperModifierPenaltySavedActive;
+	}
+
+	public void setGoalkeeperModifierPenaltySavedActive(boolean goalkeeperModifierPenaltySavedActive) {
+		this.goalkeeperModifierPenaltySavedActive = goalkeeperModifierPenaltySavedActive;
+	}
+
+	public boolean isDefenderGoalkeeperIncluded() {
+		return defenderGoalkeeperIncluded;
+	}
+
+	public void setDefenderGoalkeeperIncluded(boolean defenderGoalkeeperIncluded) {
+		this.defenderGoalkeeperIncluded = defenderGoalkeeperIncluded;
+	}
+
+	public String getDefenderMode() {
+		return defenderMode;
+	}
+
+	public void setDefenderMode(String defenderMode) {
+		this.defenderMode = defenderMode;
+	}
 	
 
+	public Double getDefenderAvgVoteUnder5() {
+		return defenderAvgVoteUnder5;
+	}
+
+	public void setDefenderAvgVoteUnder5(Double defenderAvgVoteUnder5) {
+		this.defenderAvgVoteUnder5 = defenderAvgVoteUnder5;
+	}
+
+	public Double getDefenderAvgVote5() {
+		return defenderAvgVote5;
+	}
+
+	public void setDefenderAvgVote5(Double defenderAvgVote5) {
+		this.defenderAvgVote5 = defenderAvgVote5;
+	}
+
+	public Double getDefenderAvgVote5quart() {
+		return defenderAvgVote5quart;
+	}
+
+	public void setDefenderAvgVote5quart(Double defenderAvgVote5quart) {
+		this.defenderAvgVote5quart = defenderAvgVote5quart;
+	}
+
+	public Double getDefenderAvgVote5half() {
+		return defenderAvgVote5half;
+	}
+
+	public void setDefenderAvgVote5half(Double defenderAvgVote5half) {
+		this.defenderAvgVote5half = defenderAvgVote5half;
+	}
+
+	public Double getDefenderAvgVote5sept() {
+		return defenderAvgVote5sept;
+	}
+
+	public void setDefenderAvgVote5sept(Double defenderAvgVote5sept) {
+		this.defenderAvgVote5sept = defenderAvgVote5sept;
+	}
+
+	public Double getDefenderAvgVote6quart() {
+		return defenderAvgVote6quart;
+	}
+
+	public void setDefenderAvgVote6quart(Double defenderAvgVote6quart) {
+		this.defenderAvgVote6quart = defenderAvgVote6quart;
+	}
+
+	public Double getDefenderAvgVote6sept() {
+		return defenderAvgVote6sept;
+	}
+
+	public void setDefenderAvgVote6sept(Double defenderAvgVote6sept) {
+		this.defenderAvgVote6sept = defenderAvgVote6sept;
+	}
+
+	public Double getDefenderAvgVote7quart() {
+		return defenderAvgVote7quart;
+	}
+
+	public void setDefenderAvgVote7quart(Double defenderAvgVote7quart) {
+		this.defenderAvgVote7quart = defenderAvgVote7quart;
+	}
+
+	public Double getDefenderAvgVote7half() {
+		return defenderAvgVote7half;
+	}
+
+	public void setDefenderAvgVote7half(Double defenderAvgVote7half) {
+		this.defenderAvgVote7half = defenderAvgVote7half;
+	}
+
+	public Double getDefenderAvgVote7sept() {
+		return defenderAvgVote7sept;
+	}
+
+	public void setDefenderAvgVote7sept(Double defenderAvgVote7sept) {
+		this.defenderAvgVote7sept = defenderAvgVote7sept;
+	}
+
+	public Double getDefenderAvgVote8() {
+		return defenderAvgVote8;
+	}
+
+	public void setDefenderAvgVote8(Double defenderAvgVote8) {
+		this.defenderAvgVote8 = defenderAvgVote8;
+	}
+	
+	public Double getMiddlefielder2() {
+		return middlefielder2;
+	}
+
+	public void setMiddlefielder2(Double middlefielder2) {
+		this.middlefielder2 = middlefielder2;
+	}
+
+	public Double getMiddlefielder2half() {
+		return middlefielder2half;
+	}
+
+	public void setMiddlefielder2half(Double middlefielder2half) {
+		this.middlefielder2half = middlefielder2half;
+	}
+
+	public Double getMiddlefielder3() {
+		return middlefielder3;
+	}
+
+	public void setMiddlefielder3(Double middlefielder3) {
+		this.middlefielder3 = middlefielder3;
+	}
+
+	public Double getMiddlefielder3half() {
+		return middlefielder3half;
+	}
+
+	public void setMiddlefielder3half(Double middlefielder3half) {
+		this.middlefielder3half = middlefielder3half;
+	}
+
+	public Double getMiddlefielder4() {
+		return middlefielder4;
+	}
+
+	public void setMiddlefielder4(Double middlefielder4) {
+		this.middlefielder4 = middlefielder4;
+	}
+
+	public Double getMiddlefielder4half() {
+		return middlefielder4half;
+	}
+
+	public void setMiddlefielder4half(Double middlefielder4half) {
+		this.middlefielder4half = middlefielder4half;
+	}
+
+	public Double getMiddlefielder5() {
+		return middlefielder5;
+	}
+
+	public void setMiddlefielder5(Double middlefielder5) {
+		this.middlefielder5 = middlefielder5;
+	}
+
+	public Double getMiddlefielder5half() {
+		return middlefielder5half;
+	}
+
+	public void setMiddlefielder5half(Double middlefielder5half) {
+		this.middlefielder5half = middlefielder5half;
+	}
+
+	public Double getMiddlefielder6() {
+		return middlefielder6;
+	}
+
+	public void setMiddlefielder6(Double middlefielder6) {
+		this.middlefielder6 = middlefielder6;
+	}
+
+	public Double getMiddlefielder6half() {
+		return middlefielder6half;
+	}
+
+	public void setMiddlefielder6half(Double middlefielder6half) {
+		this.middlefielder6half = middlefielder6half;
+	}
+
+	public Double getMiddlefielder7() {
+		return middlefielder7;
+	}
+
+	public void setMiddlefielder7(Double middlefielder7) {
+		this.middlefielder7 = middlefielder7;
+	}
+
+	public Double getMiddlefielder7half() {
+		return middlefielder7half;
+	}
+
+	public void setMiddlefielder7half(Double middlefielder7half) {
+		this.middlefielder7half = middlefielder7half;
+	}
+
+	public Double getMiddlefielder8() {
+		return middlefielder8;
+	}
+
+	public void setMiddlefielder8(Double middlefielder8) {
+		this.middlefielder8 = middlefielder8;
+	}
+
+	public Double getMiddlefielderMinus2() {
+		return middlefielderMinus2;
+	}
+
+	public void setMiddlefielderMinus2(Double middlefielderMinus2) {
+		this.middlefielderMinus2 = middlefielderMinus2;
+	}
+
+	public Double getMiddlefielderMinus2half() {
+		return middlefielderMinus2half;
+	}
+
+	public void setMiddlefielderMinus2half(Double middlefielderMinus2half) {
+		this.middlefielderMinus2half = middlefielderMinus2half;
+	}
+
+	public Double getMiddlefielderMinus3() {
+		return middlefielderMinus3;
+	}
+
+	public void setMiddlefielderMinus3(Double middlefielderMinus3) {
+		this.middlefielderMinus3 = middlefielderMinus3;
+	}
+
+	public Double getMiddlefielderMinus3half() {
+		return middlefielderMinus3half;
+	}
+
+	public void setMiddlefielderMinus3half(Double middlefielderMinus3half) {
+		this.middlefielderMinus3half = middlefielderMinus3half;
+	}
+
+	public Double getMiddlefielderMinus4() {
+		return middlefielderMinus4;
+	}
+
+	public void setMiddlefielderMinus4(Double middlefielderMinus4) {
+		this.middlefielderMinus4 = middlefielderMinus4;
+	}
+
+	public Double getMiddlefielderMinus4half() {
+		return middlefielderMinus4half;
+	}
+
+	public void setMiddlefielderMinus4half(Double middlefielderMinus4half) {
+		this.middlefielderMinus4half = middlefielderMinus4half;
+	}
+
+	public Double getMiddlefielderMinus5() {
+		return middlefielderMinus5;
+	}
+
+	public void setMiddlefielderMinus5(Double middlefielderMinus5) {
+		this.middlefielderMinus5 = middlefielderMinus5;
+	}
+
+	public Double getMiddlefielderMinus5half() {
+		return middlefielderMinus5half;
+	}
+
+	public void setMiddlefielderMinus5half(Double middlefielderMinus5half) {
+		this.middlefielderMinus5half = middlefielderMinus5half;
+	}
+
+	public Double getMiddlefielderMinus6() {
+		return middlefielderMinus6;
+	}
+
+	public void setMiddlefielderMinus6(Double middlefielderMinus6) {
+		this.middlefielderMinus6 = middlefielderMinus6;
+	}
+
+	public Double getMiddlefielderMinus6half() {
+		return middlefielderMinus6half;
+	}
+
+	public void setMiddlefielderMinus6half(Double middlefielderMinus6half) {
+		this.middlefielderMinus6half = middlefielderMinus6half;
+	}
+
+	public Double getMiddlefielderMinus7() {
+		return middlefielderMinus7;
+	}
+
+	public void setMiddlefielderMinus7(Double middlefielderMinus7) {
+		this.middlefielderMinus7 = middlefielderMinus7;
+	}
+
+	public Double getMiddlefielderMinus7half() {
+		return middlefielderMinus7half;
+	}
+
+	public void setMiddlefielderMinus7half(Double middlefielderMinus7half) {
+		this.middlefielderMinus7half = middlefielderMinus7half;
+	}
+
+	public Double getMiddlefielderMinus8() {
+		return middlefielderMinus8;
+	}
+
+	public void setMiddlefielderMinus8(Double middlefielderMinus8) {
+		this.middlefielderMinus8 = middlefielderMinus8;
+	}
+
+	public boolean isCaptainModifierActive() {
+		return captainModifierActive;
+	}
+
+	public void setCaptainModifierActive(boolean captainModifierActive) {
+		this.captainModifierActive = captainModifierActive;
+	}
+
+	public boolean isCaptainDuplicateBonus() {
+		return captainDuplicateBonus;
+	}
+
+	public void setCaptainDuplicateBonus(boolean captainDuplicateBonus) {
+		this.captainDuplicateBonus = captainDuplicateBonus;
+	}
+
+	public boolean isCaptainDuplicateMalus() {
+		return captainDuplicateMalus;
+	}
+
+	public void setCaptainDuplicateMalus(boolean captainDuplicateMalus) {
+		this.captainDuplicateMalus = captainDuplicateMalus;
+	}
+
+	public Double getCaptainVote3() {
+		return captainVote3;
+	}
+
+	public void setCaptainVote3(Double captainVote3) {
+		this.captainVote3 = captainVote3;
+	}
+
+	public Double getCaptainVote3half() {
+		return captainVote3half;
+	}
+
+	public void setCaptainVote3half(Double captainVote3half) {
+		this.captainVote3half = captainVote3half;
+	}
+
+	public Double getCaptainVote4() {
+		return captainVote4;
+	}
+
+	public void setCaptainVote4(Double captainVote4) {
+		this.captainVote4 = captainVote4;
+	}
+
+	public Double getCaptainVote4half() {
+		return captainVote4half;
+	}
+
+	public void setCaptainVote4half(Double captainVote4half) {
+		this.captainVote4half = captainVote4half;
+	}
+
+	public Double getCaptainVote5() {
+		return captainVote5;
+	}
+
+	public void setCaptainVote5(Double captainVote5) {
+		this.captainVote5 = captainVote5;
+	}
+
+	public Double getCaptainVote5half() {
+		return captainVote5half;
+	}
+
+	public void setCaptainVote5half(Double captainVote5half) {
+		this.captainVote5half = captainVote5half;
+	}
+
+	public Double getCaptainVote6() {
+		return captainVote6;
+	}
+
+	public void setCaptainVote6(Double captainVote6) {
+		this.captainVote6 = captainVote6;
+	}
+
+	public Double getCaptainVote6half() {
+		return captainVote6half;
+	}
+
+	public void setCaptainVote6half(Double captainVote6half) {
+		this.captainVote6half = captainVote6half;
+	}
+
+	public Double getCaptainVote7() {
+		return captainVote7;
+	}
+
+	public void setCaptainVote7(Double captainVote7) {
+		this.captainVote7 = captainVote7;
+	}
+
+	public Double getCaptainVote7half() {
+		return captainVote7half;
+	}
+
+	public void setCaptainVote7half(Double captainVote7half) {
+		this.captainVote7half = captainVote7half;
+	}
+
+	public Double getCaptainVote8() {
+		return captainVote8;
+	}
+
+	public void setCaptainVote8(Double captainVote8) {
+		this.captainVote8 = captainVote8;
+	}
+
+	public Double getCaptainVote8half() {
+		return captainVote8half;
+	}
+
+	public void setCaptainVote8half(Double captainVote8half) {
+		this.captainVote8half = captainVote8half;
+	}
+
+	public Double getCaptainVote9() {
+		return captainVote9;
+	}
+
+	public void setCaptainVote9(Double captainVote9) {
+		this.captainVote9 = captainVote9;
+	}
+
+	
 }

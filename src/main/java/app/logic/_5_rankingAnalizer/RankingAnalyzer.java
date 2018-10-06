@@ -42,7 +42,8 @@ public class RankingAnalyzer {
 	public StasResponse retrieveAllRankings(String leagueShortName, String competitionShortName, RulesType rulesType) {
 		// Ranking reale
 		RankingBean realRanking = leagueDao.findRanking(leagueShortName, competitionShortName, userBean.getUsername(), RankingType.REAL, rulesType);
-		
+		if (realRanking == null)
+			return null;
 		RankingBean realLightRanking = createRealLightRanking(realRanking);
 		
 		

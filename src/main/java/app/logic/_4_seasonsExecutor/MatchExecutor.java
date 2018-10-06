@@ -45,33 +45,33 @@ public class MatchExecutor {
 				Double varMid = homeVarMid - awayVarMid;
 				
 				if (varMid <= -2 || varMid >= 2){
-					if (varMid >= 8){
-						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver8();
-						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus8();
-					} else if (varMid >= 6) {
-						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver6();
-						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus6();
-					} else if (varMid >= 4) {
-						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver4();
-						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus4();
-					} else if (varMid >= 2) {
-						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver2();
-						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus2();
-					} else if (varMid <= -8) {
-						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus8();
-						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver8();
-					} else if (varMid <= -6) {
-						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus6();
-						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver6();
-					} else if (varMid <= -4) {
-						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus4();
-						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver4();
-					} else if (varMid <= -2) {
-						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus2();
-						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver2();
-					} else {
-						System.out.println("C'e' un errore");
-					}
+//					if (varMid >= 8){
+//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver8();
+//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus8();
+//					} else if (varMid >= 6) {
+//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver6();
+//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus6();
+//					} else if (varMid >= 4) {
+//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver4();
+//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus4();
+//					} else if (varMid >= 2) {
+//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver2();
+//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus2();
+//					} else if (varMid <= -8) {
+//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus8();
+//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver8();
+//					} else if (varMid <= -6) {
+//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus6();
+//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver6();
+//					} else if (varMid <= -4) {
+//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus4();
+//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver4();
+//					} else if (varMid <= -2) {
+//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus2();
+//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver2();
+//					} else {
+//						System.out.println("C'e' un errore");
+//					}
 				}
 				//}
 		}

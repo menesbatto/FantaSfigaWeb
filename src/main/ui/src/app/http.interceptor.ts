@@ -21,8 +21,11 @@ export class MyLoaderInterceptor implements HttpInterceptor {
 
     removeRequest(req: HttpRequest<any>) {
         const i = this.requests.indexOf(req);
+        console.log("REQ1:" + JSON.stringify(req) + "\nARRAY1:" + JSON.stringify( this.requests))
         this.requests.splice(i, 1);
-        
+        console.log("REQ2:" + JSON.stringify(req) + "\nARRAY2:" + JSON.stringify( this.requests))
+
+        console.log("---")
         let areThereHangedRequests = this.requests.length > 0;
         this.spinnerService.setLoading(areThereHangedRequests);
     }
@@ -46,14 +49,14 @@ export class MyLoaderInterceptor implements HttpInterceptor {
                         this.headerService.changeErrorMessage(err.status + " - " + err.statusText);
                     },
                     () => { 
-                        this.removeRequest(req); 
+                        // this.removeRequest(req); 
                         observer.complete(); 
                     });
             // teardown logic in case of cancelled requests
-            return () => {
-                this.removeRequest(req);
-                subscription.unsubscribe();
-            };
+            // return () => {
+            //     this.removeRequest(req);
+            //     subscription.unsubscribe();
+            // };
         });
     }
 }

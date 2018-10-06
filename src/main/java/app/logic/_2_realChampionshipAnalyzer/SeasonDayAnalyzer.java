@@ -797,11 +797,11 @@ public class SeasonDayAnalyzer {
 							(p.getEvenGoal() ?  		bonusMalus.getEvenGoal().get(p.getRole()) 			: 0) + 
 							(p.getWinGoal() ? 	 		bonusMalus.getWinGoal().get(p.getRole()) 			: 0);
 		
-		if (rules.getPoints().isPortiereImbattutoActive()){
+		if (rules.getBonusMalus().isPortiereImbattutoActive()){
 			if (p.getRole().equals(RoleEnum.P)){
 				if (!p.getIsOfficeVote()) { //Avrò ugualmente diritto al bonus portiere imbattuto se schiero un portiere che, nei casi in cui è previsto, riceve un 6 politico?					No, in queste situazioni il bonus non viene assegnato. 
 					if (p.getTakenGoals() == 0.0){
-						fantaVote += rules.getPoints().getPortiereImbattuto();
+						fantaVote += rules.getBonusMalus().getPortiereImbattuto();
 					}
 				}
 			}

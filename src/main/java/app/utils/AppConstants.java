@@ -22,14 +22,22 @@ public class AppConstants {
 	public static String SEASON_DAY_LINES_UP_URL_TEMPLATE = "http://leghe.fantagazzetta.com/[LEAGUE_NAME]/formazioni/[COMPETITION_ID]?g=";
 
 
-	public static String RULES_1_BONUS_MALUS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo1";
-	public static String RULES_2_SOURCE_URL =			"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo2";
-	public static String RULES_3_SUBSTITUTIONS_URL = 	"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo3";
-	public static String RULES_4_POINTS_URL = 			"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo4";
-	public static String RULES_5_MODIFIERS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo5";
+//	public static String RULES_1_BONUS_MALUS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo1";
+//	public static String RULES_1_BONUS_MALUS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/gestione-lega/opzioni-rose";
+//	public static String RULES_2_SOURCE_URL =			"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo2";
+//	public static String RULES_2_SOURCE_URL =			"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/gestione-lega/opzioni-formazioni";
+//	public static String RULES_3_SUBSTITUTIONS_URL = 	"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo3";
+//	public static String RULES_3_SUBSTITUTIONS_URL = 	"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/gestione-lega/opzioni-formazioni";
+//	public static String RULES_4_POINTS_URL = 			"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo4";
+//	public static String RULES_4_POINTS_URL = 			"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/gestione-lega/opzioni-calcolo";
+//	public static String RULES_5_MODIFIERS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo5";
+//	public static String RULES_5_MODIFIERS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/gestione-lega/opzioni-calcolo-avanzato";
+//	public static String RULES_6_COMPETITION_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-competizione-calendario/[COMPETITION_ID]";	
 	public static String RULES_6_COMPETITION_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-competizione-calendario/[COMPETITION_ID]";	
+//
+	public static String RULES_CONFIG_URL = 			"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/gestione-lega/opzioni-calcolo";
+	public static String RULES_CONFIG_PLUS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/gestione-lega/opzioni-calcolo-avanzato";
 
-	
 	
 	public static VotesSourceEnum FORCE_VOTE_SOURCE = null;//VotesSourceEnum.NAPOLI;
 	
