@@ -1,11 +1,11 @@
 <app-messagebox></app-messagebox>
 <div *ngIf="rules" >
     <!-- <h2>Regole della Competizione {{competitionShortName}} </h2>-->
-    <h4>Inserisci queste regole che non siamo riusciti a scaricare da FantaGazzetta</h4>
+    <!--<h4>Inserisci queste regole che non siamo riusciti a scaricare da FantaGazzetta</h4> -->
 
    
         
-    <div class="row nobor">
+<!--    <div class="row nobor">
         <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="sel1"> Numero massimo di sostituzioni d'ufficio </label>
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
             <select class="form-control" id="sel1" name="maxOfficeVoteBehaviour" [(ngModel)]="rules.substitutions.maxOfficeVotes" #maxOfficeVoteBehaviour="ngModel">
@@ -34,6 +34,7 @@
     </div>
 
 
+
     <div class="row nobor" *ngIf = "this.rules.points.autogolActive==true || this.rules.points.autogolActive=='true'">
         <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="autogol"> Soglia Autogol </label>
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
@@ -45,9 +46,7 @@
     </div>
 
     <br>
-        
-        
-       
+--> 
 
     <app-postponements [competitionRules]="rules.competitionRules"></app-postponements>
 

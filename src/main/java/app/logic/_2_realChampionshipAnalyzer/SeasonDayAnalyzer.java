@@ -1,14 +1,19 @@
 package app.logic._2_realChampionshipAnalyzer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.dao.UserDao;
+import app.logic._0_credentialsSaver.model.Credentials;
+import app.logic._0_credentialsSaver.model.UserBean;
 import app.logic._0_rulesDownloader.model.BonusMalus;
 import app.logic._0_rulesDownloader.model.MaxOfficeVotesEnum;
 import app.logic._0_rulesDownloader.model.Modifiers;
@@ -30,28 +35,38 @@ public class SeasonDayAnalyzer {
 	private Map<String, List<PlayerVoteComplete>> seasonDayVotes;
 	private RulesBean rules;
 	
+	@Autowired
+	private UserBean userBean;
+	
+	@Autowired
+	private UserDao userDao;
+	
+	private Map<String, String> transferts = new HashMap<String, String>();
+	
+		
 //	private Map<Integer, List<PostponementBean>> postponementsMap;
 	
 	
 	public List<LineUp> downloadSeasonDayLinesUpFromWeb(String seasonDayLinesUpURL) {
 //		seasonDayVotes = seasonDayVotesInput;
 //		postponementsMap = postponementsMapInput;
+		Credentials c = userDao.retrieveGazzettaCredentials(userBean.getUsername());
 		this.rules = rules;
 		//Recupero le formazioni di giornata
-		Document doc = HttpUtils.getHtmlPageNoLogged(seasonDayLinesUpURL);
+		Document doc = HttpUtils.getHtmlPageLogged(seasonDayLinesUpURL, c.getUsername(), c.getPassword());
 
 //			System.out.println(doc);
 //		String daySeasonName = seasonDayLinesUpURL.substring(seasonDayLinesUpURL.indexOf("=")+1);
 		
-		Elements lineUpElements = doc.select("div.itemBox");
+		Elements lineUpElements = doc.getElementsByClass("match-details");
 		LineUp createdLineUp1, createdLineUp2;
 		List<LineUp> linesUp = new ArrayList<LineUp>();
 //			System.out.println(doc);
 		// Crea oggetti formazioni e modificatori dall'excel
 		for (Element lineUpElem : lineUpElements) {
-			createdLineUp1 = createLineUpFromWeb(lineUpElem.child(1), lineUpElem.child(0).getElementsByTag("h3").get(0).text());
+			createdLineUp1 = createLineUpFromWeb(lineUpElem.getElementsByClass("col-home").get(0), lineUpElem.getElementsByClass("media-heading").get(0).text());
 			linesUp.add(createdLineUp1);
-			createdLineUp2 = createLineUpFromWeb(lineUpElem.child(2), lineUpElem.child(0).getElementsByTag("h3").last().text() );
+			createdLineUp2 = createLineUpFromWeb(lineUpElem.getElementsByClass("col-away").get(0), lineUpElem.getElementsByClass("media-heading").get(1).text());
 			linesUp.add(createdLineUp2);
 		}
 		return linesUp;
@@ -61,6 +76,11 @@ public class SeasonDayAnalyzer {
 	public SeasonDayResultBean calculateSingleSeasonDay(SeasonDayFromWebBean seasonDayFromWeb, Integer serieASeasonDay, RulesBean rules, Map<String, List<PlayerVoteComplete>> seasonDayVotesInput,	List<VoteMismatchBean> voteMismatches ) {
 		List<LineUp> linesUp = seasonDayFromWeb.getLinesUp();
 		this.seasonDayVotes = seasonDayVotesInput;
+		if (transferts.keySet().isEmpty()) {
+			transferts.put("PIATEK", "GEN");
+			transferts.put("BIRSA", "CHI");
+			transferts.put("ROMULO", "LAZ");
+		}
 //		if (postponementsMap== null) {
 //			this.postponementsMap = postponementsMapInput;
 //		}
@@ -166,8 +186,10 @@ public class SeasonDayAnalyzer {
 		String team = player.getTeam();
 		String name = player.getName();
 		RoleEnum role = player.getRole();
-
 		PlayerVoteComplete pvcVote = getVoteFromMap(team, name, seasonDayVotes.get(team));
+		if (pvcVote== null && transferts.keySet().contains(name)) {
+			pvcVote = getVoteFromMap(team, name, seasonDayVotes.get(transferts.get(name)));
+		}
 
 		 
 		// Controllo se lo devo forzare a 6
@@ -304,9 +326,31 @@ public class SeasonDayAnalyzer {
 				
 				
 				Double defendereModifier = 0.0;
-				if (defendereVoteAvg >= 6 && defendereVoteAvg < 6.5)			defendereModifier = rules.getModifiers().getDefenderAvgVote6();
-				else if (defendereVoteAvg >= 6.5 && defendereVoteAvg < 7)		defendereModifier = rules.getModifiers().getDefenderAvgVote6half();
-				else if (defendereVoteAvg >= 7 )								defendereModifier = rules.getModifiers().getDefenderAvgVote7();
+//				if (defendereVoteAvg >= 6 && defendereVoteAvg < 6.5)			defendereModifier = rules.getModifiers().getDefenderAvgVote6();
+//				else if (defendereVoteAvg >= 6.5 && defendereVoteAvg < 7)		defendereModifier = rules.getModifiers().getDefenderAvgVote6half();
+//				else if (defendereVoteAvg >= 7 )								defendereModifier = rules.getModifiers().getDefenderAvgVote7();
+//				
+				
+				if (defendereVoteAvg < 5.25)										defendereModifier = rules.getModifiers().getDefenderAvgVote5();
+				else if (defendereVoteAvg >= 5.25 && defendereVoteAvg < 5.50)		defendereModifier = rules.getModifiers().getDefenderAvgVote5quart();
+				else if (defendereVoteAvg >= 5.50 && defendereVoteAvg < 5.75)		defendereModifier = rules.getModifiers().getDefenderAvgVote5half();
+				else if (defendereVoteAvg >= 5.75 && defendereVoteAvg < 6.00)		defendereModifier = rules.getModifiers().getDefenderAvgVote5sept();
+				else if (defendereVoteAvg >= 6.00 && defendereVoteAvg < 6.25)		defendereModifier = rules.getModifiers().getDefenderAvgVote6();
+				
+				else if (defendereVoteAvg >= 6.25 && defendereVoteAvg < 6.50)		defendereModifier = rules.getModifiers().getDefenderAvgVote6quart();
+				else if (defendereVoteAvg >= 6.50 && defendereVoteAvg < 6.75)		defendereModifier = rules.getModifiers().getDefenderAvgVote6half();
+				else if (defendereVoteAvg >= 6.75 && defendereVoteAvg < 7.00)		defendereModifier = rules.getModifiers().getDefenderAvgVote6sept();
+				else if (defendereVoteAvg >= 7.00 && defendereVoteAvg < 7.25)		defendereModifier = rules.getModifiers().getDefenderAvgVote7();
+				
+				else if (defendereVoteAvg >= 7.25 && defendereVoteAvg < 7.50)		defendereModifier = rules.getModifiers().getDefenderAvgVote7quart();
+				else if (defendereVoteAvg >= 7.50 && defendereVoteAvg < 7.75)		defendereModifier = rules.getModifiers().getDefenderAvgVote7half();
+				else if (defendereVoteAvg >= 7.75 && defendereVoteAvg < 8.00)		defendereModifier = rules.getModifiers().getDefenderAvgVote7sept();
+				else if (defendereVoteAvg >= 8.00 )									defendereModifier = rules.getModifiers().getDefenderAvgVote8();
+				
+				
+				
+				
+				
 				
 //				if (!lineUp.getDefenderModifier().equals(defendereModifier))
 //					System.out.println("C'� una discrepanza tra il modificatore dei difesori calcolato dal web e quello calcolato dalla app " + lineUp);
@@ -494,14 +538,17 @@ public class SeasonDayAnalyzer {
 		for (PlayerVote pv : lineUp.getFinalLineUp()) {
 			totalWithoutGoalkeeperAndMiddlefielderModifier += pv.getFantaVote();
 		}
-		totalWithoutGoalkeeperAndMiddlefielderModifier += lineUp.getDefenderModifier();
+//		totalWithoutGoalkeeperAndMiddlefielderModifier += lineUp.getDefenderModifier();
 		totalWithoutGoalkeeperAndMiddlefielderModifier += lineUp.getStrickerModifier();
-		totalWithoutGoalkeeperAndMiddlefielderModifier += lineUp.getPerformanceModifier();
+		totalWithoutGoalkeeperAndMiddlefielderModifier += lineUp.getPerformanceModifier();  
 		totalWithoutGoalkeeperAndMiddlefielderModifier += lineUp.getFairPlayModifier();
+		
+		
 
 		
-		lul.setTotalWithoutGoalkeeperAndMiddlefielderModifiers(totalWithoutGoalkeeperAndMiddlefielderModifier);
+		lul.setTotalWithoutGoalkeeperAndMiddlefielderModifiers(totalWithoutGoalkeeperAndMiddlefielderModifier); 
 		lul.setMiddlefieldersVariation(lineUp.getMiddlefieldersVariation());
+		lul.setDefenderModifier(lineUp.getDefenderModifier());
 		
 		lul.setGoalkeeperModifier(lineUp.getGoalkeeperModifier());
 
@@ -549,7 +596,12 @@ public class SeasonDayAnalyzer {
 			for (int i = 0; i < orderedSubstiturionCandidate.size(); i++) {
 				PlayerVote subCandidate = orderedSubstiturionCandidate.get(i);
 				if (subCandidate.getName() == null || i > rules.getSubstitutions().getSubstitutionNumber()-1 ){
-					createOfficePlayer(i, subCandidate);
+					Boolean alreadyPlayerWithVoteUsed = false;
+					if (i>0) {
+						PlayerVote previousOfficePlayed = orderedSubstiturionCandidate.get(i-1);
+						alreadyPlayerWithVoteUsed = previousOfficePlayed.getName().equals("OFFICE");
+					}
+					createOfficePlayer(i, subCandidate, alreadyPlayerWithVoteUsed);
 				} 
 				finalLineUp.add(subCandidate);
 			}
@@ -563,7 +615,7 @@ public class SeasonDayAnalyzer {
 
 
 
-	private void createOfficePlayer(int i, PlayerVote subCandidate) {
+	private void createOfficePlayer(int i, PlayerVote subCandidate, Boolean alreadyPlayerWithVoteUsed) {
 		if (!rules.getSubstitutions().isMovementsPlayerOfficeVoteActive() && subCandidate.getRole() != RoleEnum.P) {
 			subCandidate.setName("ZERO");
 			subCandidate.setTeam("ZERO");
@@ -577,23 +629,36 @@ public class SeasonDayAnalyzer {
 			subCandidate.setVote(0.0);
 			subCandidate.setFantaVote(0.0);
 		}
-		else if (i <=  rules.getSubstitutions().getSubstitutionNumber() - 1 || rules.getSubstitutions().getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_ALL)) {
-			subCandidate.setName("OFFICE");
-			subCandidate.setTeam("OFFICE");
-			if (subCandidate.getRole().equals(RoleEnum.P)){
-				subCandidate.setVote(rules.getSubstitutions().getGoalkeeperPlayerOfficeVote());
-				subCandidate.setFantaVote(rules.getSubstitutions().getGoalkeeperPlayerOfficeVote());
-			}
-			else {
-				subCandidate.setVote(rules.getSubstitutions().getMovementsPlayerOfficeVote());
-				subCandidate.setFantaVote(rules.getSubstitutions().getMovementsPlayerOfficeVote());
-			}
+		else if (rules.getSubstitutions().getMaxOfficeVotes().equals(MaxOfficeVotesEnum.ONLY_ONE) && !alreadyPlayerWithVoteUsed || 
+				 rules.getSubstitutions().getMaxOfficeVotes().equals(MaxOfficeVotesEnum.ONLY_ONE) && i == rules.getSubstitutions().getSubstitutionNumber()) { //rules.getSubstitutions().getSubstitutionNumber() perche significa che è il primo oltre il numero di cambi massimo
+			createOfficePlayerWithVote(subCandidate);
+		}
+		else if (rules.getSubstitutions().getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_SUBSTITUTIONS) && i <=  rules.getSubstitutions().getSubstitutionNumber() - 1) {
+			createOfficePlayerWithVote(subCandidate);
+		}
+			
+		else if (rules.getSubstitutions().getMaxOfficeVotes().equals(MaxOfficeVotesEnum.TILL_ALL)) {
+			createOfficePlayerWithVote(subCandidate);
 		}
 		else {
 			subCandidate.setName("ZERO");
 			subCandidate.setTeam("ZERO");
 			subCandidate.setVote(0.0);
 			subCandidate.setFantaVote(0.0);
+		}
+	}
+
+
+	private void createOfficePlayerWithVote(PlayerVote subCandidate) {
+		subCandidate.setName("OFFICE");
+		subCandidate.setTeam("OFFICE");
+		if (subCandidate.getRole().equals(RoleEnum.P)){
+			subCandidate.setVote(rules.getSubstitutions().getGoalkeeperPlayerOfficeVote());
+			subCandidate.setFantaVote(rules.getSubstitutions().getGoalkeeperPlayerOfficeVote());
+		}
+		else {
+			subCandidate.setVote(rules.getSubstitutions().getMovementsPlayerOfficeVote());
+			subCandidate.setFantaVote(rules.getSubstitutions().getMovementsPlayerOfficeVote());
 		}
 	}
 
@@ -645,13 +710,15 @@ public class SeasonDayAnalyzer {
 		
 		lineUp.setTeamName(teamName);
 		
-		Elements playersElem = lineUpDomElement.getElementsByClass("playerRow");
+		Elements playersElem = lineUpDomElement.getElementsByClass("player-list-item");
 		PlayerVote playerVote;
 		
 		boolean reserveSection = false;
 
 		for (int i = 0; i < playersElem.size(); i++) {
 			Element playerElem = playersElem.get(i);
+			if (playerElem.getElementsByClass("player-team").text().equals(""))
+				break;
 			playerVote = getPlayer(playerElem);
 			if ( i > 10 )
 				reserveSection = true;
@@ -687,42 +754,42 @@ public class SeasonDayAnalyzer {
 			}
 		} 
 		// Middlefield Modifier non � calcolabile qui' ma solo a match in corso
-				Elements middlefieldModifierDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore centrocampo:");
-				Double middlefieldModifierFromWeb = middlefieldModifierDomElement.isEmpty() ? 0 : getVote(middlefieldModifierDomElement.get(0).siblingNodes().get(0).childNode(0).toString());
+				Elements middlefieldModifierDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore Centrocampo");
+				Double middlefieldModifierFromWeb = middlefieldModifierDomElement.isEmpty() ? 0 : getVote(middlefieldModifierDomElement.get(0).parents().get(1).getElementsByClass("total").get(0).text());
 				lineUp.setMiddlefieldersModifierFromWeb(middlefieldModifierFromWeb);
 		
 //		if (rules.getModifiers().isGoalkeeperModifierActive()){
 //			if (!AppConstants.FORCE_GOALKEEPER_MODIFIER_DISABLED){
-				Elements goalkeeperModifierDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore portiere:");
-				Double goalkeeperModifierFromWeb = goalkeeperModifierDomElement.isEmpty() ? 0 : getVote(goalkeeperModifierDomElement.get(0).siblingNodes().get(0).childNode(0).toString());
+				Elements goalkeeperModifierDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore Portiere");
+				Double goalkeeperModifierFromWeb = goalkeeperModifierDomElement.isEmpty() ? 0 : getVote(goalkeeperModifierDomElement.get(0).parents().get(1).getElementsByClass("total").get(0).text());
 				lineUp.setGoalkeeperModifierFromWeb(goalkeeperModifierFromWeb);
 //			}
 //		}
 //		if (rules.getModifiers().isStrikerModifierActive()){
 //			if (!AppConstants.FORCE_STRIKER_MODIFIER_DISABLED){
-				Elements strickerModifierDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore attacco:");
-				Double strikerModifierFromWeb = strickerModifierDomElement.isEmpty() ? 0 : getVote(strickerModifierDomElement.get(0).siblingNodes().get(0).childNode(0).toString());
+				Elements strickerModifierDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore Attacco");
+				Double strikerModifierFromWeb = strickerModifierDomElement.isEmpty() ? 0 : getVote(strickerModifierDomElement.get(0).parents().get(1).getElementsByClass("total").get(0).text());
 				lineUp.setStrickerModifierFromWeb(strikerModifierFromWeb);
 //			}
 //		}
 //		if (rules.getModifiers().isDefenderModifierActive()){
 //			if (!AppConstants.FORCE_DEFENDER_MODIFIER_DISABLED){
-				Elements defenderModifiersDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore difesa:");
-				Double defenderModifierFromWeb = defenderModifiersDomElement.isEmpty() ? 0 : getVote(defenderModifiersDomElement.get(0).siblingNodes().get(0).childNode(0).toString());
+				Elements defenderModifiersDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore Difesa");
+				Double defenderModifierFromWeb = defenderModifiersDomElement.isEmpty() ? 0 : getVote(defenderModifiersDomElement.get(0).parents().get(1).getElementsByClass("total").get(0).text());
 				lineUp.setDefenderModifierFromWeb(defenderModifierFromWeb);
 //			}
 //		}
 //		if (rules.getModifiers().isDefenderModifierActive()){
 //			if (!AppConstants.FORCE_PERFORMANCE_MODIFIER_DISABLED){
-				Elements performanceModifiersDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore rendimento:");
-				Double performanceModifierFromWeb = performanceModifiersDomElement.isEmpty() ? 0 : getVote(performanceModifiersDomElement.get(0).siblingNodes().get(0).childNode(0).toString());
+				Elements performanceModifiersDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore Rendimento");
+				Double performanceModifierFromWeb = performanceModifiersDomElement.isEmpty() ? 0 : getVote(performanceModifiersDomElement.get(0).parents().get(1).getElementsByClass("total").get(0).text());
 				lineUp.setPerformanceModifierFromWeb(performanceModifierFromWeb);
 //			}
 //		}
 //		if (rules.getModifiers().isDefenderModifierActive()){
 //			if (!AppConstants.FORCE_FAIR_PLAY_MODIFIER_DISABLED){
-				Elements fairplayModifiersDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore fairplay:");
-				Double fairPlayModifierFromWeb = fairplayModifiersDomElement.isEmpty() ? 0 : getVote(fairplayModifiersDomElement.get(0).siblingNodes().get(0).childNode(0).toString());
+				Elements fairplayModifiersDomElement = lineUpDomElement.getElementsMatchingOwnText("Modificatore Fairplay");
+				Double fairPlayModifierFromWeb = fairplayModifiersDomElement.isEmpty() ? 0 : getVote(fairplayModifiersDomElement.get(0).parents().get(1).getElementsByClass("total").get(0).text());
 				lineUp.setFairPlayModifierFromWeb(fairPlayModifierFromWeb);
 //			}
 //		}
@@ -735,15 +802,15 @@ public class SeasonDayAnalyzer {
 
 	private PlayerVote getPlayer(Element playerElem) {
 		
-		RoleEnum role = RoleEnum.valueOf(playerElem.getElementsByClass("myhidden-xs").get(0).text());
-		String name = playerElem.getElementsByClass("sh").get(0).text().toUpperCase();
+		RoleEnum role = RoleEnum.valueOf(playerElem.getElementsByTag("span").get(1).text().toUpperCase());
+		String name = playerElem.getElementsByTag("a").get(0).text().toUpperCase();
 		name = name.replace(" *", "");
-		String team = playerElem.getElementsByClass("pt").get(0).text().toUpperCase();
+		String team = playerElem.getElementsByClass("player-team").get(0).text().toUpperCase();
 		PlayerVote pvcVote = null;
 
 		
-		Double fantaVoteFromWeb = getVote(playerElem.getElementsByClass("pt").get(2).text());
-		Double voteFromWeb = getVote(playerElem.getElementsByClass("pt").get(1).text());
+		Double voteFromWeb = getVote(playerElem.getElementsByClass("vote").get(0).text());
+		Double fantaVoteFromWeb = getVote(playerElem.getElementsByClass("total").get(0).text());
 		pvcVote = new PlayerVote();
 		pvcVote.setName(name);
 		pvcVote.setTeam(team);
@@ -755,6 +822,10 @@ public class SeasonDayAnalyzer {
 		
 		return pvcVote;
 	}
+	
+	
+	
+	
 	
 	private static PlayerVoteComplete getVoteFromMap (String team, String name, List<PlayerVoteComplete> playerVoteCompleteList) {
 		if (playerVoteCompleteList == null)	//Caso in cui una partita è stata rinviata e i voti non ci sono
@@ -797,7 +868,7 @@ public class SeasonDayAnalyzer {
 							(p.getEvenGoal() ?  		bonusMalus.getEvenGoal().get(p.getRole()) 			: 0) + 
 							(p.getWinGoal() ? 	 		bonusMalus.getWinGoal().get(p.getRole()) 			: 0);
 		
-		if (rules.getBonusMalus().isPortiereImbattutoActive()){
+		if (rules.getBonusMalus().isPortiereImbattutoActive()!= null && rules.getBonusMalus().isPortiereImbattutoActive()){
 			if (p.getRole().equals(RoleEnum.P)){
 				if (!p.getIsOfficeVote()) { //Avrò ugualmente diritto al bonus portiere imbattuto se schiero un portiere che, nei casi in cui è previsto, riceve un 6 politico?					No, in queste situazioni il bonus non viene assegnato. 
 					if (p.getTakenGoals() == 0.0){
@@ -812,7 +883,7 @@ public class SeasonDayAnalyzer {
 
 	private static Double getVote(String voteString) {
 		Double vote = null;
-		if (!voteString.equals("-"))
+		if (!voteString.equals("-") && !voteString.equals("s.v."))
 			vote = Double.valueOf(voteString.replace(",", "."));
 		return vote;
 	}

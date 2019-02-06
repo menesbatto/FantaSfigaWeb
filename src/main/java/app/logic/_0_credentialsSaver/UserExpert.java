@@ -305,6 +305,17 @@ public class UserExpert {
 		return null;
 	}
 
+	@Transactional
+	public LeagueBean hardResetLeague(String leagueShortName) {
+		List<CompetitionBean> competitions = leagueDao.findCompetitionsByLeague(leagueShortName, userBean.getUsername());
+		for (CompetitionBean comp : competitions) {
+			leagueDao.deleteCompetition(comp, userBean.getUsername());
+			rulesDao.deleteByCompetition(comp, userBean.getUsername());
+		}
+		
+		return null;
+	}
+
 	
 	
 }

@@ -53,7 +53,7 @@ public class HttpUtils {
 			Thread.sleep(1000);
 			
 			getLoggedWebDriver().get(url);
-		    
+			Thread.sleep(1000);
 		    String pageSource = getLoggedWebDriver().getPageSource();
 			doc = Jsoup.parse(pageSource);
 			
@@ -236,7 +236,7 @@ public class HttpUtils {
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--allow-file-access-from-files");
 		options.addArguments("--verbose");
-		options.addArguments("load-extension=C:\\Users\\Menesbatto-PC\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cfhdojbkjhnklbpkdaibdccddilifddb\\3.3.2_1");
+		options.addArguments("load-extension=C:\\Users\\Menesbatto-PC\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cfhdojbkjhnklbpkdaibdccddilifddb\\3.4.3_0");
 		//C:\Users\Menesbatto-PC\AppData\Local\Google\Chrome\User Data\Default\Extensions\cfhdojbkjhnklbpkdaibdccddilifddb\3.3.2_1
 		capabilities.setVersion("");
 		capabilities.setCapability(ChromeOptions.CAPABILITY, options);

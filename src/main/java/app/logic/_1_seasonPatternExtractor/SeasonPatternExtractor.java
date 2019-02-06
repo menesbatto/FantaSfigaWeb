@@ -62,8 +62,8 @@ public class SeasonPatternExtractor {
 
 		leagueDao.saveOnlineSeason(season, leagueShortName, competitionShortName, userBean.getUsername());
 		
-		System.out.println(lightSeason);
-		
+//		System.out.println(lightSeason);
+//		
 	}
 
 	private List<String> getSortedTeams(SeasonBean season) {
@@ -95,7 +95,7 @@ public class SeasonPatternExtractor {
 
 //		rulesDao.saveCompetitionPattern(season, leagueShortName, competitionShortName, userBean.getUsername());
 		
-		System.out.println(lightSeason);
+//		System.out.println(lightSeason);
 		
 	}
 
@@ -132,8 +132,8 @@ public class SeasonPatternExtractor {
 		List<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < seasonDayElements.size(); i++) {
 			Element lineUpElem = seasonDayElements.get(i);
-			Elements results = lineUpElem.getElementsByClass("result");
-			if (!results.isEmpty())
+			Elements results = lineUpElem.getElementsByClass("team-score");
+			if (!results.text().equals(""))
 				list.add(i+1);
 		}
 		return list;
@@ -143,11 +143,12 @@ public class SeasonPatternExtractor {
 	private Elements downloadSeasonDayHtmlElements(String leagueShortName, String competitionShortName) {
 		String url = AppConstants.CALENDAR_URL_TEMPLATE.replace("[LEAGUE_NAME]", leagueShortName).replace("[COMPETITION_ID]", competitionShortName);
 //		Credentials c = userDao.retrieveGazzettaCredentials(userBean.getUsername());
-//		Document doc = HttpUtils.getHtmlPageNoLogged(url, c.getUsername(), c.getPassword());
-		Document doc = HttpUtils.getHtmlPageNoLogged(url);
-		
-
-		Elements seasonDayElements = doc.getElementsByTag("table");
+		Document doc = HttpUtils.getHtmlPageLogged(url, "menesbatto", "suppaman");
+//		Document doc = HttpUtils.getHtmlPageNoLogged(url);
+		url = "https://leghe.fantagazzetta.com/accaniti-division/calendario?id=8628";
+		//https://leghe.fantagazzetta.com/accaniti-division/calendario?id=8628
+		//match-frame
+		Elements seasonDayElements = doc.getElementsByClass("match-frame");
 		return seasonDayElements;
 	}
 	
@@ -156,25 +157,30 @@ public class SeasonPatternExtractor {
 	private static SeasonDayBean createSeasonDay(Element seasonDayElements, String seasonDayName) {
 		SeasonDayBean seasonDay = new SeasonDayBean(seasonDayName);
 		Elements matchesDomElems = seasonDayElements.getElementsByClass("match");
-		Elements matchesGoalsDomElems = seasonDayElements.getElementsByClass("result");
+		Elements matchesGoalsDomElems = seasonDayElements.getElementsByClass("team-score");
 
-		Element serieASeasonDayElem = seasonDayElements.getElementsByTag("tr").get(0).getElementsByClass("thtitle").get(0);
-		String serieASeasonDayApp = serieASeasonDayElem.text().split("-")[1];
-		String serieASeasonDay = serieASeasonDayApp.substring(1, serieASeasonDayApp.length()-9);
+		Element serieASeasonDayElem = seasonDayElements.getElementsByClass("widget-title").get(0);
+		String serieASeasonDayApp = serieASeasonDayElem.text().split(" ")[0];
+		serieASeasonDayApp = serieASeasonDayApp.substring(0, 1);
+		String serieASeasonDay = serieASeasonDayElem.text().split(" ")[2];
+		serieASeasonDay = serieASeasonDay.substring(1, serieASeasonDay.length());
+		serieASeasonDay = serieASeasonDay.substring(0, serieASeasonDay.length()-1);
+		
 		MatchBean m;
 		Elements teamsDomElems;
 		String homeTeam;
 		String awayTeam;
 		Double homeSumTotalPoints;
 		Double awaySumTotalPoints;
-		Element goalsElem;
+		Element goalsElemHome;
+		Element goalsElemAway;
 		for (int i = 0; i < matchesDomElems.size(); i++) {
 			Element matchElem = matchesDomElems.get(i);
 			
-			teamsDomElems = matchElem.getElementsByTag("a");
+			teamsDomElems = matchElem.getElementsByClass("team-name");
 			homeTeam = teamsDomElems.get(0).text();
 			awayTeam = teamsDomElems.get(1).text();
-			Elements resultPoints = matchElem.getElementsByClass("point");
+			Elements resultPoints = matchElem.getElementsByClass("team-fpt");
 			m = new MatchBean(homeTeam, awayTeam);
 			if (resultPoints.size() != 0){
 				homeSumTotalPoints = Double.valueOf(resultPoints.get(0).text().replace(",", "."));
@@ -182,10 +188,11 @@ public class SeasonPatternExtractor {
 				m.getHomeTeamResult().setSumTotalPoints(homeSumTotalPoints);
 				m.getAwayTeamResult().setSumTotalPoints(awaySumTotalPoints);
 				
-				if (!matchesGoalsDomElems.isEmpty()) {
-					 goalsElem = matchesGoalsDomElems.get(i);
-					int homeGoals = Integer.valueOf(goalsElem.text().split("-")[0]);
-					int awayGoals = Integer.valueOf(goalsElem.text().split("-")[1]);
+				if (!matchesGoalsDomElems.text().isEmpty()) {
+					goalsElemHome = matchesGoalsDomElems.get(i*2);
+					goalsElemAway = matchesGoalsDomElems.get(i*2 + 1);
+					int homeGoals = Integer.valueOf(goalsElemHome.text());
+					int awayGoals = Integer.valueOf(goalsElemAway.text());
 					m.getHomeTeamResult().setGoals(homeGoals);
 					m.getAwayTeamResult().setGoals(awayGoals);
 				}

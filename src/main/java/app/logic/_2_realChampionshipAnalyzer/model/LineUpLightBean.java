@@ -14,6 +14,8 @@ public class LineUpLightBean implements Serializable {
 	
 	private Double middlefieldersVariation;
 
+	private Double defenderModifier;
+	
 	private Double goalkeeperModifier;
 	
 	private Double totalWithoutGoalkeeperAndMiddlefielderModifiers;
@@ -97,7 +99,9 @@ public class LineUpLightBean implements Serializable {
 		return "\n[teamName=" + getTeamName() + "\t sumTotalPoints="
 				+ sumTotalPoints + "\t goals=" + goals + "\t rankingPoints=" + rankingPoints + "\t midVariation=" + middlefieldersVariation 
 				+ "\t goalVariation=" + goalkeeperModifier
-				+ "\t totalWithoutMidMod=" + totalWithoutGoalkeeperAndMiddlefielderModifiers + "]";
+				+ "\t totalWithoutMidMod=" + totalWithoutGoalkeeperAndMiddlefielderModifiers 
+				+ "\t defenderModifier=" + defenderModifier 
+				+ "]";
 	}
 
 	private String getTeamNameShort() {
@@ -132,6 +136,14 @@ public class LineUpLightBean implements Serializable {
 
 	public void setLuckyEdge(LuckyEdgeInfo luckyEdge) {
 		this.luckyEdge = luckyEdge;
+	}
+
+	public Double getDefenderModifier() {
+		return defenderModifier;
+	}
+
+	public void setDefenderModifier(Double defenderModifier) {
+		this.defenderModifier = defenderModifier;
 	}
 
 

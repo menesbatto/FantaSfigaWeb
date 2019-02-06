@@ -75,7 +75,11 @@ public class MainSeasonVotesDowloader {
 		String finalSeasonDayVotesUrl;
 		System.out.print(i + "\t");
 		finalSeasonDayVotesUrl = AppConstants.SEASON_DAY_VOTES_URL_TEMPLATE.replace("[SEASON_DAY]", i+"").replace("[DATE_TIME_MILLIS]", tvStamp+"");
-		
+		// qui
+		//https://www.fantagazzetta.com/Servizi/Voti.ashx?s=2018-19&g=9&tv=-4&t=[GAZZETTA_TEAM_ID]
+
+		//giusto
+		//https://www.fantagazzetta.com/Servizi/Voti.ashx?s=2018-19&g=8&tv=286870717064&t=5
 		// Creo la mappa con tutti i voti di giornata
 		Map<VotesSourceEnum, Map<String, List<PlayerVoteComplete>>> trisVote = calculateSingleSeasonDay(finalSeasonDayVotesUrl);
 		

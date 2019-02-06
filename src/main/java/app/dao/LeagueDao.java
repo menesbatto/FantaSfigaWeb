@@ -286,6 +286,7 @@ public class LeagueDao {
 		ent.setGoals(bean.getGoals());
 		ent.setMiddlefieldersVariation(bean.getMiddlefieldersVariation());
 		ent.setRankingPoints(bean.getRankingPoints());
+		ent.setDefenderModifier(bean.getDefenderModifier());
 		
 		ent.setSumTotalPoints(bean.getSumTotalPoints());
 		ent.setTakenGoals(bean.getTakenGoals());
@@ -520,6 +521,7 @@ public class LeagueDao {
 		bean.setGoals(ent.getGoals());
 		bean.setMiddlefieldersVariation(ent.getMiddlefieldersVariation());
 		bean.setRankingPoints(ent.getRankingPoints());
+		bean.setDefenderModifier(ent.getDefenderModifier());
 		
 		bean.setSumTotalPoints(ent.getSumTotalPoints());
 		bean.setTakenGoals(ent.getTakenGoals());
@@ -648,8 +650,8 @@ public class LeagueDao {
 
 	public void saveSeasonFromWeb(String leagueShortName, String competitionShortName, String username, SeasonFromWebBean seasonFromWeb) {
 		
-		if (seasonFromWeb.getSeasonDaysFromWeb().isEmpty())
-			return;
+//		if (seasonFromWeb.getSeasonDaysFromWeb().isEmpty())
+//			return;
 		
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 
@@ -755,7 +757,7 @@ public class LeagueDao {
 		Competition competition = findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		
 		SeasonFromWeb ent = seasonFromWebRepo.findByCompetition(competition);
-		//seasonFromWebRepo.delete(ent)
+		//seasonFromWebRepo.delete(ent); //XXX
 		if (ent == null)
 			return null;
 		
@@ -1086,9 +1088,7 @@ public class LeagueDao {
 		rankingRepo.deleteByCompetition(competition);
 		seasonResultRepo.deleteByCompetition(competition);
 		seasonFromWebRepo.deleteByCompetition(competition);
-		
-		
 	}
-
-
+	
+	
 }

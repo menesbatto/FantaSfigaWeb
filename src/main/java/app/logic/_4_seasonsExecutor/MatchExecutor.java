@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import app.dao.RankingType;
+import app.logic._0_rulesDownloader.model.DefenderModeEnum;
 import app.logic._0_rulesDownloader.model.RulesBean;
 import app.logic._1_seasonPatternExtractor.model.MatchBean;
 import app.logic._2_realChampionshipAnalyzer.model.LineUpLightBean;
@@ -27,13 +28,29 @@ public class MatchExecutor {
 		Double awaySumTotalPoints = awayTeamResult.getTotalWithoutGoalkeeperAndMiddlefielderModifiers();
 		
 		
-		// Modificatore difesa
+		// Modificatore Portiere
 		if (rules.getModifiers().isGoalkeeperModifierActive()){
 			//if (!AppConstants.FORCE_GOALKEEPER_MODIFIER_DISABLED){
 				Double homeVarGoalkeeper = homeTeamResult.getGoalkeeperModifier();
 				Double awayVarGoalkeeper = awayTeamResult.getGoalkeeperModifier();
 				homeSumTotalPoints += awayVarGoalkeeper;
 				awaySumTotalPoints += homeVarGoalkeeper;
+			//}
+		}
+		
+		if (rules.getModifiers().isDefenderModifierActive()){
+			//if (!AppConstants.FORCE_DEFENDER_MODIFIER_DISABLED){
+				Double homeDefenderModifier = homeTeamResult.getDefenderModifier();
+				Double awayDefenderModifier = awayTeamResult.getDefenderModifier();
+				if (rules.getModifiers().getDefenderMode().equals(DefenderModeEnum.TO_HIMSELF)){
+					homeSumTotalPoints += homeDefenderModifier;
+					awaySumTotalPoints += awayDefenderModifier;
+				}
+				else {
+					homeSumTotalPoints += awayDefenderModifier;
+					awaySumTotalPoints += homeDefenderModifier;
+				}
+				
 			//}
 		}
 		
@@ -45,33 +62,123 @@ public class MatchExecutor {
 				Double varMid = homeVarMid - awayVarMid;
 				
 				if (varMid <= -2 || varMid >= 2){
-//					if (varMid >= 8){
-//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver8();
-//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus8();
-//					} else if (varMid >= 6) {
-//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver6();
-//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus6();
-//					} else if (varMid >= 4) {
-//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver4();
-//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus4();
-//					} else if (varMid >= 2) {
-//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderOver2();
-//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus2();
-//					} else if (varMid <= -8) {
-//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus8();
-//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver8();
-//					} else if (varMid <= -6) {
-//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus6();
-//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver6();
-//					} else if (varMid <= -4) {
-//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus4();
-//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver4();
-//					} else if (varMid <= -2) {
-//						homeSumTotalPoints += rules.getModifiers().getMiddlefielderUnderMinus2();
-//						awaySumTotalPoints += rules.getModifiers().getMiddlefielderOver2();
-//					} else {
-//						System.out.println("C'e' un errore");
-//					}
+					if (varMid >= 8){
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder8();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus8();
+					} 
+					else if (varMid >= 7.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder7half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus7half();
+					}
+					else if (varMid >= 7) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder7();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus7();
+					}
+					else if (varMid >= 6.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder6half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus6half();
+					}
+					else if (varMid >= 6) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder6();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus6();
+					} 
+					else if (varMid >= 5.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder5half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus5half();
+					}
+					else if (varMid >= 5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder5();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus5();
+					}
+					else if (varMid >= 4.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder4half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus4half();
+					}
+					else if (varMid >= 4) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder4();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus4();
+					}
+					else if (varMid >= 3.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder3half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus3half();
+					} 	
+					else if (varMid >= 3) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder3();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus3();
+					}	
+					else if (varMid >= 2.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder2half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus2half();
+					} 
+					else if (varMid >= 2) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielder2();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielderMinus2();
+					} 
+					
+					
+					
+					
+					
+					
+					
+					
+					else if (varMid <= -8) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus8();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder8();
+					}
+					else if (varMid <= -7.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus7half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder7half();
+					}
+					else if (varMid <= -7) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus7();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder7();
+					}
+					else if (varMid <= -6.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus6half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder6half();
+					}
+					else if (varMid <= -6) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus6();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder6();
+					}
+					else if (varMid <= -5.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus5half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder5half();
+					}
+					else if (varMid <= -5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus5();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder5();
+					}
+					else if (varMid <= -4.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus4half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder4half();
+					}
+					else if (varMid <= -4) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus4();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder4();
+					}
+					else if (varMid <= -3.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus3half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder3half();
+					}
+					else if (varMid <= -3) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus3();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder3();
+					}
+					else if (varMid <= -2.5) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus2half();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder2half();
+					}
+					else if (varMid <= -2) {
+						homeSumTotalPoints += rules.getModifiers().getMiddlefielderMinus2();
+						awaySumTotalPoints += rules.getModifiers().getMiddlefielder2();
+					}
+					
+					
+					else {
+						System.out.println("C'e' un errore");
+					}
 				}
 				//}
 		}

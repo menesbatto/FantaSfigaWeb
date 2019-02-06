@@ -35,6 +35,8 @@ public class LineUp {
 	private Double middlefieldersVariation;
 	private Double performanceModifier;
 	private Double fairPlayModifier;
+	private Double captainModifier;
+	
 	
 	private List<PlayerVote> finalLineUp;
 	
@@ -58,6 +60,7 @@ public class LineUp {
 		this.strickerModifier = 0.0;
 		this.performanceModifier = 0.0;
 		this.fairPlayModifier = 0.0;
+		this.captainModifier = 0.0;
 		
 	}
 	public List<PlayerVote> getGoalKeeper() {
@@ -138,7 +141,8 @@ public class LineUp {
 				+ defenders + "\n\n midfielders=" + midfielders + "\n\n strikers=" + strikers + "\n\n goalKeeperReserve="
 				+ goalKeeperReserve + "\n\n defendersReserves=" + defendersReserves + "\n\n midfieldersReserves="
 				+ midfieldersReserves + "\n\n strikersReserves=" + strikersReserves + "\n\n middlefieldersVariation="
-				+ middlefieldersVariation + "\n\n defenderModifier=" + defenderModifier + "\n\n strickerModifier=" + strickerModifier + "\n\n finalLineUp=" + finalLineUp + "]";
+				+ middlefieldersVariation + "\n\n defenderModifier=" + defenderModifier + "\n\n strickerModifier=" + strickerModifier + 
+				"\n\n captainModifier=" + captainModifier + "\n\n finalLineUp=" + finalLineUp + "]";
 	}
 	public Double getMiddlefieldersVariation() {
 		return middlefieldersVariation;
@@ -205,6 +209,12 @@ public class LineUp {
 	}
 	public void setFairPlayModifierFromWeb(Double fairPlayModifierFromWeb) {
 		this.fairPlayModifierFromWeb = fairPlayModifierFromWeb;
+	}
+	public Double getCaptainModifier() {
+		return captainModifier;
+	}
+	public void setCaptainModifier(Double captainModifier) {
+		this.captainModifier = captainModifier;
 	}
 
 	

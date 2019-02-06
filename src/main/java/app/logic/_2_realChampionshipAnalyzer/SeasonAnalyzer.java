@@ -111,14 +111,19 @@ public class SeasonAnalyzer {
 		
 		
 		String finalSeasonDayUrl = AppConstants.SEASON_DAY_LINES_UP_URL_TEMPLATE.replace("[COMPETITION_ID]", competitionShortName).replace("[LEAGUE_NAME]", leagueShortName);
+		finalSeasonDayUrl = AppConstants.SEASON_DAY_LINES_UP_URL_TEMPLATE.replace("[LEAGUE_NAME]", leagueShortName);
 		
 		
 		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = new HashMap<Integer, SeasonDayFromWebBean>();
 
 //		Integer lastCalculatedWebSeasonDay = seasonPatternExtractor.lastCalculatedWebSeasonDay(leagueShortName, competitionShortName);
 		List<Integer> calculatedWebSeasonDays = seasonPatternExtractor.calculatedWebSeasonDay(leagueShortName, competitionShortName);
-		Integer lastCalculatedWebSeasonDay = calculatedWebSeasonDays.get(calculatedWebSeasonDays.size()-1);
-		
+		Integer lastCalculatedWebSeasonDay;
+		if (calculatedWebSeasonDays.size()==0)
+			lastCalculatedWebSeasonDay = 0;
+		else
+			lastCalculatedWebSeasonDay = calculatedWebSeasonDays.get(calculatedWebSeasonDays.size()-1);
+		System.out.println();
 		for (Entry<Integer, Integer> entry : seasonDayBind.entrySet()) {
 			
 			Integer compSeasonDay = entry.getKey();
@@ -128,8 +133,8 @@ public class SeasonAnalyzer {
 			if (compSeasonDay > lastCalculatedWebSeasonDay) {
 				break;
 			}
-			
-
+//			https://leghe.fantagazzetta.com/accaniti-division/formazioni/1
+//				http://leghe.fantagazzetta.com/accaniti-division/formazioni/8628?g=1
 //			if (calculatedWebSeasonDays.contains(compSeasonDay)){
 				if (calculatedSeason.getSeasonDaysFromWeb().get(compSeasonDay) == null) {
 					List<LineUp> lineUpFromWeb = seasonDayAnalyzer.downloadSeasonDayLinesUpFromWeb(finalSeasonDayUrl + compSeasonDay);
@@ -167,7 +172,7 @@ public class SeasonAnalyzer {
 		if  (AppConstants.FORCE_VOTE_SOURCE != null){
 			voteSource = AppConstants.FORCE_VOTE_SOURCE;
 		}
-		System.out.println();
+		
 		Map<String, Map<String, List<PlayerVoteComplete>>> map = utilsDao.findVotesBySource(voteSource);
 		
 		int seriaAActualSeasonDay = utilsDao.calculateLastSerieASeasonDayCalculated();
@@ -191,12 +196,11 @@ public class SeasonAnalyzer {
 		
 		
 		SeasonFromWebBean seasonFromWeb = leagueDao.findSeasonFromWeb(leagueShortName, competitionShortName, userBean.getUsername());
-		System.out.println(seasonFromWeb);
+//		System.out.println(seasonFromWeb);
 //		seasonFromWeb = input;
 		
 		Map<Integer, SeasonDayFromWebBean> seasonDaysFromWeb = seasonFromWeb.getSeasonDaysFromWeb();
 		
-		System.out.println();
 		List<VoteMismatchBean> voteMismatches = new ArrayList<VoteMismatchBean>(); 
 
 //		for (Integer i = 1; i<38; i++){

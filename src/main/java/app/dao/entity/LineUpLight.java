@@ -19,6 +19,8 @@ public class LineUpLight {
 	private Double goalkeeperModifier;
 	
 	private Double totalWithoutGoalkeeperAndMiddlefielderModifiers;
+	
+	private Double defenderModifier;
 
 	private Double sumTotalPoints;		//punti fatti 66, 75.5;
 
@@ -104,13 +106,23 @@ public class LineUpLight {
 		this.rankingPoints = rankingPoints;
 	}
 
+	
+
 	@Override
 	public String toString() {
 		return "LineUpLight [id=" + id + ", teamName=" + teamName + ", middlefieldersVariation="
 				+ middlefieldersVariation + ", goalkeeperModifier=" + goalkeeperModifier
 				+ ", totalWithoutGoalkeeperAndMiddlefielderModifiers=" + totalWithoutGoalkeeperAndMiddlefielderModifiers
-				+ ", sumTotalPoints=" + sumTotalPoints + ", goals=" + goals + ", takenGoals=" + takenGoals
-				+ ", rankingPoints=" + rankingPoints + "]";
+				+ ", defenderModifier=" + defenderModifier + ", sumTotalPoints=" + sumTotalPoints + ", goals=" + goals
+				+ ", takenGoals=" + takenGoals + ", rankingPoints=" + rankingPoints + "]";
+	}
+
+	public Double getDefenderModifier() {
+		return defenderModifier;
+	}
+
+	public void setDefenderModifier(Double defenderModifier) {
+		this.defenderModifier = defenderModifier;
 	}
 	
 	

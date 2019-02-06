@@ -236,24 +236,24 @@ public class RulesDao {
 		
 		
 		e.setDefenderModifierActive(modifiers.isDefenderModifierActive());
-		modifiers.setDefenderAvgVoteUnder5(modifiers.getDefenderAvgVoteUnder5());
+		e.setDefenderAvgVoteUnder5(modifiers.getDefenderAvgVoteUnder5());
 		
-		modifiers.setDefenderAvgVote5(modifiers.getDefenderAvgVote5());
-		modifiers.setDefenderAvgVote5quart(modifiers.getDefenderAvgVote5quart());
-		modifiers.setDefenderAvgVote5half(modifiers.getDefenderAvgVote5half());
-		modifiers.setDefenderAvgVote5sept(modifiers.getDefenderAvgVote5sept());
+		e.setDefenderAvgVote5(modifiers.getDefenderAvgVote5());
+		e.setDefenderAvgVote5quart(modifiers.getDefenderAvgVote5quart());
+		e.setDefenderAvgVote5half(modifiers.getDefenderAvgVote5half());
+		e.setDefenderAvgVote5sept(modifiers.getDefenderAvgVote5sept());
 		
-		modifiers.setDefenderAvgVote6(modifiers.getDefenderAvgVote6());
-		modifiers.setDefenderAvgVote6quart(modifiers.getDefenderAvgVote6quart());
-		modifiers.setDefenderAvgVote6half(modifiers.getDefenderAvgVote6half());
-		modifiers.setDefenderAvgVote6sept(modifiers.getDefenderAvgVote6sept());
+		e.setDefenderAvgVote6(modifiers.getDefenderAvgVote6());
+		e.setDefenderAvgVote6quart(modifiers.getDefenderAvgVote6quart());
+		e.setDefenderAvgVote6half(modifiers.getDefenderAvgVote6half());
+		e.setDefenderAvgVote6sept(modifiers.getDefenderAvgVote6sept());
 
-		modifiers.setDefenderAvgVote7(modifiers.getDefenderAvgVote7());
-		modifiers.setDefenderAvgVote7quart(modifiers.getDefenderAvgVote7quart());
-		modifiers.setDefenderAvgVote7half(modifiers.getDefenderAvgVote7half());
-		modifiers.setDefenderAvgVote7sept(modifiers.getDefenderAvgVote7sept());
+		e.setDefenderAvgVote7(modifiers.getDefenderAvgVote7());
+		e.setDefenderAvgVote7quart(modifiers.getDefenderAvgVote7quart());
+		e.setDefenderAvgVote7half(modifiers.getDefenderAvgVote7half());
+		e.setDefenderAvgVote7sept(modifiers.getDefenderAvgVote7sept());
 
-		modifiers.setDefenderAvgVote8(modifiers.getDefenderAvgVote8());
+		e.setDefenderAvgVote8(modifiers.getDefenderAvgVote8());
 		
 		e.setDefenderGoalkeeperIncluded(modifiers.isDefenderGoalkeeperIncluded());
 		if (modifiers.getDefenderMode() != null)
@@ -550,7 +550,7 @@ public class RulesDao {
 		bonusMalus.getWinGoal().put(RoleEnum.A, e.getWinGoalA());
 		bonusMalus.getYellowCard().put(RoleEnum.A, e.getYellowCardA());
 		
-		bonusMalus.setPortiereImbattutoActive(e.getPortiereImbattutoActive());
+		bonusMalus.setPortiereImbattutoActive(e.getPortiereImbattutoActive()); // vedi perche mette null
 		bonusMalus.setPortiereImbattuto(e.getPortiereImbattuto());
 		
 		bonusMalus.setYellowCardSvOfficeVoteActive(e.getYellowCardSvOfficeVoteActive());
@@ -622,37 +622,37 @@ public class RulesDao {
 		
 		
 		modifiers.setMiddlefielderModifierActive(e.isMiddlefielderModifierActive());
-		modifiers.setMiddlefielder2(modifiers.getMiddlefielder2());
-		modifiers.setMiddlefielder2half(modifiers.getMiddlefielder2half());
-		modifiers.setMiddlefielderMinus2(modifiers.getMiddlefielderMinus2());
-		modifiers.setMiddlefielderMinus2half(modifiers.getMiddlefielderMinus2half());
+		modifiers.setMiddlefielder2(e.getMiddlefielder2());
+		modifiers.setMiddlefielder2half(e.getMiddlefielder2half());
+		modifiers.setMiddlefielderMinus2(e.getMiddlefielderMinus2());
+		modifiers.setMiddlefielderMinus2half(e.getMiddlefielderMinus2half());
 		
-		modifiers.setMiddlefielder3(modifiers.getMiddlefielder3());
-		modifiers.setMiddlefielder3half(modifiers.getMiddlefielder3half());
-		modifiers.setMiddlefielderMinus3(modifiers.getMiddlefielderMinus3());
-		modifiers.setMiddlefielderMinus3half(modifiers.getMiddlefielderMinus3half());
+		modifiers.setMiddlefielder3(e.getMiddlefielder3());
+		modifiers.setMiddlefielder3half(e.getMiddlefielder3half());
+		modifiers.setMiddlefielderMinus3(e.getMiddlefielderMinus3());
+		modifiers.setMiddlefielderMinus3half(e.getMiddlefielderMinus3half());
 		
-		modifiers.setMiddlefielder4(modifiers.getMiddlefielder4());
-		modifiers.setMiddlefielder4half(modifiers.getMiddlefielder4half());
-		modifiers.setMiddlefielderMinus4(modifiers.getMiddlefielderMinus4());
-		modifiers.setMiddlefielderMinus4half(modifiers.getMiddlefielderMinus4half());
+		modifiers.setMiddlefielder4(e.getMiddlefielder4());
+		modifiers.setMiddlefielder4half(e.getMiddlefielder4half());
+		modifiers.setMiddlefielderMinus4(e.getMiddlefielderMinus4());
+		modifiers.setMiddlefielderMinus4half(e.getMiddlefielderMinus4half());
 		
-		modifiers.setMiddlefielder5(modifiers.getMiddlefielder5());
-		modifiers.setMiddlefielder5half(modifiers.getMiddlefielder5half());
-		modifiers.setMiddlefielderMinus5(modifiers.getMiddlefielderMinus5());
-		modifiers.setMiddlefielderMinus5half(modifiers.getMiddlefielderMinus5half());
+		modifiers.setMiddlefielder5(e.getMiddlefielder5());
+		modifiers.setMiddlefielder5half(e.getMiddlefielder5half());
+		modifiers.setMiddlefielderMinus5(e.getMiddlefielderMinus5());
+		modifiers.setMiddlefielderMinus5half(e.getMiddlefielderMinus5half());
 		
-		modifiers.setMiddlefielder6(modifiers.getMiddlefielder6());
-		modifiers.setMiddlefielder6half(modifiers.getMiddlefielder6half());
-		modifiers.setMiddlefielderMinus6(modifiers.getMiddlefielderMinus6());
-		modifiers.setMiddlefielderMinus6half(modifiers.getMiddlefielderMinus6half());
+		modifiers.setMiddlefielder6(e.getMiddlefielder6());
+		modifiers.setMiddlefielder6half(e.getMiddlefielder6half());
+		modifiers.setMiddlefielderMinus6(e.getMiddlefielderMinus6());
+		modifiers.setMiddlefielderMinus6half(e.getMiddlefielderMinus6half());
 		
-		modifiers.setMiddlefielder7(modifiers.getMiddlefielder7());
-		modifiers.setMiddlefielder7half(modifiers.getMiddlefielder7half());
-		modifiers.setMiddlefielderMinus7(modifiers.getMiddlefielderMinus7());
-		modifiers.setMiddlefielderMinus7half(modifiers.getMiddlefielderMinus7half());
+		modifiers.setMiddlefielder7(e.getMiddlefielder7());
+		modifiers.setMiddlefielder7half(e.getMiddlefielder7half());
+		modifiers.setMiddlefielderMinus7(e.getMiddlefielderMinus7());
+		modifiers.setMiddlefielderMinus7half(e.getMiddlefielderMinus7half());
 		
-		e.setMiddlefielder8(modifiers.getMiddlefielder8());
+		modifiers.setMiddlefielder8(e.getMiddlefielder8());
 		
 		modifiers.setStrikerModifierActive(	e.isStrikerModifierActive());
 		modifiers.setStrikerVote6(e.getStrikerVote6());
@@ -767,15 +767,16 @@ public class RulesDao {
 		substitution.setPlayerOfficeDecreasingVotesActive(e.getPlayerOfficeDecreasingVotesActive());
 		List<Double> playerOfficeDecreasingVotes = new ArrayList<Double>();
 		String playerOfficeDecreasingVotesString = e.getPlayerOfficeDecreasingVotes();
-		String[] splitDecreasing = playerOfficeDecreasingVotesString.split("-");
-		
-		for (int i = 0; i < splitDecreasing.length; i++) {
-			String voteString = split[i];
-			Double vote = Double.valueOf(voteString);
-			playerOfficeDecreasingVotes.add(vote);
+		if (playerOfficeDecreasingVotesString != null) {
+			String[] splitDecreasing = playerOfficeDecreasingVotesString.split("-");
+			
+			for (int i = 0; i < splitDecreasing.length; i++) {
+				String voteString = split[i];
+				Double vote = Double.valueOf(voteString);
+				playerOfficeDecreasingVotes.add(vote);
+			}
+			substitution.setPlayerOfficeDecreasingVotes(playerOfficeDecreasingVotes);
 		}
-		substitution.setPlayerOfficeDecreasingVotes(playerOfficeDecreasingVotes);
-		
 		
 		
 		
@@ -958,16 +959,16 @@ public class RulesDao {
 		RulesBean rulesClient = req.getRules();
 		String competitionShortName = req.getCompetitionShortName();
 		String leagueShortName = req.getLeagueShortName();
-	
-		Double autogol = rulesClient.getPoints().getAutogol();
-		Boolean autogolActive = rulesClient.getPoints().getAutogolActive();
-		String maxOfficeVoteBehaviour = rulesClient.getSubstitutions().getMaxOfficeVotes().name();
-		
+//	
+//		Double autogol = rulesClient.getPoints().getAutogol();
+//		Boolean autogolActive = rulesClient.getPoints().getAutogolActive();
+//		String maxOfficeVoteBehaviour = rulesClient.getSubstitutions().getMaxOfficeVotes().name();
+//		
 		Competition competition = leagueDao.findCompetitionByShortNameAndLeagueEnt(competitionShortName, leagueShortName, username);
 		Rules ent = rulesRepo.findByCompetitionAndType(competition, RulesType.REAL.name());
-		ent.setAutogol(autogol);
-		ent.setAutogolActive(autogolActive);
-		ent.setMaxOfficeVotes(maxOfficeVoteBehaviour);
+//		ent.setAutogol(autogol);
+//		ent.setAutogolActive(autogolActive);
+//		ent.setMaxOfficeVotes(maxOfficeVoteBehaviour);
 		
 		List<Postponement> postponementEnts = new ArrayList<Postponement>();
 		Postponement postEnt;
@@ -992,8 +993,13 @@ public class RulesDao {
 		if (existWait && existAll6)			postponementBehaviour =  PostponementBehaviourEnum.MIXED;
 		else if (existWait  && !existAll6)	postponementBehaviour =  PostponementBehaviourEnum.WAIT_MATCHES;
 		else if (!existWait && existAll6)	postponementBehaviour =  PostponementBehaviourEnum.ALL_6;;
-		ent.setPostponementBehaviour(postponementBehaviour.name());
 
+		if (postponementBehaviour == null) {	// in caso non ci siano rinvii
+			ent.setPostponementBehaviour(rulesClient.getCompetitionRules().getPostponementBehaviour().name());
+		}
+		else {
+			ent.setPostponementBehaviour(postponementBehaviour.name());
+		}
 		
 		String seasonDaysToJump = "";
 		if (rulesClient.getCompetitionRules().getSeasonDaysToJump()!= null) {

@@ -356,8 +356,7 @@ public class FacadeController {
 	
 	//###################################################################
 	
-	// Per la lega inviata vengono scaricate le competizioni contenute
-	// RICHIAMATO DA USER 1 volta all'inizio
+	// Per la lega inviata vengono eliminate le competizioni scaricate senza le stagioni scaricate dal web
 
 	@RequestMapping(value = "/resetLeague/{leagueShortName}", method = RequestMethod.GET)
 	public ResponseEntity<LeagueBean> resetLeague(@PathVariable String leagueShortName) {
@@ -373,6 +372,24 @@ public class FacadeController {
 		return response;
 	}
 	
+	//###################################################################
+	
+		// Per la lega inviata vengono eliminate le competizioni scaricate DA FINIRE
+
+	@RequestMapping(value = "/hardResetLeague/{leagueShortName}", method = RequestMethod.GET)
+	public ResponseEntity<LeagueBean> hardResetLeague(@PathVariable String leagueShortName) {
+		LeagueBean league = userExpert.hardResetLeague(leagueShortName);
+		
+		String body;
+		if (league == null)
+			body = "Downloading Competitions FAILED";
+		else
+			body = "Downloading Competitions COMPLETED";
+		
+		ResponseEntity<LeagueBean> response = new ResponseEntity<LeagueBean>(league, HttpStatus.OK);
+		return response;
+	}
+
 	//###################################################################
 	
 	// Per la lega inviata vengono scaricate le competizioni contenute

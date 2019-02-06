@@ -10,9 +10,11 @@ import app.dao.entity.Postponement;
 @RepositoryRestResource
 public interface PostponementRepo extends JpaRepository<Postponement, Long> {
 
-	Postponement findByHomeTeamAndAwayTeamAndSeasonDay(String homeTeam, String awayTeam, Integer seasonDay);
+	Postponement findByHomeTeamAndAwayTeamAndSeasonDayAndWaitIsNull(String homeTeam, String awayTeam, Integer seasonDay);
 	//findByLastnameIsNullAndFirstnam
 	List<Postponement> findByWaitIsNull();
+	
+	
 
 	
 	

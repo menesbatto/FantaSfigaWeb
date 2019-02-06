@@ -198,7 +198,7 @@ public class UtilsDao {
 
 	public void insertPostponement(PostponementBean bean) {
 		
-		Postponement ent = postponementRepo.findByHomeTeamAndAwayTeamAndSeasonDay(bean.getHomeTeam(), bean.getAwayTeam(), bean.getSeasonDay());
+		Postponement ent = postponementRepo.findByHomeTeamAndAwayTeamAndSeasonDayAndWaitIsNull(bean.getHomeTeam(), bean.getAwayTeam(), bean.getSeasonDay());
 		if (ent == null) {
 			ent = createPostponementEnt(bean);
 		}
@@ -222,7 +222,7 @@ public class UtilsDao {
 	
 	public void removePostponement(PostponementBean bean) {
 		
-		Postponement ent = postponementRepo.findByHomeTeamAndAwayTeamAndSeasonDay(bean.getHomeTeam(), bean.getAwayTeam(), bean.getSeasonDay());
+		Postponement ent = postponementRepo.findByHomeTeamAndAwayTeamAndSeasonDayAndWaitIsNull(bean.getHomeTeam(), bean.getAwayTeam(), bean.getSeasonDay());
 		
 		postponementRepo.delete(ent);
 		

@@ -17,9 +17,10 @@ public class AppConstants {
 	
 	public static String LOGIN_PAGE_URL = GAZZETTA_URL;
 	
-	public static String CALENDAR_URL_TEMPLATE = "http://leghe.fantagazzetta.com/[LEAGUE_NAME]/calendario/[COMPETITION_ID]";
-
-	public static String SEASON_DAY_LINES_UP_URL_TEMPLATE = "http://leghe.fantagazzetta.com/[LEAGUE_NAME]/formazioni/[COMPETITION_ID]?g=";
+	public static String CALENDAR_URL_TEMPLATE = "http://leghe.fantagazzetta.com/[LEAGUE_NAME]/calendario?id=[COMPETITION_ID]";
+	
+//	public static String SEASON_DAY_LINES_UP_URL_TEMPLATE = "http://leghe.fantagazzetta.com/[LEAGUE_NAME]/formazioni/[COMPETITION_ID]?g=";
+	public static String SEASON_DAY_LINES_UP_URL_TEMPLATE = "http://leghe.fantagazzetta.com/[LEAGUE_NAME]/formazioni/";
 
 
 //	public static String RULES_1_BONUS_MALUS_URL = 		"http://leghe.fantagazzetta.com/[LEAGUE_NAME]/visualizza-opzioni-calcolo1";
@@ -41,8 +42,8 @@ public class AppConstants {
 	
 	public static VotesSourceEnum FORCE_VOTE_SOURCE = null;//VotesSourceEnum.NAPOLI;
 	
-	public static String SEASON_DAY_ALL_VOTES_URL = "http://www.fantagazzetta.com/voti-fantacalcio-serie-a/2017-18";
-	public static String SEASON_DAY_VOTES_URL_TEMPLATE = "https://www.fantagazzetta.com/Servizi/Voti.ashx?s=2017-18&g=[SEASON_DAY]&tv=[DATE_TIME_MILLIS]&t=[GAZZETTA_TEAM_ID]";
+	public static String SEASON_DAY_ALL_VOTES_URL = "http://www.fantagazzetta.com/voti-fantacalcio-serie-a/2018-19";
+	public static String SEASON_DAY_VOTES_URL_TEMPLATE = "https://www.fantagazzetta.com/Servizi/Voti.ashx?s=2018-19&g=[SEASON_DAY]&tv=[DATE_TIME_MILLIS]&t=[GAZZETTA_TEAM_ID]";
 	public static String SERIE_A_TEAMS_IDS_URL = "https://www.fantagazzetta.com/voti-fantacalcio-serie-a/";
 	
 	
