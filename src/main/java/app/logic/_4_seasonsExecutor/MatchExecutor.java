@@ -43,8 +43,8 @@ public class MatchExecutor {
 				Double homeDefenderModifier = homeTeamResult.getDefenderModifier();
 				Double awayDefenderModifier = awayTeamResult.getDefenderModifier();
 				if (rules.getModifiers().getDefenderMode().equals(DefenderModeEnum.TO_HIMSELF)){
-					homeSumTotalPoints += homeDefenderModifier;
-					awaySumTotalPoints += awayDefenderModifier;
+					homeSumTotalPoints -= homeDefenderModifier;
+					awaySumTotalPoints -= awayDefenderModifier;
 				}
 				else {
 					homeSumTotalPoints += awayDefenderModifier;

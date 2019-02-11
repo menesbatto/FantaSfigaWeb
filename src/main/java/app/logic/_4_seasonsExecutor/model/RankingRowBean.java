@@ -18,7 +18,10 @@ public class RankingRowBean implements Serializable{
 	private Integer bestPosition;
 	private String bestPattern;
 	private Integer worstPosition;
-	private String worstPattern;	
+	private String worstPattern;
+	
+	private Double defenderModifier;	
+
 	
 	public Integer getBestPosition() {
 		return bestPosition;
@@ -60,6 +63,7 @@ public class RankingRowBean implements Serializable{
 		sumAllVotes = 0.0;
 		scoredGoals = 0;
 		takenGoals = 0;
+		defenderModifier = 0.0;
 	}
 
 	public RankingRowBean(String name) {
@@ -73,7 +77,7 @@ public class RankingRowBean implements Serializable{
 	@Override
 	public String toString() {
 		return  getNameToString() + "\t" + points + "\t" + sumAllVotes + "\t scoredGoals=\t"
-				+ scoredGoals + "\t takenGoals=\t" + takenGoals + "\t" + rankingPosition + "\n";
+				+ scoredGoals + "\t takenGoals=\t" + takenGoals + "\t" + defenderModifier + "\t" + rankingPosition + "\n";
 	}
 
 
@@ -179,6 +183,14 @@ public class RankingRowBean implements Serializable{
 
 	public void setLuckyEdge(LuckyEdgeInfo luckyEdge) {
 		this.luckyEdge = luckyEdge;
+	}
+
+	public Double getDefenderModifier() {
+		return defenderModifier;
+	}
+
+	public void setDefenderModifier(Double defenderModifier) {
+		this.defenderModifier = defenderModifier;
 	}
 
 	

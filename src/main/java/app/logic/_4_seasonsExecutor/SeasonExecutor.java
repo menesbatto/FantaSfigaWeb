@@ -157,6 +157,7 @@ public class SeasonExecutor {
 		rr.setScoredGoals(rr.getScoredGoals() + lul.getGoals());
 		rr.setSumAllVotes(rr.getSumAllVotes() + lul.getSumTotalPoints());
 		rr.setTakenGoals(rr.getTakenGoals() +  lul.getTakenGoals());
+		rr.setDefenderModifier(rr.getDefenderModifier() + lul.getDefenderModifier());
 		
 		LuckyEdgeInfo rrLE = rr.getLuckyEdge();
 		LuckyEdgeInfo lulLE = lul.getLuckyEdge();

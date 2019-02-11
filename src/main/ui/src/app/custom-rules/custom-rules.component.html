@@ -328,6 +328,64 @@
                         <i *ngIf="isDifferent(realRules.bonusMalus.winGoal, bonusMalus.winGoal)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.winGoal, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                     </div>
                 </div>
+
+                <div class="row">
+                    <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="amminitosv">Assegna voto ad ammonito sv:</label>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+                        <div class="radio">
+                            <label><span class="outer1 val55"><input class="form-check-input" type="radio" [(ngModel)]="bonusMalus.yellowCardSvOfficeVoteActive" name="yellowCardSvOfficeVoteActive1" [value]="true"></span>Sì </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+                        <div class="radio">
+                            <label><span class="outer2"><input class="form-check-input" type="radio" [(ngModel)]="bonusMalus.yellowCardSvOfficeVoteActive" name="yellowCardSvOfficeVoteActive2" [value]="false"></span>No </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Scegliere se impostare un valore di default per il calciatore ammonito con sv', 'Spiegazione')"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.yellowCardSvOfficeVoteActive, bonusMalus.yellowCardSvOfficeVoteActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.yellowCardSvOfficeVoteActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                    </div>
+                </div>
+    
+    
+                <div class="row ammonitosv inner nobor" *ngIf="bonusMalus.yellowCardSvOfficeVoteActive">
+                    <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vammonitosv" >Valore ammonito sv:</label>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                        <input name="ctl00$main$vammonitosv" value="0" [(ngModel)]="bonusMalus.yellowCardSvOfficeVote" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-2 col-md-1 col-sm-2 col-xs-2">
+                        <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserire il valore da attribuire all\'ammonito con sv', 'Spiegazione')"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.yellowCardSvOfficeVote, bonusMalus.yellowCardSvOfficeVote)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.yellowCardSvOfficeVote, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="pimbattuto" >Bonus portiere imbattuto:</label>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+                        <div class="radio">
+                            <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="bonusMalus.portiereImbattutoActive" name="portiereImbattutoActive1" [value]="true" ></span>Sì </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+                        <div class="radio">
+                            <label><span class="outer1"><input class="form-check-input" type="radio" [(ngModel)]="bonusMalus.portiereImbattutoActive" name="portiereImbattutoActive2" [value]="false" ></span>No </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-1 col-sm-1 col-xs-1">
+                        <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare su Si per attribuire un bonus al portiere che non subisce gol. Il portiere deve aver giocato almeno 25 minuti', 'Spiegazione')"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.portiereImbattutoActive, bonusMalus.portiereImbattutoActive)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.portiereImbattutoActive, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                    </div>
+                </div>
+                <div class="row inner nobor" *ngIf="bonusMalus.portiereImbattutoActive">
+                    <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="vpimbattuto" >Valore per bonus portiere imbattuto:</label>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                        <input name="ctl00$main$vpimbattuto" [(ngModel)]="bonusMalus.portiereImbattuto" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore del bonus da assegnare al portiere imbattuto', 'Spiegazione')"></i>
+                        <i *ngIf="isDifferent(realRules.bonusMalus.portiereImbattuto, bonusMalus.portiereImbattuto)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.bonusMalus.portiereImbattuto, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                    </div>
+                </div>
         </div>
     </div>
 
@@ -534,7 +592,7 @@
             </div>
 
 
-            <div class="row">
+            <!-- <div class="row">
                 <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="amminitosv">Assegna voto ad ammonito sv:</label>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <div class="radio">
@@ -562,7 +620,7 @@
                     <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Inserire il valore da attribuire all\'ammonito con sv', 'Spiegazione')"></i>
                     <i *ngIf="isDifferent(realRules.substitutions.yellowCardSvOfficeVote, substitutions.yellowCardSvOfficeVote)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.substitutions.yellowCardSvOfficeVote, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                 </div>
-            </div>
+            </div> -->
 
 
             <div class="row">
@@ -1050,7 +1108,7 @@
 
 
 
-            <div class="row">
+            <!-- <div class="row">
                 <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="pimbattuto" >Bonus portiere imbattuto:</label>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                     <div class="radio">
@@ -1076,7 +1134,7 @@
                     <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Impostare il valore del bonus da assegnare al portiere imbattuto', 'Spiegazione')"></i>
                     <i *ngIf="isDifferent(realRules.points.portiereImbattuto, points.portiereImbattuto)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.points.portiereImbattuto, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
                 </div>
-            </div>
+            </div> -->
 
 
         </div>
@@ -1289,31 +1347,133 @@
                 </div>
             </div>
             <div id="vmdif" class="row nobor modificatorerow inner disappear" *ngIf="modifiers.defenderModifierActive">
+
+                <div class="row">
+            
+                    <label class="col-lg-6 col-md-6 col-sm-4 col-xs-4 control-label" for="fontevoti">Modalità</label>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                        <select name="ctl00$main$mdverso" [(ngModel)]="modifiers.defenderMode"  class="form-control chk">
+                            <option value="TO_HIMSELF">Aggiunge a te</option>
+                            <option value="TO_OTHER">Toglie ad avversario</option>
+                        </select>
+                        
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <i class="info-ico" type="button" data-toggle="modal" data-target="#myModal1" (click)="updateModalText('Seleziona la modalità del modificatore difesa.', 'Spiegazione')"></i>
+                        <i *ngIf="isDifferent(realRules.modifiers.defenderMode, modifiers.defenderMode)" class="error-ico" type="button" (click)="updateModalTextDifferentRule(realRules.modifiers.defenderMode, 'Regola differente')" data-toggle="modal" data-target="#myModal1" ></i>
+                        
+                    </div>
+                </div>
+
+
                 <div class="nobor">
                     <em>Il modificatore della difesa è un bonus che si calcola solo se il portiere e almeno 4 difensori portano punteggio alla squadra. Si considerano il voto in pagella del portiere e i tre migliori voti in pagella ottenuti dai difensori, si calcola la media aritmetica di questi quattro valori.</em>
                 </div>
                 <strong>Punteggio</strong>
+
                 <div class="row nobor">
-                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=7</strong> si aggiunge</div>
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=8</strong> si aggiunge/toglie</div>
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <input name="ctl00$main$d6" [(ngModel)]="modifiers.defenderAvgVote6" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                        <input name="ctl00$main$d8" [(ngModel)]="modifiers.defenderAvgVote8" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
+                </div>
+
+
+                <div class="row nobor">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=7,75 e &lt;8</strong> si aggiunge/toglie</div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <input name="ctl00$main$d7s" [(ngModel)]="modifiers.defenderAvgVote7sept" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                     </div>
                     <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
                 </div>
                 <div class="row nobor">
-                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=6,5 e &lt;7</strong> si aggiunge</div>
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=7,5 e &lt;7,75</strong> si aggiunge/toglie</div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <input name="ctl00$main$d7h" [(ngModel)]="modifiers.defenderAvgVote7half" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
+                </div>
+                <div class="row nobor">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=7,25 e &lt;7,5</strong> si aggiunge/toglie</div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <input name="ctl00$main$d7q" [(ngModel)]="modifiers.defenderAvgVote7quart" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
+                </div>
+                <div class="row nobor">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=7 e &lt;7,25</strong> si aggiunge/toglie</div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <input name="ctl00$main$d7" [(ngModel)]="modifiers.defenderAvgVote7" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
+                </div>
+
+                
+                <div class="row nobor">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=6,75 e &lt;7</strong> si aggiunge/toglie</div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <input name="ctl00$main$d6s" [(ngModel)]="modifiers.defenderAvgVote6sept" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
+                </div>
+                <div class="row nobor">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=6,5 e &lt;6,75</strong> si aggiunge/toglie</div>
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                         <input name="ctl00$main$d6h" [(ngModel)]="modifiers.defenderAvgVote6half" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                     </div>
                     <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
                 </div>
                 <div class="row nobor">
-                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=6 e &lt;6,5</strong> si aggiunge</div>
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=6,25 e &lt;6,5</strong> si aggiunge/toglie</div>
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <input name="ctl00$main$d7" [(ngModel)]="modifiers.defenderAvgVote7" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                        <input name="ctl00$main$d6q" [(ngModel)]="modifiers.defenderAvgVote6quart" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
                     </div>
                     <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
                 </div>
+                <div class="row nobor">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=6 e &lt;6,25</strong> si aggiunge/toglie</div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <input name="ctl00$main$d6" [(ngModel)]="modifiers.defenderAvgVote6" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
+                </div>
+
+
+
+                <div class="row nobor">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=5,75 e &lt;6</strong> si aggiunge/toglie</div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <input name="ctl00$main$d5s" [(ngModel)]="modifiers.defenderAvgVote5sept" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
+                </div>
+                <div class="row nobor">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=5,5 e &lt;5,75</strong> si aggiunge/toglie</div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <input name="ctl00$main$d5h" [(ngModel)]="modifiers.defenderAvgVote5half" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
+                </div>
+                <div class="row nobor">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è &gt;=5,25 e &lt;5,5</strong> si aggiunge/toglie</div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <input name="ctl00$main$d5q" [(ngModel)]="modifiers.defenderAvgVote5quart" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
+                </div>
+                <div class="row nobor">
+                    <div class="col-lg-4 col-md-4 col-sm-5 col-xs-12 control-label">se la <strong>media è   &lt;5,25</strong> si aggiunge/toglie</div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <input name="ctl00$main$d5" [(ngModel)]="modifiers.defenderAvgVote5" class="form-control textinner" type="text"  pattern="[0-9]+([\.,][0-9]+)?" step="0.5">
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-9 control-label"><strong>punti</strong></div>
+                </div>
+
+
+
+
+
             </div>
 
             <br>
